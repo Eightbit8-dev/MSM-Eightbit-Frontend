@@ -5,7 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { apiRoutes } from "../routes/apiRoutes";
 import type { DropdownOption } from "../components/common/DropDown";
-
+import Cookies from "js-cookie";
 /**
  * -------------------------------------------
  * Branch Service Hooks - CRUD Operations
@@ -25,7 +25,7 @@ import type { DropdownOption } from "../components/common/DropDown";
 export const useFetchBranches = () => {
   const fetchAllBranches = async (): Promise<BranchDetails[]> => {
     try {
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
       
 
@@ -63,7 +63,7 @@ export const useFetchBranches = () => {
 
 export const useFetchBranchOptions = () => {
   const fetchOptions = async (): Promise<DropdownOption[]> => {
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
     const res = await axiosInstance.get(apiRoutes.branches, {
@@ -96,7 +96,7 @@ export const useCreateBranch = () => {
 
   const createBranch = async (newBranch: BranchDetails) => {
     try {
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
    newBranch.companyId = 1;
@@ -138,7 +138,7 @@ export const useEditBranch = () => {
   const queryClient = useQueryClient();
 
   const editBranch = async (updatedBranch: BranchDetails) => {
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
     const { id: branchId, ...payload } = updatedBranch;
@@ -182,7 +182,7 @@ export const useDeleteBranch = () => {
   const queryClient = useQueryClient();
 
   const deleteBranch = async (branch: BranchDetails) => {
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
    branch.companyId = 1;
 

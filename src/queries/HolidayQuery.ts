@@ -4,7 +4,7 @@ import type { HolidayDetails, HolidayPayload } from "../types/apiTypes";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { apiRoutes } from "../routes/apiRoutes";
-
+import Cookies from "js-cookie";
 /**
  * --------------------------------------
  * Holiday Service Hooks - CRUD Operations
@@ -17,7 +17,7 @@ import { apiRoutes } from "../routes/apiRoutes";
 export const useFetchHolidays = () => {
   const fetchAllHolidays = async (): Promise<HolidayDetails[]> => {
     try {
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
       const res = await axiosInstance.get(apiRoutes.holidays, {
@@ -54,7 +54,7 @@ export const useCreateHoliday = () => {
   const queryClient = useQueryClient();
 
   const createHoliday = async (newHoliday: HolidayPayload) => {
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
     try {
@@ -94,7 +94,7 @@ export const useEditHoliday = () => {
   const queryClient = useQueryClient();
 
   const editHoliday = async (updatedHoliday: HolidayPayload & { id: number }) => {
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
     const { id, ...payload } = updatedHoliday;
@@ -141,7 +141,7 @@ export const useDeleteHoliday = () => {
   const queryClient = useQueryClient();
 
   const deleteHoliday = async (holiday: HolidayDetails) => {
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
     const res = await axiosInstance.delete(`${apiRoutes.holidays}/${holiday.id}`, {
@@ -175,7 +175,7 @@ export const useDeleteHoliday = () => {
  */
 export const useFetchHolidayMonths = () => {
   const fetchMonths = async (): Promise<{ id: number; label: string }[]> => {
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized");
 
     const res = await axiosInstance.get(apiRoutes.holidaymonth, {
@@ -205,7 +205,7 @@ export const useFetchHolidayMonths = () => {
  */
 export const useFetchHolidayYears = () => {
   const fetchYears = async (): Promise<{ id: number; label: string }[]> => {
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized");
 
     const res = await axiosInstance.get(apiRoutes.holidayyears, {
@@ -236,7 +236,7 @@ export const useFetchHolidayYears = () => {
 export const useFilteredHolidays = (month: number, year: number) => {
   const fetchFilteredHolidays = async (): Promise<HolidayDetails[]> => {
     try {
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
       const res = await axiosInstance.get(

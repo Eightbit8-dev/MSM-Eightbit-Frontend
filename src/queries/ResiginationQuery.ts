@@ -4,7 +4,7 @@ import type { ResignationDetails } from "../types/apiTypes";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { apiRoutes } from "../routes/apiRoutes";
-
+import Cookies from "js-cookie";
 /**
  * -------------------------------------------
  * Designation Service Hooks - CRUD Operations
@@ -24,7 +24,7 @@ import { apiRoutes } from "../routes/apiRoutes";
 export const useFetchResignations = () => {
   const fetchAllResignation = async (): Promise<ResignationDetails[]> => {
     try {
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
       const res = await axiosInstance.get(apiRoutes.resigination, {
@@ -67,7 +67,7 @@ export const useCreateResignation = () => {
 
   const createResignation = async (newResignation: ResignationDetails) => {
     try {
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
       const res = await axiosInstance.post(apiRoutes.resigination, newResignation, {
@@ -107,7 +107,7 @@ export const useEditResignation = () => {
   const queryClient = useQueryClient();
 
   const editResignation = async (updatedResignation: ResignationDetails) => {
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
     const { id: ResignationId, ...payload } = updatedResignation;
@@ -150,7 +150,7 @@ export const useDeleteResignation = () => {
   const queryClient = useQueryClient();
 
   const deleteResignation = async (Resignation: ResignationDetails) => {
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
     const res = await axiosInstance.delete(

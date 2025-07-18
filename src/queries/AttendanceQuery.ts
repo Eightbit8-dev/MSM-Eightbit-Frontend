@@ -5,12 +5,12 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { apiRoutes } from "../routes/apiRoutes";
 import type { DropdownOption } from "../components/common/DropDown";
-
+import Cookies from "js-cookie";
 // addon for getting attednace types
 export const useFetchAttendancesTypes = () => {
   const fetchAllAttendanceTypes = async (): Promise<DropdownOption[]> => {
     try {
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
       const res = await axiosInstance.get(apiRoutes.attendanceTypes, {
@@ -68,7 +68,7 @@ export const useFetchAttendancesTypes = () => {
 export const useFetchAttendances = () => {
   const fetchAllAttendances = async (): Promise<AttendanceDetails[]> => {
     try {
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
       const res = await axiosInstance.get(apiRoutes.attendance, {
@@ -111,7 +111,7 @@ export const useCreateAttendance = () => {
 
   const createAttendance = async (newAttendance: AttendanceDetails) => {
     try {
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
       const res = await axiosInstance.post(
@@ -157,7 +157,7 @@ export const useEditAttendance = () => {
   const queryClient = useQueryClient();
 
   const editAttendance = async (updatedAttendance: AttendanceDetails) => {
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
     const { id: attendanceId, ...payload } = updatedAttendance;
@@ -200,7 +200,7 @@ export const useDeleteAttendance = () => {
   const queryClient = useQueryClient();
 
   const deleteAttendance = async (attendance: AttendanceDetails) => {
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
     const res = await axiosInstance.delete(

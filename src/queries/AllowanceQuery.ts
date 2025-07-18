@@ -5,12 +5,13 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { apiRoutes } from "../routes/apiRoutes";
 import type { DropdownOption } from "../components/common/DropDown";
+import Cookies from "js-cookie";
 
 // addon for getting allowance types
 export const useFetchAllowanceTypes = () => {
   const fetchAllAllowanceTypes = async (): Promise<DropdownOption[]> => {
     try {
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
       const res = await axiosInstance.get(apiRoutes.allowanceTypes, {
@@ -68,7 +69,7 @@ export const useFetchAllowanceTypes = () => {
 export const useFetchAllowances = () => {
   const fetchAllAllowances = async (): Promise<AllowanceDetails[]> => {
     try {
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
       const res = await axiosInstance.get(apiRoutes.allowance, {
@@ -111,7 +112,7 @@ export const useCreateAllowance = () => {
 
   const createAllowance = async (newAllowance: AllowanceDetails) => {
     try {
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
       const res = await axiosInstance.post(apiRoutes.allowance, newAllowance, {
@@ -153,7 +154,7 @@ export const useEditAllowance = () => {
   const queryClient = useQueryClient();
 
   const editAllowance = async (updatedAllowance: AllowanceDetails) => {
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
     const { id: allowanceId, ...payload } = updatedAllowance;
@@ -196,7 +197,7 @@ export const useDeleteAllowance = () => {
   const queryClient = useQueryClient();
 
   const deleteAllowance = async (allowance: AllowanceDetails) => {
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
     const res = await axiosInstance.delete(

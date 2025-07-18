@@ -4,7 +4,7 @@ import type { ShiftDetails } from "../types/apiTypes";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import Cookies from "js-cookie";
 /**
  * -------------------------------------------
  * Shift Service Hooks - CRUD Operations
@@ -26,7 +26,7 @@ const API_ROUTE = "/api/admin/shift";
 export const useFetchShifts = () => {
   const fetchAllShifts = async (): Promise<ShiftDetails[]> => {
     try {
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
       const res = await axiosInstance.get(API_ROUTE, {
@@ -66,7 +66,7 @@ export const useCreateShift = () => {
 
   const createShift = async (newShift: ShiftDetails) => {
     try {
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
       const res = await axiosInstance.post(API_ROUTE, newShift, {
@@ -106,7 +106,7 @@ export const useEditShift = () => {
   const queryClient = useQueryClient();
 
   const editShift = async (updatedShift: ShiftDetails) => {
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
     const { id: ShiftId, ...payload } = updatedShift;
@@ -145,7 +145,7 @@ export const useDeleteShift = () => {
   const queryClient = useQueryClient();
 
   const deleteShift = async (Shift: ShiftDetails) => {
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
     const res = await axiosInstance.delete(`${API_ROUTE}/${Shift.id}`, {

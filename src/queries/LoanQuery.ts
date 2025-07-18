@@ -4,7 +4,7 @@ import { type LoanDetails } from "../types/apiTypes";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { apiRoutes } from "../routes/apiRoutes";
-
+import Cookies from "js-cookie";
 /**
  * -------------------------------------------
  * Blood Service Hooks - CRUD Operations
@@ -24,7 +24,7 @@ import { apiRoutes } from "../routes/apiRoutes";
 export const useFetchLoans = () => {
   const fetchAllLoans = async (): Promise<LoanDetails[]> => {
     try {
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
       const res = await axiosInstance.get(apiRoutes.loans, {
@@ -67,7 +67,7 @@ export const useCreateLoan = () => {
 
   const createLoan = async (newLoan: LoanDetails) => {
     try {
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
       const res = await axiosInstance.post(apiRoutes.loans, newLoan, {
@@ -108,7 +108,7 @@ export const useEditLoan = () => {
 
   const editLoan = async (updatedLoan: LoanDetails) => {
     console.log("Edit called with:", updatedLoan);
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
     const { id: LoanId, ...payload } = updatedLoan;
@@ -151,7 +151,7 @@ export const useDeleteLoan = () => {
   const queryClient = useQueryClient();
 
   const deleteLoan = async (Loan: LoanDetails) => {
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
     const res = await axiosInstance.delete(

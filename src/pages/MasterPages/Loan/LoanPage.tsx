@@ -12,12 +12,12 @@ import type { FormState } from "../../../types/appTypes";
 import type { LoanDetails } from "../../../types/apiTypes";
 import { useFetchLoans } from "../../../queries/LoanQuery";
 import { DeleteLoanDialogBox } from "../Loan/DeletLoanDialogBox";
-
+import Cookies from "js-cookie";
 const LoanPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (localStorage.getItem("token") === null) {
+    if (Cookies.get("token") === null) {
       navigate(appRoutes.signInPage);
     }
   }, [navigate]);

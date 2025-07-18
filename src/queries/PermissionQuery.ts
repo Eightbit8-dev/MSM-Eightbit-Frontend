@@ -5,11 +5,11 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { apiRoutes } from "../routes/apiRoutes";
 import type { DropdownOption } from "../components/common/DropDown";
-
+import Cookies from "js-cookie";
 export const useFetchPermissionTypes = () => {
   const fetchAllPermissionTypes = async (): Promise<DropdownOption[]> => {
     try {
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
       const res = await axiosInstance.get(apiRoutes.permissionTypes, {
@@ -71,7 +71,7 @@ const API_ROUTE = apiRoutes.permissions;
 export const useFetchPermissions = () => {
   const fetchAllPermissions = async (): Promise<PermissionDetails[]> => {
     try {
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
       const res = await axiosInstance.get(API_ROUTE, {
@@ -113,7 +113,7 @@ export const useCreatePermission = () => {
 
   const createPermission = async (newPermission: PermissionDetails) => {
     try {
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
       const res = await axiosInstance.post(API_ROUTE, newPermission, {
@@ -155,7 +155,7 @@ export const useEditPermission = () => {
   const queryClient = useQueryClient();
 
   const editPermission = async (updatedPermission: PermissionDetails) => {
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
     const { id: PermissionId, ...payload } = updatedPermission;
@@ -198,7 +198,7 @@ export const useDeletePermission = () => {
   const queryClient = useQueryClient();
 
   const deletePermission = async (Permission: PermissionDetails) => {
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
     const res = await axiosInstance.delete(`${API_ROUTE}/${Permission.id}`, {

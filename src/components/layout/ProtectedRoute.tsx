@@ -1,12 +1,13 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { appRoutes } from "../../routes/appRoutes";
 import { isTokenExpired } from "../../utils/isJwtExpired";
+import Cookies from "js-cookie";
 
 const ProtectedRoute = () => {
-  const token = localStorage.getItem("token");
+  const token = Cookies.get("token");
 
   if (!token || isTokenExpired(token)) {
-    localStorage.removeItem("token");
+    Cookies.remove("token"); // remove token from cookie
     return <Navigate to={appRoutes.signInPage} replace />;
   }
 

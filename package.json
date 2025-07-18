@@ -16,6 +16,8 @@
     "axios": "^1.9.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "cookies": "^0.9.1",
+    "js-cookie": "^3.0.5",
     "json-2-csv": "^5.5.9",
     "json3": "^3.3.3",
     "jwt-decode": "^4.0.0",
@@ -35,6 +37,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
+    "@types/js-cookie": "^3.0.6",
     "@types/lodash.isequal": "^4.5.8",
     "@types/node": "^22.15.30",
     "@types/react": "^19.1.2",

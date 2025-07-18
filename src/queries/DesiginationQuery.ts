@@ -4,7 +4,7 @@ import type { DesignationsDetails } from "../types/apiTypes";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { apiRoutes } from "../routes/apiRoutes";
-
+import Cookies from "js-cookie";
 /**
  * -------------------------------------------
  * Designation Service Hooks - CRUD Operations
@@ -24,7 +24,7 @@ import { apiRoutes } from "../routes/apiRoutes";
 export const useFetchDesignations = () => {
   const fetchAllDesigination = async (): Promise<DesignationsDetails[]> => {
     try {
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
       const res = await axiosInstance.get(apiRoutes.designations, {
@@ -67,7 +67,7 @@ export const useCreateDesignation = () => {
 
   const createDesignation = async (newDesignation: DesignationsDetails) => {
     try {
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
       const res = await axiosInstance.post(apiRoutes.designations, newDesignation, {
@@ -107,7 +107,7 @@ export const useEditDesignation = () => {
   const queryClient = useQueryClient();
 
   const editDesignation = async (updatedDesignation: DesignationsDetails) => {
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
     const { id: DesignationId, ...payload } = updatedDesignation;
@@ -150,7 +150,7 @@ export const useDeleteDesignation = () => {
   const queryClient = useQueryClient();
 
   const deleteDesignation = async (Designation: DesignationsDetails) => {
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
     const res = await axiosInstance.delete(

@@ -5,7 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { apiRoutes } from "../routes/apiRoutes";
 import type { DropdownOption } from "../components/common/DropDown";
-
+import Cookies from "js-cookie";
 /**
  * -------------------------------------------
  * Department Service Hooks - CRUD Operations
@@ -18,7 +18,7 @@ import type { DropdownOption } from "../components/common/DropDown";
 export const useFetchDepartments = () => {
   const fetchAllDepartments = async (): Promise<DepartmentDetails[]> => {
     try {
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
       const res = await axiosInstance.get(apiRoutes.departments, {
@@ -53,7 +53,7 @@ export const useFetchDepartments = () => {
 
 export const useFetchDepartmentOptions = () => {
   const fetchOptions = async (): Promise<DropdownOption[]> => {
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
     const res = await axiosInstance.get(apiRoutes.departments, {
@@ -87,7 +87,7 @@ export const useCreateDepartment = () => {
 
   const createDepartment = async (newDept: DepartmentDetails) => {
     try {
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
       const res = await axiosInstance.post(
@@ -133,7 +133,7 @@ export const useEditDepartment = () => {
   const queryClient = useQueryClient();
 
   const editDepartment = async (updatedDept: DepartmentDetails) => {
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
     const { id, name } = updatedDept;
@@ -171,7 +171,7 @@ export const useDeleteDepartment = () => {
   const queryClient = useQueryClient();
 
   const deleteDepartment = async (id: number) => {
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
     const res = await axiosInstance.delete(`${apiRoutes.departments}/${id}`, {

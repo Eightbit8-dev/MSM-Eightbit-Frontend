@@ -12,12 +12,14 @@ import ErrorComponent from "../../../components/common/Error";
 import { appRoutes } from "../../../routes/appRoutes";
 import type { FormState } from "../../../types/appTypes";
 import type { BranchDetails } from "../../../types/apiTypes";
+import Cookies from "js-cookie";
 
 const BranchesPage = () => {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (localStorage.getItem("token") === null) {
+useEffect(() => {
+    const token = Cookies.get("token");
+    if (!token) {
       navigate(appRoutes.signInPage);
     }
   }, [navigate]);

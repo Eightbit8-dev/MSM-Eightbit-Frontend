@@ -6,17 +6,25 @@ import { toast } from "react-toastify";
 import { SignInSchema } from "../utils/validationSchema";
 import { ZodError } from "zod";
 import { apiRoutes } from "../routes/apiRoutes";
+import Cookies from "js-cookie";
+
 
 const signInRequest = async (
   data: signInRequestType,
 ): Promise<SignInResponseType> => {
   try {
     const parsed = SignInSchema.parse(data);
-
     const response = await axiosInstance.post(apiRoutes.signin, parsed);
 
     if (response.status === 200) {
-      localStorage.setItem("token", response.data.token);
+      // ✅ Store token in a secure cookie
+      Cookies.set("token", response.data.token, {
+        expires: 1,          // 1 day
+        secure: true,        // use false for localhost
+        sameSite: "strict",  // protect from CSRF
+        path: "/",           // available throughout the app
+      });
+
       toast.success("Sign-in successful!");
       return response.data;
     } else {
@@ -29,11 +37,12 @@ const signInRequest = async (
     } else if (axios.isAxiosError(error)) {
       toast.error(error.response?.data?.message || "Invalid credentials");
     } else {
-      toast.error("Something went wrong while creating branch");
+      toast.error("Something went wrong during sign-in");
     }
-    throw error; // Ensure React Query knows it failed
+    throw error;
   }
 };
+
 
 export const useSignInMutation = () => {
   return useMutation({

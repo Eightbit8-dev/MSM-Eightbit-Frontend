@@ -4,7 +4,7 @@ import type { BloodDetails } from "../types/apiTypes";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { apiRoutes } from "../routes/apiRoutes";
-
+import Cookies from "js-cookie";
 /**
  * -------------------------------------------
  * Blood Service Hooks - CRUD Operations
@@ -24,7 +24,7 @@ import { apiRoutes } from "../routes/apiRoutes";
 export const useFetchBloods = () => {
   const fetchAllBloods = async (): Promise<BloodDetails[]> => {
     try {
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
       const res = await axiosInstance.get(apiRoutes.Bloods, {
@@ -67,7 +67,7 @@ export const useCreateBlood = () => {
 
   const createBlood = async (newBlood: BloodDetails) => {
     try {
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
       const res = await axiosInstance.post(apiRoutes.Bloods, newBlood, {
@@ -107,7 +107,7 @@ export const useEditBlood = () => {
   const queryClient = useQueryClient();
 
   const editBlood = async (updatedBlood: BloodDetails) => {
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
     const { id: BloodId, ...payload } = updatedBlood;
@@ -150,7 +150,7 @@ export const useDeleteBlood = () => {
   const queryClient = useQueryClient();
 
   const deleteBlood = async (Blood: BloodDetails) => {
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
     const res = await axiosInstance.delete(
