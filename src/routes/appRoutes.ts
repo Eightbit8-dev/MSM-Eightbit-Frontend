@@ -24,6 +24,8 @@ export const appRoutes = {
   employeesPage: "/employees",
   loanPage: "/loan",
   usersPage: "/users",
+  //employee
+  employeePage: "/employee",
 
   // Error page
   errorPage: "/error",
