@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 import ButtonSm from "../../../components/common/Buttons";
-import type { PermissionDetails } from "../../../types/apiTypes";
-import { useDeletePermission } from "../../../queries/PermissionQuery";
+import type { PermissionDetails } from "../../../types/masterApiTypes";
+import { useDeletePermission } from "../../../queries/masterQueries/PermissionQuery";
 import { useEffect } from "react";
 
 export const DeletePermissionDialogBox = ({

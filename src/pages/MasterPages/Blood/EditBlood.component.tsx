@@ -3,8 +3,11 @@ import Input from "../../../components/common/Input";
 import TextArea from "../../../components/common/Textarea";
 import ButtonSm from "../../../components/common/Buttons";
 import type { FormState } from "../../../types/appTypes";
-import type { BloodDetails } from "../../../types/apiTypes";
-import { useCreateBlood, useEditBlood } from "../../../queries/BloodQuery";
+import type { BloodDetails } from "../../../types/masterApiTypes";
+import {
+  useCreateBlood,
+  useEditBlood,
+} from "../../../queries/masterQueries/BloodQuery";
 import isEqual from "lodash.isequal";
 
 const BloodEdit = ({
@@ -144,7 +147,7 @@ const BloodEdit = ({
               onChange={(value) => setFormData({ ...formData, name: value })}
             />
             <TextArea
-              disabled={isDisplay} 
+              disabled={isDisplay}
               title="Remarks"
               inputValue={formData.remarks}
               name="remarks"

@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 import ButtonSm from "../../../components/common/Buttons";
-import type { BloodDetails } from "../../../types/apiTypes";
-import { useDeleteBlood } from "../../../queries/BloodQuery";
+import type { BloodDetails } from "../../../types/masterApiTypes";
+import { useDeleteBlood } from "../../../queries/masterQueries/BloodQuery";
 import { useEffect } from "react";
 
 export const DeleteBloodDialogBox = ({

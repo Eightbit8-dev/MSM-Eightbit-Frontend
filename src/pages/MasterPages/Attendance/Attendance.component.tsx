@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Input from "../../../components/common/Input";
 import ButtonSm from "../../../components/common/Buttons";
 import type { FormState } from "../../../types/appTypes";
-import type { AttendanceDetails } from "../../../types/apiTypes";
+import type { AttendanceDetails } from "../../../types/masterApiTypes";
 import { usersData } from "../../../utils/userData";
 import TextArea from "../../../components/common/Textarea";
 import DropdownSelect from "../../../components/common/DropDown";
@@ -11,7 +11,7 @@ import {
   useCreateAttendance,
   useEditAttendance,
   useFetchAttendancesTypes,
-} from "../../../queries/AttendanceQuery";
+} from "../../../queries/masterQueries/AttendanceQuery";
 import isEqual from "lodash.isequal";
 
 const AttendanceEdit = ({
@@ -109,7 +109,7 @@ const AttendanceEdit = ({
   const handleUpdate = () => {
     if (formState === "edit") {
       updateAttendanceType(formData);
-    setSelectedOption({ id: 0, label: "Select type" });
+      setSelectedOption({ id: 0, label: "Select type" });
     }
   };
 
@@ -244,7 +244,6 @@ const AttendanceEdit = ({
             />
           </section>
         </form>
-
       </div>
     </main>
   );

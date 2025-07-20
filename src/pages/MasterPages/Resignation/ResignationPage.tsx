@@ -4,11 +4,11 @@ import { AnimatePresence } from "motion/react";
 import { useState } from "react";
 import DialogBox from "../../../components/common/DialogBox";
 import { DeleteResignationDialogBox } from "./DeleteResignationDialogBox";
-import { useFetchResignations } from "../../../queries/ResiginationQuery";
+import { useFetchResignations } from "../../../queries/masterQueries/ResiginationQuery";
 import MasterPagesSkeleton from "../../../components/masterPage.components/LoadingSkeleton";
 import ErrorComponent from "../../../components/common/Error";
 import type { FormState } from "../../../types/appTypes";
-import type { ResignationDetails } from "../../../types/apiTypes";
+import type { ResignationDetails } from "../../../types/masterApiTypes";
 import ResignationEdit from "./EditResignation.component";
 
 const ResignationPage = () => {
@@ -93,7 +93,7 @@ const ResignationPage = () => {
 
                 <div className="flex min-w-[120px] flex-row gap-2 text-start text-sm font-medium">
                   <ButtonSm
-                    className={`${formState === "edit" && resignation?.id === item.id ? "!bg-blue-500 !text-white !hover:bg-blue-500 !hover:text-black !active:bg-blue-600" : "bg-white"}`}
+                    className={`${formState === "edit" && resignation?.id === item.id ? "!hover:bg-blue-500 !hover:text-black !active:bg-blue-600 !bg-blue-500 !text-white" : "bg-white"}`}
                     state="outline"
                     text="Edit"
                     onClick={(e) => {

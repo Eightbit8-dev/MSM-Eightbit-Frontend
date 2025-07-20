@@ -1,8 +1,7 @@
 import ButtonSm from "../../../components/common/Buttons";
-import { useDeleteBranch } from "../../../queries/BranchQuery";
-import type { BranchDetails } from "../../../types/apiTypes";
+import { useDeleteBranch } from "../../../queries/masterQueries/BranchQuery";
+import type { BranchDetails } from "../../../types/masterApiTypes";
 import type { FormState } from "../../../types/appTypes";
-
 
 export const DeleteBranchDialogBox = ({
   setIsDeleteBranchDialogOpen,
@@ -15,18 +14,19 @@ export const DeleteBranchDialogBox = ({
   branch: BranchDetails;
   onDeleted?: () => void;
 }) => {
-  const { mutate: deleteBranch, isPending: isDeleteBranchLoading } = useDeleteBranch();
+  const { mutate: deleteBranch, isPending: isDeleteBranchLoading } =
+    useDeleteBranch();
 
-const handleDelete = () => {
-  deleteBranch(branch, {
-    onSuccess: () => {
-      setIsDeleteBranchDialogOpen(false);
-      if (onDeleted) {
-        onDeleted();
-      }
-    },
-  });
-};
+  const handleDelete = () => {
+    deleteBranch(branch, {
+      onSuccess: () => {
+        setIsDeleteBranchDialogOpen(false);
+        if (onDeleted) {
+          onDeleted();
+        }
+      },
+    });
+  };
 
   return (
     <div className="flex w-full flex-col gap-4">
@@ -41,7 +41,8 @@ const handleDelete = () => {
       </header>
 
       <p className="text-md font-medium text-zinc-700">
-        Are you sure you want to delete the branch <strong>{branch.name}</strong>? This action is irreversible.
+        Are you sure you want to delete the branch{" "}
+        <strong>{branch.name}</strong>? This action is irreversible.
       </p>
 
       <section className="mt-1 grid w-full grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-3">

@@ -1,5 +1,6 @@
 export const apiRoutes = {
   signin: "/api/auth/login",
+  // ------------------ Master API Routes ------------------
   branches: "/api/admin/branch",
   designations: "/api/admin/designation",
   resigination: "/api/admin/resignation",
@@ -16,4 +17,7 @@ export const apiRoutes = {
   holidayFilter: "/api/admin/holiday/filter",
   holidaymonth: "/api/admin/months",
   holidayyears: "/api/admin/years",
+  // ------------------ Employee API Routes ------------------
+  employeeProfile: "/api/admin/employee-profile/summary",
+  employeePrimary: "/api/admin/employee-profile/primary",
 };

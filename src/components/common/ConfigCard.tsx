@@ -20,7 +20,7 @@ const ConfigCard: React.FC<ConfigCardtype> = ({
   onAction,
 }) => {
   return (
-    <div className="w-full cursor-default rounded-2xl border-2 border-slate-300 bg-white/80 px-4 py-5 backdrop-blur-2xl">
+    <div className="w-full cursor-default rounded-2xl border-[1.5px] border-slate-300 bg-white/80 px-4 py-5 backdrop-blur-2xl">
       <div className="flex flex-col gap-3">
         <div className="mb-3 flex items-start justify-between">
           <div className="flex items-center gap-2">

@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 import ButtonSm from "../../../components/common/Buttons";
-import { useDeleteDesignation } from "../../../queries/DesiginationQuery";
-import type { DesignationsDetails } from "../../../types/apiTypes";
+import { useDeleteDesignation } from "../../../queries/masterQueries/DesiginationQuery";
+import type { DesignationsDetails } from "../../../types/masterApiTypes";
 
 export const DeleteDesignationDialogBox = ({
   setIsDeleteDesignationDialogOpen,

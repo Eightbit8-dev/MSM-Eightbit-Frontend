@@ -6,8 +6,8 @@ import { useState } from "react";
 import MasterPagesSkeleton from "../../../components/masterPage.components/LoadingSkeleton";
 import ErrorComponent from "../../../components/common/Error";
 import type { FormState } from "../../../types/appTypes";
-import type { HolidayDetails } from "../../../types/apiTypes";
-import { useFilteredHolidays } from "../../../queries/HolidayQuery"; // use new hook
+import type { HolidayDetails } from "../../../types/masterApiTypes";
+import { useFilteredHolidays } from "../../../queries/masterQueries/HolidayQuery"; // use new hook
 import DialogBox from "../../../components/common/DialogBox";
 import { DeleteHolidayDialogBox } from "./DeleteHoliday";
 import DropdownSelect from "../../../components/common/DropDown";
@@ -65,32 +65,36 @@ const HolidayPage = () => {
         <header className="flex h-max flex-row items-center justify-between gap-2">
           <PageHeader title="Holiday" />
           <DropdownSelect
-  title="Month"
-  options={monthOptions}
-  selected={
-    viewMonthYear.month.id === 0
-      ? { id: 0, label: "Select month" }
-      : viewMonthYear.month
-  }
-  onChange={(opt) => setViewMonthYear({ ...viewMonthYear, month: opt })}
-  className="w-[120px] sm:w-[140px]" // ✅ Adjust width here
-/>
+            title="Month"
+            options={monthOptions}
+            selected={
+              viewMonthYear.month.id === 0
+                ? { id: 0, label: "Select month" }
+                : viewMonthYear.month
+            }
+            onChange={(opt) =>
+              setViewMonthYear({ ...viewMonthYear, month: opt })
+            }
+            className="w-[120px] sm:w-[140px]" // ✅ Adjust width here
+          />
 
-<DropdownSelect
-  title="Year"
-  options={yearOptions}
-  selected={
-    viewMonthYear.year.id === 0
-      ? { id: 0, label: "Select year" }
-      : viewMonthYear.year
-  }
-  onChange={(opt) => setViewMonthYear({ ...viewMonthYear, year: opt })}
-  className="w-[100px] sm:w-[120px]" // ✅ Adjust width here
-/>
+          <DropdownSelect
+            title="Year"
+            options={yearOptions}
+            selected={
+              viewMonthYear.year.id === 0
+                ? { id: 0, label: "Select year" }
+                : viewMonthYear.year
+            }
+            onChange={(opt) =>
+              setViewMonthYear({ ...viewMonthYear, year: opt })
+            }
+            className="w-[100px] sm:w-[120px]" // ✅ Adjust width here
+          />
         </header>
 
         {!viewMonthYear.month.id || !viewMonthYear.year.id ? (
-          <div className="flex justify-center items-center py-10 text-gray-500 text-sm">
+          <div className="flex items-center justify-center py-10 text-sm text-gray-500">
             Please select both month and year to view holidays.
           </div>
         ) : (
@@ -125,16 +129,20 @@ const HolidayPage = () => {
                     isSelected
                       ? "bg-gray-100"
                       : index % 2 === 0
-                      ? "bg-white"
-                      : "bg-slate-50"
+                        ? "bg-white"
+                        : "bg-slate-50"
                   } hover:bg-slate-100 active:bg-slate-200`}
                   onClick={() => handleRowClick(item)}
                 >
                   <p className="w-max min-w-[100px] px-2 py-4 text-start text-sm font-medium">
                     {index + 1}
                   </p>
-                  <p className="w-full text-start text-sm font-medium">{item.name}</p>
-                  <p className="w-full text-start text-sm font-medium">{item.holidayDate}</p>
+                  <p className="w-full text-start text-sm font-medium">
+                    {item.name}
+                  </p>
+                  <p className="w-full text-start text-sm font-medium">
+                    {item.holidayDate}
+                  </p>
 
                   <div className="flex min-w-[120px] flex-row gap-2 text-start text-sm font-medium">
                     <ButtonSm

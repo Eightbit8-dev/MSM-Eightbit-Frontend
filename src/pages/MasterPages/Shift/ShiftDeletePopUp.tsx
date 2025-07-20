@@ -1,9 +1,9 @@
 import { toast } from "react-toastify";
 import ButtonSm from "../../../components/common/Buttons";
-import type { ShiftDetails } from "../../../types/apiTypes";
+import type { ShiftDetails } from "../../../types/masterApiTypes";
 
 import { useEffect } from "react";
-import { useDeleteShift } from "../../../queries/ShiftQuery";
+import { useDeleteShift } from "../../../queries/masterQueries/ShiftQuery";
 
 export const DeleteShiftDialogBox = ({
   setIsDeleteShiftDialogOpen,

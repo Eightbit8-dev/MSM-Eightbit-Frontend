@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { appRoutes } from "../../routes/appRoutes";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 
-/**
- * @state - isSideNavExpanded: boolean
- * @state - activeRoute: string
- * @state - expandedSection: string | null
- * **/
 const SideNav: React.FC = () => {
   const [activeRoute, setActiveRoute] = useState<string>("");
 
@@ -23,15 +17,12 @@ const SideNav: React.FC = () => {
       setActiveRoute(appRoutes.dashboardPage);
     } else if (currentPath.startsWith("/loan")) {
       setActiveRoute(appRoutes.loanPage);
-    } else {
-      // setExpandedSection(null);
     }
   }, []);
 
   const isRouteActive = (route: string): boolean => {
     return activeRoute === route;
   };
-
 
   const navigateToRoute = (route: string) => {
     setActiveRoute(route);
@@ -54,166 +45,104 @@ const SideNav: React.FC = () => {
       >
         {/* Header section */}
         <motion.div
-          className="flex max-w-full scale-110 flex-col items-center justify-center overflow-clip px-6 py-4"
+          className="relative flex max-w-full flex-col items-center justify-center overflow-clip px-4 py-4"
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.5 }}
         >
           {/* logo */}
-          <motion.div
-            onClick={() => window.location.reload()}
-            className="flex cursor-pointer items-center gap-2"
-            whileHover={{ scale: 1.05 }}
-            transition={{ type: "tween", stiffness: 300 }}
-          >
-            <motion.img
-              src="/icons/logo-icon-side-nav.svg"
-              alt="Logo"
-              whileHover={{ rotate: 360 }}
-              transition={{ duration: 0.5, ease: "easeInOut" }}
-            />
-          </motion.div>
-
+          <motion.img
+            src="/icons/logo-icon-side-nav.svg"
+            alt="Logo"
+            whileHover={{ rotate: 360 }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+          />
           {/* Roles */}
-          <AnimatePresence>
-            <motion.p
-              className="orange-gradient absolute top-15.5 rounded px-1.5 py-1 text-[10px] font-normal text-white"
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0, opacity: 0 }}
-              transition={{ delay: 0.4, type: "tween", stiffness: 200 }}
-            >
-              Master
-            </motion.p>
-          </AnimatePresence>
-
+          <motion.p
+            className="orange-gradient absolute bottom-1.5 rounded px-1.5 py-1 text-[10px] font-normal text-white"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0, opacity: 0 }}
+            transition={{ delay: 0.4, type: "tween", stiffness: 200 }}
+          >
+            Master
+          </motion.p>
         </motion.div>
 
         {/* Navigation items */}
         <motion.div
-          className="main-navigation-items flex h-full flex-col justify-between px-3"
+          className="main-navigation-items flex h-full flex-col justify-between px-1.5"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.5 }}
         >
           {/* Top Navigation Items */}
-          <div className="flex flex-col overflow-y-auto">
-            <motion.div
-              initial={{ x: -50, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.5, duration: 0.3 }}
-            >
-              <NavigationButton
-                labelName="Dashboard"
-                iconSrc="/icons/dashboard-icon.svg"
-                activeIconSrc="/icons/dashboard-icon-active.svg"
-                onClick={() => navigateToRoute(appRoutes.dashboardPage)}
-                isActive={isRouteActive(appRoutes.dashboardPage)}
-              />
-            </motion.div>
-
-            <motion.div
-              initial={{ x: -50, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.6, duration: 0.3 }}
-            >
-              <NavigationButton
-                labelName="Master"
-                iconSrc="/icons/company-icon.svg"
-                onClick={() =>
-                  navigateToRoute(appRoutes.masterRoutes.masterPage)
-                }
-                activeIconSrc="/icons/company-icon-active.svg"
-                isActive={isRouteActive(appRoutes.masterRoutes.masterPage)}
-              />
-            </motion.div>
-
-            <motion.div
-              initial={{ x: -50, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.7, duration: 0.3 }}
-            >
-              <NavigationButton
-                labelName="Loan"
-                iconSrc="/icons/funds-icon.svg"
-                onClick={() => navigateToRoute(appRoutes.loanPage)}
-                activeIconSrc="/icons/funds-icon-active.svg"
-                isActive={isRouteActive(appRoutes.loanPage)}
-              />
-            </motion.div>
-
-            <motion.div
-              initial={{ x: -50, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.8, duration: 0.3 }}
-            >
-              <NavigationButton
-                labelName="Attendance"
-                iconSrc="/icons/attendance-icon.svg"
-                onClick={() => navigateToRoute(appRoutes.attendancePage)}
-                activeIconSrc="/icons/attendance-icon-active.svg"
-                isActive={isRouteActive(appRoutes.attendancePage)}
-              />
-            </motion.div>
-
-            <motion.div
-              initial={{ x: -30, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 1.1, duration: 0.3 }}
-            >
-              <NavigationButton
-                labelName="Users"
-                iconSrc="/icons/users-icon.svg"
-                onClick={() => navigateToRoute(appRoutes.usersPage)}
-                isActive={isRouteActive(appRoutes.usersPage)}
-                activeIconSrc="/icons/users-icon-active.svg"
-              />
-            </motion.div>
-
-            <motion.div
-              initial={{ x: -30, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 1.2, duration: 0.3 }}
-            >
-              <NavigationButton
-                labelName="Employees"
-                iconSrc="/icons/employees-icon.svg"
-                activeIconSrc="/icons/employees-icon-active.svg"
-                onClick={() => navigateToRoute(appRoutes.employeesPage)}
-                isActive={isRouteActive(appRoutes.employeesPage)}
-              />
-            </motion.div>
-          </div>
-
-          {/* Bottom Logout Button */}
-          <div className="pt-4">
-            <motion.div
-              className={`dropdown-navigation-div flex w-full cursor-pointer flex-col items-center justify-end gap-2 rounded-xl px-3 py-2.5 text-xs font-medium text-slate-500 transition-colors duration-150 ease-in-out hover:bg-gray-100 active:bg-blue-500 active:text-white`}
-              onClick={() => console.log("Logout clicked")}
-              whileHover={{
-                scale: 1.02,
-                backgroundColor: "rgba(156, 163, 175, 0.1)",
-              }}
-              whileTap={{ scale: 0.98 }}
-              transition={{ type: "tween", stiffness: 300 }}
-            >
-              <motion.img
-                src="/icons/logout-icon.svg"
-                className="h-5 w-5 flex-shrink-0"
-                whileHover={{ rotate: 15 }}
-                transition={{ duration: 0.2 }}
-              />
-              <AnimatePresence>
-                <motion.span
-                  initial={{ opacity: 0, width: 0 }}
-                  animate={{ opacity: 1, width: "auto" }}
-                  exit={{ opacity: 0, width: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  Logout
-                </motion.span>
-              </AnimatePresence>
-            </motion.div>
+          <div className="flex flex-col gap-3 overflow-y-auto">
+            <NavigationButton
+              labelName="Dashboard"
+              isActive={isRouteActive(appRoutes.dashboardPage)}
+              iconSrc="/icons/sideNavIcons/dashboard-icon.svg"
+              activeIconSrc="/icons/sideNavIcons/dashboard-icon-active.svg"
+              onClick={() => navigateToRoute(appRoutes.dashboardPage)}
+            />
+            <NavigationButton
+              labelName="Employees"
+              isActive={isRouteActive(appRoutes.employeesRoute.employeesPage)}
+              iconSrc="/icons/sideNavIcons/employees-icon.svg"
+              activeIconSrc="/icons/sideNavIcons/employees-icon-active.svg"
+              onClick={() =>
+                navigateToRoute(appRoutes.employeesRoute.employeesPage)
+              }
+            />
+            <NavigationButton
+              labelName="Attendance"
+              isActive={isRouteActive(appRoutes.attendancePage)}
+              iconSrc="/icons/sideNavIcons/attendance-icon.svg"
+              activeIconSrc="/icons/sideNavIcons/attendance-icon-active.svg"
+              onClick={() => navigateToRoute(appRoutes.attendancePage)}
+            />
+            <NavigationButton
+              labelName="Payroll"
+              isActive={isRouteActive(appRoutes.homePage)}
+              iconSrc="/icons/sideNavIcons/payroll-icon.svg"
+              activeIconSrc="/icons/sideNavIcons/payroll-icon-active.svg"
+              onClick={() => navigateToRoute(appRoutes.homePage)}
+            />
+            <NavigationButton
+              labelName="Loan"
+              isActive={isRouteActive(appRoutes.loanPage)}
+              iconSrc="/icons/sideNavIcons/loan-icon.svg"
+              activeIconSrc="/icons/sideNavIcons/loan-icon-active.svg"
+              onClick={() => navigateToRoute(appRoutes.loanPage)}
+            />
+            <NavigationButton
+              labelName="Approval"
+              isActive={isRouteActive(appRoutes.signInPage)}
+              iconSrc="/icons/sideNavIcons/approval-icon.svg"
+              activeIconSrc="/icons/sideNavIcons/approval-icon-active.svg"
+              onClick={() => navigateToRoute(appRoutes.signInPage)}
+            />
+            <NavigationButton
+              labelName="Users"
+              isActive={isRouteActive(appRoutes.dashboardPage)}
+              iconSrc="/icons/sideNavIcons/users-icon.svg"
+              activeIconSrc="/icons/sideNavIcons/users-icon-active.svg"
+              onClick={() => navigateToRoute(appRoutes.dashboardPage)}
+            />
+            <NavigationButton
+              labelName="Master"
+              isActive={isRouteActive(appRoutes.masterRoutes.masterPage)}
+              iconSrc="/icons/sideNavIcons/master-icon.svg"
+              activeIconSrc="/icons/sideNavIcons/master-icon-active.svg"
+              onClick={() => navigateToRoute(appRoutes.masterRoutes.masterPage)}
+            />
+            <NavigationButton
+              labelName="Reports"
+              isActive={isRouteActive(appRoutes.homePage)}
+              iconSrc="/icons/sideNavIcons/reports-icon.svg"
+              activeIconSrc="/icons/sideNavIcons/reports-icon-active.svg"
+              onClick={() => navigateToRoute(appRoutes.errorPage)}
+            />
           </div>
         </motion.div>
       </motion.section>
@@ -223,97 +152,36 @@ const SideNav: React.FC = () => {
 
 export default SideNav;
 
-/**
-    @param labelName - The name of the navigation button to be displayed.
-    @param iconSrc - The source URL of the icon to be displayed when in-active.
-    @param breadCrumbCount - Optional count to display as a badge .
-    @param isDropdown - Boolean to indicate if the button has a dropdown.
-    @param children - The dropdown content to be displayed when the button is clicked
-    @param onClick - The function to be called when the button is clicked.
-    @param onDropDownClick - The function to be called when the dropdown arrow is clicked.
-    @param isActive - Boolean to indicate if the button is active.
-    @param className - Additional CSS classes to apply to the button.
-    @param isNestedchild - Boolean to indicate if the button is a nested child.
-    @param isExpanded - Boolean to indicate if the dropdown is expanded.
- **/
-
 interface NavigationButtonProps {
   labelName: string;
+  isActive: boolean;
   iconSrc: string;
   activeIconSrc?: string;
-  breadCrumbCount?: number;
   onClick?: () => void;
-  isActive?: boolean;
-  className?: string;
-  isSideNavExpanded?: boolean;
 }
 
 const NavigationButton: React.FC<NavigationButtonProps> = ({
   labelName,
+  isActive,
   iconSrc,
-  activeIconSrc = iconSrc,
+  activeIconSrc,
   onClick,
-  isActive = false,
-  className = "",
-  isSideNavExpanded = true,
 }) => {
-  const handleClick = () => onClick?.();
-
   return (
-    <Tooltip>
-      <TooltipTrigger className="w-full">
-        {!isSideNavExpanded && (
-          <TooltipContent
-            side="right"
-            sideOffset={10}
-            className="bg-slate-200 text-zinc-800"
-          >
-            <h2 className="text-sm font-medium">{labelName}</h2>
-          </TooltipContent>
-        )}
-
-        <motion.div
-          className={`relative flex cursor-pointer flex-col items-center justify-center rounded-xl p-3 transition-colors duration-300 ease-in-out ${className}`}
-          transition={{ type: "spring", stiffness: 200, damping: 20 }}
-        >
-          {/* Icon Container */}
-          <motion.div
-            onClick={handleClick}
-            className={`rounded-md ${isActive ? "p-3" : "p-2"}`}
-            animate={{
-              backgroundColor: isActive ? "#3b82f6" : "transparent",
-              padding: isActive ? "12px" : "8px",
-            }}
-            whileHover={{
-              scale: 1.05,
-              backgroundColor: isActive
-                ? "#3b82f6"
-                : "rgba(156, 163, 175, 0.1)",
-            }}
-            transition={{ duration: 0.25, ease: "easeInOut" }}
-          >
-            <motion.img
-              src={isActive ? activeIconSrc : iconSrc}
-              alt={labelName.toLowerCase()}
-              className="h-6 w-6"
-              whileTap={{ scale: 0.96 }}
-              transition={{ duration: 0.2, ease: "easeOut" }}
-            />
-          </motion.div>
-
-          {/* Label */}
-          {isSideNavExpanded && (
-            <motion.h6
-              className="text-center text-xs font-medium text-[#141718]/50"
-              initial={{ opacity: 0, y: 4 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-            >
-              {labelName}
-            </motion.h6>
-          )}
-        </motion.div>
-      </TooltipTrigger>
-    </Tooltip>
+    <div
+      className="Navigation-button-container flex scale-90 flex-col items-center justify-center"
+      onClick={onClick}
+    >
+      <div
+        className={`Navigation-button-container ${isActive ? "bg-blue-500 p-3" : "bg-white p-1.5 hover:bg-slate-100"} cursor-pointer rounded-[10px] transition-all duration-300 ease-in-out select-none active:bg-blue-600`}
+      >
+        <img src={isActive ? activeIconSrc : iconSrc} alt={labelName} />
+      </div>
+      <h4
+        className={`scale-90 text-sm ${isActive ? "font-medium text-slate-500" : "font-normal text-slate-400"}`}
+      >
+        {labelName}
+      </h4>
+    </div>
   );
 };

@@ -6,12 +6,12 @@ import type { FormState } from "../../../types/appTypes";
 import {
   useCreateHoliday,
   useEditHoliday,
-} from "../../../queries/HolidayQuery";
-import type { HolidayDetails } from "../../../types/apiTypes";
+} from "../../../queries/masterQueries/HolidayQuery";
+import type { HolidayDetails } from "../../../types/masterApiTypes";
 import Chip from "../../../components/common/Chips";
-import { useFetchAttendancesTypes } from "../../../queries/AttendanceQuery";
-import { useFetchBranchOptions } from "../../../queries/BranchQuery";
-import { useFetchDepartmentOptions } from "../../../queries/DepartmentQuery";
+import { useFetchAttendancesTypes } from "../../../queries/masterQueries/AttendanceQuery";
+import { useFetchBranchOptions } from "../../../queries/masterQueries/BranchQuery";
+import { useFetchDepartmentOptions } from "../../../queries/masterQueries/DepartmentQuery";
 
 const HolidayEdit = ({
   holidayDetails,
@@ -64,7 +64,8 @@ const HolidayEdit = ({
           : [];
 
       const formattedDepartments =
-        holidayDetails.departments && Array.isArray(holidayDetails.departments[0])
+        holidayDetails.departments &&
+        Array.isArray(holidayDetails.departments[0])
           ? holidayDetails.departments
           : [];
 
@@ -203,16 +204,16 @@ const HolidayEdit = ({
                   }
                 />
               )}
-             {formState === "edit" && (
-  <ButtonSm
-    className="font-medium text-white disabled:opacity-50"
-    text={isUpdating ? "Updating..." : "Save Changes"}
-    state="default"
-    type="button"
-    onClick={handleUpdate}
-    disabled={isUpdating} // ✅ Only disable if updating in progress
-  />
-)}
+              {formState === "edit" && (
+                <ButtonSm
+                  className="font-medium text-white disabled:opacity-50"
+                  text={isUpdating ? "Updating..." : "Save Changes"}
+                  state="default"
+                  type="button"
+                  onClick={handleUpdate}
+                  disabled={isUpdating} // ✅ Only disable if updating in progress
+                />
+              )}
             </section>
           </header>
 
@@ -248,7 +249,7 @@ const HolidayEdit = ({
                   options={attendanceTypes}
                   selected={
                     attendanceTypes.find(
-                      (opt) => opt.label === formData.leaveType
+                      (opt) => opt.label === formData.leaveType,
                     ) || { id: 0, label: "Select leave type" }
                   }
                   onChange={(opt) =>

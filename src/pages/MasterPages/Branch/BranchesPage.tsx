@@ -6,18 +6,18 @@ import { AnimatePresence } from "motion/react";
 import { useEffect, useState } from "react";
 import DialogBox from "../../../components/common/DialogBox";
 import { DeleteBranchDialogBox } from "./DeleteBranchDialogBox";
-import { useFetchBranches } from "../../../queries/BranchQuery";
+import { useFetchBranches } from "../../../queries/masterQueries/BranchQuery";
 import MasterPagesSkeleton from "../../../components/masterPage.components/LoadingSkeleton";
 import ErrorComponent from "../../../components/common/Error";
 import { appRoutes } from "../../../routes/appRoutes";
 import type { FormState } from "../../../types/appTypes";
-import type { BranchDetails } from "../../../types/apiTypes";
+import type { BranchDetails } from "../../../types/masterApiTypes";
 import Cookies from "js-cookie";
 
 const BranchesPage = () => {
   const navigate = useNavigate();
 
-useEffect(() => {
+  useEffect(() => {
     const token = Cookies.get("token");
     if (!token) {
       navigate(appRoutes.signInPage);
@@ -57,7 +57,7 @@ useEffect(() => {
         )}
       </AnimatePresence>
 
-      <section className="table-container flex w-full flex-col bg-white/80 gap-3 rounded-[12px] p-4 shadow-sm md:w-[50%]">
+      <section className="table-container flex w-full flex-col gap-3 rounded-[12px] bg-white/80 p-4 shadow-sm md:w-[50%]">
         <header className="flex flex-row items-center justify-between">
           <PageHeader title="Branch configuration" />
         </header>

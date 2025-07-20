@@ -2,12 +2,15 @@ import { useEffect, useState } from "react";
 import Input, { TimeInput } from "../../../components/common/Input";
 import ButtonSm from "../../../components/common/Buttons";
 import type { FormState } from "../../../types/appTypes";
-import type { ShiftDetails } from "../../../types/apiTypes";
-import { useCreateShift, useEditShift } from "../../../queries/ShiftQuery";
+import type { ShiftDetails } from "../../../types/masterApiTypes";
+import {
+  useCreateShift,
+  useEditShift,
+} from "../../../queries/masterQueries/ShiftQuery";
 import DropdownSelect from "../../../components/common/DropDown";
 import isEqual from "lodash.isequal";
-import { useFetchAttendances } from "../../../queries/AttendanceQuery";
-import { useFetchPermissions } from "../../../queries/PermissionQuery";
+import { useFetchAttendances } from "../../../queries/masterQueries/AttendanceQuery";
+import { useFetchPermissions } from "../../../queries/masterQueries/PermissionQuery";
 
 const ShiftEdit = ({
   Shift,

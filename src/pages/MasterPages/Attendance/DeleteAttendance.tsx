@@ -1,8 +1,8 @@
 import { toast } from "react-toastify";
 import ButtonSm from "../../../components/common/Buttons";
-import type { AttendanceDetails } from "../../../types/apiTypes";
+import type { AttendanceDetails } from "../../../types/masterApiTypes";
 
-import { useDeleteAttendance } from "../../../queries/AttendanceQuery";
+import { useDeleteAttendance } from "../../../queries/masterQueries/AttendanceQuery";
 
 export const DeleteAttendanceDialogBox = ({
   setIsDeleteAttendanceDialogOpen,

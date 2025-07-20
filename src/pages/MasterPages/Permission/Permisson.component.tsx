@@ -3,12 +3,12 @@ import Input, { TimeInput } from "../../../components/common/Input";
 import TextArea from "../../../components/common/Textarea";
 import ButtonSm from "../../../components/common/Buttons";
 import type { FormState } from "../../../types/appTypes";
-import type { PermissionDetails } from "../../../types/apiTypes";
+import type { PermissionDetails } from "../../../types/masterApiTypes";
 import {
   useCreatePermission,
   useEditPermission,
   useFetchPermissionTypes,
-} from "../../../queries/PermissionQuery";
+} from "../../../queries/masterQueries/PermissionQuery";
 import isEqual from "lodash.isequal";
 import DropdownSelect from "../../../components/common/DropDown";
 
@@ -168,9 +168,7 @@ const PermissionEdit = ({
                   state="default"
                   type="button"
                   onClick={handleUpdate}
-                  disabled={
-                    isUpdating || isEqual(formData, permission)
-                  }
+                  disabled={isUpdating || isEqual(formData, permission)}
                 />
               )}
             </section>

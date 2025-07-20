@@ -6,8 +6,8 @@ import DialogBox from "../../../components/common/DialogBox";
 import MasterPagesSkeleton from "../../../components/masterPage.components/LoadingSkeleton";
 import ErrorComponent from "../../../components/common/Error";
 import type { FormState } from "../../../types/appTypes";
-import type { ShiftDetails } from "../../../types/apiTypes";
-import { useFetchShifts } from "../../../queries/ShiftQuery";
+import type { ShiftDetails } from "../../../types/masterApiTypes";
+import { useFetchShifts } from "../../../queries/masterQueries/ShiftQuery";
 import { DeleteShiftDialogBox } from "./ShiftDeletePopUp";
 import ShiftEdit from "./Shift.component";
 

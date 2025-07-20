@@ -2,13 +2,13 @@ import { useEffect, useState } from "react";
 import Input, { InputCheckbox } from "../../../components/common/Input";
 import ButtonSm from "../../../components/common/Buttons";
 import type { FormState } from "../../../types/appTypes";
-import type { DepartmentDetails } from "../../../types/apiTypes";
+import type { DepartmentDetails } from "../../../types/masterApiTypes";
 import { AnimatePresence, motion } from "framer-motion";
 import isEqual from "lodash.isequal";
 import {
   useCreateDepartment,
   useEditDepartment,
-} from "../../../queries/DepartmentQuery";
+} from "../../../queries/masterQueries/DepartmentQuery";
 import { usersData } from "../../../utils/userData";
 import UserAccessDetails from "../Users.component";
 

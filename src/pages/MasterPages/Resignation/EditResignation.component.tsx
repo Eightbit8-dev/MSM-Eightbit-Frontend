@@ -3,11 +3,11 @@ import Input from "../../../components/common/Input";
 import TextArea from "../../../components/common/Textarea";
 import ButtonSm from "../../../components/common/Buttons";
 import type { FormState } from "../../../types/appTypes";
-import type { ResignationDetails } from "../../../types/apiTypes";
+import type { ResignationDetails } from "../../../types/masterApiTypes";
 import {
   useCreateResignation,
   useEditResignation,
-} from "../../../queries/ResiginationQuery";
+} from "../../../queries/masterQueries/ResiginationQuery";
 
 const ResignationEdit = ({
   Resignation,
@@ -26,7 +26,8 @@ const ResignationEdit = ({
     useState<ResignationDetails | null>(null);
   const [title, setTitle] = useState("");
 
-  const disable = resignationData?.name ===Resignation?.name &&
+  const disable =
+    resignationData?.name === Resignation?.name &&
     resignationData?.remarks === Resignation?.remarks;
 
   const {
@@ -125,11 +126,11 @@ const ResignationEdit = ({
 
               {formState === "create" && (
                 <ButtonSm
-                  className="font-medium text-white "
+                  className="font-medium text-white"
                   text={isPending ? "Creating..." : "Create New"}
                   state="default"
                   type="submit"
-                  disabled={isPending }
+                  disabled={isPending}
                 />
               )}
 

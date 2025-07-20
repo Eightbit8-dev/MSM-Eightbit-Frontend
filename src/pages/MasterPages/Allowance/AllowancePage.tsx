@@ -6,14 +6,15 @@ import { useState } from "react";
 import MasterPagesSkeleton from "../../../components/masterPage.components/LoadingSkeleton";
 import ErrorComponent from "../../../components/common/Error";
 import type { FormState } from "../../../types/appTypes";
-import type { AllowanceDetails } from "../../../types/apiTypes";
-import { useFetchAllowances } from "../../../queries/AllowanceQuery"; // updated query hook
+import type { AllowanceDetails } from "../../../types/masterApiTypes";
+import { useFetchAllowances } from "../../../queries/masterQueries/AllowanceQuery"; // updated query hook
 import DialogBox from "../../../components/common/DialogBox";
 import { DeleteAllowanceDialogBox } from "./DeleteAllowance";
 
 const AllowancePage = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [selectedAllowance, setSelectedAllowance] = useState<AllowanceDetails | null>(null);
+  const [selectedAllowance, setSelectedAllowance] =
+    useState<AllowanceDetails | null>(null);
   const [formState, setFormState] = useState<FormState>("create");
 
   const { data: allowances, isLoading, isError } = useFetchAllowances(); // updated query
@@ -89,8 +90,8 @@ const AllowancePage = () => {
                   isSelected
                     ? "bg-gray-100"
                     : index % 2 === 0
-                    ? "bg-white"
-                    : "bg-slate-50"
+                      ? "bg-white"
+                      : "bg-slate-50"
                 } hover:bg-slate-100 active:bg-slate-200`}
                 onClick={() => handleRowClick(item)}
               >

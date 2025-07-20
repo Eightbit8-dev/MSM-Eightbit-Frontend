@@ -5,11 +5,11 @@ import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import DialogBox from "../../../components/common/DialogBox";
 import { DeleteDesignationDialogBox } from "./DeleteDesiginationDialogBox";
-import { useFetchDesignations } from "../../../queries/DesiginationQuery";
+import { useFetchDesignations } from "../../../queries/masterQueries/DesiginationQuery";
 import MasterPagesSkeleton from "../../../components/masterPage.components/LoadingSkeleton";
 import ErrorComponent from "../../../components/common/Error";
 import type { FormState } from "../../../types/appTypes";
-import type { DesignationsDetails } from "../../../types/apiTypes";
+import type { DesignationsDetails } from "../../../types/masterApiTypes";
 
 const DesignationsPage = () => {
   const [isDeleteDesignationDialogOpen, setIsDeleteDesignationDialogOpen] =

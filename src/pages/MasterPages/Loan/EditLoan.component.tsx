@@ -2,8 +2,11 @@ import { useEffect, useState } from "react";
 import Input from "../../../components/common/Input";
 import ButtonSm from "../../../components/common/Buttons";
 import type { FormState } from "../../../types/appTypes";
-import type { LoanDetails } from "../../../types/apiTypes";
-import { useCreateLoan, useEditLoan } from "../../../queries/LoanQuery";
+import type { LoanDetails } from "../../../types/masterApiTypes";
+import {
+  useCreateLoan,
+  useEditLoan,
+} from "../../../queries/masterQueries/LoanQuery";
 import TextArea from "../../../components/common/Textarea";
 import isEqual from "lodash.isequal";
 
@@ -142,7 +145,9 @@ const LoanEdit = ({
                   text={isUpdatePending ? "Updating..." : "Save Changes"}
                   state="default"
                   type="submit"
-                  disabled={isUpdatePending || isEqual(newLoanData, loanDetails)}
+                  disabled={
+                    isUpdatePending || isEqual(newLoanData, loanDetails)
+                  }
                 />
               )}
             </section>

@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 import ButtonSm from "../../../components/common/Buttons";
-import type { HolidayDetails } from "../../../types/apiTypes";
-import { useDeleteHoliday } from "../../../queries/HolidayQuery";
+import type { HolidayDetails } from "../../../types/masterApiTypes";
+import { useDeleteHoliday } from "../../../queries/masterQueries/HolidayQuery";
 
 export const DeleteHolidayDialogBox = ({
   setIsDeleteDialogOpen,
@@ -9,7 +9,9 @@ export const DeleteHolidayDialogBox = ({
   setHolidayDetails,
 }: {
   setIsDeleteDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setHolidayDetails: React.Dispatch<React.SetStateAction<HolidayDetails | null>>;
+  setHolidayDetails: React.Dispatch<
+    React.SetStateAction<HolidayDetails | null>
+  >;
   holiday: HolidayDetails;
 }) => {
   const { mutate, isPending } = useDeleteHoliday();
@@ -40,8 +42,8 @@ export const DeleteHolidayDialogBox = ({
 
       <p className="text-md font-medium text-zinc-700">
         Are you sure you want to delete the holiday{" "}
-        <span className="font-semibold text-zinc-900">{holiday.name}</span>? This
-        action is irreversible.
+        <span className="font-semibold text-zinc-900">{holiday.name}</span>?
+        This action is irreversible.
       </p>
 
       <section className="mt-1 grid w-full grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-3">

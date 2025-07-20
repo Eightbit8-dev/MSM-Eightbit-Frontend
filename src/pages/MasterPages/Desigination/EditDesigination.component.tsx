@@ -3,11 +3,11 @@ import Input from "../../../components/common/Input";
 import TextArea from "../../../components/common/Textarea";
 import ButtonSm from "../../../components/common/Buttons";
 import type { FormState } from "../../../types/appTypes";
-import type { DesignationsDetails } from "../../../types/apiTypes";
+import type { DesignationsDetails } from "../../../types/masterApiTypes";
 import {
   useCreateDesignation,
   useEditDesignation,
-} from "../../../queries/DesiginationQuery";
+} from "../../../queries/masterQueries/DesiginationQuery";
 
 const DesignationEdit = ({
   DesignationDetails,

@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 import ButtonSm from "../../../components/common/Buttons";
-import type { AllowanceDetails } from "../../../types/apiTypes";
-import { useDeleteAllowance } from "../../../queries/AllowanceQuery";
+import type { AllowanceDetails } from "../../../types/masterApiTypes";
+import { useDeleteAllowance } from "../../../queries/masterQueries/AllowanceQuery";
 
 export const DeleteAllowanceDialogBox = ({
   setIsDeleteAllowanceDialogOpen,
@@ -9,7 +9,9 @@ export const DeleteAllowanceDialogBox = ({
   setAllowanceDetails,
 }: {
   setIsDeleteAllowanceDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setAllowanceDetails: React.Dispatch<React.SetStateAction<AllowanceDetails | null>>;
+  setAllowanceDetails: React.Dispatch<
+    React.SetStateAction<AllowanceDetails | null>
+  >;
   allowance: AllowanceDetails;
 }) => {
   const { mutate, isPending } = useDeleteAllowance();
@@ -46,7 +48,8 @@ export const DeleteAllowanceDialogBox = ({
 
       <p className="text-md font-medium text-zinc-700">
         Are you sure you want to delete the allowance type{" "}
-        <span className="font-semibold text-red-500">{allowance.name}</span>? This action is irreversible.
+        <span className="font-semibold text-red-500">{allowance.name}</span>?
+        This action is irreversible.
       </p>
 
       <section className="mt-1 grid w-full grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-3">

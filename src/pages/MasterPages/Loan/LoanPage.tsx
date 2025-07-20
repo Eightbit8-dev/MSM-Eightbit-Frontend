@@ -9,8 +9,8 @@ import ErrorComponent from "../../../components/common/Error";
 import { AnimatePresence } from "motion/react";
 import { appRoutes } from "../../../routes/appRoutes";
 import type { FormState } from "../../../types/appTypes";
-import type { LoanDetails } from "../../../types/apiTypes";
-import { useFetchLoans } from "../../../queries/LoanQuery";
+import type { LoanDetails } from "../../../types/masterApiTypes";
+import { useFetchLoans } from "../../../queries/masterQueries/LoanQuery";
 import { DeleteLoanDialogBox } from "../Loan/DeletLoanDialogBox";
 import Cookies from "js-cookie";
 const LoanPage = () => {
@@ -90,8 +90,8 @@ const LoanPage = () => {
                   isSelected
                     ? "bg-gray-100"
                     : index % 2 === 0
-                    ? "bg-white"
-                    : "bg-slate-50"
+                      ? "bg-white"
+                      : "bg-slate-50"
                 } hover:bg-slate-100 active:bg-slate-200`}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -103,7 +103,9 @@ const LoanPage = () => {
                 <p className="w-max min-w-[100px] px-2 py-4 text-start text-sm font-medium">
                   {index + 1}
                 </p>
-                <p className="w-full text-start text-sm font-medium">{item.name}</p>
+                <p className="w-full text-start text-sm font-medium">
+                  {item.name}
+                </p>
                 <p className="w-full text-start text-sm font-medium">
                   ${item.maxEligibilityAmount}
                 </p>
@@ -112,7 +114,7 @@ const LoanPage = () => {
                   <ButtonSm
                     className={`${
                       formState === "edit" && isSelected
-                        ? "!bg-blue-500 !text-white !hover:bg-blue-500 !hover:text-black !active:bg-blue-600"
+                        ? "!hover:bg-blue-500 !hover:text-black !active:bg-blue-600 !bg-blue-500 !text-white"
                         : "bg-white"
                     }`}
                     state="outline"

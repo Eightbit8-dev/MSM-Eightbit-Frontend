@@ -1,5 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
-import type { signInRequestType, SignInResponseType } from "../types/apiTypes";
+import type {
+  signInRequestType,
+  SignInResponseType,
+} from "../types/masterApiTypes";
 import axios from "axios";
 import axiosInstance from "../utils/axios";
 import { toast } from "react-toastify";
@@ -7,7 +10,6 @@ import { SignInSchema } from "../utils/validationSchema";
 import { ZodError } from "zod";
 import { apiRoutes } from "../routes/apiRoutes";
 import Cookies from "js-cookie";
-
 
 const signInRequest = async (
   data: signInRequestType,
@@ -19,10 +21,10 @@ const signInRequest = async (
     if (response.status === 200) {
       // ✅ Store token in a secure cookie
       Cookies.set("token", response.data.token, {
-        expires: 1,          // 1 day
-        secure: true,        // use false for localhost
-        sameSite: "strict",  // protect from CSRF
-        path: "/",           // available throughout the app
+        expires: 1, // 1 day
+        secure: true, // use false for localhost
+        sameSite: "strict", // protect from CSRF
+        path: "/", // available throughout the app
       });
 
       toast.success("Sign-in successful!");
@@ -42,7 +44,6 @@ const signInRequest = async (
     throw error;
   }
 };
-
 
 export const useSignInMutation = () => {
   return useMutation({

@@ -6,8 +6,8 @@ import { useState } from "react";
 import MasterPagesSkeleton from "../../../components/masterPage.components/LoadingSkeleton";
 import ErrorComponent from "../../../components/common/Error";
 import type { FormState } from "../../../types/appTypes";
-import type { AttendanceDetails } from "../../../types/apiTypes";
-import { useFetchAttendances } from "../../../queries/AttendanceQuery";
+import type { AttendanceDetails } from "../../../types/masterApiTypes";
+import { useFetchAttendances } from "../../../queries/masterQueries/AttendanceQuery";
 import DialogBox from "../../../components/common/DialogBox";
 import { DeleteAttendanceDialogBox } from "./DeleteAttendance";
 

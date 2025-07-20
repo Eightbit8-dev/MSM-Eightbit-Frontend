@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import Input from "../../../components/common/Input";
 import ButtonSm from "../../../components/common/Buttons";
 import type { FormState } from "../../../types/appTypes";
-import type { AllowanceDetails } from "../../../types/apiTypes";
+import type { AllowanceDetails } from "../../../types/masterApiTypes";
 import TextArea from "../../../components/common/Textarea";
 import DropdownSelect from "../../../components/common/DropDown";
 import {
   useCreateAllowance,
   useEditAllowance,
   useFetchAllowanceTypes,
-} from "../../../queries/AllowanceQuery";
+} from "../../../queries/masterQueries/AllowanceQuery";
 import isEqual from "lodash.isequal";
 
 const AllowanceEdit = ({
@@ -169,10 +169,7 @@ const AllowanceEdit = ({
                   state="default"
                   type="button"
                   onClick={handleUpdate}
-                  disabled={
-                    isUpdating ||
-                    isEqual(formData, allowanceDetails)
-                  }
+                  disabled={isUpdating || isEqual(formData, allowanceDetails)}
                 />
               )}
             </section>

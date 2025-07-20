@@ -8,8 +8,8 @@ import { DeleteBloodDialogBox } from "./DeleteBloodDialogBox";
 import MasterPagesSkeleton from "../../../components/masterPage.components/LoadingSkeleton";
 import ErrorComponent from "../../../components/common/Error";
 import type { FormState } from "../../../types/appTypes";
-import type { BloodDetails } from "../../../types/apiTypes";
-import { useFetchBloods } from "../../../queries/BloodQuery";
+import type { BloodDetails } from "../../../types/masterApiTypes";
+import { useFetchBloods } from "../../../queries/masterQueries/BloodQuery";
 
 const BloodPage = () => {
   const [isDeleteBloodDialogOpen, setIsDeleteBloodDialogOpen] = useState(false);

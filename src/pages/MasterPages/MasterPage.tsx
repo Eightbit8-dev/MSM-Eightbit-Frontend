@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import ConfigCard from "../../components/common/ConfigCard";
-import SearchBar from "../../components/common/SearchBar";
 import { appRoutes } from "../../routes/appRoutes";
+import ServicesSearchBar from "../../components/common/ServicesSearchBar";
 
 export interface ConfigCardtype {
   img: string;
@@ -127,11 +127,13 @@ export const MasterPage = () => {
     },
   ];
   return (
-    <div className="mx-auto flex w-full max-w-[1390px] flex-col gap-8">
+    <div className="mx-auto flex w-full max-w-[1390px] origin-top scale-90 flex-col gap-8">
       <div className="flex items-center justify-between">
-        <div className="flex flex-col gap-[5px]">
+        <div className="flex flex-col">
           <div>
-            <p className="text-2xl font-bold text-zinc-800">Configuration</p>
+            <p className="text-xl font-semibold text-slate-800">
+              Configuration
+            </p>
           </div>
           <div>
             <p className="text-base font-medium text-slate-500">
@@ -140,7 +142,7 @@ export const MasterPage = () => {
           </div>
         </div>
         <div>
-          <SearchBar />
+          <ServicesSearchBar />
         </div>
       </div>
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">

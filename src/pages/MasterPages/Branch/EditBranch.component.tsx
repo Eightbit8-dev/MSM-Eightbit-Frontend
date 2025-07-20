@@ -2,8 +2,11 @@ import { useEffect, useState } from "react";
 import Input from "../../../components/common/Input";
 import ButtonSm from "../../../components/common/Buttons";
 import type { FormState } from "../../../types/appTypes";
-import { useCreateBranch, useEditBranch } from "../../../queries/BranchQuery";
-import type { BranchDetails } from "../../../types/apiTypes";
+import {
+  useCreateBranch,
+  useEditBranch,
+} from "../../../queries/masterQueries/BranchQuery";
+import type { BranchDetails } from "../../../types/masterApiTypes";
 import { usersData } from "../../../utils/userData";
 import UserAccessDetails from "../Users.component";
 

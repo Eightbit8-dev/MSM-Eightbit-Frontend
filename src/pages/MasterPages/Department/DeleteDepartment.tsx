@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import ButtonSm from "../../../components/common/Buttons";
-import { useDeleteDepartment } from "../../../queries/DepartmentQuery";
-import type { DepartmentDetails } from "../../../types/apiTypes";
+import { useDeleteDepartment } from "../../../queries/masterQueries/DepartmentQuery";
+import type { DepartmentDetails } from "../../../types/masterApiTypes";
 import type { FormState } from "../../../types/appTypes";
 
 export const DeleteDepartmentDialogBox = ({

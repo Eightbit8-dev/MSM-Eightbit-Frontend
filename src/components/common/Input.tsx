@@ -34,6 +34,7 @@ interface InputProps<T extends string | number> {
   max?: number;
   disabled?: boolean;
   required?: boolean;
+  viewMode?: boolean;
 }
 
 /**
@@ -65,6 +66,7 @@ const Input = <T extends string | number>({
   min,
   max,
   disabled = false,
+  viewMode = false,
 }: InputProps<T>) => {
   const inputType = type === "num" ? "number" : "text";
 
@@ -97,10 +99,14 @@ const Input = <T extends string | number>({
 
   return (
     <div className="relative w-full min-w-[180px] self-stretch">
-      <h3 className="mb-0.5 w-full justify-start text-xs leading-loose font-semibold text-slate-700">
+      <h3
+        className={`mb-0.5 w-full justify-start ${viewMode ? "text-base font-medium text-slate-600" : "text-xs leading-loose font-semibold text-slate-700"}`}
+      >
         {title}
       </h3>
-      <div className="input-container flex cursor-text flex-row items-center justify-center gap-0 overflow-clip rounded-xl border-2 border-slate-300 bg-white transition-all focus-within:border-slate-500">
+      <div
+        className={`input-container flex cursor-text flex-row items-center justify-center gap-0 overflow-clip rounded-xl ${viewMode ? "" : "border-2 border-slate-300 bg-white transition-all focus-within:border-slate-500"}`}
+      >
         {prefixText && (
           <div className="flex h-full items-center justify-start bg-slate-100 px-3 py-2 text-sm leading-loose font-medium text-slate-700">
             {prefixText}
@@ -115,7 +121,7 @@ const Input = <T extends string | number>({
           placeholder={placeholder}
           onChange={handleChange}
           value={inputValue}
-          className={`min-h-max w-full px-3 py-3 text-start text-sm font-medium text-slate-600 autofill:text-black focus:outline-none`}
+          className={`min-h-max w-full text-start ${viewMode ? "text-base font-medium text-slate-900" : "px-3 py-3 text-sm font-medium text-slate-600 autofill:text-black focus:outline-none"} `}
           maxLength={type === "str" ? maxLength : undefined}
           min={type === "num" ? min : undefined}
           max={type === "num" ? max : undefined}
@@ -237,7 +243,6 @@ export const TimeInput: React.FC<TimeInputProps> = ({
   );
 };
 
-
 interface DateInputProps {
   title: string;
   value: string;
@@ -292,4 +297,3 @@ export const DateInput: React.FC<DateInputProps> = ({
     </div>
   );
 };
-

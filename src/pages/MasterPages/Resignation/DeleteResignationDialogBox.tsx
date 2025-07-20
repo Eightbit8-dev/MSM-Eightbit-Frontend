@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 import ButtonSm from "../../../components/common/Buttons";
-import type { ResignationDetails } from "../../../types/apiTypes";
-import { useDeleteResignation } from "../../../queries/ResiginationQuery";
+import type { ResignationDetails } from "../../../types/masterApiTypes";
+import { useDeleteResignation } from "../../../queries/masterQueries/ResiginationQuery";
 import { useEffect } from "react";
 
 export const DeleteResignationDialogBox = ({

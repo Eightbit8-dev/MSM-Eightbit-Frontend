@@ -9,12 +9,10 @@ import ProtectedRoute from "./components/layout/ProtectedRoute";
 import LoanPage from "./pages/LoanPage";
 import AllowancePage from "./pages/MasterPages/Allowance/AllowancePage";
 import HolidayPage from "./pages/MasterPages/Holiday/HolidayPage";
-import Employeelist from "./pages/Employee/Employeelist";
 
 // Pages
 const AttendancePage = lazy(() => import("./pages/AttendancePage"));
 const DashBoardPage = lazy(() => import("./pages/DashBoardPage"));
-const EmployeesPage = lazy(() => import("./pages/EmployeesPage"));
 const UsersPage = lazy(() => import("./pages/UsersPage"));
 const ErrorPage = lazy(() => import("./pages/ErrorPage"));
 const SignInPage = lazy(() => import("./pages/SignInPage"));
@@ -45,6 +43,16 @@ const PermissionPage = lazy(
   () => import("./pages/MasterPages/Permission/PermissionPage"),
 );
 const ShiftPage = lazy(() => import("./pages/MasterPages/Shift/ShiftPage"));
+
+// Employees Pages
+const EmployeesPage = lazy(
+  () => import("./pages/EmployeesPages/EmployeesPage"),
+);
+const StaffsPage = lazy(() => import("./pages/EmployeesPages/staffs"));
+const StaffProfilePage = lazy(
+  () => import("./pages/EmployeesPages/staffProfile"),
+);
+
 const App = () => {
   return (
     <Suspense
@@ -74,7 +82,6 @@ const App = () => {
               path={appRoutes.attendancePage}
               element={<AttendancePage />}
             />
-            <Route path={appRoutes.employeesPage} element={<EmployeesPage />} />
             <Route path={appRoutes.loanPage} element={<LoanPage />} />
 
             {/* Master Page and its nested components */}
@@ -125,15 +132,24 @@ const App = () => {
               path={appRoutes.masterRoutes.children.shifts}
               element={<ShiftPage />}
             />
-            <Route 
+            <Route
               path={appRoutes.masterRoutes.children.holidays}
-              element={<HolidayPage/>}
-              />
-              <Route 
-                path={appRoutes.employeePage}
-                element={<Employeelist/>}/>
-                
-            <Route path={appRoutes.usersPage} element={<UsersPage />} />
+              element={<HolidayPage />}
+            />
+
+            {/* Employees pages and its nested components */}
+            <Route
+              path={appRoutes.employeesRoute.employeesPage}
+              element={<EmployeesPage />}
+            />
+            <Route
+              path={appRoutes.employeesRoute.children.staffsProfile}
+              element={<StaffsPage />}
+            />
+            <Route
+              path={appRoutes.employeesRoute.children.staffProfile}
+              element={<StaffProfilePage />}
+            />
           </Route>
         </Route>
       </Routes>

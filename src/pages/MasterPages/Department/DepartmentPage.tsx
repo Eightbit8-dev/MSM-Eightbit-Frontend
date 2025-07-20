@@ -7,8 +7,8 @@ import { DeleteDepartmentDialogBox } from "./DeleteDepartment";
 import MasterPagesSkeleton from "../../../components/masterPage.components/LoadingSkeleton";
 import ErrorComponent from "../../../components/common/Error";
 import type { FormState } from "../../../types/appTypes";
-import type { DepartmentDetails } from "../../../types/apiTypes";
-import { useFetchDepartments } from "../../../queries/DepartmentQuery";
+import type { DepartmentDetails } from "../../../types/masterApiTypes";
+import { useFetchDepartments } from "../../../queries/masterQueries/DepartmentQuery";
 import DepartmentEdit from "./Department.component";
 
 const DepartmentsPage = () => {
@@ -92,7 +92,7 @@ const DepartmentsPage = () => {
 
                 <div className="flex min-w-[120px] flex-row gap-2 text-start text-sm font-medium">
                   <ButtonSm
-                    className={`${formState === "edit" && selectedDepartment?.id === item.id ? "!bg-blue-500 !text-white !hover:bg-blue-500 !hover:text-black !active:bg-blue-600" : "bg-white"}`}
+                    className={`${formState === "edit" && selectedDepartment?.id === item.id ? "!hover:bg-blue-500 !hover:text-black !active:bg-blue-600 !bg-blue-500 !text-white" : "bg-white"}`}
                     state="outline"
                     text="Edit"
                     onClick={(e) => {

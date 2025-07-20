@@ -1,5 +1,7 @@
 export const appRoutes = {
   homePage: "/",
+  signInPage: "/signin",
+  dashboardPage: "/dashboard",
   // Master Page Routes
   masterRoutes: {
     masterPage: "/master",
@@ -18,15 +20,19 @@ export const appRoutes = {
       allowances: "/master/allowances",
     },
   },
-  signInPage: "/signin",
-  dashboardPage: "/dashboard",
+  // Employee page
+  employeesRoute: {
+    employeesPage: "/employees",
+    children: {
+      staffsProfile: "/employees/profile",
+      staffProfile: "/employees/profile/:staffId",
+      branchTransfer: "/employees/branch-transfer",
+      staffRejoin: "/employees/staff-rejoin",
+      resignation: "/employees/resignation",
+    },
+  },
   attendancePage: "/attendance",
-  employeesPage: "/employees",
   loanPage: "/loan",
-  usersPage: "/users",
-  //employee
-  employeePage: "/employee",
-
   // Error page
   errorPage: "/error",
 };
