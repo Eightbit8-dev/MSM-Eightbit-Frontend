@@ -15,16 +15,16 @@ export const DeleteLoanDialogBox = ({
   const { mutate: deleteLoan, isPending: isDeleteLoanLoading } =
     useDeleteLoan();
 
-const handleDelete = () => {
-  deleteLoan(loan, {
-    onSuccess: () => {
-      setIsDeleteLoanDialogOpen(false);
-      if (onDeleted) {
-        onDeleted();
-      }
-    },
-  });
-};
+    const handleDelete = () => {
+      deleteLoan(loan, {
+        onSuccess: () => {
+          setIsDeleteLoanDialogOpen(false);
+          if (onDeleted) {
+            onDeleted();
+          }
+        },
+      });
+    };
 
   return (
     <div className="flex w-full flex-col gap-4">
