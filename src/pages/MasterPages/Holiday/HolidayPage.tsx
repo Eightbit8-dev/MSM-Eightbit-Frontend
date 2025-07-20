@@ -22,6 +22,17 @@ const HolidayPage = () => {
     month: { id: 0, label: "Select month" },
   });
 
+  //set current month and year as initial date
+  // useEffect(() => {
+  //   const now = new Date();
+  //   const year = now.getFullYear();
+  //   const month = now.getMonth() + 1;
+  //   const yearOption = yearOptions.find((val)=>{
+
+  //   })
+
+  // }, []);
+
   const {
     data: holidays,
     isLoading,

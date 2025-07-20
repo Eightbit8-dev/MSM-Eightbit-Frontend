@@ -43,8 +43,6 @@ const LoanPage = () => {
           <DialogBox setToggleDialogueBox={setIsDeleteLoanDialogOpen}>
             <DeleteLoanDialogBox
               setIsDeleteLoanDialogOpen={setIsDeleteLoanDialogOpen}
-              setFormState={setFormState}
-              setLoan={setLoan}
               loan={loan}
               onDeleted={handleLoanDeleted}
             />
@@ -107,7 +105,7 @@ const LoanPage = () => {
                   {item.name}
                 </p>
                 <p className="w-full text-start text-sm font-medium">
-                  ${item.maxEligibilityAmount}
+                  ₹{item.maxEligibilityAmount}
                 </p>
 
                 <div className="flex min-w-[120px] flex-row gap-2 text-start text-sm font-medium">
