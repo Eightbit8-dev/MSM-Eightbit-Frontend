@@ -1,6 +1,6 @@
 // EmployeeList.tsx
 import { useEffect, useState } from "react";
-import ButtonSm, { ButtonLg } from "../../components/common/Buttons";
+import ButtonSm from "../../components/common/Buttons";
 import DropdownSelect from "../../components/common/DropDown";
 import SearchBar from "../../components/common/SearchBar";
 import PageHeader from "../../components/masterPage.components/PageHeader";
@@ -78,7 +78,6 @@ useEffect(() => {
 
 
           <div
-          onClick={handleToggleFilters} 
             style={{ boxShadow: "0px 0px 6.3px rgba(0, 0, 0, 0.08)" }}
 className="filters-section w-full space-y-4 bg-white p-4 rounded-[12px] transform transition-all duration-300 ease-in-out opacity-100 scale-100"
 

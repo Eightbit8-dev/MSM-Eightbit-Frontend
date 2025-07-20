@@ -43,8 +43,6 @@ const LoanPage = () => {
           <DialogBox setToggleDialogueBox={setIsDeleteLoanDialogOpen}>
             <DeleteLoanDialogBox
               setIsDeleteLoanDialogOpen={setIsDeleteLoanDialogOpen}
-              setFormState={setFormState}
-              setLoan={setLoan}
               loan={loan}
               onDeleted={handleLoanDeleted}
             />
