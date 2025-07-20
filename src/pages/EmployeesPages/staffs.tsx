@@ -78,7 +78,6 @@ const Employeelist = () => {
         </div>
 
         <div
-          onClick={handleToggleFilters}
           className="filters-section w-full scale-100 transform space-y-4 rounded-[12px] bg-white p-4 opacity-100 shadow-sm transition-all duration-300 ease-in-out"
         >
           <div className="flex items-center justify-between gap-3">

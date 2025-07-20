@@ -101,6 +101,15 @@ const StaffProfile: React.FC = () => {
           onClick={() => {
             setActiveIndex(1);
           }}
+          
+        />
+                <TabButton
+          labelText="Personal"
+          isActive={activeIndex === 2}
+          onClick={() => {
+            setActiveIndex(2);
+          }}
+          
         />
       </header>
       <section className="tabs flex flex-row items-center gap-6">
@@ -116,6 +125,13 @@ const StaffProfile: React.FC = () => {
           isActive={activeIndex === 1}
           onClick={() => {
             setActiveIndex(1);
+          }}
+        />
+                <DummyTabButton
+          labelText="personal"
+          isActive={activeIndex === 2}
+          onClick={() => {
+            setActiveIndex(2);
           }}
         />
       </section>
@@ -202,7 +218,7 @@ const StaffProfile: React.FC = () => {
           />
           <Input
             viewMode
-            title="Guardian Name"
+            title="Father/Guardian Name"
             inputValue={data?.guardianName || ""}
             onChange={() => {}}
           />

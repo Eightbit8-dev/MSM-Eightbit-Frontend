@@ -29,16 +29,16 @@ const TabButton: React.FC<TabButtonProps> = ({
       transition={{ duration: 0.3, ease: "easeInOut" }}
       className="flex cursor-pointer px-4 py-3.5 select-none"
     >
-      <motion.p
-        initial={false}
-        animate={{
-          color: isActive ? "#ffffff" : "#1e293b",
-        }}
-        transition={{ duration: 0.2 }}
-        className="text-base font-medium transition-all duration-300 ease-in-out"
-      >
-        {labelText}
-      </motion.p>
+<motion.p
+  initial={false}
+  animate={{
+    color: isActive ? "#ffffff" : "#1e293b",
+  }}
+  className="text-base font-medium"
+>
+  {labelText}
+</motion.p>
+
     </motion.main>
   );
 };

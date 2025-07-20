@@ -127,7 +127,7 @@ export const MasterPage = () => {
     },
   ];
   return (
-    <div className="mx-auto flex w-full max-w-[1390px] origin-top scale-90 flex-col gap-8">
+    <div className=" flex w-full max-w-[1590px] origin-top scale-90 flex-col gap-8">
       <div className="flex items-center justify-between">
         <div className="flex flex-col">
           <div>
