@@ -5,6 +5,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Cookies from "js-cookie";
+import type { DropdownOption } from "@/components/common/DropDown";
+import { apiRoutes } from "@/routes/apiRoutes";
 /**
  * -------------------------------------------
  * Shift Service Hooks - CRUD Operations
@@ -18,8 +20,6 @@ import Cookies from "js-cookie";
  * Handles authentication, API errors, and notifications
  */
 
-const API_ROUTE = "/api/admin/shift";
-
 /**
  * 🔍 Fetch all Shifts
  */
@@ -29,7 +29,7 @@ export const useFetchShifts = () => {
       const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
-      const res = await axiosInstance.get(API_ROUTE, {
+      const res = await axiosInstance.get(apiRoutes.shift, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -58,6 +58,34 @@ export const useFetchShifts = () => {
   });
 };
 
+export const useFetchShiftOptions = () => {
+  const fetchOptions = async (): Promise<DropdownOption[]> => {
+    const token = Cookies.get("token");
+    if (!token) throw new Error("Unauthorized to perform this action.");
+
+    const res = await axiosInstance.get(apiRoutes.shift, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (res.status !== 200) {
+      throw new Error(res.data?.message || "Failed to fetch branches");
+    }
+
+    // Convert to id-label options
+    return res.data.map((shift: ShiftDetails) => ({
+      id: shift.id,
+      label: shift.name,
+    }));
+  };
+
+  return useQuery({
+    queryKey: ["shiftOptions"],
+    queryFn: fetchOptions,
+    staleTime: 1000 * 60 * 0,
+    retry: 1,
+  });
+};
+
 /**
  * ➕ Create a new Shift
  */
@@ -69,7 +97,7 @@ export const useCreateShift = () => {
       const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
-      const res = await axiosInstance.post(API_ROUTE, newShift, {
+      const res = await axiosInstance.post(apiRoutes.shift, newShift, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -111,11 +139,15 @@ export const useEditShift = () => {
 
     const { id: ShiftId, ...payload } = updatedShift;
 
-    const res = await axiosInstance.put(`${API_ROUTE}/${ShiftId}`, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`,
+    const res = await axiosInstance.put(
+      `${apiRoutes.shift}/${ShiftId}`,
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
-    });
+    );
 
     if (res.status !== 200) {
       throw new Error(res.data?.message || "Failed to update Shift");
@@ -148,7 +180,7 @@ export const useDeleteShift = () => {
     const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
-    const res = await axiosInstance.delete(`${API_ROUTE}/${Shift.id}`, {
+    const res = await axiosInstance.delete(`${apiRoutes.shift}/${Shift.id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

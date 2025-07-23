@@ -5,6 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { apiRoutes } from "../../routes/apiRoutes";
 import Cookies from "js-cookie";
+import type { DropdownOption } from "@/components/common/DropDown";
 /**
  * -------------------------------------------
  * Blood Service Hooks - CRUD Operations
@@ -53,6 +54,34 @@ export const useFetchBloods = () => {
     queryKey: ["Bloods"], //cache key
     queryFn: fetchAllBloods,
     staleTime: 1000 * 60 * 0, //expoiy time
+    retry: 1,
+  });
+};
+
+export const useFetchBloodOptions = () => {
+  const fetchOptions = async (): Promise<DropdownOption[]> => {
+    const token = Cookies.get("token");
+    if (!token) throw new Error("Unauthorized to perform this action.");
+
+    const res = await axiosInstance.get(apiRoutes.Bloods, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (res.status !== 200) {
+      throw new Error(res.data?.message || "Failed to fetch branches");
+    }
+
+    // Convert to id-label options
+    return res.data.map((blood: BloodDetails) => ({
+      id: blood.id,
+      label: blood.name,
+    }));
+  };
+
+  return useQuery({
+    queryKey: ["bloodOptions"],
+    queryFn: fetchOptions,
+    staleTime: 1000 * 60 * 0,
     retry: 1,
   });
 };

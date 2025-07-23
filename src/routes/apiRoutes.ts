@@ -11,6 +11,7 @@ export const apiRoutes = {
   permissions: "/api/admin/permission-types",
   permissionTypes: "/api/admin/master-types?category=permission_type",
   loans: "/api/admin/loantype",
+  shift: "/api/admin/shift",
   allowance: "/api/admin/allowance-deduction",
   allowanceTypes: "/api/admin/master-types?category=salary_type",
   holidays: "/api/admin/holiday",

@@ -4,7 +4,7 @@ type ButtonState = "default" | "outline";
 interface ButtonSmProps {
   className?: string;
   state: ButtonState;
-  text: string;
+  text?: string;
   disabled?: boolean;
   imgUrl?: string;
   iconPosition?: "left" | "right"; // ✅ New prop
@@ -26,22 +26,25 @@ const ButtonSm: React.FC<ButtonSmProps> = ({
     <button
       type={type}
       disabled={disabled}
-      className={`btn-sm flex cursor-pointer flex-row items-center gap-2 rounded-[9px] px-3 py-2 text-sm transition-all duration-200 ease-in-out select-none 
-        ${state === "default"
+      className={`btn-sm flex cursor-pointer flex-row items-center gap-2 rounded-[9px] px-3 py-2 text-sm transition-all duration-200 ease-in-out select-none ${
+        state === "default"
           ? "btn-primary bg-blue-500 hover:bg-blue-600 active:bg-blue-700"
-          : `btn-outline text-gray-800 outline-1 outline-slate-300 hover:bg-gray-100 active:bg-gray-200`}
-        ${className}`}
+          : `btn-outline text-gray-800 outline-1 outline-slate-300 hover:bg-gray-100 active:bg-gray-200`
+      } ${className}`}
       onClick={onClick}
     >
       {/* Render icon on left (default) */}
-      {imgUrl && iconPosition === "left" && <img src={imgUrl} alt="" className="h-4 w-4" />}
-      {text}
+      {imgUrl && iconPosition === "left" && (
+        <img src={imgUrl} alt="" className="nin-h-4 min-w-4" />
+      )}
+      {text && text}
       {/* Render icon on right */}
-      {imgUrl && iconPosition === "right" && <img src={imgUrl} alt="" className="h-4 w-4" />}
+      {imgUrl && iconPosition === "right" && (
+        <img src={imgUrl} alt="" className="min-h-4 min-w-4" />
+      )}
     </button>
   );
 };
-
 
 interface ButtonLgProps {
   state: ButtonState;

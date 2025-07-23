@@ -5,6 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { apiRoutes } from "../../routes/apiRoutes";
 import Cookies from "js-cookie";
+import type { DropdownOption } from "@/components/common/DropDown";
 /**
  * -------------------------------------------
  * Designation Service Hooks - CRUD Operations
@@ -55,6 +56,34 @@ export const useFetchDesignations = () => {
     queryKey: ["Designations"], //cache key
     queryFn: fetchAllDesigination,
     staleTime: 1000 * 60 * 0, //expoiy time
+    retry: 1,
+  });
+};
+
+export const useFetchDesignationOptions = () => {
+  const fetchOptions = async (): Promise<DropdownOption[]> => {
+    const token = Cookies.get("token");
+    if (!token) throw new Error("Unauthorized to perform this action.");
+
+    const res = await axiosInstance.get(apiRoutes.designations, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (res.status !== 200) {
+      throw new Error(res.data?.message || "Failed to fetch branches");
+    }
+
+    // Convert to id-label options
+    return res.data.map((designation: DesignationsDetails) => ({
+      id: designation.id,
+      label: designation.name,
+    }));
+  };
+
+  return useQuery({
+    queryKey: ["designationOptions"],
+    queryFn: fetchOptions,
+    staleTime: 1000 * 60 * 0,
     retry: 1,
   });
 };

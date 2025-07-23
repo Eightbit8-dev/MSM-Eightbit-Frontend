@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { motion } from "framer-motion";
 
 export interface DropdownOption {
   label: string;
@@ -13,6 +14,7 @@ interface DropdownSelectProps {
   required?: boolean;
   disabled?: boolean;
   className?: string;
+  direction?: "down" | "up" | "left" | "right";
 }
 
 const DropdownSelect: React.FC<DropdownSelectProps> = ({
@@ -23,8 +25,11 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
   onChange,
   required = false,
   className = "",
+  direction = "down",
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [shake, setShake] = useState(false);
+  const [wasSubmitted, setWasSubmitted] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -40,6 +45,24 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // 🔥 Listen to form submission attempt to shake only on submit
+  useEffect(() => {
+    const inputId = `dropdown-hidden-${title}`;
+    const input = document.getElementById(inputId);
+
+    const handleInvalid = (event: Event) => {
+      event.preventDefault(); // prevent default browser tooltip
+      setWasSubmitted(true);
+      setShake(true);
+      setTimeout(() => setShake(false), 400);
+    };
+
+    input?.addEventListener("invalid", handleInvalid);
+    return () => {
+      input?.removeEventListener("invalid", handleInvalid);
+    };
+  }, [selected.id, required, title]);
+
   const toggleDropdown = () => {
     if (!disabled) setIsOpen((prev) => !prev);
   };
@@ -47,7 +70,24 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
   const handleSelect = (option: DropdownOption) => {
     onChange(option);
     setIsOpen(false);
+    setWasSubmitted(false); // reset on change
   };
+
+  const getDirectionClass = () => {
+    switch (direction) {
+      case "up":
+        return "bottom-full mb-2";
+      case "left":
+        return "right-full mr-2 top-0";
+      case "right":
+        return "left-full ml-2 top-0";
+      case "down":
+      default:
+        return "top-full mt-2";
+    }
+  };
+
+  const isInvalid = required && selected.id === 0 && wasSubmitted;
 
   return (
     <div
@@ -61,11 +101,29 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
         </h3>
       )}
 
-      <div
+      {/* Hidden input triggers native validation */}
+      <input
+        id={`dropdown-hidden-${title}`}
+        type="text"
+        required={required}
+        value={selected.id === 0 ? "" : selected.id}
+        onChange={() => {}}
+        disabled={disabled}
+        className="hidden"
+        tabIndex={-1}
+      />
+
+      <motion.div
         onClick={toggleDropdown}
-        className={`input-container flex cursor-pointer flex-row items-center justify-between rounded-xl border-2 border-slate-300 bg-white px-3 py-3 transition-all ${
-          isOpen ? "border-slate-500" : ""
-        } ${disabled ? "pointer-events-none " : ""}`}
+        animate={shake ? { x: [-5, 5, -5, 5, 0] } : {}}
+        transition={{ duration: 0.4 }}
+        className={`input-container flex cursor-pointer flex-row items-center justify-between rounded-xl border-2 bg-white px-3 py-3 transition-all ${
+          isInvalid
+            ? "border-red-500"
+            : isOpen
+              ? "border-slate-500"
+              : "border-slate-300"
+        } ${disabled ? "pointer-events-none" : ""}`}
       >
         <span className="text-sm font-medium text-slate-600">
           {selected.label}
@@ -75,10 +133,12 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
           alt="Dropdown icon"
           className="h-4 w-4"
         />
-      </div>
+      </motion.div>
 
       {isOpen && (
-        <div className="absolute z-10 mt-2 w-full overflow-hidden rounded-xl border border-slate-200 bg-white shadow-lg">
+        <div
+          className={`absolute z-10 w-full overflow-hidden rounded-xl border border-slate-200 bg-white shadow-lg ${getDirectionClass()}`}
+        >
           {options.map((option) => (
             <button
               key={option.label}

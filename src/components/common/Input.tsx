@@ -34,6 +34,7 @@ interface InputProps<T extends string | number> {
   max?: number;
   disabled?: boolean;
   required?: boolean;
+  minLength?: number;
   viewMode?: boolean;
 }
 
@@ -66,6 +67,7 @@ const Input = <T extends string | number>({
   min,
   max,
   disabled = false,
+  minLength = 0,
   viewMode = false,
 }: InputProps<T>) => {
   const inputType = type === "num" ? "number" : "text";
@@ -102,7 +104,7 @@ const Input = <T extends string | number>({
       <h3
         className={`mb-0.5 w-full justify-start ${viewMode ? "text-base font-medium text-slate-600" : "text-xs leading-loose font-semibold text-slate-700"}`}
       >
-        {title}
+        {title} {required && <span className="text-red-500"> *</span>}
       </h3>
       <div
         className={`input-container flex cursor-text flex-row items-center justify-center gap-0 overflow-clip rounded-xl ${viewMode ? "" : "border-2 border-slate-300 bg-white transition-all focus-within:border-slate-500"}`}
@@ -121,10 +123,11 @@ const Input = <T extends string | number>({
           placeholder={placeholder}
           onChange={handleChange}
           value={inputValue}
-          className={`min-h-max w-full text-start ${viewMode ? "text-base font-medium text-slate-900" : "px-3 py-3 text-sm font-medium text-slate-600 autofill:text-black focus:outline-none"} `}
+          className={`min-h-max w-full text-start ${viewMode ? "text-base font-medium text-slate-900" : "px-3 py-3 text-sm font-medium text-slate-600 autofill:text-black focus:outline-none"} }`}
           maxLength={type === "str" ? maxLength : undefined}
           min={type === "num" ? min : undefined}
           max={type === "num" ? max : undefined}
+          minLength={type === "str" ? minLength : undefined}
         />
       </div>
     </div>
@@ -253,6 +256,12 @@ interface DateInputProps {
   disabled?: boolean;
 }
 
+const get18YearsAgo = () => {
+  const today = new Date();
+  today.setFullYear(today.getFullYear() - 18);
+  return today.toISOString().split("T")[0]; // format: YYYY-MM-DD
+};
+
 export const DateInput: React.FC<DateInputProps> = ({
   title,
   value,
@@ -283,6 +292,7 @@ export const DateInput: React.FC<DateInputProps> = ({
           readOnly={disabled}
           type="date"
           name={name}
+          max={get18YearsAgo()} // 💥 restrict to 18+ years
           placeholder={placeholder}
           onChange={handleChange}
           value={value}

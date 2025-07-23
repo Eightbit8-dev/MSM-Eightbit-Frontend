@@ -48,9 +48,9 @@ const ShiftPage = lazy(() => import("./pages/MasterPages/Shift/ShiftPage"));
 const EmployeesPage = lazy(
   () => import("./pages/EmployeesPages/EmployeesPage"),
 );
-const StaffsPage = lazy(() => import("./pages/EmployeesPages/staffs"));
+const StaffsPage = lazy(() => import("./pages/EmployeesPages/staffProfile/StaffsPage"));
 const StaffProfilePage = lazy(
-  () => import("./pages/EmployeesPages/staffProfile"),
+  () => import("./pages/EmployeesPages/staffProfile/StaffProfilePage"),
 );
 
 const App = () => {
