@@ -22,8 +22,8 @@ import {
   useUpdateEmployeePrimaryProfile,
 } from "@/queries/employeeQueries/employeePrimaryQuery";
 import { useNavigate } from "react-router-dom";
-import { formatAadhar } from "@/utils/commonUtils";
 // import { toast } from "react-toastify";
+import calculateAge, { formatAadhar, get18YearsAgo } from "@/utils/commonUtils";
 
 interface StaffProfilePrimaryProps {
   formState: FormState;
