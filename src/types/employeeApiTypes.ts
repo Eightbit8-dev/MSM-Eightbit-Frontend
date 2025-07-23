@@ -48,3 +48,13 @@ export interface EmployeePrimaryProfile {
   mobileOfficial: string;
   bloodGroup: [number, string];
 }
+
+
+export type EmployeeContactProfile = {
+  presentAddress: string;
+  permanentAddress: string;
+  email: string;
+  community: string;
+  caste: string;
+  religion: string;
+};

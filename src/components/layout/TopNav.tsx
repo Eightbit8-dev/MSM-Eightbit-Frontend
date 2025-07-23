@@ -60,7 +60,7 @@ export const TopNav: React.FC<TopNavProps> = ({ userName, formattedDate }) => {
             className="overflow-hidden rounded-full bg-slate-100 transition-all hover:bg-slate-200"
           >
             <img
-              src="/images/profile.png"
+              src="/images/profile.jpg  "
               alt="Profile"
               className="h-9 w-9 rounded-full object-cover"
               onError={(e) => {
