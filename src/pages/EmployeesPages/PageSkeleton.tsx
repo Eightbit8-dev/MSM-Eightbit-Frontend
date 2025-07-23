@@ -55,3 +55,21 @@ const StaffProfileSkeleton = () => {
 };
 
 export default StaffProfileSkeleton;
+
+export const StaffProfileSkeleton2 = () => {
+  return (
+    <section className="flex w-full flex-row items-center justify-between gap-4">
+      <div className="profile-details flex flex-row items-center gap-2">
+        {/* Profile image */}
+        <Skeleton className="min-h-12 min-w-12 rounded-full" />
+
+        {/* Name and Designation */}
+        <div className="dets flex flex-col gap-1">
+          <Skeleton className="min-h-5 min-w-32 rounded-md" /> {/* name */}
+          <Skeleton className="ml-1 min-h-4 min-w-24 rounded-md" />{" "}
+          {/* designation */}
+        </div>
+      </div>
+    </section>
+  );
+};

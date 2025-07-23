@@ -254,13 +254,8 @@ interface DateInputProps {
   placeholder?: string;
   required?: boolean;
   disabled?: boolean;
+  maxDate?: string;
 }
-
-const get18YearsAgo = () => {
-  const today = new Date();
-  today.setFullYear(today.getFullYear() - 18);
-  return today.toISOString().split("T")[0]; // format: YYYY-MM-DD
-};
 
 export const DateInput: React.FC<DateInputProps> = ({
   title,
@@ -270,6 +265,7 @@ export const DateInput: React.FC<DateInputProps> = ({
   placeholder = "Select date",
   required = false,
   disabled = false,
+  maxDate,
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value);
@@ -292,7 +288,7 @@ export const DateInput: React.FC<DateInputProps> = ({
           readOnly={disabled}
           type="date"
           name={name}
-          max={get18YearsAgo()} // 💥 restrict to 18+ years
+          max={maxDate}
           placeholder={placeholder}
           onChange={handleChange}
           value={value}

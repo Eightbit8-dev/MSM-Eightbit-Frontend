@@ -5,13 +5,16 @@ import Input, { DateInput } from "@/components/common/Input";
 import { useFetchBranchOptions } from "@/queries/masterQueries/BranchQuery";
 import { useFetchDepartmentOptions } from "@/queries/masterQueries/DepartmentQuery";
 import type { FormState } from "@/types/appTypes";
-import type { EmployeePrimaryProfile } from "@/types/employeeApiTypes";
+import type {
+  Employee,
+  EmployeePrimaryProfile,
+} from "@/types/employeeApiTypes";
 import isEqual from "lodash.isequal";
 import React, { useEffect, useState } from "react";
 import StaffProfileSkeleton from "../PageSkeleton";
 import { useFetchDesignationOptions } from "@/queries/masterQueries/DesiginationQuery";
 import { useFetchShiftOptions } from "@/queries/masterQueries/ShiftQuery";
-import calculateAge from "@/utils/findAge";
+
 import { useFetchBloodOptions } from "@/queries/masterQueries/BloodQuery";
 import {
   useCreateEmployeePrimaryProfile,
@@ -19,17 +22,18 @@ import {
   useUpdateEmployeePrimaryProfile,
 } from "@/queries/employeeQueries/employeePrimaryQuery";
 import { useNavigate } from "react-router-dom";
-import { formatAadhar } from "@/utils/commonUtils";
-import { toast } from "react-toastify";
+import calculateAge, { formatAadhar, get18YearsAgo } from "@/utils/commonUtils";
 
 interface StaffProfilePrimaryProps {
   formState: FormState;
   staffId: string;
+  setStaffData: React.Dispatch<React.SetStateAction<Employee>>;
 }
 
 const StaffProfilePrimary: React.FC<StaffProfilePrimaryProps> = ({
   formState,
   staffId,
+  setStaffData,
 }) => {
   const dummyPrimaryData: EmployeePrimaryProfile = {
     id: 0,
@@ -75,6 +79,7 @@ const StaffProfilePrimary: React.FC<StaffProfilePrimaryProps> = ({
       return;
     }
     if (data) {
+      setStaffData(data);
       const cloned = JSON.parse(JSON.stringify(data));
       setOriginalData(cloned);
       setDataCopy(cloned);
@@ -280,7 +285,7 @@ const StaffProfilePrimary: React.FC<StaffProfilePrimaryProps> = ({
             { id: 4, label: "Rather not say" },
           ]}
           selected={{
-            id: 0,
+            id: 404,
             label: dataCopy.gender,
           }}
           onChange={(value) =>
@@ -289,6 +294,7 @@ const StaffProfilePrimary: React.FC<StaffProfilePrimaryProps> = ({
         />
         <DateInput
           required
+          maxDate={get18YearsAgo()}
           disabled={formState === "display"}
           title="DOB"
           value={dataCopy?.dob || ""}
@@ -321,7 +327,7 @@ const StaffProfilePrimary: React.FC<StaffProfilePrimaryProps> = ({
             { id: 3, label: "Rather not say" },
           ]}
           selected={{
-            id: 0,
+            id: 404,
             label: dataCopy.maritalStatus,
           }}
           onChange={(value) =>
@@ -338,7 +344,7 @@ const StaffProfilePrimary: React.FC<StaffProfilePrimaryProps> = ({
             { id: 3, label: "Probation" },
           ]}
           selected={{
-            id: 0,
+            id: 404,
             label: dataCopy.status,
           }}
           onChange={(value) =>
@@ -421,7 +427,7 @@ const StaffProfilePrimary: React.FC<StaffProfilePrimaryProps> = ({
             { id: 3, label: "Hourly" },
           ]}
           selected={{
-            id: 0,
+            id: 404,
             label: dataCopy.salaryType,
           }}
           onChange={(value) =>

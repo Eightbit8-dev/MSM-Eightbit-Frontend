@@ -6,19 +6,26 @@ import PageHeader from "../../../components/masterPage.components/PageHeader";
 import { useParams, useSearchParams } from "react-router-dom";
 import type { FormState } from "@/types/appTypes";
 import StaffProfilePrimary from "./StaffProfilePrimary.component";
+import type { Employee } from "@/types/employeeApiTypes";
+import { StaffProfileSkeleton2 } from "../PageSkeleton";
 
 const StaffProfile: React.FC = () => {
   const { staffId } = useParams<{ staffId: string }>();
   const [searchParams] = useSearchParams();
   const formState = searchParams.get("state") as FormState;
   const [activeIndex, setActiveIndex] = useState(0);
+  const [staffData, setStaffData] = useState<Employee>({} as Employee);
 
   //--------- tab index switcher ---------
   let content;
   switch (activeIndex) {
     case 0:
       content = (
-        <StaffProfilePrimary formState={formState} staffId={staffId!} />
+        <StaffProfilePrimary
+          formState={formState}
+          staffId={staffId!}
+          setStaffData={setStaffData}
+        />
       );
       break;
     case 1:
@@ -39,7 +46,7 @@ const StaffProfile: React.FC = () => {
           </p>
         </section>
 
-        {formState !== "create" && (
+        {formState !== "create" && staffData.designation ? (
           <section className="flex w-full flex-row items-center justify-between gap-4">
             <div className="profile-details flex flex-row items-center gap-2">
               <img
@@ -49,14 +56,16 @@ const StaffProfile: React.FC = () => {
               />
               <div className="dets flex flex-col gap-0">
                 <h4 className="text-lg leading-tight font-medium text-slate-800">
-                  "Employee Name"
+                  {staffData.name}
                 </h4>
-                <p className="ml-1 text-base leading-tight font-normal text-slate-500">
-                  {"Designation"}
+                <p className="text-base leading-tight font-normal text-slate-500">
+                  {staffData.designation[1]}
                 </p>
               </div>
             </div>
           </section>
+        ) : (
+          StaffProfileSkeleton2()
         )}
       </div>
 

@@ -5,7 +5,7 @@ import type { EmployeePrimaryProfile } from "../../types/employeeApiTypes";
 import axiosInstance from "../../utils/axios";
 import { apiRoutes } from "../../routes/apiRoutes";
 import { toast } from "react-toastify";
-import { convertToBackendDate } from "@/utils/changeDateFormat";
+import { convertToBackendDate } from "@/utils/commonUtils";
 
 // ------------------ Create ------------------
 

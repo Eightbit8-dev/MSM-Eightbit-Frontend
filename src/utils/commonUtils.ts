@@ -4,3 +4,36 @@ export const formatAadhar = (value: string) => {
   // Insert space after every 4 digits
   return digits.replace(/(\d{4})(?=\d)/g, "$1 ");
 };
+
+export const get18YearsAgo = () => {
+  const today = new Date();
+  today.setFullYear(today.getFullYear() - 18);
+  return today.toISOString().split("T")[0]; // format: YYYY-MM-DD
+};
+
+import dayjs from "dayjs";
+
+export const convertToBackendDate = (date: string) => {
+  return dayjs(date).format("DD-MM-YYYY");
+};
+
+const calculateAge = (dob: string): number => {
+  if (!dob) return 0;
+  const birthDate = new Date(dob);
+  const today = new Date();
+
+  // 🛡️ Block future dates
+  if (birthDate > today) return 0;
+
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const hasBirthdayPassed =
+    today.getMonth() > birthDate.getMonth() ||
+    (today.getMonth() === birthDate.getMonth() &&
+      today.getDate() >= birthDate.getDate());
+
+  if (!hasBirthdayPassed) age--;
+
+  return age;
+};
+
+export default calculateAge;
