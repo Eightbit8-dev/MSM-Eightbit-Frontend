@@ -8,6 +8,8 @@ import type { FormState } from "@/types/appTypes";
 import StaffProfilePrimary from "./StaffProfilePrimary.component";
 import type { Employee } from "@/types/employeeApiTypes";
 import { StaffProfileSkeleton2 } from "../PageSkeleton";
+import StaffProfileContact from "./StaffProfileContact.component";
+
 
 const StaffProfile: React.FC = () => {
   const { staffId } = useParams<{ staffId: string }>();
@@ -29,7 +31,11 @@ const StaffProfile: React.FC = () => {
       );
       break;
     case 1:
-      content = <h1>Not implemented</h1>;
+      content = <StaffProfileContact
+                formState={formState}
+          staffId={staffId!}
+          setStaffData={setStaffData}
+      />;
       break;
     default:
       content = <h1>Something went wrong</h1>;

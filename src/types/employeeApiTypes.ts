@@ -51,6 +51,7 @@ export interface EmployeePrimaryProfile {
 
 
 export type EmployeeContactProfile = {
+  id: number;
   presentAddress: string;
   permanentAddress: string;
   email: string;
@@ -58,3 +59,17 @@ export type EmployeeContactProfile = {
   caste: string;
   religion: string;
 };
+
+export interface EmployeeContactProfileResponse {
+  id: number;
+  employeeCode: string;
+  presentAddress: string;
+  permanentAddress: string;
+  email: string;
+  community: string;
+  caste: string;
+  religion: string;
+}
+
+
+
