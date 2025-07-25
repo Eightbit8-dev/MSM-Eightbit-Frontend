@@ -3,7 +3,10 @@ import ButtonSm from "@/components/common/Buttons";
 import DropdownSelect from "@/components/common/DropDown";
 import Input, { DateInput } from "@/components/common/Input";
 import PageHeader from "@/components/masterPage.components/PageHeader";
-import { useCreateEmployeeTransfer } from "../../queries/employeeQueries/employeeTransferQuery";
+import {
+  useCreateEmployeeTransfer,
+  useGetEmployeeBranch,
+} from "../../queries/employeeQueries/employeeTransferQuery";
 import TextArea from "@/components/common/Textarea";
 import { useFetchBranchOptions } from "@/queries/masterQueries/BranchQuery";
 import type { employeeTransfer } from "@/types/employeeApiTypes";
@@ -20,13 +23,49 @@ const EmployeeBranchTransfer = () => {
   const [formState, setFormState] = useState<employeeTransfer>(initialState);
   const [dummy, setDummy] = useState<employeeTransfer>(initialState);
   const [isModified, setIsModified] = useState(false);
+  const [debouncedCode, setDebouncedCode] = useState("");
 
   const { mutate: submitTransfer, isPending } = useCreateEmployeeTransfer();
+
   const {
     data: branchOptions,
     isLoading: branchLoading,
     isError: branchError,
   } = useFetchBranchOptions();
+
+  // Debounce employeeCode
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      if (formState.employeeCode.trim().length > 0) {
+        setDebouncedCode(formState.employeeCode.trim());
+      }
+    }, 1000);
+    return () => clearTimeout(handler);
+  }, [formState.employeeCode]);
+
+  // Fetch employee's current branch from the code
+  const {
+    data: empBranch,
+    refetch: fetchBranch,
+    isFetching: isBranchFetching,
+  } = useGetEmployeeBranch(debouncedCode);
+
+  // Update branchFromId when employee branch is fetched
+  useEffect(() => {
+    if (empBranch && Array.isArray(empBranch)) {
+      const [branchId, branchName] = empBranch;
+      setFormState((prev) => ({
+        ...prev,
+        branchFromId: branchId,
+      }));
+    }
+  }, [empBranch]);
+
+  useEffect(() => {
+    if (debouncedCode) {
+      fetchBranch();
+    }
+  }, [debouncedCode, fetchBranch]);
 
   const updateField = (key: keyof employeeTransfer, value: any) => {
     setFormState((prev) => ({ ...prev, [key]: value }));
@@ -58,13 +97,7 @@ const EmployeeBranchTransfer = () => {
       date &&
       remarks.trim()
     ) {
-      // Send only IDs for branches
-      submitTransfer({
-        ...formState,
-        branchFromId,
-        branchToId,
-      });
-
+      submitTransfer({ ...formState });
       setFormState(initialState);
       setDummy(initialState);
     } else {
@@ -76,7 +109,6 @@ const EmployeeBranchTransfer = () => {
     setFormState(initialState);
   };
 
-  // Helper to get branch label from ID
   const getBranchLabel = (id: number) =>
     branchOptions?.find((b) => b.id === id)?.label ?? "Select Branch";
 

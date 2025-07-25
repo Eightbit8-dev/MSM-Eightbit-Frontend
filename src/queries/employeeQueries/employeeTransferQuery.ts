@@ -5,8 +5,9 @@ import axiosInstance from "../../utils/axios";
 import { apiRoutes } from "../../routes/apiRoutes";
 import type { employeeTransfer } from "../../types/employeeApiTypes";
 
+// 🔁 CREATE employee transfer
 export const useCreateEmployeeTransfer = () => {
-  const createRejoin = async (payload: employeeTransfer) => {
+  const createTransfer = async (payload: employeeTransfer) => {
     try {
       const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
@@ -17,7 +18,7 @@ export const useCreateEmployeeTransfer = () => {
         },
       });
 
-      toast.success("Employee Transferd");
+      toast.success("Employee transferred successfully");
       return response.data;
     } catch (error: any) {
       const msg = error?.response?.data?.message || "Create failed";
@@ -26,12 +27,13 @@ export const useCreateEmployeeTransfer = () => {
     }
   };
 
-  return useMutation({ mutationFn: createRejoin });
+  return useMutation({ mutationFn: createTransfer });
 };
 
+// 🔍 GET all employee transfer records
 export const useGetEmployeeRejoin = () => {
   return useQuery({
-    queryKey: ["employee-Transfer"],
+    queryKey: ["employee-transfer"],
     queryFn: async () => {
       const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized");
@@ -46,5 +48,28 @@ export const useGetEmployeeRejoin = () => {
     },
     staleTime: 60 * 1000, // 1 minute
     retry: 1,
+  });
+};
+
+// 🔍 GET specific employee's branch
+export const useGetEmployeeBranch = (Code: string) => {
+  return useQuery({
+    queryKey: ["employee-branch", Code],
+    queryFn: async () => {
+      const token = Cookies.get("token");
+      if (!token) throw new Error("Unauthorized");
+
+      const response = await axiosInstance.get(apiRoutes.employeeTransferBranch, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          employeeCode:Code,
+        },
+      });
+
+      return response.data;
+    },
+    enabled: !!Code, // only run when code is provided
   });
 };
