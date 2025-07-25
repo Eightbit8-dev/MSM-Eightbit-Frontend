@@ -63,7 +63,7 @@ const EmployeeRejoin = () => {
           disabled={isPending}
         />
 </div>
-       <div className="flex gap-3">
+       <div className="flex flex-col ">
          <DropdownSelect
           title="Employee Code"
           options={dummyEmployeeOptions}
