@@ -73,8 +73,6 @@ export interface EmployeeContactProfileResponse {
 
 
 
-
-
 export type EmployeeRejoin = {
 employeeCode: string;
 rejoinDate: string;
