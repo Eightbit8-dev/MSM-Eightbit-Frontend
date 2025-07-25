@@ -15,7 +15,7 @@ import SearchBar from "../../../components/common/SearchBar";
 import EmployeeTableSkeleton from "../TableSkeleton";
 import { useFetchEmployeesPaginated } from "@/queries/employeeQueries/employeesQuery";
 import { AnimatePresence } from "motion/react";
-import { DeleteEmployeeDialogBox } from "./DeleteEmployee.component";
+import { DeleteEmployeeDialogBox } from "./DeleteEmployee.dialogBox";
 import DialogBox from "@/components/common/DialogBox";
 import type { Employee } from "@/types/employeeApiTypes";
 

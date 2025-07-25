@@ -49,7 +49,6 @@ export interface EmployeePrimaryProfile {
   bloodGroup: [number, string];
 }
 
-
 export type EmployeeContactProfile = {
   id: number;
   presentAddress: string;
@@ -59,17 +58,20 @@ export type EmployeeContactProfile = {
   caste: string;
   religion: string;
 };
-
-export interface EmployeeContactProfileResponse {
-  id: number;
-  employeeCode: string;
-  presentAddress: string;
-  permanentAddress: string;
-  email: string;
-  community: string;
-  caste: string;
-  religion: string;
+export interface EmployeeEducationProfile {
+  id?: number;
+  degreeOrDiplomaObtained: string;
+  specialization: string;
+  institutionOrUniversity: string;
+  yearOfPassing: number;
+  percentageOfMarks: number;
+  additionalNotes: string;
 }
-
-
-
+export interface EmployeeExperience {
+  id?: number;
+  organization: string;
+  designation: string;
+  numberOfYears: number;
+  place: string;
+  additionalNotes: string;
+}

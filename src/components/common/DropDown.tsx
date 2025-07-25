@@ -90,10 +90,7 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
   const isInvalid = required && selected.id === 0 && wasSubmitted;
 
   return (
-    <div
-      className={`relative w-full min-w-[180px] self-stretch ${className}`}
-      ref={dropdownRef}
-    >
+    <div className={`relative ${className}`} ref={dropdownRef}>
       {title && (
         <h3 className="mb-0.5 w-full justify-start text-xs leading-loose font-semibold text-slate-700">
           {title}

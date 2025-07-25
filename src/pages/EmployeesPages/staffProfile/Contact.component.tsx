@@ -1,10 +1,7 @@
 import ButtonSm from "@/components/common/Buttons";
 import Input from "@/components/common/Input";
 import type { FormState } from "@/types/appTypes";
-import type {
-  Employee,
-  EmployeeContactProfile,
-} from "@/types/employeeApiTypes";
+import type { EmployeeContactProfile } from "@/types/employeeApiTypes";
 import isEqual from "lodash.isequal";
 import React, { useEffect, useState } from "react";
 import StaffProfileSkeleton from "../PageSkeleton";
@@ -14,26 +11,27 @@ import {
   useUpdateEmployeeContactProfile,
 } from "@/queries/employeeQueries/employeeContactQuery";
 import { useNavigate } from "react-router-dom";
+import TextArea from "@/components/common/Textarea";
 
 interface StaffProfileContactProps {
   formState: FormState;
   staffId: string;
-  setStaffData: React.Dispatch<React.SetStateAction<Employee>>;
 }
 
 const StaffProfileContact: React.FC<StaffProfileContactProps> = ({
   formState,
   staffId,
-  setStaffData,
 }) => {
+  //this is a local form state which doesnt affect the url
+
   const dummyContactData: EmployeeContactProfile = {
     id: 0,
-  presentAddress: "",
-  permanentAddress: "",
-  email: "",
-  community: "",
-  caste: "",
-  religion: "",
+    email: "",
+    presentAddress: "",
+    permanentAddress: "",
+    community: "",
+    caste: "",
+    religion: "",
   };
 
   const navigate = useNavigate();
@@ -43,7 +41,15 @@ const StaffProfileContact: React.FC<StaffProfileContactProps> = ({
     useState<EmployeeContactProfile>(dummyContactData);
 
   //   ----------Main apis needed in this page ----------
-  const { data, isLoading, error } = useFetchEmployeeContactProfile(staffId!); //Wont run if the staffId is new which means this is a create state
+  const {
+    data: contactData,
+    isLoading: isContactDataLoading,
+    error: isContactDataError,
+  } = useFetchEmployeeContactProfile(staffId!); //Wont run if the staffId is new which means this is a create state
+
+  useEffect(() => {
+    console.log(contactData);
+  }, [contactData]);
 
   useEffect(() => {
     if (formState === "create") {
@@ -51,15 +57,12 @@ const StaffProfileContact: React.FC<StaffProfileContactProps> = ({
       setDataCopy(dummyContactData);
       return;
     }
-    if (data) {
-      // setStaffData(data); // Removed because 'data' is EmployeeContactProfile, not Employee
-      const cloned = JSON.parse(JSON.stringify(data));
+    if (contactData) {
+      const cloned = JSON.parse(JSON.stringify(contactData));
       setOriginalData(cloned);
       setDataCopy(cloned);
     }
-  }, [data]);
-
-
+  }, [contactData]);
 
   const {
     mutate: updateProfile,
@@ -94,8 +97,8 @@ const StaffProfileContact: React.FC<StaffProfileContactProps> = ({
     }
   }, [updateSuccess]);
 
-  if (isLoading) return <StaffProfileSkeleton />;
-  if (error) return <p>Error fetching employee data</p>;
+  if (isContactDataLoading) return <StaffProfileSkeleton />;
+  if (isContactDataError) return <p>Error fetching employee data</p>;
   return (
     <form onSubmit={hanldeSubmit}>
       <div className="section relative flex flex-row items-center justify-end gap-2">
@@ -115,7 +118,7 @@ const StaffProfileContact: React.FC<StaffProfileContactProps> = ({
               type="submit"
               disabled={isEqual(dummyContactData, dataCopy) || createPending}
               state="default"
-              text="Create Employee"
+              text="Create Contact"
               className="text-md py-3 text-white disabled:cursor-not-allowed disabled:opacity-70"
             />
           </>
@@ -144,76 +147,72 @@ const StaffProfileContact: React.FC<StaffProfileContactProps> = ({
       </div>
       <section className="details grid grid-cols-3 gap-4 text-base font-medium">
         <Input
-          required
-          minLength={5}
-          type="str"
-          maxLength={25}
-          disabled={formState === "display"}
-          title="Employee Code"
-          placeholder="Enter employee code"
-          inputValue={dataCopy?.presentAddress || ""}
-          onChange={(value) => setDataCopy({ ...dataCopy, presentAddress: value })}
-        />
-        <Input
           minLength={4}
           maxLength={26}
           required
           disabled={formState === "display"}
-          title="Name"
-          placeholder="Enter employee name"
-          inputValue={dataCopy?.permanentAddress || ""}
-          onChange={(value) => setDataCopy({ ...dataCopy, permanentAddress: value })}
-        />
-      
-
-      
-        <Input
-          required
-          minLength={4}
-          maxLength={26}
-          placeholder="Enter Father/Guardian name"
-          disabled={formState === "display"}
-          title="Father/Guardian "
+          title="Email"
+          name="email"
+          placeholder="Eg: m@example.com"
           inputValue={dataCopy?.email || ""}
-          onChange={(value) =>
-            setDataCopy({ ...dataCopy, email: value })
-          }
+          onChange={(value) => setDataCopy({ ...dataCopy, email: value })}
         />
+
         <Input
           required
           minLength={3}
           maxLength={30}
-          placeholder="Eg: 123 A, 4th Floor, XYZ Building"
+          placeholder="Community"
           disabled={formState === "display"}
-          title="Address Line 1"
+          title="Community"
           inputValue={dataCopy?.community || ""}
-          onChange={(value) =>
-            setDataCopy({ ...dataCopy, community: value })
-          }
+          onChange={(value) => setDataCopy({ ...dataCopy, community: value })}
         />
         <Input
-          required
           minLength={3}
           maxLength={30}
-          placeholder="Eg: Area"
+          required
+          placeholder="Caste"
           disabled={formState === "display"}
-          title="Address Line 2"
+          title="Caste"
           inputValue={dataCopy?.caste || ""}
-          onChange={(value) =>
-            setDataCopy({ ...dataCopy, caste: value })
-          }
+          onChange={(value) => setDataCopy({ ...dataCopy, caste: value })}
         />
         <Input
           minLength={3}
           maxLength={30}
           required
-          placeholder="Eg: Street"
+          placeholder="Relegion"
           disabled={formState === "display"}
-          title="Location"
+          title="Relegion"
           inputValue={dataCopy?.religion || ""}
           onChange={(value) => setDataCopy({ ...dataCopy, religion: value })}
         />
-       
+
+        <TextArea
+          required
+          minLength={4}
+          maxLength={50}
+          placeholder="Enter Present Address"
+          disabled={formState === "display"}
+          title="Present Address "
+          inputValue={dataCopy?.presentAddress || ""}
+          onChange={(value) =>
+            setDataCopy({ ...dataCopy, presentAddress: value })
+          }
+        />
+        <TextArea
+          required
+          minLength={4}
+          maxLength={50}
+          placeholder="Enter Permanent Address"
+          disabled={formState === "display"}
+          title="Permanent Address "
+          inputValue={dataCopy?.permanentAddress || ""}
+          onChange={(value) =>
+            setDataCopy({ ...dataCopy, permanentAddress: value })
+          }
+        />
       </section>
     </form>
   );

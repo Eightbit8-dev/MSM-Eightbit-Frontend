@@ -73,3 +73,14 @@ export const StaffProfileSkeleton2 = () => {
     </section>
   );
 };
+
+export const TabButtonSkeleton: React.FC = () => {
+  return (
+    <div className="flex flex-row gap-3">
+      <Skeleton width={120} height={40} />
+      <Skeleton width={120} height={40} />
+      <Skeleton width={120} height={40} />
+      <Skeleton width={120} height={40} />
+    </div>
+  );
+};
