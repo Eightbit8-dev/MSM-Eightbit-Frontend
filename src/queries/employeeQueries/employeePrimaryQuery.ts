@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import Cookies from "js-cookie";
 import type { EmployeePrimaryProfile } from "../../types/employeeApiTypes";
@@ -10,6 +10,7 @@ import { convertToBackendDate } from "@/utils/commonUtils";
 // ------------------ Create ------------------
 
 export const useCreateEmployeePrimaryProfile = () => {
+  const queryClient = useQueryClient();
   const createProfile = async (payload: EmployeePrimaryProfile) => {
     try {
       const token = Cookies.get("token");
@@ -53,6 +54,8 @@ export const useCreateEmployeePrimaryProfile = () => {
       );
 
       toast.success("Employee profile Created");
+      if (response.status === 201 || response.status === 200)
+        queryClient.invalidateQueries({ queryKey: ["Employees"] });
       return response.data;
     } catch (error: any) {
       const msg = error?.response?.data?.message || "Create failed";
@@ -106,6 +109,7 @@ export const useFetchEmployeePrimaryProfile = (employeeCode: string) => {
 
 // ------------Update ----------------
 export const useUpdateEmployeePrimaryProfile = () => {
+  const queryClient = useQueryClient();
   const updateProfile = async ({
     employeeCode,
     payload,
@@ -120,6 +124,7 @@ export const useUpdateEmployeePrimaryProfile = () => {
       // ------------Cleaning this because backend expects only id not dropDown optinos and dd:mm:yyyyy date format but html5 uses other
       const cleanedPayload = {
         ...payload,
+        code: payload.code,
         doj: convertToBackendDate(payload.doj),
         dob: convertToBackendDate(payload.dob),
         confirmationDate: convertToBackendDate(payload.confirmationDate),
@@ -142,6 +147,10 @@ export const useUpdateEmployeePrimaryProfile = () => {
       );
 
       toast.success("Employee profile updated successfully");
+      if (response.status === 201 || response.status === 200)
+        queryClient.invalidateQueries({
+          queryKey: ["employeePrimaryProfile", employeeCode],
+        });
       return response.data;
     } catch (error: any) {
       const msg = error?.response?.data?.message || "Update failed";

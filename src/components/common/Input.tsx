@@ -36,6 +36,7 @@ interface InputProps<T extends string | number> {
   required?: boolean;
   minLength?: number;
   viewMode?: boolean;
+  className?: string;
 }
 
 /**
@@ -66,9 +67,10 @@ const Input = <T extends string | number>({
   maxLength = 36,
   min,
   max,
+  className = "",
   disabled = false,
   minLength = 0,
-  viewMode = false,
+  viewMode = false, //depriciate dont-use
 }: InputProps<T>) => {
   const inputType = type === "num" ? "number" : "text";
 
@@ -107,7 +109,7 @@ const Input = <T extends string | number>({
         {title} {required && <span className="text-red-500"> *</span>}
       </h3>
       <div
-        className={`input-container flex cursor-text flex-row items-center justify-center gap-0 overflow-clip rounded-xl ${viewMode ? "" : "border-2 border-slate-300 bg-white transition-all focus-within:border-slate-500"}`}
+        className={`input-container flex cursor-text flex-row items-center justify-center gap-0 overflow-clip rounded-xl ${viewMode ? "" : "border-2 border-slate-300 bg-white transition-all focus-within:border-slate-500"} `}
       >
         {prefixText && (
           <div className="flex h-full items-center justify-start bg-slate-100 px-3 py-2 text-sm leading-loose font-medium text-slate-700">
@@ -123,7 +125,9 @@ const Input = <T extends string | number>({
           placeholder={placeholder}
           onChange={handleChange}
           value={inputValue}
-          className={`min-h-max w-full text-start ${viewMode ? "text-base font-medium text-slate-900" : "px-3 py-3 text-sm font-medium text-slate-600 autofill:text-black focus:outline-none"} }`}
+          className={`custom-disabled-cursor min-h-max w-full ${
+            disabled ? "bg-slate-200" : "cursor-text"
+          } ${className} text-start ${viewMode ? "text-base font-medium text-slate-900" : "px-3 py-3 text-sm font-medium text-slate-600 autofill:text-black focus:outline-none"} read-only:cursor-default read-only:bg-white`}
           maxLength={type === "str" ? maxLength : undefined}
           min={type === "num" ? min : undefined}
           max={type === "num" ? max : undefined}

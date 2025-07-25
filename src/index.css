@@ -10,6 +10,10 @@
   font-display: swap;
 }
 
+input.custom-disabled-cursor:disabled {
+  cursor: url("/icons/disabled.cur"), not-allowed !important;
+}
+
 input:focus,
 textarea:focus,
 select:focus {

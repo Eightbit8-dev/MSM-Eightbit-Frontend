@@ -14,7 +14,6 @@ import React, { useEffect, useState } from "react";
 import StaffProfileSkeleton from "../PageSkeleton";
 import { useFetchDesignationOptions } from "@/queries/masterQueries/DesiginationQuery";
 import { useFetchShiftOptions } from "@/queries/masterQueries/ShiftQuery";
-
 import { useFetchBloodOptions } from "@/queries/masterQueries/BloodQuery";
 import {
   useCreateEmployeePrimaryProfile,
@@ -85,7 +84,7 @@ const StaffProfilePrimary: React.FC<StaffProfilePrimaryProps> = ({
       setOriginalData(cloned);
       setDataCopy(cloned);
     }
-  }, [data]);
+  }, [data, formState]);
 
   useEffect(() => {
     if (dataCopy?.dob) {
@@ -95,11 +94,35 @@ const StaffProfilePrimary: React.FC<StaffProfilePrimaryProps> = ({
   }, [dataCopy.dob]);
 
   //   ----------Utility Apis needed in this page -----------
-  const { data: departmentOptions } = useFetchDepartmentOptions();
-  const { data: branchOptions } = useFetchBranchOptions();
-  const { data: designationOptions } = useFetchDesignationOptions();
-  const { data: shiftOptions } = useFetchShiftOptions();
-  const { data: bloodOptions } = useFetchBloodOptions();
+  const {
+    data: departmentOptions,
+    isLoading: departmentLoading,
+    isError: departmentError,
+  } = useFetchDepartmentOptions();
+
+  const {
+    data: branchOptions,
+    isLoading: branchLoading,
+    isError: branchError,
+  } = useFetchBranchOptions();
+
+  const {
+    data: designationOptions,
+    isLoading: designationLoading,
+    isError: designationError,
+  } = useFetchDesignationOptions();
+
+  const {
+    data: shiftOptions,
+    isLoading: shiftLoading,
+    isError: shiftError,
+  } = useFetchShiftOptions();
+
+  const {
+    data: bloodOptions,
+    isLoading: bloodLoading,
+    isError: bloodError,
+  } = useFetchBloodOptions();
 
   const {
     mutate: updateProfile,
@@ -134,8 +157,25 @@ const StaffProfilePrimary: React.FC<StaffProfilePrimaryProps> = ({
     }
   }, [updateSuccess]);
 
-  if (isLoading) return <StaffProfileSkeleton />;
-  if (error) return <p>Error fetching employee data</p>;
+  if (
+    isLoading ||
+    departmentLoading ||
+    branchLoading ||
+    designationLoading ||
+    shiftLoading ||
+    bloodLoading
+  )
+    return <StaffProfileSkeleton />;
+
+  if (
+    error ||
+    departmentError ||
+    branchError ||
+    designationError ||
+    shiftError ||
+    bloodError
+  )
+    return <p>Error fetching employee data</p>;
   return (
     <form onSubmit={hanldeSubmit}>
       <div className="section relative flex flex-row items-center justify-end gap-2">
@@ -184,26 +224,46 @@ const StaffProfilePrimary: React.FC<StaffProfilePrimaryProps> = ({
       </div>
       <section className="details grid grid-cols-3 gap-4 text-base font-medium">
         <Input
+          className="disabled:cursor-not-allowed"
           required
           minLength={3}
           type="str"
           maxLength={10}
-          disabled={formState === "display"}
+          disabled={formState === "display" || formState === "edit"}
           title="Employee Code"
           placeholder="Enter employee code"
           inputValue={dataCopy?.code || ""}
           onChange={(value) => setDataCopy({ ...dataCopy, code: value })}
         />
-        <Input
-          minLength={4}
-          maxLength={26}
-          required
-          disabled={formState === "display"}
-          title="Name"
-          placeholder="Enter employee name"
-          inputValue={dataCopy?.name || ""}
-          onChange={(value) => setDataCopy({ ...dataCopy, name: value })}
-        />
+        <div className="name flex flex-row gap-2">
+          <DropdownSelect
+            className="w-[100px]"
+            required
+            disabled={formState === "display"}
+            title="Prefix"
+            options={[
+              { id: 1, label: "Mr." },
+              { id: 2, label: "Mrs." },
+            ]}
+            selected={{
+              id: 404,
+              label: dataCopy.gender,
+            }}
+            onChange={(value) =>
+              setDataCopy({ ...dataCopy, gender: value.label })
+            }
+          />
+          <Input
+            minLength={4}
+            maxLength={26}
+            required
+            disabled={formState === "display"}
+            title="Name"
+            placeholder="Enter employee name"
+            inputValue={dataCopy?.name || ""}
+            onChange={(value) => setDataCopy({ ...dataCopy, name: value })}
+          />
+        </div>
         <DateInput
           required
           disabled={formState === "display"}

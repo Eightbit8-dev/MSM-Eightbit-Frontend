@@ -10,6 +10,7 @@ interface TextAreaProps {
   required?: boolean;
   maxLength?: number;
   disabled?: boolean;
+  minLength?: number;
 }
 
 const TextArea: React.FC<TextAreaProps> = ({
@@ -17,6 +18,7 @@ const TextArea: React.FC<TextAreaProps> = ({
   placeholder = "",
   inputValue,
   onChange,
+  minLength = 10,
   name = "",
   prefixText = "",
   maxLength = 100,
@@ -59,6 +61,7 @@ const TextArea: React.FC<TextAreaProps> = ({
           disabled={disabled}
           value={inputValue}
           maxLength={maxLength}
+          minLength={minLength}
           className="min-h-max w-full px-4 py-[14px] text-start text-sm font-medium text-slate-600 autofill:text-black focus:outline-none"
           rows={4}
         />
