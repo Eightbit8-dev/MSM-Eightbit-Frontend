@@ -3,21 +3,21 @@ import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import axiosInstance from "../../utils/axios";
 import { apiRoutes } from "../../routes/apiRoutes";
-import type { EmployeeRejoin } from "../../types/employeeApiTypes";
+import type { employeeTransfer } from "../../types/employeeApiTypes";
 
-export const useCreateEmployeeRejoin = () => {
-  const createRejoin = async (payload: EmployeeRejoin) => {
+export const useCreateEmployeeTransfer = () => {
+  const createRejoin = async (payload: employeeTransfer) => {
     try {
       const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
-      const response = await axiosInstance.post(apiRoutes.employeeRejoin, payload, {
+      const response = await axiosInstance.post(apiRoutes.employeeTransfer, payload, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-      toast.success("Employee rejoin record created");
+      toast.success("Employee Transferd");
       return response.data;
     } catch (error: any) {
       const msg = error?.response?.data?.message || "Create failed";
@@ -31,7 +31,7 @@ export const useCreateEmployeeRejoin = () => {
 
 export const useGetEmployeeRejoin = () => {
   return useQuery({
-    queryKey: ["employee-rejoin"],
+    queryKey: ["employee-Transfer"],
     queryFn: async () => {
       const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized");

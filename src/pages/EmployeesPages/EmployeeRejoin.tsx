@@ -1,66 +1,62 @@
 import { useState, useEffect } from "react";
 import ButtonSm from "@/components/common/Buttons";
-import DropdownSelect from "@/components/common/DropDown";
-import { DateInput } from "@/components/common/Input";
+import Input, { DateInput } from "@/components/common/Input";
 import PageHeader from "@/components/masterPage.components/PageHeader";
 import {
   useCreateEmployeeRejoin,
-  useGetEmployeeRejoin,
 } from "@/queries/employeeQueries/employeeRejoinQuery";
+import type { EmployeeRejoin } from "@/types/employeeApiTypes";
 
-const EmployeeRejoin = () => {
-  const initialState = {
-    employee: { id: 0, label: "Select employee" },
-    refDate: "",
+const EmployeeRejoinPage = () => {
+  const initialState: EmployeeRejoin = {
+    employeeCode: "",
     rejoinDate: "",
+    refDate: "",
   };
 
-  const [selectedEmployee, setSelectedEmployee] = useState(initialState.employee);
-  const [refDate, setRefDate] = useState(initialState.refDate);
-  const [rejoinDate, setRejoinDate] = useState(initialState.rejoinDate);
-
+  const [data, setData] = useState<EmployeeRejoin>(initialState);
+  const [dummy, setDummy] = useState<EmployeeRejoin>(initialState);
   const [isModified, setIsModified] = useState(false);
-
-  const dummyEmployeeOptions = [
-    { id: 0, label: "Select employee" },
-    { id: 1, label: "EMP101" },
-    { id: 2, label: "EMP102" },
-    { id: 3, label: "EMP103" },
-    { id: 4, label: "EMP104" },
-    { id: 5, label: "EMP105" },
-  ];
 
   const { mutate: submitRejoin, isPending } = useCreateEmployeeRejoin();
 
-  // Track if form is modified
+  // Compare current data with dummy to detect changes
   useEffect(() => {
     const modified =
-      selectedEmployee.id !== initialState.employee.id ||
-      refDate !== initialState.refDate ||
-      rejoinDate !== initialState.rejoinDate;
+      data.employeeCode !== dummy.employeeCode ||
+      data.refDate !== dummy.refDate ||
+      data.rejoinDate !== dummy.rejoinDate;
     setIsModified(modified);
-  }, [selectedEmployee, refDate, rejoinDate]);
+  }, [data, dummy]);
+
+  const updateField = (field: keyof EmployeeRejoin, value: string) => {
+    setData((prev) => ({ ...prev, [field]: value }));
+  };
 
   const handleSubmit = () => {
-    if (selectedEmployee.id && refDate && rejoinDate) {
-      submitRejoin({
-        employeeCode: selectedEmployee.label,
+    const { employeeCode, refDate, rejoinDate } = data;
+
+    if (employeeCode && refDate && rejoinDate) {
+      const payload: EmployeeRejoin = {
+        employeeCode,
         refDate,
         rejoinDate,
-      });
+      };
+      submitRejoin(payload);
+      setDummy(payload);
+      setData(payload);
     } else {
       alert("Please fill all fields.");
     }
   };
 
   const handleCancel = () => {
-    setSelectedEmployee(initialState.employee);
-    setRefDate(initialState.refDate);
-    setRejoinDate(initialState.rejoinDate);
+    setData(dummy);
   };
 
   return (
     <div className="flex flex-col gap-4">
+      {/* Header Section */}
       <section className="flex flex-col bg-white p-3 rounded-lg items-start justify-start">
         <PageHeader title="Staff Rejoin" />
         <p className="w-max text-base font-medium text-slate-500">
@@ -68,33 +64,35 @@ const EmployeeRejoin = () => {
         </p>
       </section>
 
+      {/* Form Section */}
       <div className="rounded-lg bg-white p-4 flex flex-col gap-4">
-
-
         <div className="grid grid-cols-3 gap-3">
-          <DropdownSelect
+          <Input
             title="Employee Code"
-            options={dummyEmployeeOptions}
-            selected={selectedEmployee}
-            onChange={setSelectedEmployee}
+            inputValue={data.employeeCode}
+            onChange={(val) => updateField("employeeCode", val)}
+            placeholder="Enter employee code"
+            maxLength={10}
             required
           />
 
           <DateInput
             title="Reference Date"
-            value={refDate}
-            onChange={setRefDate}
+            value={data.refDate}
+            onChange={(val) => updateField("refDate", val)}
             required
           />
 
           <DateInput
             title="Rejoin Date"
-            value={rejoinDate}
-            onChange={setRejoinDate}
+            value={data.rejoinDate}
+            onChange={(val) => updateField("rejoinDate", val)}
             required
           />
         </div>
-                <div className="w-full gap-2 flex justify-end">
+
+        {/* Buttons */}
+        <div className="w-full gap-2 flex justify-end">
           {isModified && (
             <ButtonSm
               text="Cancel"
@@ -116,4 +114,4 @@ const EmployeeRejoin = () => {
   );
 };
 
-export default EmployeeRejoin;
+export default EmployeeRejoinPage;

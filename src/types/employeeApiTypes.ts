@@ -84,3 +84,12 @@ rejoinDate: string;
 refDate:string;
 };
 
+
+
+export type employeeTransfer = {
+  employeeCode: string;
+  date: string;
+  branchFromId:number;
+  branchToId:number;
+  remarks: string;
+}
