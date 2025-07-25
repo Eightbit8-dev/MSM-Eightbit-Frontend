@@ -69,23 +69,7 @@ const EmployeeRejoin = () => {
       </section>
 
       <div className="rounded-lg bg-white p-4 flex flex-col gap-4">
-        <div className="w-full gap-2 flex justify-end">
-          {isModified && (
-            <ButtonSm
-              text="Cancel"
-              state="outline"
-              onClick={handleCancel}
-              disabled={isPending}
-            />
-          )}
-          <ButtonSm
-            text={isPending ? "Submitting..." : "Submit"}
-            state="default"
-            className="text-white"
-            onClick={handleSubmit}
-            disabled={isPending}
-          />
-        </div>
+
 
         <div className="grid grid-cols-3 gap-3">
           <DropdownSelect
@@ -108,6 +92,23 @@ const EmployeeRejoin = () => {
             value={rejoinDate}
             onChange={setRejoinDate}
             required
+          />
+        </div>
+                <div className="w-full gap-2 flex justify-end">
+          {isModified && (
+            <ButtonSm
+              text="Cancel"
+              state="outline"
+              onClick={handleCancel}
+              disabled={isPending}
+            />
+          )}
+          <ButtonSm
+            text={isPending ? "Submitting..." : "Submit"}
+            state="default"
+            className="text-white"
+            onClick={handleSubmit}
+            disabled={isPending}
           />
         </div>
       </div>
