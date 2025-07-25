@@ -9,6 +9,7 @@ import ProtectedRoute from "./components/layout/ProtectedRoute";
 import LoanPage from "./pages/LoanPage";
 import AllowancePage from "./pages/MasterPages/Allowance/AllowancePage";
 import HolidayPage from "./pages/MasterPages/Holiday/HolidayPage";
+import EmployeeRejoin from "./pages/EmployeesPages/EmployeeRejoin";
 
 // Pages
 const AttendancePage = lazy(() => import("./pages/AttendancePage"));
@@ -150,6 +151,9 @@ const App = () => {
               path={appRoutes.employeesRoute.children.staffProfile}
               element={<StaffProfilePage />}
             />
+            <Route 
+            path={appRoutes.employeesRoute.children.staffRejoin}
+            element={<EmployeeRejoin/>}/>
           </Route>
         </Route>
       </Routes>
