@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ButtonSm from "@/components/common/Buttons";
 import DropdownSelect from "@/components/common/DropDown";
-import  { DateInput } from "@/components/common/Input";
+import { DateInput } from "@/components/common/Input";
 import PageHeader from "@/components/masterPage.components/PageHeader";
 import {
   useCreateEmployeeRejoin,
@@ -9,30 +9,42 @@ import {
 } from "@/queries/employeeQueries/employeeRejoinQuery";
 
 const EmployeeRejoin = () => {
-  const [selectedEmployee, setSelectedEmployee] = useState({ id: 0, label: "Select employee" });
-  const [refDate, setRefDate] = useState("");
-  const [rejoinDate, setRejoinDate] = useState("");
+  const initialState = {
+    employee: { id: 0, label: "Select employee" },
+    refDate: "",
+    rejoinDate: "",
+  };
+
+  const [selectedEmployee, setSelectedEmployee] = useState(initialState.employee);
+  const [refDate, setRefDate] = useState(initialState.refDate);
+  const [rejoinDate, setRejoinDate] = useState(initialState.rejoinDate);
+
+  const [isModified, setIsModified] = useState(false);
 
   const dummyEmployeeOptions = [
-  { id: 0, label: "Select employee" },
-  { id: 1, label: "EMP101" },
-  { id: 2, label: "EMP102" },
-  { id: 3, label: "EMP103" },
-  { id: 4, label: "EMP104" },
-  { id: 5, label: "EMP105" },
-];
+    { id: 0, label: "Select employee" },
+    { id: 1, label: "EMP101" },
+    { id: 2, label: "EMP102" },
+    { id: 3, label: "EMP103" },
+    { id: 4, label: "EMP104" },
+    { id: 5, label: "EMP105" },
+  ];
 
-
-  // Query to get employee options
-  const { data: employeeData,  } = useGetEmployeeRejoin(selectedEmployee.label);
-
-  // Mutation to submit rejoin info
   const { mutate: submitRejoin, isPending } = useCreateEmployeeRejoin();
+
+  // Track if form is modified
+  useEffect(() => {
+    const modified =
+      selectedEmployee.id !== initialState.employee.id ||
+      refDate !== initialState.refDate ||
+      rejoinDate !== initialState.rejoinDate;
+    setIsModified(modified);
+  }, [selectedEmployee, refDate, rejoinDate]);
 
   const handleSubmit = () => {
     if (selectedEmployee.id && refDate && rejoinDate) {
       submitRejoin({
-        employeeCode: selectedEmployee.label, // or use ID depending on backend
+        employeeCode: selectedEmployee.label,
         refDate,
         rejoinDate,
       });
@@ -41,53 +53,63 @@ const EmployeeRejoin = () => {
     }
   };
 
-  const employeeOptions =
-    employeeData?.map((emp: any) => ({
-      id: emp.id,
-      label: emp.employeeCode,
-    })) || [];
+  const handleCancel = () => {
+    setSelectedEmployee(initialState.employee);
+    setRefDate(initialState.refDate);
+    setRejoinDate(initialState.rejoinDate);
+  };
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="rounded-lg bg-white p-4">
-        <PageHeader title="Staff-Rejoin" />
-      </div>
+      <section className="flex flex-col bg-white p-3 rounded-lg items-start justify-start">
+        <PageHeader title="Staff Rejoin" />
+        <p className="w-max text-base font-medium text-slate-500">
+          Manage your Rejoined Employee
+        </p>
+      </section>
 
-      <div className="rounded-lg bg-white p-4 flex flex-col gap-4 ">
-<div className="w-full flex justify-end">
-                  <ButtonSm
-          text={isPending ? "Submitting..." : "Submit"}
-          state="default"
-          className="text-white "
-          onClick={handleSubmit}
-          disabled={isPending}
-        />
-</div>
-       <div className="flex flex-col ">
-         <DropdownSelect
-          title="Employee Code"
-          options={dummyEmployeeOptions}
-          selected={selectedEmployee}
-          onChange={setSelectedEmployee}
-          required
-        />
+      <div className="rounded-lg bg-white p-4 flex flex-col gap-4">
+        <div className="w-full gap-2 flex justify-end">
+          {isModified && (
+            <ButtonSm
+              text="Cancel"
+              state="outline"
+              onClick={handleCancel}
+              disabled={isPending}
+            />
+          )}
+          <ButtonSm
+            text={isPending ? "Submitting..." : "Submit"}
+            state="default"
+            className="text-white"
+            onClick={handleSubmit}
+            disabled={isPending}
+          />
+        </div>
 
-        <DateInput
-          title="Reference Date"
-          value={refDate}
-          onChange={setRefDate}
-          required
-        />
+        <div className="grid grid-cols-3 gap-3">
+          <DropdownSelect
+            title="Employee Code"
+            options={dummyEmployeeOptions}
+            selected={selectedEmployee}
+            onChange={setSelectedEmployee}
+            required
+          />
 
-        <DateInput
-          title="Rejoin Date"
-          value={rejoinDate}
-          onChange={setRejoinDate}
-          required
-        />
-       </div>
+          <DateInput
+            title="Reference Date"
+            value={refDate}
+            onChange={setRefDate}
+            required
+          />
 
-
+          <DateInput
+            title="Rejoin Date"
+            value={rejoinDate}
+            onChange={setRejoinDate}
+            required
+          />
+        </div>
       </div>
     </div>
   );
