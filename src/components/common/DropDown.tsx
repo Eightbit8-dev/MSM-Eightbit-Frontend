@@ -134,7 +134,7 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
 
       {isOpen && (
         <div
-          className={`absolute z-10 w-full overflow-hidden rounded-xl border border-slate-200 bg-white shadow-lg ${getDirectionClass()}`}
+          className={`absolute z-10 max-h-[200px] w-full overflow-hidden overflow-y-scroll rounded-xl border border-slate-200 bg-white shadow-lg ${getDirectionClass()}`}
         >
           {options.map((option) => (
             <button

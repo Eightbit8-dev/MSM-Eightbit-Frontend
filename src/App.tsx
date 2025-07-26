@@ -6,19 +6,14 @@ import MainLayout from "./components/layout/MainLayout";
 import { appRoutes } from "./routes/appRoutes";
 import { Spinner } from "./components/layout/Spinner";
 import ProtectedRoute from "./components/layout/ProtectedRoute";
-import LoanPage from "./pages/LoanPage";
-import AllowancePage from "./pages/MasterPages/Allowance/AllowancePage";
-import HolidayPage from "./pages/MasterPages/Holiday/HolidayPage";
-import EmployeeRejoin from "./pages/EmployeesPages/EmployeeRejoin";
 
-// Pages
+// ------------------Main Pages ---------------------------
 const AttendancePage = lazy(() => import("./pages/AttendancePage"));
 const DashBoardPage = lazy(() => import("./pages/DashBoardPage"));
-const UsersPage = lazy(() => import("./pages/UsersPage"));
 const ErrorPage = lazy(() => import("./pages/ErrorPage"));
 const SignInPage = lazy(() => import("./pages/SignInPage"));
 
-// Master Pages
+// ---------------Master Pages----------------------------
 const MasterPage = lazy(() => import("./pages/MasterPages/MasterPage"));
 const ResignationPage = lazy(
   () => import("./pages/MasterPages/Resignation/ResignationPage"),
@@ -44,14 +39,29 @@ const PermissionPage = lazy(
   () => import("./pages/MasterPages/Permission/PermissionPage"),
 );
 const ShiftPage = lazy(() => import("./pages/MasterPages/Shift/ShiftPage"));
+const LoanPage = lazy(() => import("./pages/LoanPage"));
+const AllowancePage = lazy(
+  () => import("./pages/MasterPages/Allowance/AllowancePage"),
+);
+const HolidayPage = lazy(
+  () => import("./pages/MasterPages/Holiday/HolidayPage"),
+);
 
-// Employees Pages
+// ------------Employees Pages-------------
 const EmployeesPage = lazy(
   () => import("./pages/EmployeesPages/EmployeesPage"),
 );
-const StaffsPage = lazy(() => import("./pages/EmployeesPages/staffProfile/StaffsPage"));
+const StaffsPage = lazy(
+  () => import("./pages/EmployeesPages/staffProfile/StaffsPage"),
+);
 const StaffProfilePage = lazy(
   () => import("./pages/EmployeesPages/staffProfile/StaffProfilePage"),
+);
+const EmployeeRejoin = lazy(
+  () => import("./pages/EmployeesPages/EmployeeRejoin"),
+);
+const EmployeeResignationPage = lazy(
+  () => import("./pages/EmployeesPages/resignation/EmployeeResignationPage"),
 );
 
 const App = () => {
@@ -151,9 +161,14 @@ const App = () => {
               path={appRoutes.employeesRoute.children.staffProfile}
               element={<StaffProfilePage />}
             />
-            <Route 
-            path={appRoutes.employeesRoute.children.staffRejoin}
-            element={<EmployeeRejoin/>}/>
+            <Route
+              path={appRoutes.employeesRoute.children.staffRejoin}
+              element={<EmployeeRejoin />}
+            />
+            <Route
+              path={appRoutes.employeesRoute.children.resignation}
+              element={<EmployeeResignationPage />}
+            />
           </Route>
         </Route>
       </Routes>

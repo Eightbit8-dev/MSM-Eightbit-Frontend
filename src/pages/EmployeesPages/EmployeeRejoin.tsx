@@ -3,19 +3,18 @@ import ButtonSm from "@/components/common/Buttons";
 import DropdownSelect from "@/components/common/DropDown";
 import { DateInput } from "@/components/common/Input";
 import PageHeader from "@/components/masterPage.components/PageHeader";
-import {
-  useCreateEmployeeRejoin,
-  useGetEmployeeRejoin,
-} from "@/queries/employeeQueries/employeeRejoinQuery";
+import { useCreateEmployeeRejoin } from "@/queries/employeeQueries/employeeRejoinQuery";
 
-const EmployeeRejoin = () => {
+const EmployeeRejoinPage = () => {
   const initialState = {
     employee: { id: 0, label: "Select employee" },
     refDate: "",
     rejoinDate: "",
   };
 
-  const [selectedEmployee, setSelectedEmployee] = useState(initialState.employee);
+  const [selectedEmployee, setSelectedEmployee] = useState(
+    initialState.employee,
+  );
   const [refDate, setRefDate] = useState(initialState.refDate);
   const [rejoinDate, setRejoinDate] = useState(initialState.rejoinDate);
 
@@ -61,15 +60,31 @@ const EmployeeRejoin = () => {
 
   return (
     <div className="flex flex-col gap-4">
-      <section className="flex flex-col bg-white p-3 rounded-lg items-start justify-start">
+      <section className="flex flex-col items-start justify-start rounded-lg bg-white p-3">
         <PageHeader title="Staff Rejoin" />
         <p className="w-max text-base font-medium text-slate-500">
           Manage your Rejoined Employee
         </p>
       </section>
 
-      <div className="rounded-lg bg-white p-4 flex flex-col gap-4">
-
+      <div className="flex flex-col gap-4 rounded-lg bg-white p-4">
+        <div className="flex w-full justify-end gap-2">
+          {isModified && (
+            <ButtonSm
+              text="Cancel"
+              state="outline"
+              onClick={handleCancel}
+              disabled={isPending}
+            />
+          )}
+          <ButtonSm
+            text={isPending ? "Submitting..." : "Submit"}
+            state="default"
+            className="text-white"
+            onClick={handleSubmit}
+            disabled={isPending}
+          />
+        </div>
 
         <div className="grid grid-cols-3 gap-3">
           <DropdownSelect
@@ -94,26 +109,9 @@ const EmployeeRejoin = () => {
             required
           />
         </div>
-                <div className="w-full gap-2 flex justify-end">
-          {isModified && (
-            <ButtonSm
-              text="Cancel"
-              state="outline"
-              onClick={handleCancel}
-              disabled={isPending}
-            />
-          )}
-          <ButtonSm
-            text={isPending ? "Submitting..." : "Submit"}
-            state="default"
-            className="text-white"
-            onClick={handleSubmit}
-            disabled={isPending}
-          />
-        </div>
       </div>
     </div>
   );
 };
 
-export default EmployeeRejoin;
+export default EmployeeRejoinPage;
