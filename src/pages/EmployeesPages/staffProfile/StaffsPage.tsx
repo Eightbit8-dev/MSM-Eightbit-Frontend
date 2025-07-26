@@ -74,36 +74,37 @@ const Employeelist = () => {
           </section>
 
           <section className="flex w-full flex-row items-center justify-end gap-4">
-            <SearchBar
-              placeholder="Search by name or ID"
-              className="max-w-[300px]"
-              isSearchable
-            />
+
 
             <ButtonSm
-              onClick={(e) => {
-                e.stopPropagation();
-                navigate(
-                  appRoutes.employeesRoute.children.staffsProfile +
-                    "/" +
-                    "new" +
-                    "?state=create",
-                );
-              }}
-              state="default"
-              text="Add Employee"
-              className="text-md py-3 text-white"
-              imgUrl="/icons/plus.svg"
-              iconPosition="right"
-            />
-            <ButtonSm
-              state="default"
-              text="Import"
-              className="text-md py-3 text-white"
-              imgUrl="/icons/ArrowDown.svg"
-              iconPosition="right"
-            />
+  onClick={(e) => {
+    e.stopPropagation();
+    navigate(
+      appRoutes.employeesRoute.children.staffsProfile + "/new?state=create",
+    );
+  }}
+  state="default"
+  text="Add Employee"
+  className="text-md py-3 text-black bg-white border border-slate-300 shadow-inner hover:shadow-inner hover:bg-gray-100 transition duration-200"
+  imgUrl="/icons/shapes.svg"
+  iconPosition="right"
+/>
+
+<ButtonSm
+  state="default"
+  text="Import"
+  className="text-md py-3 text-black bg-white border border-slate-300 shadow-inner hover:shadow-inner hover:bg-gray-100 transition duration-200"
+  imgUrl="/icons/Shape.svg"
+  iconPosition="right"
+/>
+
           </section>
+        </div>
+        <div className="w-full">
+                      <SearchBar
+              className="w-full bg-white"
+              isSearchable
+            />
         </div>
 
         <div className="filters-section w-full scale-100 transform space-y-4 rounded-[12px] bg-white p-4 opacity-100 shadow-sm transition-all duration-300 ease-in-out">
