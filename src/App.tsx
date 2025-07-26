@@ -6,9 +6,6 @@ import MainLayout from "./components/layout/MainLayout";
 import { appRoutes } from "./routes/appRoutes";
 import { Spinner } from "./components/layout/Spinner";
 import ProtectedRoute from "./components/layout/ProtectedRoute";
-import LoanPage from "./pages/LoanPage";
-import AllowancePage from "./pages/MasterPages/Allowance/AllowancePage";
-import HolidayPage from "./pages/MasterPages/Holiday/HolidayPage";
 import EmployeeRejoinPage from "./pages/EmployeesPages/EmployeeRejoin";
 import EmployeeBranchTransfer from "./pages/EmployeesPages/EmployeeTransfer";
 

@@ -91,3 +91,17 @@ export type employeeTransfer = {
   branchToId:number;
   remarks: string;
 }
+
+export interface EmployeeResignation {
+  refNo?: number;
+  employeeCode: string;
+  reasonId: [number, string];
+  month: string;
+  year: string;
+  refDate: string;
+  resignationDate: string;
+  leaveDate: string;
+  exitInterviewStatus: string;
+  resignationStatus: string;
+  remarks: string;
+}

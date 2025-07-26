@@ -23,7 +23,7 @@ export const apiRoutes = {
   employeePrimary: "/api/admin/employee-profile/primary",
   employeeContact: "/api/admin/employee-profile/contact",
   employeeRejoin: "/api/admin/employee-rejoin",
-  employeeResignation: "/api/admin/employee-resignation",,
+  employeeResignation: "/api/admin/employee-resignation",
   employeeTransfer:"/api/admin/employee-transfer",
   employeeTransferBranch:"/api/admin/employee-transfer/branch-info"
 };
