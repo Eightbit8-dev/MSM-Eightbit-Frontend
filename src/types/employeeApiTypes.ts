@@ -76,12 +76,10 @@ export interface EmployeeExperience {
   additionalNotes: string;
 }
 
-
-
 export type EmployeeRejoin = {
-employeeCode: string;
-rejoinDate: string;
-refDate:string;
+  employeeCode: string;
+  rejoinDate: string;
+  refDate: string;
 };
 
 

@@ -278,7 +278,7 @@ export const DateInput: React.FC<DateInputProps> = ({
   return (
     <div className="relative w-full min-w-[180px] self-stretch">
       <h3 className="mb-0.5 w-full justify-start text-xs leading-loose font-semibold text-slate-700">
-        {title}
+        {title} {required && <span className="text-red-500"> *</span>}
       </h3>
 
       <div

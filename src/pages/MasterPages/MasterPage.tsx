@@ -45,7 +45,7 @@ export const MasterPage = () => {
       onAction: () => navigate(appRoutes.masterRoutes.children.designations),
     },
     {
-      img: "/icons/Configpage/Resigination.svg",
+      img: "/icons/Configpage/Resigination.png",
       title: "Resigination",
       desc: "Track and manage employee resignations efficiently with proper records.",
       label: "HR Essentials",
@@ -127,7 +127,7 @@ export const MasterPage = () => {
     },
   ];
   return (
-    <div className=" flex w-full max-w-[1590px] origin-top scale-90 flex-col gap-8">
+    <div className="flex w-full max-w-[1590px] origin-top scale-90 flex-col gap-8">
       <div className="flex items-center justify-between">
         <div className="flex flex-col">
           <div>

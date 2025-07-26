@@ -115,3 +115,4 @@ const EmployeeRejoinPage = () => {
 };
 
 export default EmployeeRejoinPage;
+export default EmployeeRejoinPage;

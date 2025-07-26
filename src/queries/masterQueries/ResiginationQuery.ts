@@ -5,6 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { apiRoutes } from "../../routes/apiRoutes";
 import Cookies from "js-cookie";
+import type { DropdownOption } from "@/components/common/DropDown";
 /**
  * -------------------------------------------
  * Designation Service Hooks - CRUD Operations
@@ -53,6 +54,47 @@ export const useFetchResignations = () => {
 
   return useQuery({
     queryKey: ["Resignations"], //cache key
+    queryFn: fetchAllResignation,
+    staleTime: 1000 * 60 * 0, //expoiy time
+    retry: 1,
+  });
+};
+
+export const useFetchResignationOptions = () => {
+  const fetchAllResignation = async (): Promise<DropdownOption[]> => {
+    try {
+      const token = Cookies.get("token");
+      if (!token) throw new Error("Unauthorized to perform this action.");
+
+      const res = await axiosInstance.get(apiRoutes.resigination, {
+        //All api routes are inside this file
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.status !== 200) {
+        throw new Error(res.data?.message || "Failed to fetch Resignations");
+      }
+
+      return res.data.map((resigination: ResignationDetails) => ({
+        id: resigination.id,
+        label: resigination.name,
+      }));
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        toast.error(
+          error.response?.data?.message || "Failed to fetch Resignations",
+        );
+      } else {
+        toast.error("Something went wrong while fetching Resignations");
+      }
+      throw new Error("Resignation fetch failed"); //Force throw the error so the react query handles it
+    }
+  };
+
+  return useQuery({
+    queryKey: ["ResignationsOptions"], //cache key
     queryFn: fetchAllResignation,
     staleTime: 1000 * 60 * 0, //expoiy time
     retry: 1,

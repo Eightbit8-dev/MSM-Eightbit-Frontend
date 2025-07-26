@@ -27,7 +27,7 @@ export const appRoutes = {
       staffsProfile: "/employees/profile",
       staffProfile: "/employees/profile/:staffId",
       branchTransfer: "/employees/branch-transfer",
-      staffRejoin: "/employees/staff-rejoin",
+      staffRejoin: "/employees/rejoin",
       resignation: "/employees/resignation",
     },
   },
