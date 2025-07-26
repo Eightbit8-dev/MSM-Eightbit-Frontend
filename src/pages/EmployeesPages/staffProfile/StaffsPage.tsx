@@ -300,7 +300,7 @@ const Employeelist = () => {
                     {item.branch[1]}
                   </p>
                   <p className="w-[140px] text-sm font-normal text-slate-700">
-                    {item.mobile1}
+                    {item.mobilePersonal}
                   </p>
                   <p className="w-[160px] text-sm font-normal text-slate-700">
                     {item.department[1]}

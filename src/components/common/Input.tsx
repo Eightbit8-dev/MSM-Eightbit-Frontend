@@ -307,3 +307,120 @@ export const DateInput: React.FC<DateInputProps> = ({
     </div>
   );
 };
+
+
+import { useState, useEffect, useRef } from "react";
+
+interface Suggestion {
+  id: string;
+  title: string;
+}
+
+interface AutoSuggestInputProps {
+  title: string;
+  fetchSuggestions: (query: string) => Promise<Suggestion[]>;
+  onSelect: (item: Suggestion) => void;
+  placeholder?: string;
+  required?: boolean;
+  disabled?: boolean;
+}
+
+export const AutoSuggestInput: React.FC<AutoSuggestInputProps> = ({
+  title,
+  fetchSuggestions,
+  onSelect,
+  placeholder = "Search...",
+  required = false,
+  disabled = false,
+}) => {
+  const [inputValue, setInputValue] = useState("");
+  const [debouncedValue, setDebouncedValue] = useState("");
+  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
+  const [isVisible, setIsVisible] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
+  const listRef = useRef<HTMLUListElement>(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedValue(inputValue), 300);
+    return () => clearTimeout(timer);
+  }, [inputValue]);
+
+  useEffect(() => {
+    if (debouncedValue.length > 1) {
+      fetchSuggestions(debouncedValue).then(setSuggestions);
+      setIsVisible(true);
+    } else {
+      setSuggestions([]);
+      setIsVisible(false);
+    }
+  }, [debouncedValue, fetchSuggestions]);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "ArrowDown") {
+      setSelectedIndex((prev) => (prev < suggestions.length - 1 ? prev + 1 : 0));
+    } else if (e.key === "ArrowUp") {
+      setSelectedIndex((prev) => (prev > 0 ? prev - 1 : suggestions.length - 1));
+    } else if (e.key === "Enter" && selectedIndex >= 0) {
+      handleSelect(suggestions[selectedIndex]);
+    } else if (e.key === "Escape") {
+      setIsVisible(false);
+    }
+  };
+
+  const handleSelect = (item: Suggestion) => {
+    setInputValue(item.title);
+    onSelect(item);
+    setSuggestions([]);
+    setIsVisible(false);
+    setSelectedIndex(-1);
+  };
+
+  return (
+    <div className="relative w-full min-w-[180px] self-stretch">
+      <h3 className="mb-0.5 w-full justify-start text-xs leading-loose font-semibold text-slate-700">
+        {title} {required && <span className="text-red-500">*</span>}
+      </h3>
+
+      <div
+        className={`input-container group flex flex-row items-center justify-between overflow-clip rounded-xl border-2 bg-white transition-all ${
+          disabled ? "cursor-default bg-slate-200" : "cursor-text border-slate-300 focus-within:border-slate-500"
+        }`}
+      >
+        <input
+          type="text"
+          placeholder={placeholder}
+          value={inputValue}
+          disabled={disabled}
+          readOnly={disabled}
+          onChange={(e) => {
+            setInputValue(e.target.value);
+            setSelectedIndex(-1);
+          }}
+          onKeyDown={handleKeyDown}
+          className="min-h-max w-full px-3 py-3 text-start text-sm font-medium text-slate-600 autofill:text-black focus:outline-none"
+        />
+      </div>
+
+      {isVisible && suggestions.length > 0 && (
+        <ul
+          ref={listRef}
+          className="absolute z-10 mt-1 max-h-60 w-full overflow-y-auto rounded-xl border border-slate-300 bg-white shadow-md"
+        >
+          {suggestions.map((item, index) => (
+            <li
+              key={item.id}
+              onClick={() => handleSelect(item)}
+              className={`flex items-center gap-3 px-3 py-2 cursor-pointer ${
+                index === selectedIndex ? "bg-purple-200" : "hover:bg-gray-100"
+              }`}
+            >
+              <div>
+                <div className="font-medium text-sm">{item.title}</div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+};

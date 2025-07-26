@@ -175,7 +175,7 @@ const AttendanceEdit = ({
             <Input
               required
               disabled={isDisplay}
-              title="Type Name *"
+              title="Type Name"
               type="str"
               inputValue={formData.name}
               name="Attendance"
@@ -188,7 +188,7 @@ const AttendanceEdit = ({
               <Input
                 required
                 disabled={isDisplay}
-                title="Code *"
+                title="Code"
                 type="str"
                 inputValue={formData.code}
                 name="attendance code"
@@ -199,7 +199,7 @@ const AttendanceEdit = ({
               <Input
                 required
                 disabled={isDisplay}
-                title="Factor *"
+                title="Factor"
                 type="num"
                 inputValue={formData.factor}
                 name="factor"
@@ -213,7 +213,7 @@ const AttendanceEdit = ({
             </div>
             <div className="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-3">
               <DropdownSelect
-                title="Select Type *"
+                title="Select Type"
                 disabled={isDisplay}
                 options={attendanceTypes || []}
                 selected={selectedOption}
@@ -224,7 +224,7 @@ const AttendanceEdit = ({
               />
 
               <ToggleField
-                title="Required *"
+                title="Required"
                 disabled={isDisplay}
                 subtitle="Carry forward"
                 value={formData.carryForward}

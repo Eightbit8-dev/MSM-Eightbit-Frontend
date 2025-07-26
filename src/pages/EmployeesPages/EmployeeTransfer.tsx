@@ -1,15 +1,18 @@
 import { useState, useEffect } from "react";
 import ButtonSm from "@/components/common/Buttons";
 import DropdownSelect from "@/components/common/DropDown";
-import Input, { DateInput } from "@/components/common/Input";
+import { AutoSuggestInput, DateInput } from "@/components/common/Input";
 import PageHeader from "@/components/masterPage.components/PageHeader";
 import {
   useCreateEmployeeTransfer,
   useGetEmployeeBranch,
+  useEmployeeSearch
 } from "../../queries/employeeQueries/employeeTransferQuery";
 import TextArea from "@/components/common/Textarea";
 import { useFetchBranchOptions } from "@/queries/masterQueries/BranchQuery";
 import type { employeeTransfer } from "@/types/employeeApiTypes";
+import { fetchEmployeeSuggestions } from "@/utils/uiUtils";
+import { useDebounce } from "@/utils/useDebounce"; // custom debounce hook (added below)
 
 const EmployeeBranchTransfer = () => {
   const initialState: employeeTransfer = {
@@ -23,7 +26,8 @@ const EmployeeBranchTransfer = () => {
   const [formState, setFormState] = useState<employeeTransfer>(initialState);
   const [dummy, setDummy] = useState<employeeTransfer>(initialState);
   const [isModified, setIsModified] = useState(false);
-  const [debouncedCode, setDebouncedCode] = useState("");
+  const [prefix, setPrefix] = useState(""); // track input text
+  const debouncedPrefix = useDebounce(prefix, 400); // debounce input
 
   const { mutate: submitTransfer, isPending } = useCreateEmployeeTransfer();
 
@@ -33,39 +37,21 @@ const EmployeeBranchTransfer = () => {
     isError: branchError,
   } = useFetchBranchOptions();
 
-  // Debounce employeeCode
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      if (formState.employeeCode.trim().length > 0) {
-        setDebouncedCode(formState.employeeCode.trim());
-      }
-    }, 1000);
-    return () => clearTimeout(handler);
-  }, [formState.employeeCode]);
-
-  // Fetch employee's current branch from the code
   const {
     data: empBranch,
     refetch: fetchBranch,
     isFetching: isBranchFetching,
-  } = useGetEmployeeBranch(debouncedCode);
+  } = useEmployeeSearch(formState.employeeCode, debouncedPrefix);
 
-  // Update branchFromId when employee branch is fetched
   useEffect(() => {
     if (empBranch && Array.isArray(empBranch)) {
-      const [branchId, branchName] = empBranch;
+      const [branchId] = empBranch;
       setFormState((prev) => ({
         ...prev,
         branchFromId: branchId,
       }));
     }
   }, [empBranch]);
-
-  useEffect(() => {
-    if (debouncedCode) {
-      fetchBranch();
-    }
-  }, [debouncedCode, fetchBranch]);
 
   const updateField = (key: keyof employeeTransfer, value: any) => {
     setFormState((prev) => ({ ...prev, [key]: value }));
@@ -109,6 +95,11 @@ const EmployeeBranchTransfer = () => {
     setFormState(initialState);
   };
 
+  const handleSelect = (employee: { id: string; title: string }) => {
+    updateField("employeeCode", employee.id);
+    fetchBranch(); // fetch branch immediately
+  };
+
   const getBranchLabel = (id: number) =>
     branchOptions?.find((b) => b.id === id)?.label ?? "Select Branch";
 
@@ -129,13 +120,12 @@ const EmployeeBranchTransfer = () => {
         )}
 
         <div className="grid grid-cols-2 gap-3">
-          <Input
+          <AutoSuggestInput
             title="Employee Code"
-            inputValue={formState.employeeCode}
-            onChange={(val) => updateField("employeeCode", val)}
-            placeholder="Enter employee code"
-            maxLength={10}
-            required
+            fetchSuggestions={fetchEmployeeSuggestions}
+            onSelect={handleSelect}
+            onInputChange={(val) => setPrefix(val)} // track input
+            placeholder="Employee Code"
           />
 
           <DateInput
@@ -143,6 +133,7 @@ const EmployeeBranchTransfer = () => {
             value={formState.date}
             onChange={(val) => updateField("date", val)}
             required
+            maxDate={new Date().toISOString().split("T")[0]}
           />
 
           <DropdownSelect
@@ -154,7 +145,7 @@ const EmployeeBranchTransfer = () => {
             }}
             onChange={(val) => updateField("branchFromId", val.id)}
             required
-            disabled={branchLoading}
+            disabled={branchLoading || isBranchFetching}
           />
 
           <DropdownSelect

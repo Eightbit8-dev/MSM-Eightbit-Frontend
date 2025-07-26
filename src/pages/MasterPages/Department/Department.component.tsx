@@ -177,7 +177,7 @@ const DepartmentEdit = ({
             <Input
               required
               disabled={formState === "display"}
-              title="Department Name *"
+              title="Department Name"
               type="str"
               inputValue={newDepartmentData?.name ?? ""}
               name="Department"

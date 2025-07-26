@@ -9,7 +9,7 @@ export interface Employee {
   department: EntityTuple;
   designation: EntityTuple;
   doj: string;
-  mobile1: string;
+  mobilePersonal: string;
   biometricNo: string;
   shift: EntityTuple;
 }
@@ -30,6 +30,7 @@ export interface EmployeePrimaryProfile {
   designation: [number, string];
   department: [number, string];
   shift: [number, string];
+  Prefix:string;
   gender: string;
   dob: string;
   age: number;
@@ -44,8 +45,8 @@ export interface EmployeePrimaryProfile {
   biometricNo: string;
   salaryType: string;
   aadharNo: string;
-  mobile1: string;
-  mobileOfficial: string;
+  mobilePersonal: string;
+  mobileWork: string;
   bloodGroup: [number, string];
 }
 

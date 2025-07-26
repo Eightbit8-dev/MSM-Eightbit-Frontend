@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import ButtonSm from "@/components/common/Buttons";
-import Input, { DateInput } from "@/components/common/Input";
+import Input, { AutoSuggestInput, DateInput } from "@/components/common/Input";
 import PageHeader from "@/components/masterPage.components/PageHeader";
 import {
   useCreateEmployeeRejoin,
 } from "@/queries/employeeQueries/employeeRejoinQuery";
 import type { EmployeeRejoin } from "@/types/employeeApiTypes";
+import { fetchEmployeeSuggestions } from "@/utils/uiUtils";
 
 const EmployeeRejoinPage = () => {
   const initialState: EmployeeRejoin = {
@@ -49,7 +50,9 @@ const EmployeeRejoinPage = () => {
       alert("Please fill all fields.");
     }
   };
-
+  const handleSelect = (employee: { id: string; title: string }) => {
+    updateField("employeeCode", employee.id);
+  };
   const handleCancel = () => {
     setData(dummy);
   };
@@ -67,6 +70,12 @@ const EmployeeRejoinPage = () => {
       {/* Form Section */}
       <div className="rounded-lg bg-white p-4 flex flex-col gap-4">
         <div className="grid grid-cols-3 gap-3">
+                    <AutoSuggestInput
+                      title="Employee Code"
+                      fetchSuggestions={fetchEmployeeSuggestions}
+                      onSelect={handleSelect}
+                      placeholder="Employee Code"
+                    />
           <Input
             title="Employee Code"
             inputValue={data.employeeCode}

@@ -38,8 +38,8 @@ export const useCreateEmployeePrimaryProfile = () => {
         biometricNo: payload.biometricNo,
         salaryType: payload.salaryType,
         aadharNo: payload.aadharNo,
-        mobile1: payload.mobile1,
-        mobileOfficial: payload.mobileOfficial,
+        mobilePersonal: payload.mobilePersonal,
+        mobileWork: payload.mobileWork,
         bloodGroupId: payload.bloodGroup[0],
       };
 
@@ -54,6 +54,7 @@ export const useCreateEmployeePrimaryProfile = () => {
       );
 
       toast.success("Employee profile Created");
+    
       if (response.status === 201 || response.status === 200)
         queryClient.invalidateQueries({ queryKey: ["Employees"] });
       return response.data;
@@ -86,8 +87,9 @@ export const useFetchEmployeePrimaryProfile = (employeeCode: string) => {
       if (res.status !== 200) {
         throw new Error("Failed to fetch employee primary profile");
       }
-
+      toast.success(res.data)
       return res.data;
+
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         toast.error(error.response?.data?.message || "Error fetching profile");

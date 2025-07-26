@@ -179,7 +179,7 @@ const AllowanceEdit = ({
             <Input
               required
               disabled={isDisplay}
-              title="Allowance Name *"
+              title="Allowance Name"
               type="str"
               inputValue={formData.name}
               name="Allowance"
@@ -192,7 +192,7 @@ const AllowanceEdit = ({
               <Input
                 required
                 disabled={isDisplay}
-                title="Percentage *"
+                title="Percentage"
                 type="num"
                 prefixText="%"
                 inputValue={formData.percent}
@@ -206,7 +206,7 @@ const AllowanceEdit = ({
               />
 
               <DropdownSelect
-                title="On *"
+                title="On"
                 disabled={isDisplay}
                 options={[
                   { id: 1, label: "Basic" },
@@ -221,7 +221,7 @@ const AllowanceEdit = ({
             </div>
 
             <DropdownSelect
-              title="Select Type *"
+              title="Select Type"
               disabled={isDisplay}
               options={allowanceTypes || []}
               selected={selectedMasterType}

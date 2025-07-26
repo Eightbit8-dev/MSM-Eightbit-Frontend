@@ -192,7 +192,7 @@ const ShiftEdit = ({
               <Input
                 required
                 disabled={isDisplay}
-                title="Shift Name *"
+                title="Shift Name"
                 type="str"
                 inputValue={formData.name}
                 name="ShiftName"
@@ -201,7 +201,7 @@ const ShiftEdit = ({
                 onChange={(value) => setFormData({ ...formData, name: value })}
               />
               <DropdownSelect
-                title="Select Type *"
+                title="Select Type"
                 disabled={isDisplay}
                 options={shiftTypeOptions}
                 selected={
@@ -217,7 +217,7 @@ const ShiftEdit = ({
 
             <div className="grid grid-cols-2 gap-3">
               <DropdownSelect
-                title="Present *"
+                title="Present"
                 disabled={isDisplay}
                 options={attendanceTypeOption}
                 selected={
@@ -306,7 +306,7 @@ const ShiftEdit = ({
               <TimeInput
                 required
                 disabled={isDisplay}
-                title="Shift In Time *"
+                title="Shift In Time"
                 value={formData.shiftIn}
                 onChange={(value) =>
                   setFormData({ ...formData, shiftIn: value })
@@ -316,7 +316,7 @@ const ShiftEdit = ({
               <TimeInput
                 required
                 disabled={isDisplay}
-                title="Shift Out Time *"
+                title="Shift Out Time"
                 value={formData.shiftOut}
                 onChange={(value) =>
                   setFormData({ ...formData, shiftOut: value })

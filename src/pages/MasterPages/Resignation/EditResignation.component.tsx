@@ -152,7 +152,7 @@ const ResignationEdit = ({
             <Input
               required
               disabled={formState === "display"}
-              title="Resignation Name *"
+              title="Resignation Name"
               type="str"
               inputValue={resignationData.name}
               name="resignation"

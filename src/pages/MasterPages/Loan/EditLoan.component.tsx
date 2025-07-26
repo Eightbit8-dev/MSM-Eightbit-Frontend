@@ -158,7 +158,7 @@ const LoanEdit = ({
               <Input
                 required
                 disabled={formState === "display"}
-                title="Loan Name *"
+                title="Loan Name"
                 type="str"
                 inputValue={newLoanData.name}
                 name="loan"
@@ -171,7 +171,7 @@ const LoanEdit = ({
               <Input
                 required
                 disabled={formState === "display"}
-                title="Employee Work *"
+                title="Employee Work"
                 prefixText="Months"
                 type="num"
                 inputValue={newLoanData.employeeWorkedMonths || ""}
@@ -189,7 +189,7 @@ const LoanEdit = ({
               <Input
                 required
                 disabled={formState === "display"}
-                title="Max Eligible Amount *"
+                title="Max Eligible Amount"
                 prefixText="₹"
                 type="num"
                 inputValue={newLoanData.maxEligibilityAmount || ""}
@@ -205,7 +205,7 @@ const LoanEdit = ({
               <Input
                 required
                 disabled={formState === "display"}
-                title="Loan Repayment Period *"
+                title="Loan Repayment Period"
                 type="num"
                 prefixText="Months"
                 inputValue={newLoanData.loanRepaymentPeriod || ""}

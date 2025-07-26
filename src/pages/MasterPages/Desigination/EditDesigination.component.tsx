@@ -149,7 +149,7 @@ const DesignationEdit = ({
             <Input
               required
               disabled={formState === "display"}
-              title="Designation Name *"
+              title="Designation Name"
               type="str"
               inputValue={designationData.name}
               name="designation"

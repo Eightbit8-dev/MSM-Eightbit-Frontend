@@ -73,3 +73,26 @@ export const useGetEmployeeBranch = (Code: string) => {
     enabled: !!Code, // only run when code is provided
   });
 };
+
+// 🔍 GET specific employee's branch
+export const useEmployeeSearch = (Code: string,prefix:string) => {
+  return useQuery({
+    queryKey: ["employee-search", Code],
+    queryFn: async () => {
+      const token = Cookies.get("token");
+      if (!token) throw new Error("Unauthorized");
+
+      const response = await axiosInstance.get(`${apiRoutes.employeeSearch}/code?prefix=${prefix}&page=0&limit=20`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      });
+
+      return response.data;
+    },
+    enabled: !!Code, // only run when code is provided
+  });
+};
+
+
+

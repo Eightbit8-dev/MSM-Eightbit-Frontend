@@ -138,7 +138,7 @@ const BloodEdit = ({
             <Input
               required
               disabled={isDisplay}
-              title="Blood Group Name *"
+              title="Blood Group Name"
               type="str"
               inputValue={formData.name}
               name="Blood"

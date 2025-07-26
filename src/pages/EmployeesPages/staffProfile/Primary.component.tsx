@@ -47,6 +47,7 @@ const StaffProfilePrimary: React.FC<StaffProfilePrimaryProps> = ({
     gender: "Select Gender",
     dob: "",
     age: 0,
+    Prefix:"Mr",
     confirmationDate: "",
     maritalStatus: "Select Maritial Status",
     status: "Select Status",
@@ -58,8 +59,8 @@ const StaffProfilePrimary: React.FC<StaffProfilePrimaryProps> = ({
     biometricNo: "",
     salaryType: "Select Salary Type",
     aadharNo: "",
-    mobile1: "",
-    mobileOfficial: "",
+    mobilePersonal: "",
+    mobileWork: "",
     bloodGroup: [0, "Select Blood Group"],
   };
 
@@ -247,10 +248,10 @@ const StaffProfilePrimary: React.FC<StaffProfilePrimaryProps> = ({
             ]}
             selected={{
               id: 404,
-              label: dataCopy.gender,
+              label: dataCopy.Prefix,
             }}
             onChange={(value) =>
-              setDataCopy({ ...dataCopy, gender: value.label })
+              setDataCopy({ ...dataCopy, Prefix: value.label })
             }
           />
           <Input
@@ -343,7 +344,6 @@ const StaffProfilePrimary: React.FC<StaffProfilePrimaryProps> = ({
             { id: 1, label: "Male" },
             { id: 2, label: "Female" },
             { id: 3, label: "Transgender" },
-            { id: 4, label: "Rather not say" },
           ]}
           selected={{
             id: 404,
@@ -514,9 +514,9 @@ const StaffProfilePrimary: React.FC<StaffProfilePrimaryProps> = ({
           placeholder="Enter 10 digit mobile number"
           disabled={formState === "display"}
           title="Mobile (Personal)"
-          inputValue={dataCopy?.mobile1 || ""}
+          inputValue={dataCopy?.mobilePersonal || ""}
           prefixText="+91"
-          onChange={(value) => setDataCopy({ ...dataCopy, mobile1: value })}
+          onChange={(value) => setDataCopy({ ...dataCopy, mobilePersonal: value })}
         />
         <Input
           required
@@ -526,9 +526,9 @@ const StaffProfilePrimary: React.FC<StaffProfilePrimaryProps> = ({
           disabled={formState === "display"}
           title="Mobile (Official)"
           prefixText="+91"
-          inputValue={dataCopy?.mobileOfficial || ""}
+          inputValue={dataCopy?.mobileWork || ""}
           onChange={(value) =>
-            setDataCopy({ ...dataCopy, mobileOfficial: value })
+            setDataCopy({ ...dataCopy, mobileWork: value })
           }
         />
         <DropdownSelect

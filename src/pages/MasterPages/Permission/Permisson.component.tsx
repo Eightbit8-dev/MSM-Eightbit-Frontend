@@ -179,7 +179,7 @@ const PermissionEdit = ({
               <Input
                 required
                 disabled={isDisplay}
-                title="Permission Name *"
+                title="Permission Name"
                 type="str"
                 inputValue={formData.name}
                 name="Permission"
@@ -188,7 +188,7 @@ const PermissionEdit = ({
                 onChange={(value) => setFormData({ ...formData, name: value })}
               />
               <DropdownSelect
-                title="Select Type *"
+                title="Select Type"
                 disabled={isDisplay}
                 options={permissionTypes || []}
                 selected={selectedOption}
@@ -202,7 +202,7 @@ const PermissionEdit = ({
               <TimeInput
                 required
                 disabled={isDisplay}
-                title="Start Time *"
+                title="Start Time"
                 value={formData.startTime}
                 onChange={(value) =>
                   setFormData({ ...formData, startTime: value })
@@ -211,7 +211,7 @@ const PermissionEdit = ({
               <TimeInput
                 required
                 disabled={isDisplay}
-                title="End Time *"
+                title="End Time"
                 value={formData.endTime}
                 onChange={(value) =>
                   setFormData({ ...formData, endTime: value })

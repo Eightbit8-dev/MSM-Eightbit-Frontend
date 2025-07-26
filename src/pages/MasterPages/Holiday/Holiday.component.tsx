@@ -221,7 +221,7 @@ const HolidayEdit = ({
             <Input
               required
               disabled={isDisplay}
-              title="Holiday Name *"
+              title="Holiday Name"
               type="str"
               inputValue={formData.name}
               name="Holiday"
@@ -234,7 +234,7 @@ const HolidayEdit = ({
               <Input
                 required
                 disabled={isDisplay}
-                title="Holiday Date *"
+                title="Holiday Date"
                 inputValue={formData.holidayDate}
                 name="holidayDate"
                 placeholder="Select date"
@@ -245,7 +245,7 @@ const HolidayEdit = ({
 
               {!isDisplay && attendanceTypes && (
                 <DropdownSelect
-                  title="Leave Type *"
+                  title="Leave Type"
                   options={attendanceTypes}
                   selected={
                     attendanceTypes.find(

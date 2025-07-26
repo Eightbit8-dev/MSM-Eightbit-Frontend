@@ -19,11 +19,11 @@ export const apiRoutes = {
   holidaymonth: "/api/admin/months",
   holidayyears: "/api/admin/years",
   // ------------------ Employee API Routes ------------------
-  employeeProfile: "/api/admin/employee-profile/summary",
-  employeePrimary: "/api/admin/employee-profile/primary",
-  employeeContact: "/api/admin/employee-profile/contact",
-  employeeRejoin: "/api/admin/employee-rejoin",
-  employeeResignation: "/api/admin/employee-resignation",
+  employeeProfile: "/api/admin/employee/summary",
+  employeePrimary: "/api/admin/employee/profile",
+  employeeContact:"/api/admin/employee-profile/contact",
+  employeeRejoin:"/api/admin/employee-rejoin",
   employeeTransfer:"/api/admin/employee-transfer",
-  employeeTransferBranch:"/api/admin/employee-transfer/branch-info"
+  employeeTransferBranch:"/api/admin/employee-transfer/branch-info",
+  employeeSearch:"/api/admin/employee/search"
 };

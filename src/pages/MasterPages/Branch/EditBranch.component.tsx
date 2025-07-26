@@ -156,7 +156,7 @@ const BranchEdit = ({
             <Input
               required
               disabled={formState === "display"}
-              title="Branch Name *"
+              title="Branch Name"
               type="str"
               inputValue={newbranchData.name}
               name="branch"
@@ -170,7 +170,7 @@ const BranchEdit = ({
               <Input
                 required
                 disabled={formState === "display"}
-                title="Address Line 1 *"
+                title="Address Line 1"
                 type="str"
                 inputValue={newbranchData.addressLine1}
                 name="address1"
