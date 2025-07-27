@@ -31,7 +31,7 @@ export const MasterPage = () => {
     {
       img: "/icons/Master/Products.svg",
       title: "Products",
-      desc: "Catalog, track, and manage your products or items.",
+      desc: "Catalog, track, and manage your products or items in one page.",
       btnText: "Configure",
       onAction: () => navigate(appRoutes.masterRoutes.children.products),
     },

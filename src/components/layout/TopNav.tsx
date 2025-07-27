@@ -1,12 +1,20 @@
 import { motion } from "framer-motion";
 import React from "react";
 import NotificationCenter from "../common/NotificationCenter";
+import { useAuthStore } from "@/store/useAuthStore";
 
-interface TopNavProps {
-  userName?: string;
-  formattedDate?: string;
-}
-export const TopNav: React.FC<TopNavProps> = ({ userName, formattedDate }) => {
+export const TopNav: React.FC = () => {
+  const date = new Date(  );
+const options: Intl.DateTimeFormatOptions = {
+  weekday: "long",
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+};
+const formatted = date.toLocaleDateString("en-GB", options);
+
+  const { userName, role } = useAuthStore();
+  console.log(userName, role);
   return (
     <motion.header
       initial={{ opacity: 0, y: -10 }}
@@ -31,10 +39,9 @@ export const TopNav: React.FC<TopNavProps> = ({ userName, formattedDate }) => {
             transition={{ delay: 0.2 }}
             className="text-sm text-zinc-500"
           >
-            {formattedDate}
+            {formatted}
           </motion.p>
         </div>
-
 
         {/* Action Buttons */}
         <motion.div
