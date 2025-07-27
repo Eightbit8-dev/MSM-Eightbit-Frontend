@@ -6,6 +6,7 @@ import MainLayout from "./components/layout/MainLayout";
 import { appRoutes } from "./routes/appRoutes";
 import { Spinner } from "./components/layout/Spinner";
 import ProtectedRoute from "./components/layout/ProtectedRoute";
+import TransactionPage from "./pages/TransactionPage";
 
 // ------------------Main Pages ---------------------------
 const DashBoardPage = lazy(() => import("./pages/DashBoardPage"));
@@ -51,6 +52,7 @@ const App = () => {
           path="/"
           element={<Navigate to={appRoutes.dashboardPage} replace />}
         />
+        <Route path={appRoutes.transactionRoutes.transcationPage} element={<TransactionPage/>}/>
         <Route path="*" element={<ErrorPage />} />
 
         {/* Main Layout Routes */}
@@ -58,6 +60,7 @@ const App = () => {
         <Route element={<ProtectedRoute />}>
           <Route element={<MainLayout />}>
             <Route path={appRoutes.dashboardPage} element={<DashBoardPage />} />
+
 
             {/* Master Page and its nested components */}
             <Route
