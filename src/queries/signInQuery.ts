@@ -10,6 +10,7 @@ import { SignInSchema } from "../utils/validationSchema";
 import { ZodError } from "zod";
 import { apiRoutes } from "../routes/apiRoutes";
 import Cookies from "js-cookie";
+import { useAuthStore } from "@/store/useAuthStore";
 
 const signInRequest = async (
   data: signInRequestType,
@@ -19,12 +20,11 @@ const signInRequest = async (
     const response = await axiosInstance.post(apiRoutes.signin, parsed);
 
     if (response.status === 200) {
-      // ✅ Store token in a secure cookie
       Cookies.set("token", response.data.token, {
-        expires: 1, // 1 day
-        secure: true, // use false for localhost
-        sameSite: "strict", // protect from CSRF
-        path: "/", // available throughout the app
+        expires: 1,
+        secure: import.meta.env.VITE_MODE  === "production",
+        sameSite: "strict",
+        path: "/",
       });
 
       toast.success("Sign-in successful!");
@@ -48,5 +48,8 @@ const signInRequest = async (
 export const useSignInMutation = () => {
   return useMutation({
     mutationFn: signInRequest,
+    onSuccess: (res) => {
+      useAuthStore.getState().setAuthData(res.username, res.role);
+    },
   });
 };

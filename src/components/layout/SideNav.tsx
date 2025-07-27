@@ -1,63 +1,45 @@
 import React, { useState, useEffect } from "react";
 import { appRoutes } from "../../routes/appRoutes";
-import { motion } from "motion/react";
+import { motion } from "framer-motion"; // fixed: 'motion/react' is incorrect
+import { useNavigate } from "react-router-dom";
 
 const SideNav: React.FC = () => {
   const [activeRoute, setActiveRoute] = useState<string>("");
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Get current pathname
     const currentPath = window.location.pathname;
     setActiveRoute(currentPath);
-
-    // Auto-expand section based on current route (only one at a time)
-    if (currentPath.startsWith("/master")) {
-      setActiveRoute(appRoutes.masterRoutes.masterPage);
-    } else if (currentPath.startsWith("/dashboard")) {
-      setActiveRoute(appRoutes.dashboardPage);
-    } else if (currentPath.startsWith("/loan")) {
-      setActiveRoute(appRoutes.loanPage);
-    }
   }, []);
 
-  const isRouteActive = (route: string): boolean => {
-    return activeRoute === route;
+  const isRouteActive = (baseRoute: string) => {
+    return activeRoute.startsWith(baseRoute);
   };
 
   const navigateToRoute = (route: string) => {
     setActiveRoute(route);
-    window.history.pushState({}, "", route);
-
-    // Dispatch popstate event to notify other components of route change
-    window.dispatchEvent(new PopStateEvent("popstate"));
+    navigate(route);
   };
 
   return (
-    <div
-      className={`floating-container relative flex h-screen border-r-2 border-slate-300 transition-all duration-300`}
-    >
+    <div className="floating-container relative  h-screen border-r-2 border-slate-300 transition-all duration-300 hidden lg:flex">
       <motion.section
-        className={`flex h-screen flex-col items-center justify-start gap-3 overflow-clip transition-all duration-300 select-none`}
-        animate={{
-          x: 0,
-          opacity: 1,
-        }}
+        className="flex h-screen flex-col items-center justify-start gap-3 overflow-clip transition-all duration-300 select-none"
+        animate={{ x: 0, opacity: 1 }}
       >
-        {/* Header section */}
+        {/* ---------- LOGO ----------- */}
         <motion.div
           className="relative flex max-w-full flex-col items-center justify-center overflow-clip px-4 py-4"
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.5 }}
         >
-          {/* logo */}
           <motion.img
             src="/icons/logo-icon-side-nav.svg"
             alt="Logo"
             whileHover={{ rotate: 360 }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
           />
-          {/* Roles */}
           <motion.p
             className="orange-gradient absolute bottom-1.5 rounded px-1.5 py-1 text-[10px] font-normal text-white"
             initial={{ scale: 0, opacity: 0 }}
@@ -69,14 +51,13 @@ const SideNav: React.FC = () => {
           </motion.p>
         </motion.div>
 
-        {/* Navigation items */}
+        {/* ---------- NAVIGATION ITEMS ----------- */}
         <motion.div
           className="main-navigation-items flex h-full flex-col justify-between px-1.5"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.5 }}
         >
-          {/* Top Navigation Items */}
           <div className="flex flex-col gap-3 overflow-y-auto">
             <NavigationButton
               labelName="Dashboard"
@@ -85,7 +66,8 @@ const SideNav: React.FC = () => {
               activeIconSrc="/icons/sideNavIcons/dashboard-icon-active.svg"
               onClick={() => navigateToRoute(appRoutes.dashboardPage)}
             />
-                      <NavigationButton
+
+            <NavigationButton
               labelName="Master"
               isActive={isRouteActive(appRoutes.masterRoutes.masterPage)}
               iconSrc="/icons/sideNavIcons/master-icon.svg"
@@ -94,26 +76,27 @@ const SideNav: React.FC = () => {
             />
 
             <NavigationButton
-              labelName="Transcation"
-              isActive={isRouteActive(appRoutes.loanPage)}
+              labelName="Transaction"
+              isActive={isRouteActive(appRoutes.transactionRoutes.transcationPage)}
               iconSrc="/icons/sideNavIcons/loan-icon.svg"
               activeIconSrc="/icons/sideNavIcons/loan-icon-active.svg"
-              onClick={() => navigateToRoute(appRoutes.loanPage)}
+              onClick={() => navigateToRoute(appRoutes.transactionRoutes.transcationPage)}
             />
+
             <NavigationButton
               labelName="Users"
-              isActive={isRouteActive(appRoutes.dashboardPage)}
+              isActive={isRouteActive(appRoutes.userRoutes?.userPage || "/users")}
               iconSrc="/icons/sideNavIcons/users-icon.svg"
               activeIconSrc="/icons/sideNavIcons/users-icon-active.svg"
-              onClick={() => navigateToRoute(appRoutes.dashboardPage)}
+              onClick={() => navigateToRoute(appRoutes.userRoutes?.userPage || "/users")}
             />
 
             <NavigationButton
               labelName="Reports"
-              isActive={isRouteActive(appRoutes.homePage)}
+              isActive={isRouteActive(appRoutes.reportRoutes?.reportPage || "/reports")}
               iconSrc="/icons/sideNavIcons/reports-icon.svg"
               activeIconSrc="/icons/sideNavIcons/reports-icon-active.svg"
-              onClick={() => navigateToRoute(appRoutes.errorPage)}
+              onClick={() => navigateToRoute(appRoutes.reportRoutes?.reportPage || "/reports")}
             />
           </div>
         </motion.div>
