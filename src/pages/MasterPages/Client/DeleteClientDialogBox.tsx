@@ -1,30 +1,27 @@
 import { toast } from "react-toastify";
 import ButtonSm from "../../../components/common/Buttons";
-import { useDeleteDesignation } from "../../../queries/masterQueries/DesiginationQuery";
-import type { DesignationsDetails } from "../../../types/masterApiTypes";
+import { useDeleteClient } from "../../../queries/masterQueries/ClientQuery";
+import type { ClientDetails } from "../../../types/masterApiTypes";
 
-export const DeleteDesignationDialogBox = ({
-  setIsDeleteDesignationDialogOpen,
-  Designation,
+export const DeleteClientDialogBox = ({
+  setIsDeleteClientDialogOpen,
+  client,
   onDeleted,
 }: {
-  setIsDeleteDesignationDialogOpen: React.Dispatch<
-    React.SetStateAction<boolean>
-  >;
-  Designation: DesignationsDetails;
+  setIsDeleteClientDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  client: ClientDetails;
   onDeleted: () => void;
 }) => {
-  const { mutate: deleteDesignation, isPending: isDeleting } =
-    useDeleteDesignation();
+  const { mutate: deleteClient, isPending: isDeleting } = useDeleteClient();
 
   const handleDelete = () => {
-    deleteDesignation(Designation, {
+    deleteClient(client, {
       onSuccess: () => {
-        onDeleted(); // reset state in parent
-        setIsDeleteDesignationDialogOpen(false);
+        onDeleted();
+        setIsDeleteClientDialogOpen(false);
       },
       onError: () => {
-        toast.error(`Failed to delete designation "${Designation.name}"`);
+        toast.error(`Failed to delete client "${client.clientName}"`);
       },
     });
   };
@@ -38,9 +35,9 @@ export const DeleteDesignationDialogBox = ({
       }}
     >
       <header className="header flex w-full flex-row items-center justify-between text-lg font-medium text-red-600">
-        Delete Designation
+        Delete Client
         <img
-          onClick={() => setIsDeleteDesignationDialogOpen(false)}
+          onClick={() => setIsDeleteClientDialogOpen(false)}
           className="w-5 cursor-pointer"
           src="/icons/close-icon.svg"
           alt="close"
@@ -48,8 +45,8 @@ export const DeleteDesignationDialogBox = ({
       </header>
 
       <p className="text-md font-medium text-zinc-700">
-        Are you sure you want to delete the designation{" "}
-        <strong>{Designation.name}</strong>? This action is irreversible.
+        Are you sure you want to delete the client{" "}
+        <strong>{client.clientName}</strong>? This action is irreversible.
       </p>
 
       <section className="mt-1 grid w-full grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-3">
@@ -58,7 +55,7 @@ export const DeleteDesignationDialogBox = ({
           state="outline"
           text="Cancel"
           disabled={isDeleting}
-          onClick={() => setIsDeleteDesignationDialogOpen(false)}
+          onClick={() => setIsDeleteClientDialogOpen(false)}
         />
         <ButtonSm
           className="items-center justify-center bg-red-500 text-center text-white hover:bg-red-700 active:bg-red-500"
