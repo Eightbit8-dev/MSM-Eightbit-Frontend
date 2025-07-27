@@ -59,8 +59,6 @@ export const useCreateSpare = () => {
     try {
       const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
-
-      toast.success(newSpare.spareName + " Spare Created Successfully");
       const res = await axiosInstance.post(
         apiRoutes.machineSpares,newSpare,
         {

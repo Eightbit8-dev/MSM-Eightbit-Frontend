@@ -93,13 +93,16 @@ const SpareEdit = ({
     }
   };
 
-  const handleCancel = () => {
-    if (formState === "edit" && spareData) {
-      setNewSpareData(spareData);
-    } else {
-      setNewSpareData(emptySpare);
-    }
-  };
+const handleCancel = () => {
+  if (formState === "edit" && spareData) {
+    setNewSpareData(emptySpare);
+    setSpareData(null);
+    setFormState("create"); // 👈 switch back to create mode
+  } else {
+    setNewSpareData(emptySpare);
+  }
+};
+
 
   return (
     <motion.main
@@ -121,14 +124,15 @@ const SpareEdit = ({
             </h1>
 
             <section className="ml-auto flex flex-row items-center gap-3">
-              {isDirty && (
-                <ButtonSm
-                  className="font-medium"
-                  text="Cancel"
-                  state="outline"
-                  onClick={handleCancel}
-                />
-              )}
+{(formState === "edit" || isDirty) && (
+  <ButtonSm
+    className="font-medium"
+    text="Cancel"
+    state="outline"
+    onClick={handleCancel}
+  />
+)}
+
 
               {formState === "create" && (
                 <ButtonSm
