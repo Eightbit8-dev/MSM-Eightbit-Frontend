@@ -7,6 +7,8 @@ import { appRoutes } from "./routes/appRoutes";
 import { Spinner } from "./components/layout/Spinner";
 import ProtectedRoute from "./components/layout/ProtectedRoute";
 import TransactionPage from "./pages/TransactionPage";
+import UsersPage from "./pages/UsersPage";
+import Report from "./pages/Report";
 
 // ------------------Main Pages ---------------------------
 const DashBoardPage = lazy(() => import("./pages/DashBoardPage"));
@@ -21,18 +23,12 @@ const ResignationPage = lazy(
 const DesignationsPage = lazy(
   () => import("./pages/MasterPages/Client/ClientPage"),
 );
-const VendorsPage = lazy(
-  () => import("./pages/MasterPages/Vendor/VendorPage"),
-);
+const VendorsPage = lazy(() => import("./pages/MasterPages/Vendor/VendorPage"));
 const DepartmentsPage = lazy(
   () => import("./pages/MasterPages/Spares/SparesPage"),
 );
 const LoanMPage = lazy(() => import("./pages/MasterPages/Problem/ProblemPage"));
-const Bloodpage = lazy(
-  () => import("./pages/MasterPages/Users/UsersPage"),
-);
-
-
+const Bloodpage = lazy(() => import("./pages/MasterPages/Users/UsersPage"));
 
 const App = () => {
   return (
@@ -52,7 +48,7 @@ const App = () => {
           path="/"
           element={<Navigate to={appRoutes.dashboardPage} replace />}
         />
-        <Route path={appRoutes.transactionRoutes.transcationPage} element={<TransactionPage/>}/>
+
         <Route path="*" element={<ErrorPage />} />
 
         {/* Main Layout Routes */}
@@ -60,8 +56,19 @@ const App = () => {
         <Route element={<ProtectedRoute />}>
           <Route element={<MainLayout />}>
             <Route path={appRoutes.dashboardPage} element={<DashBoardPage />} />
+            <Route
+              path={appRoutes.reportRoutes.reportPage}
+              element={<Report />}
+            />
 
-
+            <Route
+              path={appRoutes.transactionRoutes.transcationPage}
+              element={<TransactionPage />}
+            />
+            <Route
+              path={appRoutes.userRoutes.userPage}
+              element={<UsersPage />}
+            />
             {/* Master Page and its nested components */}
             <Route
               path={appRoutes.masterRoutes.masterPage}
