@@ -50,7 +50,7 @@ const BottomNav: React.FC = () => {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 flex justify-around border-t bg-white px-2 py-2 shadow-md lg:hidden">
-      <div className="flex flex-row gap-4 w-full justify-between max-w-[390px] px-3">
+      <div className="flex flex-row gap-4 w-full justify-between max-w-[390px] px-3 ">
         {navItems.map((item) => (
         <button
           key={item.label}
