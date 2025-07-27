@@ -28,12 +28,10 @@ export interface ResignationDetails {
   remarks: string;
 }
 
-export interface DepartmentDetails {
+export interface SpareDetails {
   id: number;
-  name: string;
-  remarks: string;
-  code: string;
-  active?: boolean;
+  spareName: string;
+  partNumber: string;
 }
 
 export interface AttendanceDetails {

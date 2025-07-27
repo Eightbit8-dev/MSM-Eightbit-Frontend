@@ -1,48 +1,46 @@
 import { useEffect } from "react";
 import ButtonSm from "../../../components/common/Buttons";
-import { useDeleteDepartment } from "../../../queries/masterQueries/DepartmentQuery";
-import type { DepartmentDetails } from "../../../types/masterApiTypes";
+import type { SpareDetails } from "../../../types/masterApiTypes";
 import type { FormState } from "../../../types/appTypes";
+import { useDeleteSpare } from "@/queries/masterQueries/SpareQuery";
 
-export const DeleteDepartmentDialogBox = ({
-  setIsDeleteDepartmentDialogOpen,
+export const DeleteSpareDialogBox = ({
+  setIsDeleteSpareDialogOpen,
   setFormState,
-  setDepartment,
-  department,
+  setSpare,
+  spare,
 }: {
-  setIsDeleteDepartmentDialogOpen: React.Dispatch<
+  setIsDeleteSpareDialogOpen: React.Dispatch<
     React.SetStateAction<boolean>
   >;
   setFormState: React.Dispatch<React.SetStateAction<FormState>>;
-  setDepartment: React.Dispatch<React.SetStateAction<DepartmentDetails | null>>;
-  department: DepartmentDetails;
+  setSpare: React.Dispatch<React.SetStateAction<SpareDetails | null>>;
+  spare: SpareDetails;
 }) => {
   const {
-    mutate: deleteDepartment,
-    isPending: isDeleteDepartmentLoading,
+    mutate: deleteSpare,
+    isPending: isDeleteSpareLoading,
     isSuccess,
-  } = useDeleteDepartment();
+  } = useDeleteSpare();
 
   //Dummy data for cleanuo
-  const emptyDepartment: DepartmentDetails = {
-    name: "",
-    code: "",
-    remarks: "",
-    active: true,
+  const emptySpare: SpareDetails = {
+    spareName: "",
+    partNumber: "",
     id: 0,
   };
 
   useEffect(() => {
     if (isSuccess) {
       setFormState("create");
-      setDepartment(emptyDepartment);
+      setSpare(emptySpare);
     }
   }, [isSuccess]);
 
-  const handleDelete = (dept: DepartmentDetails) => {
-    deleteDepartment(dept.id);
-    setIsDeleteDepartmentDialogOpen(false);
-    setDepartment(emptyDepartment);
+  const handleDelete = (spare: SpareDetails) => {
+    deleteSpare(spare.id);
+    setIsDeleteSpareDialogOpen(false);
+    setSpare(emptySpare);
     setFormState("create");
   };
 
@@ -51,14 +49,14 @@ export const DeleteDepartmentDialogBox = ({
       className="flex w-full flex-col gap-4"
       onSubmit={(e) => {
         e.preventDefault();
-        handleDelete(department);
-        setIsDeleteDepartmentDialogOpen(false);
+        handleDelete(spare);
+        setIsDeleteSpareDialogOpen(false);
       }}
     >
       <header className="header flex w-full flex-row items-center justify-between text-lg font-medium text-red-600">
-        Delete Department
+        Delete Spare
         <img
-          onClick={() => setIsDeleteDepartmentDialogOpen(false)}
+          onClick={() => setIsDeleteSpareDialogOpen(false)}
           className="w-5 cursor-pointer"
           src="/icons/close-icon.svg"
           alt="close"
@@ -66,8 +64,8 @@ export const DeleteDepartmentDialogBox = ({
       </header>
 
       <p className="text-md font-medium text-zinc-700">
-        Are you sure you want to delete the department{" "}
-        <strong>{department.name}</strong>? This action is irreversible.
+        Are you sure you want to delete the spare{" "}
+        <strong>{spare.spareName}</strong>? This action is irreversible.
       </p>
 
       <section className="mt-1 grid w-full grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-3">
@@ -75,15 +73,15 @@ export const DeleteDepartmentDialogBox = ({
           className="justify-center font-semibold"
           state="outline"
           text="Cancel"
-          onClick={() => setIsDeleteDepartmentDialogOpen(false)}
+          onClick={() => setIsDeleteSpareDialogOpen(false)}
         />
         <ButtonSm
           className="items-center justify-center bg-red-500 text-white hover:bg-red-700 active:bg-red-500"
           state="default"
-          text={isDeleteDepartmentLoading ? "Deleting..." : "Delete"}
+          text={isDeleteSpareLoading ? "Deleting..." : "Delete"}
           onClick={() => {
-            handleDelete(department);
-            setIsDeleteDepartmentDialogOpen(false);
+            handleDelete(spare);
+            setIsDeleteSpareDialogOpen(false);
           }}
         />
       </section>

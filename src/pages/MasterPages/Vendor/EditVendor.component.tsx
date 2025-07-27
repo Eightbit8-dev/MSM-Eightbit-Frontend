@@ -7,7 +7,6 @@ import {
   useEditVendor,
 } from "../../../queries/masterQueries/VendorQuery";
 import type { VendorDetails } from "../../../types/masterApiTypes";
-import { usersData } from "../../../utils/userData";
 
 const VendorEdit = ({
   vendorDetails,
@@ -20,7 +19,6 @@ const VendorEdit = ({
   setFormState: React.Dispatch<React.SetStateAction<FormState>>;
   setVendorData: React.Dispatch<React.SetStateAction<VendorDetails | null>>;
 }) => {
-  const [users, setUsers] = useState(usersData);
   const [vendorData, setVendorDataLocal] = useState<VendorDetails | null>(null);
   const [newVendorData, setNewVendorData] = useState<VendorDetails | null>(null);
   const [title, setTitle] = useState("");

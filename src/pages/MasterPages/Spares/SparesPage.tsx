@@ -3,39 +3,39 @@ import PageHeader from "../../../components/masterPage.components/PageHeader";
 import { AnimatePresence } from "motion/react";
 import { useState } from "react";
 import DialogBox from "../../../components/common/DialogBox";
-import { DeleteDepartmentDialogBox } from "./DeleteSpares";
+import { DeleteSpareDialogBox } from "./DeleteSpares";
 import MasterPagesSkeleton from "../../../components/masterPage.components/LoadingSkeleton";
 import ErrorComponent from "../../../components/common/Error";
 import type { FormState } from "../../../types/appTypes";
-import type { DepartmentDetails } from "../../../types/masterApiTypes";
-import { useFetchDepartments } from "../../../queries/masterQueries/DepartmentQuery";
-import DepartmentEdit from "./Spares.component";
+import type { SpareDetails } from "../../../types/masterApiTypes";
+import { useFetchSpares } from "../../../queries/masterQueries/SpareQuery";
+import SpareEdit from "./Spares.component";
 
-const DepartmentsPage = () => {
-  const [isDeleteDepartmentDialogOpen, setIsDeleteDepartmentDialogOpen] =
-    useState(false); //Mangae the state of the dialog box
-  const [selectedDepartment, setSelectedDepartment] =
-    useState<DepartmentDetails | null>({} as DepartmentDetails); //Store the selected department details null if user wants to create one
-  const [formState, setFormState] = useState<FormState>("create"); //Manage the state  ["display", "create", "edit"]
+const SparesPage = () => {
+  const [isDeleteSpareDialogOpen, setIsDeleteSpareDialogOpen] =
+    useState(false);
+  const [selectedSpare, setSelectedSpare] =
+    useState<SpareDetails | null>({} as SpareDetails);
+  const [formState, setFormState] = useState<FormState>("create");
 
   const {
-    data: departments,
-    isLoading: isDepartmentsLoading,
-    isError: isDepartmentsError,
-  } = useFetchDepartments(); //Tanstack method
+    data: spares,
+    isLoading: isSparesLoading,
+    isError: isSparesError,
+  } = useFetchSpares();
 
-  if (isDepartmentsLoading) return <MasterPagesSkeleton />;
-  if (isDepartmentsError) return <ErrorComponent />;
+  if (isSparesLoading) return <MasterPagesSkeleton />;
+  if (isSparesError) return <ErrorComponent />;
 
   return (
     <main className="flex w-full max-w-full flex-col gap-4 md:flex-row">
       <AnimatePresence>
-        {isDeleteDepartmentDialogOpen && (
-          <DialogBox setToggleDialogueBox={setIsDeleteDepartmentDialogOpen}>
-            <DeleteDepartmentDialogBox
-              setIsDeleteDepartmentDialogOpen={setIsDeleteDepartmentDialogOpen}
-              department={selectedDepartment!}
-              setDepartment={setSelectedDepartment}
+        {isDeleteSpareDialogOpen && (
+          <DialogBox setToggleDialogueBox={setIsDeleteSpareDialogOpen}>
+            <DeleteSpareDialogBox
+              setIsDeleteSpareDialogOpen={setIsDeleteSpareDialogOpen}
+              spare={selectedSpare!}
+              setSpare={setSelectedSpare}
               setFormState={setFormState}
             />
           </DialogBox>
@@ -43,68 +43,62 @@ const DepartmentsPage = () => {
       </AnimatePresence>
       <section className="table-container flex w-full flex-col gap-3 rounded-[12px] bg-white/80 p-4 shadow-sm md:w-[40%]">
         <header className="flex h-max flex-row items-center justify-between">
-          <PageHeader title="Department configuration" />
+          <PageHeader title="Spare Configuration" />
         </header>
         <div className="tables flex w-full flex-col overflow-clip rounded-[9px]">
-          {/* table header */}
+          {/* Table Header */}
           <header className="header flex w-full flex-row items-center gap-2 bg-gray-200 px-3">
             <p className="w-max min-w-[100px] px-2 py-4 text-start text-sm font-semibold text-zinc-900">
               S.No
             </p>
             <p className="w-full text-start text-sm font-semibold text-zinc-900">
-              Name
+              Spare Name
             </p>
-
+            <p className="w-full text-start text-sm font-semibold text-zinc-900">
+              Part Number
+            </p>
             <p className="min-w-[120px] text-start text-sm font-semibold text-zinc-900">
               Action
             </p>
           </header>
-          {/* table body with data if no data show no data found*/}
-          {departments?.length === 0 && (
+
+          {/* Table Body */}
+          {spares?.length === 0 && (
             <h2 className="text-md my-3 text-center font-medium text-zinc-600">
-              No Departments Found
+              No Spares Found
             </h2>
           )}
-          {departments?.map((item: DepartmentDetails, index) => {
+          {spares?.map((item: SpareDetails, index) => {
             return (
               <div
                 key={index + 1}
-                className={`cell-1 flex w-full cursor-pointer flex-row items-center gap-2 px-3 py-2 text-zinc-700 ${selectedDepartment?.id === item.id ? "bg-gray-100 text-white" : index % 2 === 0 ? "bg-white" : "bg-slate-50"} hover:bg-slate-100 active:bg-slate-200`}
+                className={`cell-1 flex w-full cursor-pointer flex-row items-center gap-2 px-3 py-2 text-zinc-700 ${selectedSpare?.id === item.id ? "bg-gray-100 text-white" : index % 2 === 0 ? "bg-white" : "bg-slate-50"} hover:bg-slate-100 active:bg-slate-200`}
                 onClick={(e) => {
                   e.stopPropagation();
-                  if (selectedDepartment?.id === item.id) return;
+                  if (selectedSpare?.id === item.id) return;
                   setFormState("display");
-                  setSelectedDepartment({
-                    id: item.id,
-                    remarks: item.remarks,
-                    active: true,
-                    name: item.name,
-                    code: item.code,
-                  });
+                  setSelectedSpare({ ...item });
                 }}
               >
                 <p className="w-max min-w-[100px] px-2 py-4 text-start text-sm font-medium">
                   {index + 1}
                 </p>
                 <p className="w-full text-start text-sm font-medium">
-                  {item.name}
+                  {item.spareName}
+                </p>
+                <p className="w-full text-start text-sm font-medium">
+                  {item.partNumber}
                 </p>
 
                 <div className="flex min-w-[120px] flex-row gap-2 text-start text-sm font-medium">
                   <ButtonSm
-                    className={`${formState === "edit" && selectedDepartment?.id === item.id ? "!hover:bg-blue-500 !hover:text-black !active:bg-blue-600 !bg-blue-500 !text-white" : "bg-white"}`}
+                    className={`${formState === "edit" && selectedSpare?.id === item.id ? "!hover:bg-blue-500 !hover:text-black !active:bg-blue-600 !bg-blue-500 !text-white" : "bg-white"}`}
                     state="outline"
                     text="Edit"
                     onClick={(e) => {
                       e.stopPropagation();
                       setFormState("edit");
-                      setSelectedDepartment({
-                        id: item.id,
-                        remarks: item.remarks,
-                        active: true,
-                        name: item.name,
-                        code: item.code,
-                      });
+                      setSelectedSpare({ ...item });
                     }}
                   />
                   <ButtonSm
@@ -113,7 +107,7 @@ const DepartmentsPage = () => {
                     text="Delete"
                     onClick={() => {
                       setFormState("create");
-                      setIsDeleteDepartmentDialogOpen(true);
+                      setIsDeleteSpareDialogOpen(true);
                     }}
                   />
                 </div>
@@ -122,9 +116,10 @@ const DepartmentsPage = () => {
           })}
         </div>
       </section>
+
       <section className="table-container max-h-full w-full flex-col gap-3 rounded-[12px] bg-white/80 p-4 shadow-sm md:w-[60%]">
-        <DepartmentEdit
-          departmentDetails={selectedDepartment}
+        <SpareEdit
+          spareDetails={selectedSpare}
           formState={formState}
           setFormState={setFormState}
         />
@@ -133,4 +128,4 @@ const DepartmentsPage = () => {
   );
 };
 
-export default DepartmentsPage;
+export default SparesPage;

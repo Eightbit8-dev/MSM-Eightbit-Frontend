@@ -3,10 +3,10 @@ export const apiRoutes = {
   signup: "/api/auth/register",
   // ------------------ Master API Routes ------------------
   vendors: "/api/admin/vendors",
+  spares: "/api/admin/spares",
   designations: "/api/admin/designation",
   resigination: "/api/admin/resignation",
   Bloods: "/api/admin/bloodgroup",
-  departments: "/api/admin/department",
   attendance: "/api/admin/attendance-types",
   attendanceTypes: "/api/admin/master-types?category=attendance_type",
   permissions: "/api/admin/permission-types",
