@@ -1,55 +1,43 @@
 import { toast } from "react-toastify";
 import ButtonSm from "../../../components/common/Buttons";
-import type { ResignationDetails } from "../../../types/masterApiTypes";
-import { useDeleteResignation } from "../../../queries/masterQueries/ResiginationQuery";
-import { useEffect } from "react";
+import { useDeleteProduct } from "../../../queries/masterQueries/ProductQuery";
+import type { ProductDetails } from "../../../types/masterApiTypes";
 
-export const DeleteResignationDialogBox = ({
-  setIsDeleteDesignationDialogOpen,
-  Resignation,
-  setResignationData,
+export const DeleteProductDialogBox = ({
+  setIsDeleteProductDialogOpen,
+  product,
+  onDeleted,
 }: {
-  setIsDeleteDesignationDialogOpen: React.Dispatch<
-    React.SetStateAction<boolean>
-  >;
-  Resignation: ResignationDetails;
-  setResignationData: React.Dispatch<
-    React.SetStateAction<ResignationDetails | null>
-  >;
+  setIsDeleteProductDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  product: ProductDetails;
+  onDeleted: () => void;
 }) => {
-  const {
-    mutate: deleteResignation,
-    isPending: isDeleteResignationLoading,
-    isSuccess,
-  } = useDeleteResignation();
+  const { mutate: deleteProduct, isPending: isDeleting } = useDeleteProduct();
 
-  const handleDelete = (Resignation: ResignationDetails) => {
-    deleteResignation(Resignation);
+  const handleDelete = () => {
+    deleteProduct(product, {
+      onSuccess: () => {
+        onDeleted();
+        setIsDeleteProductDialogOpen(false);
+      },
+      onError: () => {
+        toast.error(`Failed to delete product "${product.machineType}"`);
+      },
+    });
   };
-
-  useEffect(() => {
-    if (isSuccess) {
-      setResignationData({
-        id: 0,
-        name: "",
-        remarks: "",
-      } as ResignationDetails);
-    }
-  }, [isSuccess]);
 
   return (
     <form
       className="flex w-full flex-col gap-4"
       onSubmit={(e) => {
         e.preventDefault();
-        toast.success("Deleted Designation " + JSON.stringify(":"));
-        setIsDeleteDesignationDialogOpen(false);
+        handleDelete();
       }}
     >
       <header className="header flex w-full flex-row items-center justify-between text-lg font-medium text-red-600">
-        Delete Designation
+        Delete Product
         <img
-          onClick={() => setIsDeleteDesignationDialogOpen(false)}
+          onClick={() => setIsDeleteProductDialogOpen(false)}
           className="w-5 cursor-pointer"
           src="/icons/close-icon.svg"
           alt="close"
@@ -57,8 +45,8 @@ export const DeleteResignationDialogBox = ({
       </header>
 
       <p className="text-md font-medium text-zinc-700">
-        Are you sure want to delete the Designation {Resignation.name} ? This
-        action is irreversable
+        Are you sure you want to delete the product{" "}
+        <strong>{product.machineType}</strong>? This action is irreversible.
       </p>
 
       <section className="mt-1 grid w-full grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-3">
@@ -66,16 +54,15 @@ export const DeleteResignationDialogBox = ({
           className="justify-center font-semibold"
           state="outline"
           text="Cancel"
-          onClick={() => setIsDeleteDesignationDialogOpen(false)}
+          disabled={isDeleting}
+          onClick={() => setIsDeleteProductDialogOpen(false)}
         />
         <ButtonSm
           className="items-center justify-center bg-red-500 text-center text-white hover:bg-red-700 active:bg-red-500"
           state="default"
-          onClick={() => {
-            handleDelete(Resignation);
-            setIsDeleteDesignationDialogOpen(false);
-          }}
-          text={isDeleteResignationLoading ? "Deleting..." : "Delete"}
+          text={isDeleting ? "Deleting..." : "Delete"}
+          type="submit"
+          disabled={isDeleting}
         />
       </section>
     </form>
