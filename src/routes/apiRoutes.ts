@@ -8,10 +8,9 @@ export const apiRoutes = {
   clients: "/api/admin/clients",
   products: "/api/admin/products",
   users: "/api/admin/users",
-  machineSpares: "/api/admin/machine-spares",
+  machineSpares: "/api/admin/spares",
   problemDetails: "/api/admin/problem-details",
   // ------------------ old remove this later ------------------
-  spares: "/api/admin/spares",
   designations: "/api/admin/designation",
   resigination: "/api/admin/resignation",
   Bloods: "/api/admin/bloodgroup",

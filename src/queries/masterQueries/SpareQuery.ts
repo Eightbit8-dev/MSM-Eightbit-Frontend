@@ -20,7 +20,7 @@ export const useFetchSpares = () => {
       const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
-      const res = await axiosInstance.get(apiRoutes.spares, {
+      const res = await axiosInstance.get(apiRoutes.machineSpares, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -62,7 +62,7 @@ export const useCreateSpare = () => {
 
       toast.success(newSpare.spareName + " Spare Created Successfully");
       const res = await axiosInstance.post(
-        apiRoutes.spares,
+        apiRoutes.machineSpares,
         {
           newSpare
         },
@@ -110,7 +110,7 @@ export const useEditSpare = () => {
     const { id } = updatedSpare;
 
     const res = await axiosInstance.put(
-      `${apiRoutes.spares}/${id}`,
+      `${apiRoutes.machineSpares}/${id}`,
       {
         ...updatedSpare,
       },
@@ -145,7 +145,7 @@ export const useDeleteSpare = () => {
     const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
-    const res = await axiosInstance.delete(`${apiRoutes.spares}/${id}`, {
+    const res = await axiosInstance.delete(`${apiRoutes.machineSpares}/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 
