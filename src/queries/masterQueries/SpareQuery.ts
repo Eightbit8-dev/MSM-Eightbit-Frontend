@@ -62,10 +62,7 @@ export const useCreateSpare = () => {
 
       toast.success(newSpare.spareName + " Spare Created Successfully");
       const res = await axiosInstance.post(
-        apiRoutes.machineSpares,
-        {
-          newSpare
-        },
+        apiRoutes.machineSpares,newSpare,
         {
           headers: { Authorization: `Bearer ${token}` },
         },
