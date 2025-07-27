@@ -1,38 +1,22 @@
+
+
 export const appRoutes = {
   homePage: "/",
   signInPage: "/signin",
+  signUpPage: "/signup",
   dashboardPage: "/dashboard",
   // Master Page Routes
   masterRoutes: {
     masterPage: "/master",
-    children: {
-      branches: "/master/branches",
-      departments: "/master/departments",
-      designations: "/master/designations",
-      resignations: "/master/resignations",
-      bloodGroups: "/master/blood-groups",
-      attendance: "/master/attendance",
-      permissions: "/master/permissions",
-      lop: "/master/lop",
-      shifts: "/master/shifts",
-      holidays: "/master/holidays",
-      loans: "/master/loans",
-      allowances: "/master/allowances",
-    },
+children: {
+  vendors: "/master/vendors",               // For Vendors
+  clients: "/master/clients",               // For Clients
+  products: "/master/products",             // For Products
+  users: "/master/users",                   // For Users
+  machineSpares: "/master/machine-spares",  // For Machine Spares
+  problemDetails: "/master/problem-details",// For Problem Details
   },
-  // Employee page
-  employeesRoute: {
-    employeesPage: "/employees",
-    children: {
-      staffsProfile: "/employees/profile",
-      staffProfile: "/employees/profile/:staffId",
-      branchTransfer: "/employees/branch-transfer",
-      staffRejoin: "/employees/rejoin",
-      resignation: "/employees/resignation",
-    },
   },
-  attendancePage: "/attendance",
-  loanPage: "/loan",
   // Error page
   errorPage: "/error",
 };

@@ -1,7 +1,8 @@
 export const apiRoutes = {
   signin: "/api/auth/login",
+  signup: "/api/auth/register",
   // ------------------ Master API Routes ------------------
-  branches: "/api/admin/branch",
+  vendors: "/api/admin/vendors",
   designations: "/api/admin/designation",
   resigination: "/api/admin/resignation",
   Bloods: "/api/admin/bloodgroup",
@@ -18,12 +19,5 @@ export const apiRoutes = {
   holidayFilter: "/api/admin/holiday/filter",
   holidaymonth: "/api/admin/months",
   holidayyears: "/api/admin/years",
-  // ------------------ Employee API Routes ------------------
-  employeeProfile: "/api/admin/employee/summary",
-  employeePrimary: "/api/admin/employee/profile",
-  employeeContact:"/api/admin/employee-profile/contact",
-  employeeRejoin:"/api/admin/employee-rejoin",
-  employeeTransfer:"/api/admin/employee-transfer",
-  employeeTransferBranch:"/api/admin/employee-transfer/branch-info",
-  employeeSearch:"/api/admin/employee/search"
+
 };

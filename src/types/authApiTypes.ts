@@ -6,4 +6,6 @@ export interface signInRequestType {
 
 export interface SignInResponseType {
   token: string;
+  username:string;
+  role:string;
 }

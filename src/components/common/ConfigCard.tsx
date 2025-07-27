@@ -4,8 +4,6 @@ type ConfigCardtype = {
   img: string;
   title: string;
   desc: string;
-  label: string;
-  labelColor: string;
   btnText: string;
   onAction: () => void;
 };
@@ -14,8 +12,6 @@ const ConfigCard: React.FC<ConfigCardtype> = ({
   img,
   title,
   desc,
-  label,
-  labelColor,
   btnText,
   onAction,
 }) => {
@@ -30,11 +26,6 @@ const ConfigCard: React.FC<ConfigCardtype> = ({
 
             <h2 className="text-xl font-medium text-zinc-800">{title}</h2>
           </div>
-          <span
-            className={`rounded-[8px] px-2 py-[6px] text-sm font-medium text-white ${labelColor}`}
-          >
-            {label}
-          </span>
         </div>
         <p className="mb-4 text-base font-medium text-slate-500">{desc}</p>
         <div>

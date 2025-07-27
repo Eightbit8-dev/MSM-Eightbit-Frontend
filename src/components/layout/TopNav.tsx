@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import React from "react";
 import NotificationCenter from "../common/NotificationCenter";
-import ServicesSearchBar from "../common/ServicesSearchBar";
 
 interface TopNavProps {
   userName?: string;
@@ -36,10 +35,6 @@ export const TopNav: React.FC<TopNavProps> = ({ userName, formattedDate }) => {
           </motion.p>
         </div>
 
-        {/* Search bar */}
-        <div className="mx-8 max-w-lg flex-1">
-          <ServicesSearchBar />
-        </div>
 
         {/* Action Buttons */}
         <motion.div

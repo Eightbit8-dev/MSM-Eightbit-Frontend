@@ -1,0 +1,229 @@
+import { useEffect, useState } from "react";
+import Input from "../../../components/common/Input";
+import ButtonSm from "../../../components/common/Buttons";
+import type { FormState } from "../../../types/appTypes";
+import {
+  useCreateVendor,
+} from "../../../queries/masterQueries/VendorQuery";
+import type { VendorDetails } from "../../../types/masterApiTypes";
+import { usersData } from "../../../utils/userData";
+import UserAccessDetails from "../Users.component";
+
+const VendorEdit = ({
+  vendorDetails,
+  formState,
+  setFormState,
+  setVendorData,
+}: {
+  vendorDetails: VendorDetails | null;
+  formState: FormState;
+  setFormState: React.Dispatch<React.SetStateAction<FormState>>;
+  setVendorData: React.Dispatch<React.SetStateAction<VendorDetails | null>>;
+}) => {
+  const [users, setUsers] = useState(usersData);
+  const [vendorData, setVendorDataLocal] = useState<VendorDetails | null>(null);
+  const [newVendorData, setNewVendorData] = useState<VendorDetails | null>(null);
+  const [title, setTitle] = useState("");
+
+  const { mutate: createVendor, isPending, isSuccess } = useCreateVendor();
+
+  const emptyVendor: VendorDetails = {
+    id: 0,
+    vendorName: "",
+    contactPerson: "",
+    contactNumber: "",
+    emailAddress: "",
+    address: "",
+    gstNumber: "",
+  };
+
+  useEffect(() => {
+    if (formState === "create") {
+      setVendorDataLocal(emptyVendor);
+      setNewVendorData(emptyVendor);
+      setTitle("");
+    } else if (vendorDetails) {
+      setVendorDataLocal(vendorDetails);
+      setNewVendorData(vendorDetails);
+      setTitle(vendorDetails.vendorName);
+    }
+  }, [vendorDetails, formState]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      setVendorDataLocal(emptyVendor);
+      setNewVendorData(emptyVendor);
+      setFormState("create");
+      setTitle("");
+    }
+  }, [isSuccess]);
+
+  const handleCancel = () => {
+    setVendorDataLocal(emptyVendor);
+    setNewVendorData(emptyVendor);
+    setFormState("create");
+    setTitle("");
+  };
+
+  const hasData =
+    newVendorData?.vendorName ||
+    newVendorData?.address ||
+    newVendorData?.gstNumber;
+
+  if (!vendorData || !newVendorData) {
+    return (
+      <p className="text-center text-sm text-gray-500">
+        Select a vendor to view details.
+      </p>
+    );
+  }
+
+  return (
+    <main className="flex max-h-full w-full max-w-[870px] flex-col gap-2">
+      <div className="branch-config-container flex flex-col gap-3 rounded-[20px]">
+        <form
+          className="flex flex-col gap-3"
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (formState === "create") {
+              createVendor(newVendorData!);
+            }
+          }}
+        >
+          <header className="header flex w-full flex-row items-center justify-between">
+            <h1 className="text-start text-lg font-semibold text-zinc-800">
+              {formState === "create"
+                ? "Vendor Configuration"
+                : `${title || "Vendor"} Configuration`}
+            </h1>
+            <section className="ml-auto flex flex-row items-center gap-3">
+              {(formState === "edit" ||
+                (formState === "create" && hasData)) && (
+                <ButtonSm
+                  className="font-medium"
+                  text="Cancel"
+                  state="outline"
+                  onClick={handleCancel}
+                  type="button"
+                />
+              )}
+              {formState === "display" && vendorData.id !== 0 && (
+                <ButtonSm
+                  className="font-medium"
+                  text="Back"
+                  state="outline"
+                  onClick={handleCancel}
+                  type="button"
+                />
+              )}
+              {formState === "create" && (
+                <ButtonSm
+                  className="font-medium text-white"
+                  text={isPending ? "Creating..." : "Create New"}
+                  state="default"
+                  type="submit"
+                />
+              )}
+              {formState === "edit" && (
+                <ButtonSm
+                  className="font-medium text-white disabled:opacity-60"
+                  text="Save Changes"
+                  state="default"
+                  type="button"
+                  disabled={true}
+                  onClick={() => {
+                    console.log("Dummy edit button clicked");
+                  }}
+                />
+              )}
+            </section>
+          </header>
+
+          {/* Vendor Details */}
+          <section className="vendor-details-section flex w-full flex-col gap-2 overflow-clip px-3">
+            <Input
+              required
+              disabled={formState === "display"}
+              title="Vendor Name"
+              type="str"
+              inputValue={newVendorData.vendorName}
+              name="vendorName"
+              placeholder="Enter vendor name"
+              maxLength={50}
+              onChange={(value) =>
+                setNewVendorData({ ...newVendorData, vendorName: value })
+              }
+            />
+            <Input
+              required
+              disabled={formState === "display"}
+              title="Contact Person"
+              type="str"
+              inputValue={newVendorData.contactPerson}
+              name="contactPerson"
+              placeholder="Enter contact person name"
+              maxLength={50}
+              onChange={(value) =>
+                setNewVendorData({ ...newVendorData, contactPerson: value })
+              }
+            />
+            <Input
+              required
+              disabled={formState === "display"}
+              title="Contact Number"
+              type="str"
+              inputValue={newVendorData.contactNumber}
+              name="contactNumber"
+              placeholder="Enter contact number"
+              maxLength={15}
+              onChange={(value) =>
+                setNewVendorData({ ...newVendorData, contactNumber: value })
+              }
+            />
+            <Input
+              required
+              disabled={formState === "display"}
+              title="Email Address"
+              inputValue={newVendorData.emailAddress}
+              name="emailAddress"
+              placeholder="Enter email address"
+              maxLength={100}
+              onChange={(value) =>
+                setNewVendorData({ ...newVendorData, emailAddress: value })
+              }
+            />
+            <Input
+              required
+              disabled={formState === "display"}
+              title="Address"
+              type="str"
+              inputValue={newVendorData.address}
+              name="address"
+              placeholder="Enter address"
+              maxLength={150}
+              onChange={(value) =>
+                setNewVendorData({ ...newVendorData, address: value })
+              }
+            />
+            <Input
+              required
+              disabled={formState === "display"}
+              title="GST Number"
+              type="str"
+              inputValue={newVendorData.gstNumber}
+              name="gstNumber"
+              placeholder="Enter GST number"
+              maxLength={15}
+              onChange={(value) =>
+                setNewVendorData({ ...newVendorData, gstNumber: value })
+              }
+            />
+          </section>
+
+        </form>
+      </div>
+    </main>
+  );
+};
+
+export default VendorEdit;

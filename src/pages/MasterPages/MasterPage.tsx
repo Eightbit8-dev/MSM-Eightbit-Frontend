@@ -1,14 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import ConfigCard from "../../components/common/ConfigCard";
 import { appRoutes } from "../../routes/appRoutes";
-import ServicesSearchBar from "../../components/common/ServicesSearchBar";
 
 export interface ConfigCardtype {
   img: string;
   title: string;
   desc: string;
-  label: string;
-  labelColor: string;
   btnText: string;
   onAction: () => void;
 }
@@ -18,113 +15,47 @@ export const MasterPage = () => {
 
   const configCards: ConfigCardtype[] = [
     {
-      img: "/icons/Configpage/Branch.svg",
-      title: "Branch",
-      desc: "Manage different office branches to streamline your organizational structure.",
-      label: "Organisation",
-      labelColor: "bg-red-500",
+      img: "/icons/Master/Vendor.svg",
+      title: "Vendors",
+      desc: "Register and manage your external suppliers and service providers .",
       btnText: "Configure",
-      onAction: () => navigate(appRoutes.masterRoutes.children.branches),
+      onAction: () => navigate(appRoutes.masterRoutes.children.vendors),
     },
     {
-      img: "/icons/Configpage/Department.svg",
-      title: "Department",
-      desc: "Define departments to better organize teams and responsibilities.",
-      label: "Organisation",
-      labelColor: "bg-red-500",
+      img: "/icons/Master/Clients.svg",
+      title: "Clients",
+      desc: "Manage your customer database for orders, deliveries, and support tracking.",
       btnText: "Configure",
-      onAction: () => navigate(appRoutes.masterRoutes.children.departments),
+      onAction: () => navigate(appRoutes.masterRoutes.children.clients),
     },
     {
-      img: "/icons/Configpage/Desigination.svg",
-      title: "Desigination",
-      desc: "Create and manage job titles to clarify employee roles and hierarchy.",
-      label: "HR Essentials",
-      labelColor: "bg-yellow-500",
+      img: "/icons/Master/Products.svg",
+      title: "Products",
+      desc: "Catalog, track, and manage your products or items.",
       btnText: "Configure",
-      onAction: () => navigate(appRoutes.masterRoutes.children.designations),
+      onAction: () => navigate(appRoutes.masterRoutes.children.products),
     },
     {
-      img: "/icons/Configpage/Resigination.png",
-      title: "Resigination",
-      desc: "Track and manage employee resignations efficiently with proper records.",
-      label: "HR Essentials",
-      labelColor: "bg-yellow-500",
+      img: "/icons/Master/Users.svg",
+      title: "Users",
+      desc: "Create and manage system users with roles and permissions.",
       btnText: "Configure",
-      onAction: () => navigate(appRoutes.masterRoutes.children.resignations),
+      onAction: () => navigate(appRoutes.masterRoutes.children.users),
     },
     {
-      img: "/icons/Configpage/BloodGroup.svg",
-      title: "Blood Group",
-      desc: "Store employee blood group information for medical and emergency use.",
-      label: "HR Essentials",
-      labelColor: "bg-yellow-500",
+      img: "/icons/Master/Spare.svg",
+      title: "Machine Spares ",
+      desc: "Record and manage spare parts for machines, ensuring quick access for maintenance. ",
       btnText: "Configure",
-      onAction: () => navigate(appRoutes.masterRoutes.children.bloodGroups),
+      onAction: () => navigate(appRoutes.masterRoutes.children.machineSpares),
     },
     {
-      img: "/icons/Configpage/Attendance.svg",
-      title: "Attendance",
-      desc: "Monitor and manage employee attendance records accurately",
-      label: "Attendance",
-      labelColor: "bg-green-500",
+      img: "/icons/Master/Problem.svg",
+      title: "Problem Details",
+      desc: "Log and categorize recurring issues related to products, machines, or inventory.",
       btnText: "Configure",
-      onAction: () => navigate(appRoutes.masterRoutes.children.attendance),
-    },
-    {
-      img: "/icons/Configpage/Permission.svg",
-      title: "Permission",
-      desc: "Allow short-duration leave requests and approvals through permission logs",
-      label: "Attendance",
-      labelColor: "bg-green-500",
-      btnText: "Configure",
-      onAction: () => navigate(appRoutes.masterRoutes.children.permissions),
-    },
-    {
-      img: "/icons/Configpage/Lop.svg",
-      title: "LOB",
-      desc: "Leave opening balance, Track leaves without pay and maintain data.",
-      label: "Attendance",
-      labelColor: "bg-green-500",
-      btnText: "Configure",
-      onAction: () => console.log("Timesheet clicked"),
-    },
-    {
-      img: "./icons/Configpage/Shift.svg",
-      title: "Shift",
-      desc: "Define work shifts and allocate employees accordingly.",
-      label: "Attendance",
-      labelColor: "bg-green-500",
-      btnText: "Configure",
-      onAction: () => navigate(appRoutes.masterRoutes.children.shifts),
-    },
-    {
-      img: "/icons/Configpage/Holiday.svg",
-      title: "Holiday",
-      desc: "lan and manage company-wide holidays and off days",
-      label: " Holiday & Benefits",
-      labelColor: "bg-purple-500",
-      btnText: "Configure",
-      onAction: () => navigate(appRoutes.masterRoutes.children.holidays),
-    },
-    {
-      img: "/icons/Configpage/Loan.svg",
-      title: "Loan",
-      desc: "Track employee loans and repayment details with ease",
-      label: " Holiday & Benefits",
-      labelColor: "bg-purple-500",
-      btnText: "Configure",
-      onAction: () => navigate(appRoutes.masterRoutes.children.loans),
-    },
-    {
-      img: "/icons/Configpage/Allowance.svg",
-      title: "Allowance",
-      desc: "Configure various allowances provided to employees beyond salary.",
-      label: " Holiday & Benefits",
-      labelColor: "bg-purple-500",
-      btnText: "Configure",
-      onAction: () => navigate(appRoutes.masterRoutes.children.allowances),
-    },
+      onAction: () => navigate(appRoutes.masterRoutes.children.problemDetails),
+    }
   ];
   return (
     <div className="flex w-full max-w-[1590px] origin-top scale-90 flex-col gap-8">
@@ -141,9 +72,6 @@ export const MasterPage = () => {
             </p>
           </div>
         </div>
-        <div>
-          <ServicesSearchBar />
-        </div>
       </div>
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {configCards.map((card, index) => (
@@ -152,8 +80,6 @@ export const MasterPage = () => {
             img={card.img}
             title={card.title}
             desc={card.desc}
-            label={card.label}
-            labelColor={card.labelColor}
             btnText={card.btnText}
             onAction={card.onAction}
           />

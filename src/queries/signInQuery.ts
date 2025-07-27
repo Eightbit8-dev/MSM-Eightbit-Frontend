@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import type {
   signInRequestType,
   SignInResponseType,
-} from "../types/masterApiTypes";
+} from "../types/authApiTypes";
 import axios from "axios";
 import axiosInstance from "../utils/axios";
 import { toast } from "react-toastify";

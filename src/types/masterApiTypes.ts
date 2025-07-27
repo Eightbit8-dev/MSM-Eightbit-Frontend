@@ -1,13 +1,12 @@
 // Master types
-export interface BranchDetails {
-  companyId?: number;
+export interface VendorDetails {
   id: number;
-  code: string;
-  name: string;
-  addressLine1: string;
-  addressLine2: string;
-  remarks: string;
-  active?: boolean;
+  vendorName: string;
+  contactPerson: string;
+  contactNumber: string;
+  emailAddress: string;
+  address: string;
+  gstNumber: string;
 }
 
 export interface BloodDetails {

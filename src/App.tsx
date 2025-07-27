@@ -6,11 +6,8 @@ import MainLayout from "./components/layout/MainLayout";
 import { appRoutes } from "./routes/appRoutes";
 import { Spinner } from "./components/layout/Spinner";
 import ProtectedRoute from "./components/layout/ProtectedRoute";
-import EmployeeRejoinPage from "./pages/EmployeesPages/EmployeeRejoin";
-import EmployeeBranchTransfer from "./pages/EmployeesPages/EmployeeTransfer";
 
 // ------------------Main Pages ---------------------------
-const AttendancePage = lazy(() => import("./pages/AttendancePage"));
 const DashBoardPage = lazy(() => import("./pages/DashBoardPage"));
 const ErrorPage = lazy(() => import("./pages/ErrorPage"));
 const SignInPage = lazy(() => import("./pages/SignInPage"));
@@ -18,53 +15,23 @@ const SignInPage = lazy(() => import("./pages/SignInPage"));
 // ---------------Master Pages----------------------------
 const MasterPage = lazy(() => import("./pages/MasterPages/MasterPage"));
 const ResignationPage = lazy(
-  () => import("./pages/MasterPages/Resignation/ResignationPage"),
+  () => import("./pages/MasterPages/Product/ProductPage"),
 );
 const DesignationsPage = lazy(
-  () => import("./pages/MasterPages/Desigination/DesiginationPage"),
+  () => import("./pages/MasterPages/Client/ClientPage"),
 );
-const BranchesPage = lazy(
-  () => import("./pages/MasterPages/Branch/BranchesPage"),
+const VendorsPage = lazy(
+  () => import("./pages/MasterPages/Vendor/VendorPage"),
 );
 const DepartmentsPage = lazy(
-  () => import("./pages/MasterPages/Department/DepartmentPage"),
+  () => import("./pages/MasterPages/Spares/SparesPage"),
 );
-const LoanMPage = lazy(() => import("./pages/MasterPages/Loan/LoanPage"));
+const LoanMPage = lazy(() => import("./pages/MasterPages/Problem/ProblemPage"));
 const Bloodpage = lazy(
-  () => import("../src/pages/MasterPages/Blood/BloodPage"),
-);
-const AttendanceTypePage = lazy(
-  () => import("../src/pages/MasterPages/Attendance/AttendancePage"),
+  () => import("./pages/MasterPages/Users/UsersPage"),
 );
 
-const PermissionPage = lazy(
-  () => import("./pages/MasterPages/Permission/PermissionPage"),
-);
-const ShiftPage = lazy(() => import("./pages/MasterPages/Shift/ShiftPage"));
-const LoanPage = lazy(() => import("./pages/LoanPage"));
-const AllowancePage = lazy(
-  () => import("./pages/MasterPages/Allowance/AllowancePage"),
-);
-const HolidayPage = lazy(
-  () => import("./pages/MasterPages/Holiday/HolidayPage"),
-);
 
-// ------------Employees Pages-------------
-const EmployeesPage = lazy(
-  () => import("./pages/EmployeesPages/EmployeesPage"),
-);
-const StaffsPage = lazy(
-  () => import("./pages/EmployeesPages/staffProfile/StaffsPage"),
-);
-const StaffProfilePage = lazy(
-  () => import("./pages/EmployeesPages/staffProfile/StaffProfilePage"),
-);
-const EmployeeRejoin = lazy(
-  () => import("./pages/EmployeesPages/EmployeeRejoin"),
-);
-const EmployeeResignationPage = lazy(
-  () => import("./pages/EmployeesPages/resignation/EmployeeResignationPage"),
-);
 
 const App = () => {
   return (
@@ -91,89 +58,38 @@ const App = () => {
         <Route element={<ProtectedRoute />}>
           <Route element={<MainLayout />}>
             <Route path={appRoutes.dashboardPage} element={<DashBoardPage />} />
-            <Route
-              path={appRoutes.attendancePage}
-              element={<AttendancePage />}
-            />
-            <Route path={appRoutes.loanPage} element={<LoanPage />} />
 
             {/* Master Page and its nested components */}
             <Route
               path={appRoutes.masterRoutes.masterPage}
               element={<MasterPage />}
             />
-            {/* Branches pages */}
+            {/* Vendors pages */}
             <Route
-              path={appRoutes.masterRoutes.children.branches}
-              element={<BranchesPage />}
+              path={appRoutes.masterRoutes.children.vendors}
+              element={<VendorsPage />}
             />
-            {/* Designations pages */}
+            {/* Clients pages */}
             <Route
-              path={appRoutes.masterRoutes.children.designations}
+              path={appRoutes.masterRoutes.children.clients}
               element={<DesignationsPage />}
             />
             <Route
-              path={appRoutes.masterRoutes.children.resignations}
+              path={appRoutes.masterRoutes.children.products}
               element={<ResignationPage />}
             />
             <Route
-              path={appRoutes.masterRoutes.children.bloodGroups}
+              path={appRoutes.masterRoutes.children.users}
               element={<Bloodpage />}
             />
 
             <Route
-              path={appRoutes.masterRoutes.children.departments}
+              path={appRoutes.masterRoutes.children.machineSpares}
               element={<DepartmentsPage />}
             />
             <Route
-              path={appRoutes.masterRoutes.children.loans}
+              path={appRoutes.masterRoutes.children.problemDetails}
               element={<LoanMPage />}
-            />
-            <Route
-              path={appRoutes.masterRoutes.children.attendance}
-              element={<AttendanceTypePage />}
-            />
-            <Route
-              path={appRoutes.masterRoutes.children.permissions}
-              element={<PermissionPage />}
-            />
-            <Route
-              path={appRoutes.masterRoutes.children.allowances}
-              element={<AllowancePage />}
-            />
-            <Route
-              path={appRoutes.masterRoutes.children.shifts}
-              element={<ShiftPage />}
-            />
-            <Route
-              path={appRoutes.masterRoutes.children.holidays}
-              element={<HolidayPage />}
-            />
-
-            {/* Employees pages and its nested components */}
-            <Route
-              path={appRoutes.employeesRoute.employeesPage}
-              element={<EmployeesPage />}
-            />
-            <Route
-              path={appRoutes.employeesRoute.children.staffsProfile}
-              element={<StaffsPage />}
-            />
-            <Route
-              path={appRoutes.employeesRoute.children.staffProfile}
-              element={<StaffProfilePage />}
-            />
-            <Route
-              path={appRoutes.employeesRoute.children.resignation}
-              element={<EmployeeResignationPage />}
-            />
-            <Route 
-            path={appRoutes.employeesRoute.children.staffRejoin}
-            element={<EmployeeRejoinPage/>}
-            />
-            <Route 
-            path={appRoutes.employeesRoute.children.branchTransfer}
-            element={<EmployeeBranchTransfer/>}
             />
           </Route>
         </Route>

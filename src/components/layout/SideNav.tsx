@@ -65,7 +65,7 @@ const SideNav: React.FC = () => {
             exit={{ scale: 0, opacity: 0 }}
             transition={{ delay: 0.4, type: "tween", stiffness: 200 }}
           >
-            Master
+            MSM
           </motion.p>
         </motion.div>
 
@@ -85,42 +85,20 @@ const SideNav: React.FC = () => {
               activeIconSrc="/icons/sideNavIcons/dashboard-icon-active.svg"
               onClick={() => navigateToRoute(appRoutes.dashboardPage)}
             />
-            <NavigationButton
-              labelName="Employees"
-              isActive={isRouteActive(appRoutes.employeesRoute.employeesPage)}
-              iconSrc="/icons/sideNavIcons/employees-icon.svg"
-              activeIconSrc="/icons/sideNavIcons/employees-icon-active.svg"
-              onClick={() =>
-                navigateToRoute(appRoutes.employeesRoute.employeesPage)
-              }
+                      <NavigationButton
+              labelName="Master"
+              isActive={isRouteActive(appRoutes.masterRoutes.masterPage)}
+              iconSrc="/icons/sideNavIcons/master-icon.svg"
+              activeIconSrc="/icons/sideNavIcons/master-icon-active.svg"
+              onClick={() => navigateToRoute(appRoutes.masterRoutes.masterPage)}
             />
+
             <NavigationButton
-              labelName="Attendance"
-              isActive={isRouteActive(appRoutes.attendancePage)}
-              iconSrc="/icons/sideNavIcons/attendance-icon.svg"
-              activeIconSrc="/icons/sideNavIcons/attendance-icon-active.svg"
-              onClick={() => navigateToRoute(appRoutes.attendancePage)}
-            />
-            <NavigationButton
-              labelName="Payroll"
-              isActive={isRouteActive(appRoutes.homePage)}
-              iconSrc="/icons/sideNavIcons/payroll-icon.svg"
-              activeIconSrc="/icons/sideNavIcons/payroll-icon-active.svg"
-              onClick={() => navigateToRoute(appRoutes.homePage)}
-            />
-            <NavigationButton
-              labelName="Loan"
+              labelName="Transcation"
               isActive={isRouteActive(appRoutes.loanPage)}
               iconSrc="/icons/sideNavIcons/loan-icon.svg"
               activeIconSrc="/icons/sideNavIcons/loan-icon-active.svg"
               onClick={() => navigateToRoute(appRoutes.loanPage)}
-            />
-            <NavigationButton
-              labelName="Approval"
-              isActive={isRouteActive(appRoutes.signInPage)}
-              iconSrc="/icons/sideNavIcons/approval-icon.svg"
-              activeIconSrc="/icons/sideNavIcons/approval-icon-active.svg"
-              onClick={() => navigateToRoute(appRoutes.signInPage)}
             />
             <NavigationButton
               labelName="Users"
@@ -129,13 +107,7 @@ const SideNav: React.FC = () => {
               activeIconSrc="/icons/sideNavIcons/users-icon-active.svg"
               onClick={() => navigateToRoute(appRoutes.dashboardPage)}
             />
-            <NavigationButton
-              labelName="Master"
-              isActive={isRouteActive(appRoutes.masterRoutes.masterPage)}
-              iconSrc="/icons/sideNavIcons/master-icon.svg"
-              activeIconSrc="/icons/sideNavIcons/master-icon-active.svg"
-              onClick={() => navigateToRoute(appRoutes.masterRoutes.masterPage)}
-            />
+
             <NavigationButton
               labelName="Reports"
               isActive={isRouteActive(appRoutes.homePage)}
