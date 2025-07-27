@@ -3,97 +3,113 @@ import Input from "../../../components/common/Input";
 import TextArea from "../../../components/common/Textarea";
 import ButtonSm from "../../../components/common/Buttons";
 import type { FormState } from "../../../types/appTypes";
-import type { DesignationsDetails } from "../../../types/masterApiTypes";
+import type { ClientDetails } from "../../../types/masterApiTypes";
 import {
-  useCreateDesignation,
-  useEditDesignation,
-} from "../../../queries/masterQueries/DesiginationQuery";
+  useCreateClient,
+  useEditClient,
+} from "../../../queries/masterQueries/ClientQuery";
 
-const DesignationEdit = ({
-  DesignationDetails,
+const ClientEdit = ({
+  clientDetails,
   formState,
   setFormState,
-  setDesignation,
+  setClient,
 }: {
-  DesignationDetails: DesignationsDetails | null;
+  clientDetails: ClientDetails | null;
   formState: FormState;
   setFormState: React.Dispatch<React.SetStateAction<FormState>>;
-  setDesignation: React.Dispatch<React.SetStateAction<DesignationsDetails>>;
+  setClient: React.Dispatch<React.SetStateAction<ClientDetails>>;
 }) => {
-  const [designationData, setDesignationData] =
-    useState<DesignationsDetails | null>(null);
+  const [clientData, setClientData] = useState<ClientDetails | null>(null);
 
   const {
-    mutate: createDesignation,
+    mutate: createClient,
     isPending,
     isSuccess,
-  } = useCreateDesignation();
+  } = useCreateClient();
 
   const {
-    mutate: updateDesignation,
+    mutate: updateClient,
     isPending: isUpdatePending,
     isSuccess: isUpdatingSuccess,
-  } = useEditDesignation();
+  } = useEditClient();
 
   const disableButton =
-    DesignationDetails?.name === designationData?.name &&
-    DesignationDetails?.remarks === designationData?.remarks;
+    clientDetails?.clientName === clientData?.clientName &&
+    clientDetails?.contactNumber === clientData?.contactNumber &&
+    clientDetails?.contactPerson === clientData?.contactPerson &&
+    clientDetails?.email === clientData?.email &&
+    clientDetails?.address === clientData?.address &&
+    clientDetails?.gstNumber === clientData?.gstNumber;
+
+
+    const resetData = {
+      id: 0,
+      clientName: "",
+      contactPerson: "",
+      contactNumber: "",
+      email: "",
+      address: "",
+      gstNumber: "",
+    };
 
   useEffect(() => {
     if (formState === "create") {
-      const newData = { id: 0, name: "", remarks: "", code: "" };
-      setDesignationData(newData);
-    } else if (DesignationDetails) {
-      setDesignationData(DesignationDetails);
+      setClientData(resetData);
+    } else if (clientDetails) {
+      setClientData(clientDetails);
     }
-  }, [DesignationDetails, formState]);
+  }, [clientDetails, formState]);
 
   useEffect(() => {
     if (isSuccess) {
-      const resetData = { id: 0, name: "", remarks: "", code: "" };
+     
       setFormState("create");
-      setDesignation(resetData);
-      setDesignationData(resetData);
-    } else if (isUpdatingSuccess && designationData) {
+      setClient(resetData);
+      setClientData(resetData);
+    } else if (isUpdatingSuccess && clientData) {
       setFormState("create");
-      setDesignation(designationData);
+      setClient(clientData);
     }
   }, [isSuccess, isUpdatingSuccess]);
 
   const handleCancel = () => {
     setFormState("create");
-    const resetData = { id: 0, name: "", remarks: "", code: "" };
-    setDesignation(resetData);
-    setDesignationData(resetData);
+    
+    setClient(resetData);
+    setClientData(resetData);
   };
 
-  if (!designationData) {
+  if (!clientData) {
     return (
       <p className="text-center text-sm text-gray-500">
-        Select a designation to view details.
+        Select a client to view details.
       </p>
     );
   }
 
-  const hasData = designationData.name || designationData.remarks;
+  const hasData =
+    clientData.clientName ||
+    clientData.contactPerson ||
+    clientData.contactNumber;
 
   return (
     <main className="flex max-h-full w-full max-w-[870px] flex-col gap-2">
-      <div className="designation-config-container flex flex-col gap-3 rounded-[20px]">
+      <div className="client-config-container flex flex-col gap-3 rounded-[20px]">
         <form
           className="flex flex-col gap-3"
           onSubmit={(e) => {
             e.preventDefault();
-            if (formState === "create" && designationData) {
-              createDesignation(designationData);
+            if (formState === "create" && clientData) {
+              createClient(clientData);
             }
           }}
         >
           <header className="flex w-full flex-row items-center justify-between">
             <h1 className="text-start text-lg font-semibold text-zinc-800">
               {formState === "create"
-                ? "Designation Configuration"
-                : `${DesignationDetails?.name} Configuration`}
+                ? "Client Configuration"
+                : `${clientDetails?.clientName} Configuration`}
             </h1>
             <section className="ml-auto flex flex-row items-center gap-3">
               {(formState === "edit" ||
@@ -107,7 +123,7 @@ const DesignationEdit = ({
                 />
               )}
 
-              {formState === "display" && designationData.id !== 0 && (
+              {formState === "display" && clientData.id !== 0 && (
                 <ButtonSm
                   className="font-medium"
                   text="Back"
@@ -135,8 +151,8 @@ const DesignationEdit = ({
                   type="button"
                   disabled={disableButton || isUpdatePending}
                   onClick={() => {
-                    if (designationData) {
-                      updateDesignation(designationData);
+                    if (clientData) {
+                      updateClient(clientData);
                     }
                   }}
                 />
@@ -144,30 +160,79 @@ const DesignationEdit = ({
             </section>
           </header>
 
-          {/* Designation Details */}
+          {/* Client Fields */}
           <section className="flex w-full flex-col gap-2 overflow-clip px-3">
             <Input
               required
               disabled={formState === "display"}
-              title="Designation Name"
+              title="Client Name"
               type="str"
-              inputValue={designationData.name}
-              name="designation"
-              placeholder="Enter designation name"
+              inputValue={clientData.clientName}
+              name="clientName"
+              placeholder="Enter client name"
               maxLength={50}
               onChange={(value) =>
-                setDesignationData({ ...designationData, name: value })
+                setClientData({ ...clientData, clientName: value })
+              }
+            />
+            <Input
+              required
+              disabled={formState === "display"}
+              title="Contact Person"
+              type="str"
+              inputValue={clientData.contactPerson}
+              name="contactPerson"
+              placeholder="Enter contact person"
+              maxLength={50}
+              onChange={(value) =>
+                setClientData({ ...clientData, contactPerson: value })
+              }
+            />
+            <Input
+              required
+              disabled={formState === "display"}
+              title="Contact Number"
+              type="str"
+              minLength={10}
+              inputValue={clientData.contactNumber}
+              name="contactNumber"
+              placeholder="Enter contact number"
+              maxLength={10}
+              onChange={(value) =>
+                setClientData({ ...clientData, contactNumber: value })
+              }
+            />
+            <Input
+              disabled={formState === "display"}
+              title="Email"
+              inputValue={clientData.email}
+              name="email"
+              placeholder="Enter email"
+              onChange={(value) =>
+                setClientData({ ...clientData, email: value })
               }
             />
             <TextArea
               disabled={formState === "display"}
-              title="Remarks"
-              inputValue={designationData.remarks}
-              name="remarks"
-              placeholder="Enter remarks"
+              title="Address"
+              inputValue={clientData.address}
+              name="address"
+              placeholder="Enter address"
               maxLength={300}
               onChange={(value) =>
-                setDesignationData({ ...designationData, remarks: value })
+                setClientData({ ...clientData, address: value })
+              }
+            />
+            <Input
+              disabled={formState === "display"}
+              title="GST Number"
+              type="str"
+              inputValue={clientData.gstNumber}
+              name="gstNumber"
+              placeholder="Enter GST number"
+              maxLength={15}
+              onChange={(value) =>
+                setClientData({ ...clientData, gstNumber: value })
               }
             />
           </section>
@@ -177,4 +242,4 @@ const DesignationEdit = ({
   );
 };
 
-export default DesignationEdit;
+export default ClientEdit;

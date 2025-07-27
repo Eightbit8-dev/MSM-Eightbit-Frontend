@@ -3,6 +3,14 @@ export const apiRoutes = {
   signup: "/api/auth/register",
   // ------------------ Master API Routes ------------------
   vendors: "/api/admin/vendors",
+
+  // ------------------ Master API Routes ------------------
+  clients: "/api/admin/clients",
+  products: "/api/admin/products",
+  users: "/api/admin/users",
+  machineSpares: "/api/admin/machine-spares",
+  problemDetails: "/api/admin/problem-details",
+  // ------------------ old remove this later ------------------
   spares: "/api/admin/spares",
   designations: "/api/admin/designation",
   resigination: "/api/admin/resignation",
