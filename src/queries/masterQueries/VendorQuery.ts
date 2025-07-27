@@ -101,4 +101,85 @@ export const useCreateVendor = () => {
   });
 };
 
+/**
+ * ✏️ Edit an existing vendor
+ */
+export const useEditVendor = () => {
+  const queryClient = useQueryClient();
 
+  const editVendor = async (updatedVendor: VendorDetails) => {
+    const token = Cookies.get("token");
+    if (!token) throw new Error("Unauthorized to perform this action.");
+
+    const { id: vendorId, ...payload } = updatedVendor;
+
+    const res = await axiosInstance.put(
+      `${apiRoutes.vendors}/${updatedVendor.id}`,
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    if (res.status !== 200) {
+      throw new Error(res.data?.message || "Failed to update branch");
+    }
+
+    return res.data;
+  };
+
+  return useMutation({
+    mutationFn: editVendor,
+    onSuccess: () => {
+      toast.success("Vendor updated successfully");
+      queryClient.invalidateQueries({ queryKey: ["vendors"] });
+    },
+    onError: (error) => {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data?.message || "Update failed");
+      }
+    },
+  });
+};
+
+/**
+ * ❌ Delete a vendor
+ */
+export const useDeleteVendor = () => {
+  const queryClient = useQueryClient();
+
+  const deleteVendor = async (vendor: VendorDetails) => {
+    const token = Cookies.get("token");
+    if (!token) throw new Error("Unauthorized to perform this action.");
+
+    const res = await axiosInstance.delete(
+      `${apiRoutes.vendors}/${vendor.id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    if (res.status !== 200) {
+      throw new Error(res.data?.message || "Failed to delete vendor");
+    }
+
+    return res.data;
+  };
+
+  return useMutation({
+    mutationFn: deleteVendor,
+    onSuccess: () => {
+      toast.success("Vendor deleted successfully");
+      queryClient.invalidateQueries({ queryKey: ["vendors"] });
+    },
+    onError: (error) => {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data?.message || "Delete failed");
+      }
+    },
+  });
+};
