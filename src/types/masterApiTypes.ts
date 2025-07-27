@@ -9,6 +9,19 @@ export interface VendorDetails {
   gstNumber: string;
 }
 
+export interface ClientDetails {
+  id: number;
+  clientName: string;
+  contactPerson: string;
+  contactNumber: string;
+  email: string;
+  address: string;
+  gstNumber: string;
+}
+
+
+//-------------old remove this later ------------
+
 export interface BloodDetails {
   id: number;
   name: string;
