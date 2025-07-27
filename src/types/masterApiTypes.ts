@@ -19,6 +19,15 @@ export interface ClientDetails {
   gstNumber: string;
 }
 
+export interface ProductDetails {
+  id: number;
+  machineType: string;
+  brand: string;
+  modelNumber: string;
+  description: string;
+}
+
+
 
 //-------------old remove this later ------------
 

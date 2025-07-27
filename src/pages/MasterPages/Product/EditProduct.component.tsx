@@ -3,104 +3,120 @@ import Input from "../../../components/common/Input";
 import TextArea from "../../../components/common/Textarea";
 import ButtonSm from "../../../components/common/Buttons";
 import type { FormState } from "../../../types/appTypes";
-import type { ResignationDetails } from "../../../types/masterApiTypes";
+import type { ProductDetails } from "../../../types/masterApiTypes";
 import {
-  useCreateResignation,
-  useEditResignation,
-} from "../../../queries/masterQueries/ResiginationQuery";
+  useCreateProduct,
+  useEditProduct,
+} from "../../../queries/masterQueries/ProductQuery";
 
-const ResignationEdit = ({
-  Resignation,
+const ProductEdit = ({
+  productDetails,
   formState,
   setFormState,
-  setResignation, // ✅ NEW PROP
+  setProduct,
 }: {
-  Resignation: ResignationDetails | null;
+  productDetails: ProductDetails;
   formState: FormState;
   setFormState: React.Dispatch<React.SetStateAction<FormState>>;
-  setResignation: React.Dispatch<
-    React.SetStateAction<ResignationDetails | null>
-  >; // ✅ Declare type
+  setProduct: React.Dispatch<React.SetStateAction<ProductDetails>>;
 }) => {
-  const [resignationData, setResignationData] =
-    useState<ResignationDetails | null>(null);
-  const [title, setTitle] = useState("");
-
-  const disable =
-    resignationData?.name === Resignation?.name &&
-    resignationData?.remarks === Resignation?.remarks;
+  const [productData, setProductData] = useState<ProductDetails | null>(null);
 
   const {
-    mutate: createResignation,
+    mutate: createProduct,
     isPending,
     isSuccess,
-  } = useCreateResignation();
+  } = useCreateProduct();
+
   const {
-    mutate: updateResignation,
+    mutate: updateProduct,
     isPending: isUpdatePending,
     isSuccess: isUpdatingSuccess,
-  } = useEditResignation();
+  } = useEditProduct();
 
-  // On form mode or data change
+  const disableButton =
+    productDetails?.machineType === productData?.machineType &&
+    productDetails?.brand === productData?.brand &&
+    productDetails?.modelNumber === productData?.modelNumber &&
+    productDetails?.description === productData?.description;
+
   useEffect(() => {
     if (formState === "create") {
-      const reset = { id: 0, name: "", remarks: "" };
-      setResignationData(reset);
-      setTitle("");
-    } else if (Resignation) {
-      setResignationData(Resignation);
-      setTitle(Resignation.name); // Lock title on first load
+      const newData: ProductDetails = {
+        id: 0,
+        machineType: "",
+        brand: "",
+        modelNumber: "",
+        description: "",
+      };
+      setProductData(newData);
+    } else if (productDetails) {
+      setProductData(productDetails);
     }
-  }, [Resignation, formState]);
+  }, [productDetails, formState]);
 
-  // On success update title if updated
   useEffect(() => {
     if (isSuccess) {
-      const reset = { id: 0, name: "", remarks: "" };
-      setResignationData(reset);
+      const resetData: ProductDetails = {
+        id: 0,
+        machineType: "",
+        brand: "",
+        modelNumber: "",
+        description: "",
+      };
       setFormState("create");
-      setTitle("");
-    } else if (isUpdatingSuccess && resignationData) {
+      setProduct(resetData);
+      setProductData(resetData);
+    } else if (isUpdatingSuccess && productData) {
       setFormState("create");
-      setResignation(resignationData); // ✅ UPDATE PARENT
-      setTitle(resignationData.name); // Update title after save
+      setProduct(productData);
     }
   }, [isSuccess, isUpdatingSuccess]);
 
   const handleCancel = () => {
-    const reset = { id: 0, name: "", remarks: "" };
-    setResignationData(reset);
     setFormState("create");
-    setTitle("");
+    const resetData: ProductDetails = {
+      id: 0,
+      machineType: "",
+      brand: "",
+      modelNumber: "",
+      description: "",
+    };
+    setProduct(resetData);
+    setProductData(resetData);
   };
 
-  if (!resignationData) {
+  if (!productData) {
     return (
       <p className="text-center text-sm text-gray-500">
-        Select a resignation to view details.
+        Select a product to view details.
       </p>
     );
   }
 
-  const hasData = resignationData.name || resignationData.remarks;
+  const hasData =
+    productData.machineType ||
+    productData.brand ||
+    productData.modelNumber ||
+    productData.description;
 
   return (
     <main className="flex max-h-full w-full max-w-[870px] flex-col gap-2">
-      <div className="designation-config-container flex flex-col gap-3 rounded-[20px]">
+      <div className="product-config-container flex flex-col gap-3 rounded-[20px]">
         <form
           className="flex flex-col gap-3"
           onSubmit={(e) => {
             e.preventDefault();
-            if (formState === "create") {
-              createResignation(resignationData);
+            if (formState === "create" && productData) {
+              createProduct(productData);
             }
           }}
         >
           <header className="flex w-full flex-row items-center justify-between">
             <h1 className="text-start text-lg font-semibold text-zinc-800">
               {formState === "create"
-                ? "Resignation Configuration"
-                : `${title || "Resignation"} Configuration`}
+                ? "Product Configuration"
+                : `${productDetails?.machineType} Configuration`}
             </h1>
             <section className="ml-auto flex flex-row items-center gap-3">
               {(formState === "edit" ||
@@ -114,7 +130,7 @@ const ResignationEdit = ({
                 />
               )}
 
-              {formState === "display" && resignationData.id !== 0 && (
+              {formState === "display" && productData.id !== 0 && (
                 <ButtonSm
                   className="font-medium"
                   text="Back"
@@ -140,37 +156,67 @@ const ResignationEdit = ({
                   text={isUpdatePending ? "Updating..." : "Save Changes"}
                   state="default"
                   type="button"
-                  disabled={isPending || disable}
-                  onClick={() => updateResignation(resignationData)}
+                  disabled={disableButton || isUpdatePending}
+                  onClick={() => {
+                    if (productData) {
+                      updateProduct(productData);
+                    }
+                  }}
                 />
               )}
             </section>
           </header>
 
-          {/* Resignation Details */}
+          {/* Product Inputs */}
           <section className="flex w-full flex-col gap-2 overflow-clip px-3">
             <Input
               required
               disabled={formState === "display"}
-              title="Resignation Name"
+              title="Machine Type"
               type="str"
-              inputValue={resignationData.name}
-              name="resignation"
-              placeholder="Enter resignation name"
+              inputValue={productData.machineType}
+              name="machineType"
+              placeholder="Enter machine type"
               maxLength={50}
               onChange={(value) =>
-                setResignationData({ ...resignationData, name: value })
+                setProductData({ ...productData, machineType: value })
+              }
+            />
+            <Input
+              required
+              disabled={formState === "display"}
+              title="Brand"
+              type="str"
+              inputValue={productData.brand}
+              name="brand"
+              placeholder="Enter brand"
+              maxLength={50}
+              onChange={(value) =>
+                setProductData({ ...productData, brand: value })
+              }
+            />
+            <Input
+              required
+              disabled={formState === "display"}
+              title="Model Number"
+              type="str"
+              inputValue={productData.modelNumber}
+              name="modelNumber"
+              placeholder="Enter model number"
+              maxLength={50}
+              onChange={(value) =>
+                setProductData({ ...productData, modelNumber: value })
               }
             />
             <TextArea
               disabled={formState === "display"}
-              title="Remarks"
-              inputValue={resignationData.remarks}
-              name="remarks"
-              placeholder="Enter remarks"
+              title="Description"
+              inputValue={productData.description}
+              name="description"
+              placeholder="Enter description"
               maxLength={300}
               onChange={(value) =>
-                setResignationData({ ...resignationData, remarks: value })
+                setProductData({ ...productData, description: value })
               }
             />
           </section>
@@ -180,4 +226,4 @@ const ResignationEdit = ({
   );
 };
 
-export default ResignationEdit;
+export default ProductEdit;
