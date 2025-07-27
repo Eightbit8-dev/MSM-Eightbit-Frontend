@@ -1,6 +1,6 @@
 // Master types
 export interface VendorDetails {
-  id: number;
+  id: number; 
   vendorName: string;
   contactPerson: string;
   contactNumber: string;

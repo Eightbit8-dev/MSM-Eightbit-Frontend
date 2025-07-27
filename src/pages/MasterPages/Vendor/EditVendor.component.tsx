@@ -4,10 +4,10 @@ import ButtonSm from "../../../components/common/Buttons";
 import type { FormState } from "../../../types/appTypes";
 import {
   useCreateVendor,
+  useEditVendor,
 } from "../../../queries/masterQueries/VendorQuery";
 import type { VendorDetails } from "../../../types/masterApiTypes";
 import { usersData } from "../../../utils/userData";
-import UserAccessDetails from "../Users.component";
 
 const VendorEdit = ({
   vendorDetails,
@@ -25,7 +25,8 @@ const VendorEdit = ({
   const [newVendorData, setNewVendorData] = useState<VendorDetails | null>(null);
   const [title, setTitle] = useState("");
 
-  const { mutate: createVendor, isPending, isSuccess } = useCreateVendor();
+  const { mutate: createVendor, isPending: isCreating, isSuccess: isCreateSuccess } = useCreateVendor();
+  const { mutate: editVendor, isPending: isEditing, isSuccess: isEditSuccess } = useEditVendor();
 
   const emptyVendor: VendorDetails = {
     id: 0,
@@ -50,13 +51,13 @@ const VendorEdit = ({
   }, [vendorDetails, formState]);
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isCreateSuccess || isEditSuccess) {
       setVendorDataLocal(emptyVendor);
       setNewVendorData(emptyVendor);
       setFormState("create");
       setTitle("");
     }
-  }, [isSuccess]);
+  }, [isCreateSuccess, isEditSuccess]);
 
   const handleCancel = () => {
     setVendorDataLocal(emptyVendor);
@@ -87,6 +88,8 @@ const VendorEdit = ({
             e.preventDefault();
             if (formState === "create") {
               createVendor(newVendorData!);
+            } else if (formState === "edit") {
+              editVendor(newVendorData!);
             }
           }}
         >
@@ -97,8 +100,7 @@ const VendorEdit = ({
                 : `${title || "Vendor"} Configuration`}
             </h1>
             <section className="ml-auto flex flex-row items-center gap-3">
-              {(formState === "edit" ||
-                (formState === "create" && hasData)) && (
+              {(formState === "edit" || (formState === "create" && hasData)) && (
                 <ButtonSm
                   className="font-medium"
                   text="Cancel"
@@ -119,21 +121,19 @@ const VendorEdit = ({
               {formState === "create" && (
                 <ButtonSm
                   className="font-medium text-white"
-                  text={isPending ? "Creating..." : "Create New"}
+                  text={isCreating ? "Creating..." : "Create New"}
                   state="default"
                   type="submit"
+                  disabled={isCreating}
                 />
               )}
               {formState === "edit" && (
                 <ButtonSm
-                  className="font-medium text-white disabled:opacity-60"
-                  text="Save Changes"
+                  className="font-medium text-white"
+                  text={isEditing ? "Saving..." : "Save Changes"}
                   state="default"
-                  type="button"
-                  disabled={true}
-                  onClick={() => {
-                    console.log("Dummy edit button clicked");
-                  }}
+                  type="submit"
+                  disabled={isEditing}
                 />
               )}
             </section>
@@ -219,7 +219,6 @@ const VendorEdit = ({
               }
             />
           </section>
-
         </form>
       </div>
     </main>

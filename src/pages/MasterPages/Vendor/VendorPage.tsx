@@ -16,6 +16,7 @@ import { useFetchVendors } from "../../../queries/masterQueries/VendorQuery";
 import { appRoutes } from "../../../routes/appRoutes";
 import type { VendorDetails } from "../../../types/masterApiTypes";
 import type { FormState } from "../../../types/appTypes";
+import { toast } from "react-toastify";
 
 const VendorsPage = () => {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ const VendorsPage = () => {
   const [vendor, setVendor] = useState<VendorDetails | null>(null);
   const [formState, setFormState] = useState<FormState>("create");
 
-  const { data: vendors, isLoading, isError } = useFetchVendors();
+  const { data: vendors, isLoading, isError ,refetch } = useFetchVendors();
 
   const handleVendorDeleted = () => {
     setVendor(null);
@@ -47,13 +48,14 @@ const VendorsPage = () => {
       <AnimatePresence>
         {isDeleteVendorDialogOpen && (
           <DialogBox setToggleDialogueBox={setIsDeleteVendorDialogOpen}>
-            <DeleteVendorDialogBox
-              setVendor={setVendor}
-              setFormState={setFormState}
-              setIsDeleteVendorDialogOpen={setIsDeleteVendorDialogOpen}
-              vendor={vendor!}
-              onDeleted={handleVendorDeleted}
-            />
+<DeleteVendorDialogBox
+  setIsDeleteVendorDialogOpen={setIsDeleteVendorDialogOpen}
+  setFormState={setFormState}
+  setVendor={setVendor}
+  vendor={vendor!}
+  onDeleted={() => toast.success("Vendor deleted successfully!")}
+  refetchVendors={refetch}
+/>
           </DialogBox>
         )}
       </AnimatePresence>
