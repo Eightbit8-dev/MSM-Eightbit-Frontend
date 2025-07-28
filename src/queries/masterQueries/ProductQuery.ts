@@ -78,6 +78,60 @@ export const useFetchProductsOptions = () => {
   });
 };
 
+
+export const useFetchBrandsOptions = () => {
+  const fetchBrand = async (): Promise<DropdownOption[]> => {
+    const token = Cookies.get("token");
+    if (!token) throw new Error("Unauthorized to perform this action.");
+
+    const res = await axiosInstance.get(apiRoutes.products, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (res.status !== 200) {
+      throw new Error(res.data?.message || "Failed to fetch products options");
+    }
+
+    return res.data.data.map((client: ProductDetails) => ({
+      id: client.id,
+      label: client.brand,
+    }));
+  };
+
+  return useQuery({
+    queryKey: ["productBrands"],
+    queryFn: fetchBrand,
+    staleTime: 1000 * 60 * 0,
+    retry: 1,
+  });
+};
+
+export const useFetchModelsOptions = () => {
+  const fetchModel = async (): Promise<DropdownOption[]> => {
+    const token = Cookies.get("token");
+    if (!token) throw new Error("Unauthorized to perform this action.");
+
+    const res = await axiosInstance.get(apiRoutes.products, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (res.status !== 200) {
+      throw new Error(res.data?.message || "Failed to fetch products options");
+    }
+
+    return res.data.data.map((client: ProductDetails) => ({
+      id: client.id,
+      label: client.modelNumber,
+    }));
+  };
+
+  return useQuery({
+    queryKey: ["productModels"],
+    queryFn: fetchModel,
+    staleTime: 1000 * 60 * 0,
+    retry: 1,
+  });
+};
 /**
  * ➕ Create a new Product
  */

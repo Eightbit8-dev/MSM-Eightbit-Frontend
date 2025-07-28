@@ -46,7 +46,7 @@ const AuthPage = () => {
               Please sign in!
             </p>
             <h2 className="head mt-1 text-start text-2xl font-medium">
-              Welcome to Payroll
+              Welcome to MSM
             </h2>
           </div>
 
