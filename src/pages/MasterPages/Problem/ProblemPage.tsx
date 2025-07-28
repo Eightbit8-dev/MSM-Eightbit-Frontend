@@ -11,7 +11,7 @@ import { appRoutes } from "../../../routes/appRoutes";
 import type { FormState } from "../../../types/appTypes";
 import type { LoanDetails } from "../../../types/masterApiTypes";
 import { useFetchLoans } from "../../../queries/masterQueries/LoanQuery";
-import { DeleteLoanDialogBox } from "../Loan/DeletLoanDialogBox";
+
 import Cookies from "js-cookie";
 const LoanPage = () => {
   const navigate = useNavigate();
@@ -38,18 +38,6 @@ const LoanPage = () => {
 
   return (
     <main className="flex w-full max-w-full flex-col gap-4 md:flex-row">
-      <AnimatePresence>
-        {isDeleteLoanDialogOpen && loan && (
-          <DialogBox setToggleDialogueBox={setIsDeleteLoanDialogOpen}>
-            <DeleteLoanDialogBox
-              setIsDeleteLoanDialogOpen={setIsDeleteLoanDialogOpen}
-              loan={loan}
-              onDeleted={handleLoanDeleted}
-            />
-          </DialogBox>
-        )}
-      </AnimatePresence>
-
       {/* Table Section */}
       <section className="table-container flex w-full flex-col gap-3 rounded-[12px] bg-white/80 p-4 shadow-sm md:w-[50%]">
         <header className="flex flex-row items-center justify-between">

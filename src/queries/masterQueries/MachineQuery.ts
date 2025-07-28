@@ -5,6 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { apiRoutes } from "../../routes/apiRoutes";
 import Cookies from "js-cookie";
+import type { DropdownOption } from "@/components/common/DropDown";
 
 /**
  * -------------------------------------------
@@ -41,9 +42,45 @@ export const useFetchMachine = () => {
       return res.data.data;
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        toast.error(
-          error.response?.data?.message || "Failed to fetch machine"
-        );
+        toast.error(error.response?.data?.message || "Failed to fetch machine");
+      } else {
+        toast.error("Something went wrong while fetching machine");
+      }
+      throw new Error("Machine fetch failed");
+    }
+  };
+
+  return useQuery({
+    queryKey: ["machine"],
+    queryFn: fetchAllMachine,
+    staleTime: 1000 * 60 * 0,
+    retry: 1,
+  });
+};
+
+export const useFetchMachineOptions = () => {
+  const fetchAllMachine = async (): Promise<DropdownOption[]> => {
+    try {
+      const token = Cookies.get("token");
+      if (!token) throw new Error("Unauthorized to perform this action.");
+
+      const res = await axiosInstance.get(apiRoutes.machineEntry, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.status !== 200) {
+        throw new Error(res.data?.message || "Failed to fetch machine");
+      }
+
+      return res.data.data.map((machine: TransactionDetails) => ({
+        id: machine.id,
+        label: machine.machineType,
+      }));
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data?.message || "Failed to fetch machine");
       } else {
         toast.error("Something went wrong while fetching machine");
       }
@@ -84,7 +121,7 @@ export const useCreateMachine = () => {
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         toast.error(
-          error.response?.data?.message || "Failed to create Machine"
+          error.response?.data?.message || "Failed to create Machine",
         );
       } else {
         toast.error("Something went wrong while creating Machine");
@@ -121,7 +158,7 @@ export const useEditMachine = () => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
 
     if (res.status !== 200) {
@@ -155,11 +192,14 @@ export const useDeleteClient = () => {
     const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
-    const res = await axiosInstance.delete(`${apiRoutes.machineEntry}/${client.id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
+    const res = await axiosInstance.delete(
+      `${apiRoutes.machineEntry}/${client.id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
-    });
+    );
 
     if (res.status !== 200) {
       throw new Error(res.data?.message || "Failed to delete Client");

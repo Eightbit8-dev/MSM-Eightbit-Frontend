@@ -33,7 +33,9 @@ export const useFetchProducts = () => {
       return res.data.data;
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        toast.error(error.response?.data?.message || "Failed to fetch Products");
+        toast.error(
+          error.response?.data?.message || "Failed to fetch Products",
+        );
       } else {
         toast.error("Something went wrong while fetching Products");
       }
@@ -64,7 +66,7 @@ export const useFetchProductsOptions = () => {
 
     return res.data.data.map((client: ProductDetails) => ({
       id: client.id,
-      label: client.brand,
+      label: client.machineType,
     }));
   };
 
@@ -100,7 +102,9 @@ export const useCreateProduct = () => {
       return res.data;
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        toast.error(error.response?.data?.message || "Failed to create Product");
+        toast.error(
+          error.response?.data?.message || "Failed to create Product",
+        );
       } else {
         toast.error("Something went wrong while creating Product");
       }
@@ -130,11 +134,15 @@ export const useEditProduct = () => {
 
       const { id, ...payload } = updatedProduct;
 
-      const res = await axiosInstance.put(`${apiRoutes.products}/${id}`, payload, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const res = await axiosInstance.put(
+        `${apiRoutes.products}/${id}`,
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
 
       if (res.status !== 200) {
         throw new Error(res.data?.message || "Failed to update Product");
@@ -143,7 +151,9 @@ export const useEditProduct = () => {
       return res.data;
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        toast.error(error.response?.data?.message || "Failed to update Product");
+        toast.error(
+          error.response?.data?.message || "Failed to update Product",
+        );
       } else {
         toast.error("Something went wrong while updating Product");
       }
@@ -171,11 +181,14 @@ export const useDeleteProduct = () => {
       const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
-      const res = await axiosInstance.delete(`${apiRoutes.products}/${product.id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const res = await axiosInstance.delete(
+        `${apiRoutes.products}/${product.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
 
       if (res.status !== 200) {
         throw new Error(res.data?.message || "Failed to delete Product");
@@ -184,7 +197,9 @@ export const useDeleteProduct = () => {
       return res.data;
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        toast.error(error.response?.data?.message || "Failed to delete Product");
+        toast.error(
+          error.response?.data?.message || "Failed to delete Product",
+        );
       } else {
         toast.error("Something went wrong while deleting Product");
       }
