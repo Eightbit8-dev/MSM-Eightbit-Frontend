@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
-import ButtonSm from "../../components/common/Buttons";
-import {  useDeleteClient} from "../../queries/masterQueries/MachineQuery";
-import type {TransactionDetails  } from "../../types/transactionTypes";
+import ButtonSm from "../../../components/common/Buttons";
+import {  useDeleteClient} from "../../../queries/masterQueries/MachineQuery";
+import type {TransactionDetails  } from "../../../types/transactionTypes";
 
 export const DeleteMachineDialogBox = ({
   setIsDeleteMachineDialogOpen,

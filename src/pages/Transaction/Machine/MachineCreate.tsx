@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Input, { DateInput } from "../../components/common/Input";
-import DropdownSelect, { type DropdownOption } from "../../components/common/DropDown";
+import Input, { DateInput } from "../../../components/common/Input";
+import DropdownSelect, { type DropdownOption } from "../../../components/common/DropDown";
 import { toast } from "react-toastify";
-import type { TransactionDetails } from "../../types/transactionTypes";
-import { useFetchClientOptions } from "../../queries/masterQueries/ClientQuery";
-import { useFetchProductsOptions } from "../../queries/masterQueries/ProductQuery";
-import { useCreateMachine } from "../../queries/masterQueries/MachineQuery";
+import type { TransactionDetails } from "../../../types/transactionTypes";
+import { useFetchClientOptions } from "../../../queries/masterQueries/ClientQuery";
+import { useFetchProductsOptions } from "../../../queries/masterQueries/ProductQuery";
+import { useCreateMachine } from "../../../queries/masterQueries/MachineQuery";
 import ButtonSm from "@/components/common/Buttons"; "../../components/common/Buttons";
 
 const CreateMachinePage: React.FC = () => {
@@ -105,7 +105,7 @@ const CreateMachinePage: React.FC = () => {
     state="default"
     onClick={() => navigate(-1)}
     text="Cancel"
-    className="rounded-lg cursor-pointer bg-white border border-slate-300 px-4 py-2 text-slate-600 hover:bg-slate-100 transition"
+    className="rounded-lg cursor-pointer bg-white border border-slate-300 px-4 py-2 text-slate-600 active:bg-slate-100 hover:bg-slate-100 transition"
   />
   
   <ButtonSm

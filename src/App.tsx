@@ -10,11 +10,11 @@ import { ErrorPageContent } from "./pages/ErrorPage";
 import UsersPage from "./pages/UsersPage";
 import Report from "./pages/Report";
 import TransactionPage from "./pages/Transaction/TransactionPage";
-import MachineEntry from "./pages/Transaction/MachineEntry";
+import MachineEntry from "../src/pages/Transaction/Machine/MachineEntry";
 import ServiceEntry from "./pages/Transaction/ServiceEntry";
 import ServiceRequest from "./pages/Transaction/ServiceRequest";
-import EditMachinePage from "./pages/Transaction/edit-machine";
-import CreateMachinePage from "./pages/Transaction/MachineCreate";
+import EditMachinePage from "./pages/Transaction/Machine/Edit-machine";
+import CreateMachinePage from "./pages/Transaction/Machine/MachineCreate";
 
 // ------------------Main Pages ---------------------------
 const DashBoardPage = lazy(() => import("./pages/DashBoardPage"));

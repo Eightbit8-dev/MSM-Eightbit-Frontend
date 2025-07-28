@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Input, { DateInput } from "../../components/common/Input";
-import DropdownSelect, { type DropdownOption } from "../../components/common/DropDown";
+import Input, { DateInput } from "../../../components/common/Input";
+import DropdownSelect, { type DropdownOption } from "../../../components/common/DropDown";
 import { toast } from "react-toastify";
-import type { TransactionDetails } from "../../types/transactionTypes";
-import { useFetchClientOptions } from "../../queries/masterQueries/ClientQuery";
-import { useFetchProductsOptions } from "../../queries/masterQueries/ProductQuery";
-import { useFetchMachine, useEditMachine } from "../../queries/masterQueries/MachineQuery";
+import type { TransactionDetails } from "../../../types/transactionTypes";
+import { useFetchClientOptions } from "../../../queries/masterQueries/ClientQuery";
+import { useFetchProductsOptions } from "../../../queries/masterQueries/ProductQuery";
+import { useFetchMachine, useEditMachine } from "../../../queries/masterQueries/MachineQuery";
 
 const EditMachinePage: React.FC = () => {
   const { id } = useParams();
@@ -115,7 +115,7 @@ const EditMachinePage: React.FC = () => {
           <button
             type="button"
             onClick={() => navigate(-1)}
-            className="rounded-lg cursor-pointer border border-slate-300 px-4 py-2 text-slate-600 hover:bg-slate-100 transition"
+            className="rounded-lg cursor-pointer border border-slate-300 px-4 py-2 text-slate-600 active:bg-slate-100 hover:bg-slate-100 transition"
           >
             Cancel
           </button>

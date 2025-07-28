@@ -1,8 +1,8 @@
-import { useFetchMachine } from "../../queries/masterQueries/MachineQuery";
+import { useFetchMachine } from "../../../queries/masterQueries/MachineQuery";
 import ButtonSm from "@/components/common/Buttons";
 import PageHeader from "@/components/masterPage.components/PageHeader";
-import PaginationControls from "../../components/common/Pagination";
-import EmployeeTableSkeleton from "../TableSkleton";
+import PaginationControls from "../../../components/common/Pagination";
+import EmployeeTableSkeleton from "../../TableSkleton";
 import { DeleteMachineDialogBox } from "./MachineEntryDelete";
 
 import { useState, useMemo } from "react";
@@ -37,7 +37,7 @@ const MachineEntry = () => {
         </div>
         <div className="flex items-center gap-2">
           <ButtonSm
-            className="font-medium border border-gray-300 text-black bg-white"
+            className="font-medium border hover:bg-white active:bg-white  border-gray-300 text-black bg-white"
             text="Generate QR"
             state="default"
             type="button"
@@ -157,7 +157,7 @@ const MachineEntry = () => {
                           setSelectedMachine(item);
                           setIsDeleteMachineDialogOpen(true);
                         }}
-                        className="aspect-square bg-red-100 text-red-500"
+                        className="aspect-square hover:bg-red-100 active:bg-red-100 bg-red-100 text-red-500"
                         state="default"
                         imgUrl="/icons/delete-icon.svg"
                       />
