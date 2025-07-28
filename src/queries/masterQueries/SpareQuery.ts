@@ -25,14 +25,14 @@ export const useFetchSpares = () => {
       });
 
       if (res.status !== 200) {
-        throw new Error(res.data?.message || "Failed to fetch spares");
+        throw new Error(res.data?.data.message || "Failed to fetch spares");
       }
 
-      return res.data;
+      return res.data.data;
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         toast.error(
-          error.response?.data?.message || "Failed to fetch spares",
+          error.response?.data?.data.message || "Failed to fetch spares",
         );
       } else {
         toast.error("Something went wrong while fetching spares");
