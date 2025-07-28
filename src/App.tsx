@@ -6,10 +6,11 @@ import MainLayout from "./components/layout/MainLayout";
 import { appRoutes } from "./routes/appRoutes";
 import { Spinner } from "./components/layout/Spinner";
 import ProtectedRoute from "./components/layout/ProtectedRoute";
+import { ErrorPageContent } from "./pages/ErrorPage";
 
 // ------------------Main Pages ---------------------------
 const DashBoardPage = lazy(() => import("./pages/DashBoardPage"));
-const ErrorPage = lazy(() => import("./pages/ErrorPage"));
+
 const SignInPage = lazy(() => import("./pages/SignInPage"));
 
 // ---------------Master Pages----------------------------
@@ -20,18 +21,12 @@ const ResignationPage = lazy(
 const DesignationsPage = lazy(
   () => import("./pages/MasterPages/Client/ClientPage"),
 );
-const VendorsPage = lazy(
-  () => import("./pages/MasterPages/Vendor/VendorPage"),
-);
+const VendorsPage = lazy(() => import("./pages/MasterPages/Vendor/VendorPage"));
 const DepartmentsPage = lazy(
   () => import("./pages/MasterPages/Spares/SparesPage"),
 );
 const LoanMPage = lazy(() => import("./pages/MasterPages/Problem/ProblemPage"));
-const Bloodpage = lazy(
-  () => import("./pages/MasterPages/Users/UsersPage"),
-);
-
-
+const Bloodpage = lazy(() => import("./pages/MasterPages/Users/UsersPage"));
 
 const App = () => {
   return (
@@ -51,7 +46,15 @@ const App = () => {
           path="/"
           element={<Navigate to={appRoutes.dashboardPage} replace />}
         />
-        <Route path="*" element={<ErrorPage />} />
+        <Route
+          path="*"
+          element={
+            <ErrorPageContent
+              onRefresh={() => window.location.reload()}
+              error={new Error("Page Not found")}
+            />
+          }
+        />
 
         {/* Main Layout Routes */}
         {/* These are all authenticated routes */}
