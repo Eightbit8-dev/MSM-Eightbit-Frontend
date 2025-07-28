@@ -32,8 +32,13 @@ const VendorEdit = ({
     contactPerson: "",
     contactNumber: "",
     emailAddress: "",
-    address: "",
+    addressLine1: "",
+    addressLine2:"",
+    city:"",
+    pinCode:0,
+    state:"",
     gstNumber: "",
+
   };
 
   useEffect(() => {
@@ -66,7 +71,7 @@ const VendorEdit = ({
 
   const hasData =
     newVendorData?.vendorName ||
-    newVendorData?.address ||
+    newVendorData?.addressLine1 ||
     newVendorData?.gstNumber;
 
   if (!vendorData || !newVendorData) {
@@ -138,7 +143,7 @@ const VendorEdit = ({
           </header>
 
           {/* Vendor Details */}
-          <section className="vendor-details-section flex w-full flex-col gap-2 overflow-clip px-3">
+          <section className="vendor-details-section grid grid-cols-2 flex w-full flex-col gap-2 overflow-clip px-3">
             <Input
               required
               disabled={formState === "display"}
@@ -193,16 +198,72 @@ const VendorEdit = ({
             <Input
               required
               disabled={formState === "display"}
-              title="Address"
+              title="AddressLine1"
               type="str"
-              inputValue={newVendorData.address}
-              name="address"
-              placeholder="Enter address"
+              inputValue={newVendorData.addressLine1}
+              name="AddressLine1"
+              placeholder="Enter AddressLine1"
               maxLength={150}
               onChange={(value) =>
-                setNewVendorData({ ...newVendorData, address: value })
+                setNewVendorData({ ...newVendorData, addressLine1: value })
               }
             />
+                        <Input
+              required
+              disabled={formState === "display"}
+              title="addressLine2"
+              type="str"
+              inputValue={newVendorData.addressLine2}
+              name="addressLine2"
+              placeholder="Enter addressLine2"
+              maxLength={150}
+              onChange={(value) =>
+                setNewVendorData({ ...newVendorData, addressLine2: value })
+              }
+            />
+                        <Input
+              required
+              disabled={formState === "display"}
+              title="city"
+              type="str"
+              inputValue={newVendorData.city}
+              name="city"
+              placeholder="Enter city"
+              maxLength={150}
+              onChange={(value) =>
+                setNewVendorData({ ...newVendorData, city: value })
+              }
+            />
+                                    <Input
+              required
+              disabled={formState === "display"}
+              title="state"
+              type="str"
+              inputValue={newVendorData.state}
+              name="state"
+              placeholder="Enter state"
+              maxLength={150}
+              onChange={(value) =>
+                setNewVendorData({ ...newVendorData, state: value })
+              }
+            />
+<Input
+  required
+  disabled={formState === "display"}
+  title="PinCode"
+  type="str"
+  inputValue={newVendorData.pinCode === 0 ? "" : newVendorData.pinCode}
+  onChange={(value) =>
+    setNewVendorData({
+      ...newVendorData,
+      pinCode: Number(value) || 0,
+    })
+  }
+  name="PinCode"
+  placeholder="Enter PinCode"
+  maxLength={150}
+/>
+
             <Input
               required
               disabled={formState === "display"}

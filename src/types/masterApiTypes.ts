@@ -5,8 +5,12 @@ export interface VendorDetails {
   contactPerson: string;
   contactNumber: string;
   emailAddress: string;
-  address: string;
   gstNumber: string;
+  addressLine1:string;
+  addressLine2:string;
+  city:string;
+  pinCode:number;
+  state:string
 }
 
 export interface ClientDetails {
@@ -27,6 +31,12 @@ export interface ProductDetails {
   description: string;
 }
 
+export interface SpareDetails {
+  id: number;
+  spareName: string;
+  partNumber: string;
+}
+
 
 
 //-------------old remove this later ------------
@@ -39,11 +49,6 @@ export interface BloodDetails {
 
 
 
-export interface SpareDetails {
-  id: number;
-  spareName: string;
-  partNumber: string;
-}
 
 
 export interface LoanDetails {
