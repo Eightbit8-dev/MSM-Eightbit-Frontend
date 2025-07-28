@@ -29,7 +29,7 @@ export const useFetchProducts = () => {
         throw new Error(res.data?.message || "Failed to fetch Products");
       }
 
-      return res.data;
+      return res.data.data;
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         toast.error(error.response?.data?.message || "Failed to fetch Products");

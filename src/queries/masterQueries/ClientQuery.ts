@@ -39,7 +39,7 @@ export const useFetchClients = () => {
         throw new Error(res.data?.message || "Failed to fetch Clients");
       }
 
-      return res.data;
+      return res.data.data;
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         toast.error(

@@ -35,14 +35,14 @@ export const useFetchVendors = () => {
       });
 
       if (res.status !== 200) {
-        throw new Error(res.data?.data.message || "Failed to fetch vendors");
+        throw new Error(res.data?.message || "Failed to fetch vendors");
       }
 
       return res.data.data;
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         toast.error(
-          error.response?.data?.data.message || "Failed to fetch vendors",
+          error.response?.data?.message || "Failed to fetch vendors",
         );
       } else {
         toast.error("Something went wrong while fetching vendors");

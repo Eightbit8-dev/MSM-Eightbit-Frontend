@@ -1,3 +1,5 @@
+
+
 export const appRoutes = {
   // -------- Public Pages --------
   homePage: "/",
@@ -26,6 +28,9 @@ export const appRoutes = {
     transcationPage: "/transactions",
     children: {
       // e.g., receipts: "/transactions/receipts"
+      machineEntry: "/transactions/machine-entry",
+      serviceRequest: "/transactions/service-request",
+      serviceEntry: "/transactions/service-entry",
     },
   },
 

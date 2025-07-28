@@ -7,9 +7,12 @@ import { appRoutes } from "./routes/appRoutes";
 import { Spinner } from "./components/layout/Spinner";
 import ProtectedRoute from "./components/layout/ProtectedRoute";
 import { ErrorPageContent } from "./pages/ErrorPage";
-import TransactionPage from "./pages/TransactionPage";
 import UsersPage from "./pages/UsersPage";
 import Report from "./pages/Report";
+import TransactionPage from "./pages/Transaction/TransactionPage";
+import MachineEntry from "./pages/Transaction/MachineEntry";
+import ServiceEntry from "./pages/Transaction/ServiceEntry";
+import ServiceRequest from "./pages/Transaction/ServiceRequest";
 
 // ------------------Main Pages ---------------------------
 const DashBoardPage = lazy(() => import("./pages/DashBoardPage"));
@@ -69,10 +72,7 @@ const App = () => {
               element={<Report />}
             />
 
-            <Route
-              path={appRoutes.transactionRoutes.transcationPage}
-              element={<TransactionPage />}
-            />
+
             <Route
               path={appRoutes.userRoutes.userPage}
               element={<UsersPage />}
@@ -108,6 +108,22 @@ const App = () => {
             <Route
               path={appRoutes.masterRoutes.children.problemDetails}
               element={<LoanMPage />}
+            />
+                        <Route
+              path={appRoutes.transactionRoutes.transcationPage}
+              element={<TransactionPage />}
+            />
+            <Route
+            path={appRoutes.transactionRoutes.children.machineEntry}
+            element={<MachineEntry/>}/>
+
+            <Route
+            path={appRoutes.transactionRoutes.children.serviceEntry}
+            element={<ServiceEntry/>}
+            />
+            <Route
+            path={appRoutes.transactionRoutes.children.serviceRequest}
+            element={<ServiceRequest/>}
             />
           </Route>
         </Route>

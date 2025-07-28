@@ -32,7 +32,7 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="flex h-screen w-full">
+    <div className="flex justify-center h-screen w-full">
       {/* Left Side - Form */}
       <div className="flex w-full flex-col items-center justify-center px-4 md:w-1/2 md:px-8">
         <div className="flex w-full flex-col gap-2 md:w-[400px]">
@@ -86,8 +86,8 @@ const AuthPage = () => {
                     <img
                       src={
                         showPassword
-                          ? "/icons/eye-off-icon.svg"
-                          : "/icons/eye-icon.svg"
+                          ?"/icons/eye-icon.svg"
+                          :  "/icons/eye-off-icon.svg"
                       }
                       alt={showPassword ? "Hide Password" : "Show Password"}
                       className="h-6 w-6"
@@ -109,7 +109,7 @@ const AuthPage = () => {
       </div>
 
       {/* Right Side */}
-      <div className="bg-primary relative hidden w-1/2 items-center justify-center md:flex">
+      <div className="bg-primary relative hidden w-1/2 items-center justify-center lg:flex">
         <img
           src="./images/Login-image.png"
           alt="Login art"
