@@ -34,9 +34,9 @@ const AuthPage = () => {
   return (
     <div className="flex h-screen w-full">
       {/* Left Side - Form */}
-      <div className="flex w-full flex-col items-center justify-center px-8 md:w-1/2">
-        <div className="flex w-[400px] flex-col gap-2">
-          <div className="mb-3 text-center">
+      <div className="flex w-full flex-col items-center justify-center px-4 md:w-1/2 md:px-8">
+        <div className="flex w-full flex-col gap-2 md:w-[400px]">
+          <div className="mb-3 flex w-full flex-col text-center">
             <img
               src="./icons/logo-icon.svg"
               alt="Payroll Logo"
@@ -52,7 +52,7 @@ const AuthPage = () => {
 
           <div>
             <form
-              className="flex w-full max-w-sm flex-col gap-3"
+              className="flex max-w-sm min-w-full flex-col gap-3"
               onSubmit={handleSubmit}
             >
               <Input

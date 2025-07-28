@@ -6,13 +6,14 @@ import MainLayout from "./components/layout/MainLayout";
 import { appRoutes } from "./routes/appRoutes";
 import { Spinner } from "./components/layout/Spinner";
 import ProtectedRoute from "./components/layout/ProtectedRoute";
+import { ErrorPageContent } from "./pages/ErrorPage";
 import TransactionPage from "./pages/TransactionPage";
 import UsersPage from "./pages/UsersPage";
 import Report from "./pages/Report";
 
 // ------------------Main Pages ---------------------------
 const DashBoardPage = lazy(() => import("./pages/DashBoardPage"));
-const ErrorPage = lazy(() => import("./pages/ErrorPage"));
+
 const SignInPage = lazy(() => import("./pages/SignInPage"));
 
 // ---------------Master Pages----------------------------
@@ -48,8 +49,15 @@ const App = () => {
           path="/"
           element={<Navigate to={appRoutes.dashboardPage} replace />}
         />
-
-        <Route path="*" element={<ErrorPage />} />
+        <Route
+          path="*"
+          element={
+            <ErrorPageContent
+              onRefresh={() => window.location.reload()}
+              error={new Error("Page Not found")}
+            />
+          }
+        />
 
         {/* Main Layout Routes */}
         {/* These are all authenticated routes */}

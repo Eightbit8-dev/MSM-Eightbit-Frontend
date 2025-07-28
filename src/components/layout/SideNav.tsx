@@ -22,7 +22,7 @@ const SideNav: React.FC = () => {
   };
 
   return (
-    <div className="floating-container relative  h-screen border-r-2 border-slate-300 transition-all duration-300 hidden lg:flex">
+    <div className="floating-container relative hidden h-screen border-r-2 border-slate-300 transition-all duration-300 lg:flex">
       <motion.section
         className="flex h-screen flex-col items-center justify-start gap-3 overflow-clip transition-all duration-300 select-none"
         animate={{ x: 0, opacity: 1 }}
@@ -77,26 +77,40 @@ const SideNav: React.FC = () => {
 
             <NavigationButton
               labelName="Transaction"
-              isActive={isRouteActive(appRoutes.transactionRoutes.transcationPage)}
+              isActive={isRouteActive(
+                appRoutes.transactionRoutes.transcationPage,
+              )}
               iconSrc="/icons/sideNavIcons/loan-icon.svg"
               activeIconSrc="/icons/sideNavIcons/loan-icon-active.svg"
-              onClick={() => navigateToRoute(appRoutes.transactionRoutes.transcationPage)}
+              onClick={() =>
+                navigateToRoute(appRoutes.transactionRoutes.transcationPage)
+              }
             />
 
             <NavigationButton
               labelName="Users"
-              isActive={isRouteActive(appRoutes.userRoutes?.userPage || "/users")}
+              isActive={isRouteActive(
+                appRoutes.userRoutes?.userPage || "/users",
+              )}
               iconSrc="/icons/sideNavIcons/users-icon.svg"
               activeIconSrc="/icons/sideNavIcons/users-icon-active.svg"
-              onClick={() => navigateToRoute(appRoutes.userRoutes?.userPage || "/users")}
+              onClick={() =>
+                navigateToRoute(appRoutes.userRoutes?.userPage || "/users")
+              }
             />
 
             <NavigationButton
               labelName="Reports"
-              isActive={isRouteActive(appRoutes.reportRoutes?.reportPage || "/reports")}
+              isActive={isRouteActive(
+                appRoutes.reportRoutes?.reportPage || "/reports",
+              )}
               iconSrc="/icons/sideNavIcons/reports-icon.svg"
               activeIconSrc="/icons/sideNavIcons/reports-icon-active.svg"
-              onClick={() => navigateToRoute(appRoutes.reportRoutes?.reportPage || "/reports")}
+              onClick={() =>
+                navigateToRoute(
+                  appRoutes.reportRoutes?.reportPage || "/reports",
+                )
+              }
             />
           </div>
         </motion.div>
@@ -133,7 +147,7 @@ const NavigationButton: React.FC<NavigationButtonProps> = ({
         <img src={isActive ? activeIconSrc : iconSrc} alt={labelName} />
       </div>
       <h4
-        className={`scale-90 text-sm ${isActive ? "font-medium text-slate-500" : "font-normal text-slate-400"}`}
+        className={`scale-95 text-sm ${isActive ? "font-medium text-slate-700" : "font-medium text-slate-500"}`}
       >
         {labelName}
       </h4>
