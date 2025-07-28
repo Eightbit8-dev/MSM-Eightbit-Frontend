@@ -17,6 +17,11 @@ export const convertToBackendDate = (date: string) => {
   return dayjs(date).format("DD-MM-YYYY");
 };
 
+export const convertToFrontendDate = (backendDate: string): string => {
+  const [dd, mm, yyyy] = backendDate.split("-");
+  return `${yyyy}-${mm}-${dd}`;
+};
+
 const calculateAge = (dob: string): number => {
   if (!dob) return 0;
   const birthDate = new Date(dob);
