@@ -5,6 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { apiRoutes } from "../../routes/apiRoutes";
 import Cookies from "js-cookie";
+import type { DropdownOption } from "@/components/common/DropDown";
 
 /**
  * -------------------------------------------
@@ -43,6 +44,33 @@ export const useFetchProducts = () => {
   return useQuery({
     queryKey: ["Products"],
     queryFn: fetchAllProducts,
+    staleTime: 1000 * 60 * 0,
+    retry: 1,
+  });
+};
+
+export const useFetchProductsOptions = () => {
+  const fetchOptions = async (): Promise<DropdownOption[]> => {
+    const token = Cookies.get("token");
+    if (!token) throw new Error("Unauthorized to perform this action.");
+
+    const res = await axiosInstance.get(apiRoutes.products, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (res.status !== 200) {
+      throw new Error(res.data?.message || "Failed to fetch products options");
+    }
+
+    return res.data.data.map((client: ProductDetails) => ({
+      id: client.id,
+      label: client.brand,
+    }));
+  };
+
+  return useQuery({
+    queryKey: ["productOptions"],
+    queryFn: fetchOptions,
     staleTime: 1000 * 60 * 0,
     retry: 1,
   });

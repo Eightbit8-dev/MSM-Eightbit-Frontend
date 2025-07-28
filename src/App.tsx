@@ -13,6 +13,8 @@ import TransactionPage from "./pages/Transaction/TransactionPage";
 import MachineEntry from "./pages/Transaction/MachineEntry";
 import ServiceEntry from "./pages/Transaction/ServiceEntry";
 import ServiceRequest from "./pages/Transaction/ServiceRequest";
+import EditMachinePage from "./pages/Transaction/edit-machine";
+import CreateMachinePage from "./pages/Transaction/MachineCreate";
 
 // ------------------Main Pages ---------------------------
 const DashBoardPage = lazy(() => import("./pages/DashBoardPage"));
@@ -116,6 +118,14 @@ const App = () => {
             <Route
             path={appRoutes.transactionRoutes.children.machineEntry}
             element={<MachineEntry/>}/>
+<Route
+ path={appRoutes.transactionRoutes.children.machineEdit} 
+element={<EditMachinePage/>}/>
+
+<Route 
+path={appRoutes.transactionRoutes.children.machineCreate}
+element={<CreateMachinePage/>}/>
+
 
             <Route
             path={appRoutes.transactionRoutes.children.serviceEntry}
@@ -125,6 +135,7 @@ const App = () => {
             path={appRoutes.transactionRoutes.children.serviceRequest}
             element={<ServiceRequest/>}
             />
+
           </Route>
         </Route>
       </Routes>

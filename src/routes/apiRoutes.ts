@@ -1,3 +1,5 @@
+
+
 export const apiRoutes = {
   signin: "/api/auth/login",
   signup: "/api/auth/register",
@@ -10,6 +12,10 @@ export const apiRoutes = {
   users: "/api/admin/users",
   machineSpares: "/api/admin/spares",
   problemDetails: "/api/admin/problem-details",
+
+  // ------------------ Transaction API Routes ------------------
+  machineEntry: "/api/admin/machine",
+
   // ------------------ old remove this later ------------------
   designations: "/api/admin/designation",
   resigination: "/api/admin/resignation",

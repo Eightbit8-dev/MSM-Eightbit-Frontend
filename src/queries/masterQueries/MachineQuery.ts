@@ -1,11 +1,10 @@
 import axiosInstance from "../../utils/axios";
 import axios from "axios";
-import type { ClientDetails } from "../../types/masterApiTypes";
+import type { TransactionDetails } from "../../types/transactionTypes";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { apiRoutes } from "../../routes/apiRoutes";
 import Cookies from "js-cookie";
-import type { DropdownOption } from "@/components/common/DropDown";
 
 /**
  * -------------------------------------------
@@ -23,130 +22,100 @@ import type { DropdownOption } from "@/components/common/DropDown";
 /**
  * 🔍 Fetch all Clients
  */
-export const useFetchClients = () => {
-  const fetchAllClients = async (): Promise<ClientDetails[]> => {
+export const useFetchMachine = () => {
+  const fetchAllMachine = async (): Promise<TransactionDetails[]> => {
     try {
       const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
-      const res = await axiosInstance.get(apiRoutes.clients, {
+      const res = await axiosInstance.get(apiRoutes.machineEntry, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
       if (res.status !== 200) {
-        throw new Error(res.data?.message || "Failed to fetch Clients");
+        throw new Error(res.data?.message || "Failed to fetch machine");
       }
 
       return res.data.data;
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         toast.error(
-          error.response?.data?.message || "Failed to fetch Clients"
+          error.response?.data?.message || "Failed to fetch machine"
         );
       } else {
-        toast.error("Something went wrong while fetching Clients");
+        toast.error("Something went wrong while fetching machine");
       }
-      throw new Error("Client fetch failed");
+      throw new Error("Machine fetch failed");
     }
   };
 
   return useQuery({
-    queryKey: ["Clients"],
-    queryFn: fetchAllClients,
+    queryKey: ["machine"],
+    queryFn: fetchAllMachine,
     staleTime: 1000 * 60 * 0,
     retry: 1,
   });
 };
 
 /**
- * 📋 Dropdown Options
+ * ➕ Create a new Machine
  */
-export const useFetchClientOptions = () => {
-  const fetchOptions = async (): Promise<DropdownOption[]> => {
-    const token = Cookies.get("token");
-    if (!token) throw new Error("Unauthorized to perform this action.");
-
-    const res = await axiosInstance.get(apiRoutes.clients, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
-    if (res.status !== 200) {
-      throw new Error(res.data?.message || "Failed to fetch clients");
-    }
-
-    return res.data.data.map((client: ClientDetails) => ({
-      id: client.id,
-      label: client.clientName,
-    }));
-  };
-
-  return useQuery({
-    queryKey: ["clientOptions"],
-    queryFn: fetchOptions,
-    staleTime: 1000 * 60 * 0,
-    retry: 1,
-  });
-};
-
-/**
- * ➕ Create a new Client
- */
-export const useCreateClient = () => {
+export const useCreateMachine = () => {
   const queryClient = useQueryClient();
 
-  const createClient = async (newClient: ClientDetails) => {
+  const createMachine = async (newMachine: TransactionDetails) => {
     try {
       const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
-      const res = await axiosInstance.post(apiRoutes.clients, newClient, {
+      const res = await axiosInstance.post(apiRoutes.machineEntry, newMachine, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
       if (res.status !== 201 && res.status !== 200) {
-        throw new Error(res.data?.message || "Failed to create Client");
+        throw new Error(res.data?.message || "Failed to create Machine");
       }
 
       return res.data;
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         toast.error(
-          error.response?.data?.message || "Failed to create Client"
+          error.response?.data?.message || "Failed to create Machine"
         );
       } else {
-        toast.error("Something went wrong while creating Client");
+        toast.error("Something went wrong while creating Machine");
       }
       throw error;
     }
   };
 
   return useMutation({
-    mutationFn: createClient,
+    mutationFn: createMachine,
     onSuccess: () => {
-      toast.success("Client created successfully");
-      queryClient.invalidateQueries({ queryKey: ["Clients"] });
+      toast.success("Machine created successfully");
+      queryClient.invalidateQueries({ queryKey: ["Machine"] });
     },
   });
 };
 
 /**
- * ✏️ Edit an existing Client
+ * ✏️ Edit an existing Machine
  */
-export const useEditClient = () => {
+export const useEditMachine = () => {
   const queryClient = useQueryClient();
 
-  const editClient = async (updatedClient: ClientDetails) => {
+  const editMachine = async (updatedMachine: TransactionDetails) => {
     const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
-    const { id: clientId, ...payload } = updatedClient;
+    const { id: machineId, ...payload } = updatedMachine;
 
     const res = await axiosInstance.put(
-      `${apiRoutes.clients}/${clientId}`,
+      `${apiRoutes.machineEntry}/${machineId}`,
       payload,
       {
         headers: {
@@ -156,17 +125,17 @@ export const useEditClient = () => {
     );
 
     if (res.status !== 200) {
-      throw new Error(res.data?.message || "Failed to update Client");
+      throw new Error(res.data?.message || "Failed to update Machine");
     }
 
     return res.data;
   };
 
   return useMutation({
-    mutationFn: editClient,
+    mutationFn: editMachine,
     onSuccess: () => {
-      toast.success("Client updated successfully");
-      queryClient.invalidateQueries({ queryKey: ["Clients"] });
+      toast.success("Machine updated successfully");
+      queryClient.invalidateQueries({ queryKey: ["machine"] });
     },
     onError: (error) => {
       if (axios.isAxiosError(error)) {
@@ -182,11 +151,11 @@ export const useEditClient = () => {
 export const useDeleteClient = () => {
   const queryClient = useQueryClient();
 
-  const deleteClient = async (client: ClientDetails) => {
+  const deleteClient = async (client: TransactionDetails) => {
     const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
-    const res = await axiosInstance.delete(`${apiRoutes.clients}/${client.id}`, {
+    const res = await axiosInstance.delete(`${apiRoutes.machineEntry}/${client.id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
