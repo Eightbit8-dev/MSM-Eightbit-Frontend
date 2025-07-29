@@ -115,7 +115,6 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
 
     const payload = {
       ...machine,
-      installationDate: convertToBackendDate(machine.installationDate),
       clientId: selectedClient.id,
       productId: selectedType.id,
     };
@@ -216,7 +215,12 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
         <DateInput
           title="Installation Date"
           value={convertToFrontendDate(machine.installationDate)}
-          onChange={(val) => updateField("installationDate", val)}
+          onChange={(val) =>
+            updateField(
+              "installationDate",
+              convertToBackendDate(val.toString()),
+            )
+          }
           required
           maxDate={new Date().toISOString().split("T")[0]}
           disabled={isView}

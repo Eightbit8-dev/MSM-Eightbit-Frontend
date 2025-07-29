@@ -190,7 +190,7 @@ export const useCreateMachine = () => {
     mutationFn: createMachine,
     onSuccess: () => {
       toast.success("Machine created successfully");
-      queryClient.invalidateQueries({ queryKey: ["Machine"] });
+      queryClient.invalidateQueries({ queryKey: ["machine"] });
     },
   });
 };
@@ -241,7 +241,7 @@ export const useEditMachine = () => {
 /**
  * ❌ Delete a Client
  */
-export const useDeleteClient = () => {
+export const useDeleteMachineEntry = () => {
   const queryClient = useQueryClient();
 
   const deleteClient = async (client: MachineDetails) => {
@@ -267,7 +267,7 @@ export const useDeleteClient = () => {
   return useMutation({
     mutationFn: deleteClient,
     onSuccess: () => {
-      toast.success("Client deleted successfully");
+      toast.success("Entry deleted successfully");
       queryClient.invalidateQueries({ queryKey: ["machine"] });
     },
     onError: (error) => {
