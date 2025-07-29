@@ -1,5 +1,4 @@
-
-export interface TransactionDetails {
+export interface MachineDetails {
   id: number;
   slNo: string;
   serialNumber: string;

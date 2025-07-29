@@ -10,11 +10,9 @@ import { ErrorPageContent } from "./pages/ErrorPage";
 import UsersPage from "./pages/UsersPage";
 import Report from "./pages/Report";
 import TransactionPage from "./pages/Transaction/TransactionPage";
-import MachineEntry from "../src/pages/Transaction/Machine/MachineEntry";
+import MachineEntry from "./pages/Transaction/machineEntry/MachineEntry";
 import ServiceEntry from "./pages/Transaction/ServiceEntry";
 import ServiceRequest from "./pages/Transaction/ServiceRequest";
-import EditMachinePage from "./pages/Transaction/Machine/Edit-machine";
-import CreateMachinePage from "./pages/Transaction/Machine/MachineCreate";
 
 // ------------------Main Pages ---------------------------
 const DashBoardPage = lazy(() => import("./pages/DashBoardPage"));
@@ -74,7 +72,6 @@ const App = () => {
               element={<Report />}
             />
 
-
             <Route
               path={appRoutes.userRoutes.userPage}
               element={<UsersPage />}
@@ -111,31 +108,23 @@ const App = () => {
               path={appRoutes.masterRoutes.children.problemDetails}
               element={<LoanMPage />}
             />
-                        <Route
+            <Route
               path={appRoutes.transactionRoutes.transcationPage}
               element={<TransactionPage />}
             />
             <Route
-            path={appRoutes.transactionRoutes.children.machineEntry}
-            element={<MachineEntry/>}/>
-<Route
- path={appRoutes.transactionRoutes.children.machineEdit} 
-element={<EditMachinePage/>}/>
-
-<Route 
-path={appRoutes.transactionRoutes.children.machineCreate}
-element={<CreateMachinePage/>}/>
-
-
-            <Route
-            path={appRoutes.transactionRoutes.children.serviceEntry}
-            element={<ServiceEntry/>}
-            />
-            <Route
-            path={appRoutes.transactionRoutes.children.serviceRequest}
-            element={<ServiceRequest/>}
+              path={appRoutes.transactionRoutes.children.machineEntry}
+              element={<MachineEntry />}
             />
 
+            <Route
+              path={appRoutes.transactionRoutes.children.serviceEntry}
+              element={<ServiceEntry />}
+            />
+            <Route
+              path={appRoutes.transactionRoutes.children.serviceRequest}
+              element={<ServiceRequest />}
+            />
           </Route>
         </Route>
       </Routes>

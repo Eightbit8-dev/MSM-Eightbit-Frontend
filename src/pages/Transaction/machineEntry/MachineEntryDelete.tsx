@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 import ButtonSm from "../../../components/common/Buttons";
-import {  useDeleteClient} from "../../../queries/masterQueries/MachineQuery";
-import type {TransactionDetails  } from "../../../types/transactionTypes";
+import { useDeleteClient } from "../../../queries/masterQueries/MachineQuery";
+import type { MachineDetails } from "../../../types/transactionTypes";
 
 export const DeleteMachineDialogBox = ({
   setIsDeleteMachineDialogOpen,
@@ -9,7 +9,7 @@ export const DeleteMachineDialogBox = ({
   onDeleted,
 }: {
   setIsDeleteMachineDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  client: TransactionDetails;
+  client: MachineDetails;
   onDeleted: () => void;
 }) => {
   const { mutate: deleteMachine, isPending: isDeleting } = useDeleteClient();

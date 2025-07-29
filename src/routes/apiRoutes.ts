@@ -1,5 +1,3 @@
-
-
 export const apiRoutes = {
   signin: "/api/auth/login",
   signup: "/api/auth/register",
@@ -15,6 +13,7 @@ export const apiRoutes = {
 
   // ------------------ Transaction API Routes ------------------
   machineEntry: "/api/admin/machine",
+  machineQr: "/api/admin/machine/bulk-qr-pdf",
 
   // ------------------ old remove this later ------------------
   designations: "/api/admin/designation",
@@ -32,5 +31,4 @@ export const apiRoutes = {
   holidayFilter: "/api/admin/holiday/filter",
   holidaymonth: "/api/admin/months",
   holidayyears: "/api/admin/years",
-
 };

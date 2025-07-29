@@ -1,6 +1,6 @@
 import axiosInstance from "../../utils/axios";
 import axios from "axios";
-import type { TransactionDetails } from "../../types/transactionTypes";
+import type { MachineDetails } from "../../types/transactionTypes";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { apiRoutes } from "../../routes/apiRoutes";
@@ -23,8 +23,52 @@ import type { DropdownOption } from "@/components/common/DropDown";
 /**
  * 🔍 Fetch all Clients
  */
+
+export const useCreateMachineQR = () => {
+  const generateQR = async (ids: number[]) => {
+    try {
+      const token = Cookies.get("token");
+      if (!token) throw new Error("Unauthorized to perform this action.");
+
+      const response = await axiosInstance.post(apiRoutes.machineQr, ids, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        responseType: "blob", // Important: treat response as binary
+      });
+
+      const blob = new Blob([response.data], { type: "application/pdf" });
+      const blobUrl = URL.createObjectURL(blob);
+
+      // Open in a new tab and trigger print
+      const newWindow = window.open(blobUrl);
+      if (newWindow) {
+        newWindow.addEventListener("load", () => {
+          newWindow.print();
+        });
+      }
+
+      return true;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        toast.error(
+          error.response?.data?.message || "Failed to generate QR PDF",
+        );
+      } else {
+        toast.error("Something went wrong while generating the QR PDF");
+      }
+      throw error;
+    }
+  };
+
+  return useMutation({
+    mutationFn: generateQR,
+  });
+};
+
 export const useFetchMachine = () => {
-  const fetchAllMachine = async (): Promise<TransactionDetails[]> => {
+  const fetchAllMachine = async (): Promise<MachineDetails[]> => {
     try {
       const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
@@ -74,7 +118,7 @@ export const useFetchMachineOptions = () => {
         throw new Error(res.data?.message || "Failed to fetch machine");
       }
 
-      return res.data.data.map((machine: TransactionDetails) => ({
+      return res.data.data.map((machine: MachineDetails) => ({
         id: machine.id,
         label: machine.machineType,
       }));
@@ -102,7 +146,7 @@ export const useFetchMachineOptions = () => {
 export const useCreateMachine = () => {
   const queryClient = useQueryClient();
 
-  const createMachine = async (newMachine: TransactionDetails) => {
+  const createMachine = async (newMachine: MachineDetails) => {
     try {
       const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
@@ -145,7 +189,7 @@ export const useCreateMachine = () => {
 export const useEditMachine = () => {
   const queryClient = useQueryClient();
 
-  const editMachine = async (updatedMachine: TransactionDetails) => {
+  const editMachine = async (updatedMachine: MachineDetails) => {
     const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
@@ -188,7 +232,7 @@ export const useEditMachine = () => {
 export const useDeleteClient = () => {
   const queryClient = useQueryClient();
 
-  const deleteClient = async (client: TransactionDetails) => {
+  const deleteClient = async (client: MachineDetails) => {
     const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
@@ -212,7 +256,7 @@ export const useDeleteClient = () => {
     mutationFn: deleteClient,
     onSuccess: () => {
       toast.success("Client deleted successfully");
-      queryClient.invalidateQueries({ queryKey: ["Clients"] });
+      queryClient.invalidateQueries({ queryKey: ["machine"] });
     },
     onError: (error) => {
       if (axios.isAxiosError(error)) {

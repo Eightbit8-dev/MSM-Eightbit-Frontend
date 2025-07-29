@@ -11,6 +11,7 @@ const popUpVariants = {
 
 interface DialogBoxProps {
   children: React.ReactNode;
+  className?: string;
 
   setToggleDialogueBox: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -18,6 +19,7 @@ interface DialogBoxProps {
 const DialogBox: React.FC<DialogBoxProps> = ({
   setToggleDialogueBox,
   children,
+  className = "",
 }) => {
   const [domReady, setDomReady] = useState(false);
 
@@ -75,7 +77,7 @@ const DialogBox: React.FC<DialogBoxProps> = ({
     >
       <div
         ref={containerRef}
-        className="md:w[400px] flex w-[350px] flex-col items-center gap-4 rounded-[20px] bg-white p-8 outline-1 outline-gray-300 backdrop-blur-sm lg:w-[500px]"
+        className={`md:w[400px] flex w-[350px] flex-col items-center gap-4 rounded-[20px] bg-white p-8 outline-1 outline-gray-300 backdrop-blur-sm lg:w-[500px] ${className} `}
       >
         {children}
       </div>
