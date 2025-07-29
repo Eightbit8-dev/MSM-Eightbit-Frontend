@@ -109,7 +109,7 @@ const MachineEntry = () => {
             imgUrl="/icons/plus-icon.svg"
           />
           <ButtonSm
-            className="font-medium text-white"
+            className="font-medium text-white opacity-100"
             text="Import"
             state="default"
             type="button"
