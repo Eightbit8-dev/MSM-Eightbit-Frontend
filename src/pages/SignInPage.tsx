@@ -6,6 +6,7 @@ import { useSignInMutation } from "../queries/signInQuery";
 import { useNavigate } from "react-router-dom";
 import { appRoutes } from "../routes/appRoutes";
 import { toast } from "react-toastify";
+import { motion } from "motion/react";
 
 const AuthPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -32,16 +33,35 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="flex justify-center h-screen w-full">
+    <div className="flex h-screen w-full justify-center">
       {/* Left Side - Form */}
       <div className="flex w-full flex-col items-center justify-center px-4 md:w-1/2 md:px-8">
         <div className="flex w-full flex-col gap-2 md:w-[400px]">
           <div className="mb-3 flex w-full flex-col text-center">
-            <img
-              src="./icons/logo-icon.svg"
-              alt="Payroll Logo"
-              className="mb-4 h-24 w-24"
-            />
+            <motion.div
+              className="relative mb-4 flex max-w-full flex-col items-start justify-center py-4"
+              initial={{ y: -20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+            >
+              <div className="container flex w-max flex-col items-center">
+                <motion.img
+                  src="/icons/logo-icon-side-nav.svg"
+                  alt="Logo"
+                  whileHover={{ rotate: 360 }}
+                  transition={{ duration: 0.5, ease: "easeInOut" }}
+                />
+                <motion.p
+                  className="orange-gradient absolute bottom-1.5 rounded px-1.5 py-1 text-[10px] font-normal text-white"
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0, opacity: 0 }}
+                  transition={{ delay: 0.4, type: "tween", stiffness: 200 }}
+                >
+                  MSM
+                </motion.p>
+              </div>
+            </motion.div>
             <p className="text-md text-start font-medium text-gray-500">
               Please sign in!
             </p>
@@ -86,8 +106,8 @@ const AuthPage = () => {
                     <img
                       src={
                         showPassword
-                          ?"/icons/eye-icon.svg"
-                          :  "/icons/eye-off-icon.svg"
+                          ? "/icons/eye-icon.svg"
+                          : "/icons/eye-off-icon.svg"
                       }
                       alt={showPassword ? "Hide Password" : "Show Password"}
                       className="h-6 w-6"
@@ -110,8 +130,11 @@ const AuthPage = () => {
 
       {/* Right Side */}
       <div className="bg-primary relative hidden w-1/2 items-center justify-center lg:flex">
+        <div className="texts absolute top-1/2 left-1/2 z-50 -translate-x-1/2 -translate-y-1/2 text-[80px] leading-[80px] font-medium text-[#00b3fa] mix-blend-difference">
+          Reliable <br /> Fast <br /> Smart.
+        </div>
         <img
-          src="./images/Login-image.png"
+          src="./images/sign-in-image.webp"
           alt="Login art"
           className="absolute inset-0 h-full w-full object-cover opacity-90"
         />
