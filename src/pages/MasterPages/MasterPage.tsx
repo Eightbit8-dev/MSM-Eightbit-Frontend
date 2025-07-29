@@ -54,7 +54,7 @@ export const MasterPage = () => {
       title: "Problem Details",
       desc: "Log and categorize recurring issues related to products, machines, or inventory.",
       btnText: "Configure",
-      onAction: () => navigate(appRoutes.masterRoutes.children.problemDetails),
+      onAction: () => navigate(appRoutes.scanPage),
     }
   ];
   return (

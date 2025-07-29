@@ -23,6 +23,9 @@ export const appRoutes = {
     },
   },
 
+
+    scanPage:"/Sacn-qr",
+
   // -------- Transaction Routes --------
   transactionRoutes: {
     transcationPage: "/transactions",
