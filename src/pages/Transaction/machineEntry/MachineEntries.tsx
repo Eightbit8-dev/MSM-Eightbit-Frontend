@@ -85,9 +85,9 @@ const MachineEntry = () => {
         <div className="flex items-center gap-2">
           <ButtonSm
             disabled={selectedIds.length === 0 || isCreateQRPending}
-            className={
+            className={`${
               selectedIds.length > 0 ? "text-white" : "disabled:opacity-60"
-            }
+            } h-full font-medium`}
             text={isCreateQRPending ? "Generating QR" : "Generate QR"}
             state={selectedIds.length > 0 ? "default" : "outline"}
             type="button"
@@ -156,6 +156,7 @@ const MachineEntry = () => {
                   <p className="w-[40px] text-sm font-semibold text-zinc-900">
                     S.No
                   </p>
+
                   <CheckboxInput
                     checked={isAllSelected}
                     onChange={handleSelectAllChange}
