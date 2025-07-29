@@ -25,7 +25,7 @@ type Mode = "create" | "edit" | "display";
 
 interface MachineFormPageProps {
   mode: Mode;
-  machineFromParent?: MachineDetails;
+  machineFromParent: MachineDetails;
   setFormVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -45,25 +45,7 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
   const { data: brandOptions = [] } = useFetchBrandsOptions();
   const { data: modelOptions = [] } = useFetchModelsOptions();
 
-  const dummyData: MachineDetails = {
-    id: 0,
-    slNo: "",
-    serialNumber: "",
-    referenceNumber: "",
-    installationDate: convertToFrontendDate(
-      new Date().toISOString().split("T")[0],
-    ),
-    installedBy: "",
-    machinePhotos: [],
-    clientName: "",
-    machineType: "",
-    brand: "",
-    modelNumber: "",
-  };
-
-  const [machine, setMachine] = useState<MachineDetails>(
-    machineFromParent || dummyData,
-  );
+  const [machine, setMachine] = useState<MachineDetails>(machineFromParent);
 
   const [selectedClient, setSelectedClient] = useState<DropdownOption>({
     id: 0,
@@ -83,10 +65,6 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
   });
 
   useEffect(() => {
-    setMachine({
-      ...machine,
-      installationDate: convertToFrontendDate(machine.installationDate),
-    });
     if ((isEdit || isView) && machineFromParent) {
       setMachine(machineFromParent);
       setSelectedClient(
@@ -237,7 +215,7 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
         />
         <DateInput
           title="Installation Date"
-          value={machine.installationDate}
+          value={convertToFrontendDate(machine.installationDate)}
           onChange={(val) => updateField("installationDate", val)}
           required
           maxDate={new Date().toISOString().split("T")[0]}

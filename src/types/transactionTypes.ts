@@ -11,3 +11,10 @@ export interface MachineDetails {
   brand: string;
   modelNumber: string;
 }
+
+export interface MachineResponse {
+  data: MachineDetails[];
+  page: number;
+  totalPages: number;
+  totalRecords: number;
+}

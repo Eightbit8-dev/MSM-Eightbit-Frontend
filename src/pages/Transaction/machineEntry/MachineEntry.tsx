@@ -8,7 +8,7 @@ import PaginationControls from "../../../components/common/Pagination";
 import EmployeeTableSkeleton from "../../TableSkleton";
 import { DeleteMachineDialogBox } from "./MachineEntryDelete";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import type { MachineDetails } from "@/types/transactionTypes";
 import MachineFormPage from "./MachineForm";
 import DialogBox from "@/components/common/DialogBox";
@@ -16,15 +16,11 @@ import { AnimatePresence } from "motion/react";
 import CheckboxInput from "@/components/common/CheckBox";
 import type { FormState } from "@/types/appTypes";
 import { convertToFrontendDate } from "@/utils/commonUtils";
-
-const ITEMS_PER_PAGE = 10;
+import DropdownSelect from "@/components/common/DropDown";
 
 const MachineEntry = () => {
-  const { data, isLoading } = useFetchMachine();
-  const { mutate: generateQR, isPending: isCreateQRPending } =
-    useCreateMachineQR();
-
   const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [selectedMachine, setSelectedMachine] = useState<MachineDetails | null>(
     null,
   );
@@ -33,13 +29,13 @@ const MachineEntry = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [formState, setFormState] = useState<FormState>("create");
 
-  const paginatedData = useMemo(() => {
-    if (!data) return [];
-    const start = (currentPage - 1) * ITEMS_PER_PAGE;
-    return data.slice(start, start + ITEMS_PER_PAGE);
-  }, [data, currentPage]);
+  const { data, isLoading } = useFetchMachine(currentPage, itemsPerPage);
 
-  const totalPages = Math.ceil((data?.length || 0) / ITEMS_PER_PAGE);
+  const { mutate: generateQR, isPending: isCreateQRPending } =
+    useCreateMachineQR();
+
+  const paginatedData = data?.data || [];
+  const totalPages = data?.totalPages || 0;
 
   const handleCheckboxChange = (id: number) => {
     setSelectedIds((prevSelected) =>
@@ -60,7 +56,7 @@ const MachineEntry = () => {
     );
   };
 
-  const dummyData: MachineDetails = {
+  const dummyMachineData: MachineDetails = {
     id: 0,
     slNo: "",
     serialNumber: "",
@@ -105,7 +101,7 @@ const MachineEntry = () => {
             state="default"
             type="button"
             onClick={() => {
-              setSelectedMachine(dummyData);
+              setSelectedMachine(dummyMachineData);
               setFormState("create");
               setIsFormOpen(true);
             }}
@@ -128,25 +124,35 @@ const MachineEntry = () => {
         {isLoading ? (
           <EmployeeTableSkeleton />
         ) : (
-          <div className="rounded-[12px] bg-white/80 p-4">
-            <div className="mb-2 flex items-center justify-between">
+          <div className="flex flex-col items-end gap-2 rounded-[12px] bg-white/80 p-4">
+            <div className="flex w-full items-center justify-between">
               <section className="result-length flex flex-row items-center gap-2">
                 <div className="h-[10px] w-[10px] rounded-full bg-blue-500"></div>
                 <h2 className="text-md font-semibold text-zinc-800">
-                  Showing {paginatedData.length} results of {data?.length || 0}
+                  Showing {paginatedData.length} results of{" "}
+                  {data?.totalRecords || 0}
                 </h2>
               </section>
-              <PaginationControls
-                totalPages={totalPages}
-                currentPage={currentPage}
-                onPageChange={setCurrentPage}
-              />
+              {/* ------selected------ */}
+              <div
+                className={`selectin-container flex flex-row gap-2 rounded-md border-1 border-blue-500 bg-blue-500/10 px-3 py-2 ${selectedIds.length === 0 ? "opacity-0" : ""}`}
+              >
+                <h3 className="text-md font-medium text-blue-500">
+                  Selected {selectedIds.length}
+                </h3>
+                <img
+                  className="cursor-pointer transition-all duration-200 hover:scale-125 hover:scale-3d"
+                  onClick={() => setSelectedIds([])}
+                  src="/icons/chip-x-icon.svg"
+                  alt="x"
+                />
+              </div>
             </div>
 
-            <div className="tables mt-4 flex min-h-[300px] w-full flex-col overflow-clip rounded-[9px] bg-white shadow-sm">
-              {/* Table Header */}
+            <div className="tables flex min-h-[300px] w-full flex-col overflow-clip rounded-[9px] bg-white shadow-sm">
+              {/* ------Table Header------- */}
               <header className="header flex w-full flex-row items-center gap-2 bg-gray-100 px-3 py-3">
-                <div className="flex w-[100px] items-center gap-2">
+                <div className="flex w-[70px] items-center justify-between gap-2">
                   <p className="w-[40px] text-sm font-semibold text-zinc-900">
                     S.No
                   </p>
@@ -172,7 +178,7 @@ const MachineEntry = () => {
                     key={index}
                     className={`text-start text-sm font-semibold text-zinc-900 ${
                       label === "SL No"
-                        ? "w-[100px]"
+                        ? "w-[70px]"
                         : label === "Serial Number" || label === "Reference No"
                           ? "w-[140px]"
                           : label === "Installation Date"
@@ -205,15 +211,22 @@ const MachineEntry = () => {
               ) : (
                 paginatedData.map((item, index) => (
                   <div
-                    key={item.slNo}
+                    key={item.id}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedMachine(item);
+                      setFormState("display");
+                      setIsFormOpen(true);
+                    }}
                     className="flex w-full cursor-pointer items-center gap-2 bg-white px-3 py-2 text-zinc-700 hover:bg-slate-50"
                   >
-                    <div className="flex w-[100px] flex-row items-center gap-1">
+                    <div className="flex w-[70px] flex-row items-center justify-between gap-1">
                       <p className="w-[40px] text-sm">
-                        {(currentPage - 1) * ITEMS_PER_PAGE + index + 1}
+                        {(currentPage - 1) * itemsPerPage + index + 1}
                       </p>
                       <CheckboxInput
-                        checked={selectedIds.includes(item.id)}
+                        key={item.id}
+                        checked={selectedIds.some((id) => id === item.id)}
                         onChange={() => handleCheckboxChange(item.id)}
                         label=""
                       />
@@ -230,7 +243,7 @@ const MachineEntry = () => {
                     <p className="w-[100px] text-sm">{item.modelNumber}</p>
                     <div className="flex min-w-[120px] flex-row gap-2">
                       <ButtonSm
-                        className="aspect-square scale-90 border-1 border-blue-500 bg-blue-200"
+                        className="aspect-square scale-90 border-1 border-blue-500 bg-blue-500/10"
                         onClick={(e) => {
                           e.stopPropagation();
                           setSelectedMachine(item);
@@ -255,6 +268,30 @@ const MachineEntry = () => {
                 ))
               )}
             </div>
+            {/* --------- Table Footer -------- */}
+            <footer className="flex w-full flex-row items-center justify-between">
+              <DropdownSelect
+                title=""
+                direction="up"
+                options={[5, 10, 15, 20].map((item) => ({
+                  id: item,
+                  label: item.toString(),
+                }))}
+                selected={{
+                  id: itemsPerPage,
+                  label: itemsPerPage.toString() + " items Per Page",
+                }}
+                onChange={(e) => {
+                  setItemsPerPage(e.id);
+                  setCurrentPage(1);
+                }}
+              />
+              <PaginationControls
+                totalPages={totalPages}
+                currentPage={currentPage}
+                onPageChange={setCurrentPage}
+              />
+            </footer>
           </div>
         )}
       </div>

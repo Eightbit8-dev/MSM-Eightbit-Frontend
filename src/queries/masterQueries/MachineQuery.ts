@@ -1,6 +1,9 @@
 import axiosInstance from "../../utils/axios";
 import axios from "axios";
-import type { MachineDetails } from "../../types/transactionTypes";
+import type {
+  MachineDetails,
+  MachineResponse,
+} from "../../types/transactionTypes";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { apiRoutes } from "../../routes/apiRoutes";
@@ -67,13 +70,17 @@ export const useCreateMachineQR = () => {
   });
 };
 
-export const useFetchMachine = () => {
-  const fetchAllMachine = async (): Promise<MachineDetails[]> => {
+export const useFetchMachine = (page: number, limit: number) => {
+  const fetchAllMachine = async (): Promise<MachineResponse> => {
     try {
       const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
       const res = await axiosInstance.get(apiRoutes.machineEntry, {
+        params: {
+          page: page - 1,
+          limit,
+        },
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -83,7 +90,12 @@ export const useFetchMachine = () => {
         throw new Error(res.data?.message || "Failed to fetch machine");
       }
 
-      return res.data.data;
+      return {
+        data: res.data.data,
+        page: res.data.page,
+        totalPages: res.data.totalPages,
+        totalRecords: res.data.totalRecords,
+      };
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         toast.error(error.response?.data?.message || "Failed to fetch machine");
@@ -95,9 +107,9 @@ export const useFetchMachine = () => {
   };
 
   return useQuery({
-    queryKey: ["machine"],
+    queryKey: ["machine", page, limit],
     queryFn: fetchAllMachine,
-    staleTime: 1000 * 60 * 0,
+    staleTime: 0,
     retry: 1,
   });
 };
