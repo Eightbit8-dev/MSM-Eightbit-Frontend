@@ -53,16 +53,20 @@ const QRScanner: React.FC = () => {
   }, []);
 
   return (
-    <div className="p-4">
-      <div ref={scannerRef} id="qr-reader" style={{ width: "300px" }} />
+    <div className="flex flex-col items-center justify-center p-6 min-h-screen bg-gradient-to-br from-white to-blue-50">
+      <div
+        id="qr-reader"
+        className="custom-scanner-ui w-full max-w-md border-2 border-indigo-300 rounded-xl shadow-lg p-4 bg-white"
+      />
+
       {parsedData && (
-        <div className="mt-6 border rounded-lg p-4 bg-gray-50 shadow-md max-w-md">
-          <h2 className="text-xl font-bold mb-4">Machine Details</h2>
+        <div className="mt-8 w-full max-w-md border border-gray-200 rounded-lg p-4 bg-white shadow-md">
+          <h2 className="text-xl font-bold mb-4 text-indigo-700">Machine Details</h2>
           <ul className="space-y-2">
             {Object.entries(parsedData).map(([key, value]) => (
               <li key={key} className="flex justify-between">
-                <span className="font-semibold">{key}</span>
-                <span>{value}</span>
+                <span className="font-medium text-gray-600">{key}</span>
+                <span className="text-gray-800">{value}</span>
               </li>
             ))}
           </ul>
