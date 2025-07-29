@@ -19,25 +19,28 @@ export const TransactionPage = () => {
       title: "Machine Entry",
       desc: "Register and manage your external suppliers and service providers.",
       btnText: "Configure",
-      onAction: () => navigate(appRoutes.transactionRoutes.children.machineEntry),
+      onAction: () =>
+        navigate(appRoutes.transactionRoutes.children.machineEntry),
     },
     {
       img: "/icons/Master/Clients.svg",
       title: "Service Request",
       desc: "Manage your customer database for orders, deliveries, and support tracking.",
       btnText: "Configure",
-      onAction: () => navigate(appRoutes.transactionRoutes.children.serviceEntry),
+      onAction: () =>
+        navigate(appRoutes.transactionRoutes.children.serviceEntry),
     },
     {
       img: "/icons/Master/Products.svg",
       title: "Service Entry",
       desc: "Catalog, track, and manage your products or items in one page.",
       btnText: "Configure",
-      onAction: () => navigate(appRoutes.transactionRoutes.children.serviceRequest),
-    }
+      onAction: () =>
+        navigate(appRoutes.transactionRoutes.children.serviceRequest),
+    },
   ];
   return (
-    <div className="flex w-full max-w-[1590px] origin-top scale-90 flex-col gap-8">
+    <div className="flex w-full max-w-[1590px] origin-top flex-col gap-8">
       <div className="flex items-center justify-between">
         <div className="flex flex-col">
           <div>

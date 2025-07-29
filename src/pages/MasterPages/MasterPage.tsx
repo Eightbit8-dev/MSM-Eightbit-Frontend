@@ -55,10 +55,10 @@ export const MasterPage = () => {
       desc: "Log and categorize recurring issues related to products, machines, or inventory.",
       btnText: "Configure",
       onAction: () => navigate(appRoutes.scanPage),
-    }
+    },
   ];
   return (
-    <div className="flex w-full max-w-[1590px] origin-top scale-90 flex-col gap-8">
+    <div className="flex w-full max-w-[1590px] origin-top flex-col gap-8">
       <div className="flex items-center justify-between">
         <div className="flex flex-col">
           <div>
@@ -73,7 +73,7 @@ export const MasterPage = () => {
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="mb-16 grid grid-cols-1 gap-6 md:grid-cols-2 lg:mb-0 lg:grid-cols-3">
         {configCards.map((card, index) => (
           <ConfigCard
             key={index}

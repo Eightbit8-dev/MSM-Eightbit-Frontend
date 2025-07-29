@@ -17,6 +17,7 @@ import CheckboxInput from "@/components/common/CheckBox";
 import type { FormState } from "@/types/appTypes";
 import { convertToFrontendDate } from "@/utils/commonUtils";
 import DropdownSelect from "@/components/common/DropDown";
+import { useBreakpoints } from "@/hooks/useBreakPoints";
 
 const MachineEntry = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -28,6 +29,8 @@ const MachineEntry = () => {
   const [isDeleteDialogOpen, setIsDeleteMachineDialogOpen] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [formState, setFormState] = useState<FormState>("create");
+
+  const { isSm } = useBreakpoints();
 
   const { data, isLoading } = useFetchMachine(currentPage, itemsPerPage);
 
@@ -73,7 +76,7 @@ const MachineEntry = () => {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="mb-32 flex flex-col gap-4">
       {/* Header */}
       <div className="flex items-center justify-between rounded-lg bg-white p-2">
         <div className="flex flex-col">
@@ -82,12 +85,12 @@ const MachineEntry = () => {
             Manage your Machine Entries
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-row items-center gap-2">
           <ButtonSm
             disabled={selectedIds.length === 0 || isCreateQRPending}
             className={`${
               selectedIds.length > 0 ? "text-white" : "disabled:opacity-60"
-            } h-full font-medium`}
+            } min-h-full self-stretch font-medium`}
             text={isCreateQRPending ? "Generating QR" : "Generate QR"}
             state={selectedIds.length > 0 ? "default" : "outline"}
             type="button"
@@ -97,7 +100,7 @@ const MachineEntry = () => {
           />
           <ButtonSm
             className="font-medium text-white"
-            text="New Entry"
+            text={isSm ? "" : "New Entry"}
             state="default"
             type="button"
             onClick={() => {
@@ -110,7 +113,7 @@ const MachineEntry = () => {
           />
           <ButtonSm
             className="font-medium text-white opacity-100"
-            text="Import"
+            text={isSm ? "" : "Import"}
             state="default"
             type="button"
             iconPosition="right"
@@ -149,10 +152,10 @@ const MachineEntry = () => {
               </div>
             </div>
 
-            <div className="tables flex min-h-[300px] w-full min-w-[800px] flex-col overflow-clip rounded-[9px] bg-white shadow-sm">
+            <div className="tables flex min-h-[300px] w-full flex-col overflow-x-scroll rounded-[9px] bg-white shadow-sm">
               {/* ------Table Header------- */}
-              <header className="header flex w-full flex-row items-center justify-start gap-2 bg-gray-100 px-3 py-3">
-                <div className="flex w-[70px] items-center justify-between gap-2">
+              <header className="header flex min-w-max flex-row items-center justify-start gap-2 bg-slate-200 px-3 py-3">
+                <div className="flex w-[70px] min-w-[70px] items-center justify-between gap-2">
                   <p className="w-[40px] text-sm font-semibold text-zinc-900">
                     S.No
                   </p>
@@ -179,24 +182,24 @@ const MachineEntry = () => {
                     key={index}
                     className={`text-start text-sm font-semibold text-zinc-900 ${
                       label === "SL No"
-                        ? "w-[100px]"
+                        ? "w-[100px] min-w-[100px]"
                         : label === "Machine S No" || label === "Reference No"
-                          ? "w-[140px]"
+                          ? "w-[140px] min-w-[140px]"
                           : label === "Installation Date"
-                            ? "w-[140px]"
+                            ? "w-[140px] min-w-[140px]"
                             : label === "Installed By"
-                              ? "w-[120px]"
+                              ? "w-[120px] min-w-[120px]"
                               : label === "Client"
-                                ? "w-[160px]"
+                                ? "w-[160px] min-w-[160px]"
                                 : label === "Machine Type"
-                                  ? "w-[150px]"
+                                  ? "w-[150px] min-w-[150px]"
                                   : label === "Brand"
-                                    ? "w-[120px]"
+                                    ? "w-[120px] min-w-[120px]"
                                     : label === "Model"
-                                      ? "w-[100px]"
+                                      ? "w-[100px] min-w-[100px]"
                                       : label === "Action"
                                         ? "min-w-[120px]"
-                                        : "w-[60px]"
+                                        : "w-[60px] min-w-[60px]"
                     }`}
                   >
                     {label}
@@ -215,14 +218,14 @@ const MachineEntry = () => {
                     key={item.id}
                     onClick={(e) => {
                       e.stopPropagation();
-                      setSelectedMachine(item);
-                      setFormState("display");
-                      setIsFormOpen(true);
+                      // setSelectedMachine(item);
+                      // setFormState("display");
+                      // setIsFormOpen(true);
                     }}
                     className="flex w-full cursor-pointer items-center justify-start gap-2 bg-white px-3 py-2 text-zinc-700 hover:bg-slate-50"
                   >
                     <div className="items-cener flex w-[70px] flex-row justify-between gap-1">
-                      <p className="w-[40px] text-sm">
+                      <p className="w-[45px] text-sm">
                         {(currentPage - 1) * itemsPerPage + index + 1}
                       </p>
                       <CheckboxInput
@@ -233,15 +236,33 @@ const MachineEntry = () => {
                       />
                     </div>
 
-                    <p className="w-[100px] text-sm">{item.slNo}</p>
-                    <p className="w-[140px] text-sm">{item.serialNumber}</p>
-                    <p className="w-[140px] text-sm">{item.referenceNumber}</p>
-                    <p className="w-[140px] text-sm">{item.installationDate}</p>
-                    <p className="w-[120px] text-sm">{item.installedBy}</p>
-                    <p className="w-[160px] text-sm">{item.clientName}</p>
-                    <p className="w-[150px] text-sm">{item.machineType}</p>
-                    <p className="w-[120px] text-sm">{item.brand}</p>
-                    <p className="w-[100px] text-sm">{item.modelNumber}</p>
+                    <p className="w-[100px] min-w-[100px] text-sm">
+                      {item.slNo}
+                    </p>
+                    <p className="w-[140px] min-w-[140px] text-sm">
+                      {item.serialNumber}
+                    </p>
+                    <p className="w-[140px] min-w-[140px] text-sm">
+                      {item.referenceNumber}
+                    </p>
+                    <p className="w-[140px] min-w-[140px] text-sm">
+                      {item.installationDate}
+                    </p>
+                    <p className="w-[120px] min-w-[120px] text-sm">
+                      {item.installedBy}
+                    </p>
+                    <p className="w-[160px] min-w-[160px] text-sm">
+                      {item.clientName}
+                    </p>
+                    <p className="w-[150px] min-w-[150px] text-sm">
+                      {item.machineType}
+                    </p>
+                    <p className="w-[120px] min-w-[120px] text-sm">
+                      {item.brand}
+                    </p>
+                    <p className="w-[100px] min-w-[100px] text-sm">
+                      {item.modelNumber}
+                    </p>
                     <div className="flex min-w-[120px] flex-row gap-2">
                       <ButtonSm
                         className="aspect-square scale-90 border-1 border-blue-500 bg-blue-500/10"

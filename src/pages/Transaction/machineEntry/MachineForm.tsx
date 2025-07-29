@@ -136,100 +136,111 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
       <h1 className="mb-6 text-2xl font-semibold capitalize">{mode} Machine</h1>
       <form
         onSubmit={handleSubmit}
-        className="grid grid-cols-1 gap-6 md:grid-cols-2"
+        className="flex flex-col gap-3 md:gap-4 lg:gap-6"
       >
-        <Input
-          title="SL No"
-          placeholder="Enter SL No"
-          inputValue={machine.slNo}
-          onChange={(val) => updateField("slNo", val)}
-          required
-          disabled={isView}
-        />
-        <Input
-          title="Machine Serial Number"
-          placeholder="Enter Machine Serial Number"
-          inputValue={machine.serialNumber}
-          onChange={(val) => updateField("serialNumber", val)}
-          required
-          disabled={isView}
-        />
-        <Input
-          title="Reference Number"
-          placeholder="Enter Reference Number"
-          inputValue={machine.referenceNumber}
-          onChange={(val) => updateField("referenceNumber", val)}
-          disabled={isView}
-        />
-        <DropdownSelect
-          title="Brand"
-          options={brandOptions}
-          selected={selectedBrand}
-          onChange={(val) => {
-            setSelectedBrand(val);
-            updateField("brand", val.label);
-          }}
-          required
-          disabled={isView}
-        />
-        <DropdownSelect
-          title="Model Number"
-          options={modelOptions}
-          selected={selectedModel}
-          onChange={(val) => {
-            setSelectedModel(val);
-            updateField("modelNumber", val.label);
-          }}
-          required
-          disabled={isView}
-        />
-        <DropdownSelect
-          title="Client"
-          options={clientOptions}
-          selected={selectedClient}
-          onChange={(val) => {
-            setSelectedClient(val);
-            updateField("clientName", val.label);
-          }}
-          required
-          disabled={isView}
-        />
-        <DropdownSelect
-          title="Machine Type"
-          options={typeOptions}
-          selected={selectedType}
-          onChange={(val) => {
-            setSelectedType(val);
-            updateField("machineType", val.label);
-          }}
-          required
-          disabled={isView}
-        />
-        <Input
-          title="Installed By"
-          placeholder="Eg : John Doe"
-          inputValue={machine.installedBy}
-          onChange={(val) => updateField("installedBy", val)}
-          disabled={isView}
-        />
-        <DateInput
-          title="Installation Date"
-          value={convertToFrontendDate(machine.installationDate)}
-          onChange={(val) =>
-            updateField(
-              "installationDate",
-              convertToBackendDate(val.toString()),
-            )
-          }
-          required
-          maxDate={new Date().toISOString().split("T")[0]}
-          disabled={isView}
-        />
+        <div className="grid-container grid gap-2 md:grid-cols-2 md:gap-6">
+          <Input
+            title="SL No"
+            placeholder="Enter SL No"
+            inputValue={machine.slNo}
+            onChange={(val) => updateField("slNo", val)}
+            required
+            disabled={isView}
+          />
+          <Input
+            title="Machine Serial Number"
+            placeholder="Enter Machine Serial Number"
+            inputValue={machine.serialNumber}
+            onChange={(val) => updateField("serialNumber", val)}
+            required
+            disabled={isView}
+          />
+        </div>
+        <div className="grid-container grid grid-cols-2 gap-2 md:gap-6">
+          <DropdownSelect
+            title="Brand"
+            options={brandOptions}
+            selected={selectedBrand}
+            onChange={(val) => {
+              setSelectedBrand(val);
+              updateField("brand", val.label);
+            }}
+            required
+            disabled={isView}
+          />
+          <DropdownSelect
+            title="Model Number"
+            options={modelOptions}
+            selected={selectedModel}
+            onChange={(val) => {
+              setSelectedModel(val);
+              updateField("modelNumber", val.label);
+            }}
+            required
+            disabled={isView}
+          />
+        </div>
+        <div className="grid-container grid grid-cols-2 gap-2 md:gap-6">
+          <DropdownSelect
+            title="Machine Type"
+            options={typeOptions}
+            selected={selectedType}
+            onChange={(val) => {
+              setSelectedType(val);
+              updateField("machineType", val.label);
+            }}
+            required
+            disabled={isView}
+          />
+          <DropdownSelect
+            title="Client"
+            options={clientOptions}
+            selected={selectedClient}
+            onChange={(val) => {
+              setSelectedClient(val);
+              updateField("clientName", val.label);
+            }}
+            required
+            disabled={isView}
+          />
+        </div>
+        <div className="grid-container grid gap-2 md:grid-cols-2 md:gap-6">
+          <Input
+            title="Reference Number"
+            placeholder="Enter Reference Number"
+            inputValue={machine.referenceNumber}
+            onChange={(val) => updateField("referenceNumber", val)}
+            disabled={isView}
+          />
+          <Input
+            title="Installed By"
+            placeholder="Eg : John Doe"
+            inputValue={machine.installedBy}
+            onChange={(val) => updateField("installedBy", val)}
+            disabled={isView}
+          />
+        </div>
+        <div className="grid-container grid gap-2 md:grid-cols-2 md:gap-6">
+          <DateInput
+            title="Installation Date"
+            value={convertToFrontendDate(machine.installationDate)}
+            onChange={(val) =>
+              updateField(
+                "installationDate",
+                convertToBackendDate(val.toString()),
+              )
+            }
+            required
+            maxDate={new Date().toISOString().split("T")[0]}
+            disabled={isView}
+          />
+        </div>
 
-        <div className="col-span-full mt-4 flex justify-end gap-4">
+        <div className="col-span-full mt-4 flex justify-end gap-4 md:gap-6">
           <ButtonSm
             type="button"
             state="outline"
+            className="boder-[1.5px] border-slate-300"
             onClick={() => setFormVisible(false)}
             text="Back"
           />
@@ -238,7 +249,7 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
               type="submit"
               state="default"
               text={isEdit ? "Save Changes" : "Create Machine"}
-              className="bg-blue-600 text-white hover:bg-blue-700"
+              className="bg-blue-500 text-white hover:bg-blue-700"
             />
           )}
         </div>

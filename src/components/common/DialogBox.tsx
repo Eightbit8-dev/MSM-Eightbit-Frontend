@@ -77,7 +77,7 @@ const DialogBox: React.FC<DialogBoxProps> = ({
     >
       <div
         ref={containerRef}
-        className={`md:w[400px] flex w-[350px] flex-col items-center gap-4 rounded-[20px] bg-white p-8 outline-1 outline-gray-300 backdrop-blur-sm lg:w-[500px] ${className} `}
+        className={`md:w[400px] mx-4 flex w-full flex-col items-center gap-4 rounded-[20px] bg-white p-5 outline-1 outline-gray-300 backdrop-blur-sm md:p-6 lg:w-[500px] lg:p-8 ${className} `}
       >
         {children}
       </div>

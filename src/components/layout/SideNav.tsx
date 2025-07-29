@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { appRoutes } from "../../routes/appRoutes";
 import { motion } from "framer-motion"; // fixed: 'motion/react' is incorrect
 import { useNavigate } from "react-router-dom";
+// import InstallButton from "@/hooks/InstallPwaButton";
 
 const SideNav: React.FC = () => {
   const [activeRoute, setActiveRoute] = useState<string>("");
@@ -112,6 +113,8 @@ const SideNav: React.FC = () => {
                 )
               }
             />
+            {/* --install pwa button */}
+            {/* <InstallButton /> */}
           </div>
         </motion.div>
       </motion.section>

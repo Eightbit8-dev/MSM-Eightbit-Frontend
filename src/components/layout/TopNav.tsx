@@ -4,14 +4,14 @@ import NotificationCenter from "../common/NotificationCenter";
 import { useAuthStore } from "@/store/useAuthStore";
 
 export const TopNav: React.FC = () => {
-  const date = new Date(  );
-const options: Intl.DateTimeFormatOptions = {
-  weekday: "long",
-  year: "numeric",
-  month: "long",
-  day: "numeric",
-};
-const formatted = date.toLocaleDateString("en-GB", options);
+  const date = new Date();
+  const options: Intl.DateTimeFormatOptions = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  };
+  const formatted = date.toLocaleDateString("en-GB", options);
 
   const { userName, role } = useAuthStore();
   console.log(userName, role);
@@ -20,7 +20,7 @@ const formatted = date.toLocaleDateString("en-GB", options);
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="border-b border-zinc-200 bg-white px-4 py-3 shadow-sm"
+      className="border-b border-zinc-200 bg-white px-3 py-3 shadow-sm lg:px-4"
     >
       <div className="flex items-center justify-between">
         {/* Welcome Section */}

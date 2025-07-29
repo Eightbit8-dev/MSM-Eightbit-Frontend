@@ -11,9 +11,9 @@ const MainLayout: React.FC = () => {
       <section className="flex h-full w-full flex-col overflow-hidden">
         {/* Top Navbar */}
         <TopNav />
-        <BottomNav/>
+        <BottomNav />
         {/* Content */}
-        <main className="flex-1 overflow-y-auto bg-zinc-50 bg-gradient-to-b from-white/0 to-blue-500/30 px-4 py-4">
+        <main className="flex-1 overflow-y-auto bg-zinc-50 bg-gradient-to-b from-white/0 to-blue-500/30 p-3 lg:p-4">
           {/*This is where the nested routes will be rendered which will be given my router dom from app.tsx  */}
           <Outlet />
         </main>
