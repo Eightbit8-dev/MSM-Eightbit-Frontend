@@ -124,7 +124,7 @@ const MachineEntry = () => {
         {isLoading ? (
           <EmployeeTableSkeleton />
         ) : (
-          <div className="flex flex-col items-end gap-2 rounded-[12px] bg-white/80 p-4">
+          <div className="flex flex-col items-start justify-start gap-2 overflow-clip rounded-[12px] bg-white/80 p-4">
             <div className="flex w-full items-center justify-between">
               <section className="result-length flex flex-row items-center gap-2">
                 <div className="h-[10px] w-[10px] rounded-full bg-blue-500"></div>
@@ -149,9 +149,9 @@ const MachineEntry = () => {
               </div>
             </div>
 
-            <div className="tables flex min-h-[300px] w-full flex-col overflow-clip rounded-[9px] bg-white shadow-sm">
+            <div className="tables flex min-h-[300px] w-full min-w-[800px] flex-col overflow-clip rounded-[9px] bg-white shadow-sm">
               {/* ------Table Header------- */}
-              <header className="header flex w-full flex-row items-center gap-2 bg-gray-100 px-3 py-3">
+              <header className="header flex w-full flex-row items-center justify-start gap-2 bg-gray-100 px-3 py-3">
                 <div className="flex w-[70px] items-center justify-between gap-2">
                   <p className="w-[40px] text-sm font-semibold text-zinc-900">
                     S.No
@@ -164,7 +164,7 @@ const MachineEntry = () => {
                 </div>
                 {[
                   "SL No",
-                  "Serial Number",
+                  "Machine S No",
                   "Reference No",
                   "Installation Date",
                   "Installed By",
@@ -178,8 +178,8 @@ const MachineEntry = () => {
                     key={index}
                     className={`text-start text-sm font-semibold text-zinc-900 ${
                       label === "SL No"
-                        ? "w-[70px]"
-                        : label === "Serial Number" || label === "Reference No"
+                        ? "w-[100px]"
+                        : label === "Machine S No" || label === "Reference No"
                           ? "w-[140px]"
                           : label === "Installation Date"
                             ? "w-[140px]"
@@ -205,8 +205,8 @@ const MachineEntry = () => {
 
               {/* Table Body */}
               {paginatedData.length === 0 ? (
-                <h2 className="text-md my-3 text-center font-medium text-zinc-600">
-                  No Machines Found
+                <h2 className="text-md my-auto text-center font-medium text-zinc-600">
+                  No Entries Found
                 </h2>
               ) : (
                 paginatedData.map((item, index) => (
@@ -218,9 +218,9 @@ const MachineEntry = () => {
                       setFormState("display");
                       setIsFormOpen(true);
                     }}
-                    className="flex w-full cursor-pointer items-center gap-2 bg-white px-3 py-2 text-zinc-700 hover:bg-slate-50"
+                    className="flex w-full cursor-pointer items-center justify-start gap-2 bg-white px-3 py-2 text-zinc-700 hover:bg-slate-50"
                   >
-                    <div className="flex w-[70px] flex-row items-center justify-between gap-1">
+                    <div className="items-cener flex w-[70px] flex-row justify-between gap-1">
                       <p className="w-[40px] text-sm">
                         {(currentPage - 1) * itemsPerPage + index + 1}
                       </p>
@@ -238,7 +238,7 @@ const MachineEntry = () => {
                     <p className="w-[140px] text-sm">{item.installationDate}</p>
                     <p className="w-[120px] text-sm">{item.installedBy}</p>
                     <p className="w-[160px] text-sm">{item.clientName}</p>
-                    <p className="w-[120px] text-sm">{item.machineType}</p>
+                    <p className="w-[150px] text-sm">{item.machineType}</p>
                     <p className="w-[120px] text-sm">{item.brand}</p>
                     <p className="w-[100px] text-sm">{item.modelNumber}</p>
                     <div className="flex min-w-[120px] flex-row gap-2">
