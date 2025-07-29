@@ -79,7 +79,7 @@ const MachineEntry = () => {
         <div className="flex flex-col">
           <PageHeader title="Machine Entry" />
           <p className="text-sm font-medium text-slate-500">
-            Manage your Machine entries
+            Manage your Machine Entries
           </p>
         </div>
         <div className="flex items-center gap-2">
