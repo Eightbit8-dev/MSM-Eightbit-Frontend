@@ -10,7 +10,7 @@ import { ErrorPageContent } from "./pages/ErrorPage";
 import UsersPage from "./pages/UsersPage";
 import Report from "./pages/Report";
 import TransactionPage from "./pages/Transaction/TransactionPage";
-import MachineEntry from "./pages/Transaction/machineEntry/MachineEntry";
+import MachineEntry from "./pages/Transaction/machineEntry/MachineEntries";
 import ServiceEntry from "./pages/Transaction/ServiceEntry";
 import ServiceRequest from "./pages/Transaction/ServiceRequest";
 
