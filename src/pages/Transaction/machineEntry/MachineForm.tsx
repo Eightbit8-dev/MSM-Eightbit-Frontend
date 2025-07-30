@@ -20,6 +20,7 @@ import {
   convertToFrontendDate,
 } from "@/utils/commonUtils";
 import type { MachineDetails } from "@/types/transactionTypes";
+import MultiFileUpload from "@/components/common/FileUploadBox";
 
 type Mode = "create" | "edit" | "display";
 
@@ -132,55 +133,34 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
   }
 
   return (
-    <div className="flex min-w-full flex-col rounded-2xl bg-white">
+    <div className="flex min-w-full flex-col gap-0 rounded-2xl bg-white">
       <h1 className="mb-6 text-2xl font-semibold capitalize">{mode} Machine</h1>
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col gap-3 md:gap-4 lg:gap-6"
+        className="flex flex-col gap-3 md:gap-4 lg:gap-4"
       >
-        <div className="grid-container grid gap-2 md:grid-cols-2 md:gap-6">
+        <div className="grid-container grid gap-2 md:grid-cols-1 md:gap-6">
           <Input
-            title="SL No"
+            title="Ref No"
             placeholder="Enter SL No"
             inputValue={machine.slNo}
             onChange={(val) => updateField("slNo", val)}
             required
             disabled={isView}
           />
-          <Input
-            title="Machine Serial Number"
-            placeholder="Enter Machine Serial Number"
-            inputValue={machine.serialNumber}
-            onChange={(val) => updateField("serialNumber", val)}
-            required
-            disabled={isView}
-          />
         </div>
-        <div className="grid-container grid grid-cols-2 gap-2 md:gap-6">
+        <div className="grid-container grid grid-cols-3 gap-2 md:gap-6">
           <DropdownSelect
-            title="Brand"
-            options={brandOptions}
-            selected={selectedBrand}
+            title="Client"
+            options={clientOptions}
+            selected={selectedClient}
             onChange={(val) => {
-              setSelectedBrand(val);
-              updateField("brand", val.label);
+              setSelectedClient(val);
+              updateField("clientName", val.label);
             }}
             required
             disabled={isView}
           />
-          <DropdownSelect
-            title="Model Number"
-            options={modelOptions}
-            selected={selectedModel}
-            onChange={(val) => {
-              setSelectedModel(val);
-              updateField("modelNumber", val.label);
-            }}
-            required
-            disabled={isView}
-          />
-        </div>
-        <div className="grid-container grid grid-cols-2 gap-2 md:gap-6">
           <DropdownSelect
             title="Machine Type"
             options={typeOptions}
@@ -193,18 +173,19 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
             disabled={isView}
           />
           <DropdownSelect
-            title="Client"
-            options={clientOptions}
-            selected={selectedClient}
+            title="Brand"
+            options={brandOptions}
+            selected={selectedBrand}
             onChange={(val) => {
-              setSelectedClient(val);
-              updateField("clientName", val.label);
+              setSelectedBrand(val);
+              updateField("brand", val.label);
             }}
             required
             disabled={isView}
           />
         </div>
-        <div className="grid-container grid gap-2 md:grid-cols-2 md:gap-6">
+
+        <div className="grid-container grid gap-2 md:grid-cols-3 md:gap-6">
           <Input
             title="Reference Number"
             placeholder="Enter Reference Number"
@@ -219,8 +200,40 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
             onChange={(val) => updateField("installedBy", val)}
             disabled={isView}
           />
+          <DateInput
+            title="Ref Date"
+            value={convertToFrontendDate(machine.installationDate)}
+            onChange={(val) =>
+              updateField(
+                "installationDate",
+                convertToBackendDate(val.toString()),
+              )
+            }
+            required
+            maxDate={new Date().toISOString().split("T")[0]}
+            disabled={isView}
+          />
         </div>
-        <div className="grid-container grid gap-2 md:grid-cols-2 md:gap-6">
+        <div className="grid-container grid gap-2 md:grid-cols-3 md:gap-6">
+          <DropdownSelect
+            title="Model Number"
+            options={modelOptions}
+            selected={selectedModel}
+            onChange={(val) => {
+              setSelectedModel(val);
+              updateField("modelNumber", val.label);
+            }}
+            required
+            disabled={isView}
+          />
+          <Input
+            title="Machine Serial Number"
+            placeholder="Enter Machine Serial Number"
+            inputValue={machine.serialNumber}
+            onChange={(val) => updateField("serialNumber", val)}
+            required
+            disabled={isView}
+          />
           <DateInput
             title="Installation Date"
             value={convertToFrontendDate(machine.installationDate)}
@@ -235,6 +248,8 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
             disabled={isView}
           />
         </div>
+
+        <MultiFileUpload />
 
         <div className="col-span-full mt-4 flex justify-end gap-4 md:gap-6">
           <ButtonSm

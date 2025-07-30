@@ -322,7 +322,7 @@ const MachineEntry = () => {
         {isDeleteDialogOpen && selectedMachine && (
           <DialogBox
             setToggleDialogueBox={setIsFormOpen}
-            className="lg:min-w-[400px]"
+            className="lg:min-w-[600px]"
           >
             <DeleteMachineDialogBox
               client={selectedMachine}
