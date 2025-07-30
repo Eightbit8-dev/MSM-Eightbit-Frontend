@@ -38,6 +38,19 @@ export interface SpareDetails {
 }
 
 
+export interface ProblemDetails {
+  id: number;
+  problemType: string;
+  description: string;
+}
+
+export interface ProblemResponse {
+  data: ProblemDetails[];
+  page: number;
+  totalPages: number;
+  totalRecords: number;
+}
+
 
 //-------------old remove this later ------------
 
@@ -59,3 +72,6 @@ export interface LoanDetails {
   employeeWorkedMonths: number;
   remarks: string;
 }
+
+
+

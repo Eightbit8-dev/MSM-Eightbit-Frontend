@@ -14,6 +14,7 @@ import MachineEntry from "./pages/Transaction/machineEntry/MachineEntries";
 import ServiceEntry from "./pages/Transaction/ServiceEntry";
 import ServiceRequest from "./pages/Transaction/ServiceRequest";
 import QRScanner from "./pages/QR/ScanQr";
+import ProblemPage from "./pages/MasterPages/Problem/ProblemPage";
 
 // ------------------Main Pages ---------------------------
 const DashBoardPage = lazy(() => import("./pages/DashBoardPage"));
@@ -106,10 +107,6 @@ const App = () => {
               element={<DepartmentsPage />}
             />
             <Route
-              path={appRoutes.masterRoutes.children.problemDetails}
-              element={<LoanMPage />}
-            />
-            <Route
               path={appRoutes.transactionRoutes.transcationPage}
               element={<TransactionPage />}
             />
@@ -130,7 +127,10 @@ const App = () => {
             path={appRoutes.scanPage}
             element={<QRScanner/>}
             />
-
+            <Route 
+            path={appRoutes.masterRoutes.children.problemDetails}
+            element={<ProblemPage />}
+          />
           </Route>
         </Route>
       </Routes>

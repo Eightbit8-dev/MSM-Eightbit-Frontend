@@ -192,10 +192,10 @@ export const useDeleteClient = () => {
       },
     });
 
-    if (res.status !== 200) {
-      throw new Error(res.data?.message || "Failed to delete Client");
-    }
-
+if (res.status !== 200 && res.status !== 204) {
+  throw new Error(res.data?.message || "Failed to delete Client");
+}
+console.log(res.data)
     return res.data;
   };
 

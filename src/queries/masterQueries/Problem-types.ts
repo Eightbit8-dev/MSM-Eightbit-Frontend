@@ -1,15 +1,16 @@
 import axiosInstance from "../../utils/axios";
 import axios from "axios";
 import type {
-  MachineDetails,
-  MachineResponse,
-} from "../../types/transactionTypes";
+  ProblemDetails
+  
+} from "../../types/masterApiTypes";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { apiRoutes } from "../../routes/apiRoutes";
 import Cookies from "js-cookie";
 import type { DropdownOption } from "@/components/common/DropDown";
 
+import type {ProblemResponse} from "../../types/masterApiTypes";
 /**
  * -------------------------------------------
  * Client Service Hooks - CRUD Operations
@@ -27,56 +28,14 @@ import type { DropdownOption } from "@/components/common/DropDown";
  * 🔍 Fetch all Clients
  */
 
-export const useCreateMachineQR = () => {
-  const generateQR = async (ids: number[]) => {
+
+export const useFetchProblem = (page: number, limit: number) => {
+  const fetchAllProblem = async (): Promise<ProblemResponse> => {
     try {
       const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
-      const response = await axiosInstance.post(apiRoutes.machineQr, ids, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        responseType: "blob", // Important: treat response as binary
-      });
-
-      const blob = new Blob([response.data], { type: "application/pdf" });
-      const blobUrl = URL.createObjectURL(blob);
-
-      // Open in a new tab and trigger print
-      const newWindow = window.open(blobUrl);
-      if (newWindow) {
-        newWindow.addEventListener("load", () => {
-          newWindow.print();
-        });
-      }
-
-      return true;
-    } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
-        toast.error(
-          error.response?.data?.message || "Failed to generate QR PDF",
-        );
-      } else {
-        toast.error("Something went wrong while generating the QR PDF");
-      }
-      throw error;
-    }
-  };
-
-  return useMutation({
-    mutationFn: generateQR,
-  });
-};
-
-export const useFetchMachine = (page: number, limit: number) => {
-  const fetchAllMachine = async (): Promise<MachineResponse> => {
-    try {
-      const token = Cookies.get("token");
-      if (!token) throw new Error("Unauthorized to perform this action.");
-
-      const res = await axiosInstance.get(apiRoutes.machineEntry, {
+      const res = await axiosInstance.get(apiRoutes.problemDetails, {
         params: {
           page: page - 1,
           limit,
@@ -85,9 +44,9 @@ export const useFetchMachine = (page: number, limit: number) => {
           Authorization: `Bearer ${token}`,
         },
       });
-
+      
       if (res.status !== 200) {
-        throw new Error(res.data?.message || "Failed to fetch machine");
+        throw new Error(res.data?.message || "Failed to fetch problems");
       }
 
       return {
@@ -98,17 +57,17 @@ export const useFetchMachine = (page: number, limit: number) => {
       };
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        toast.error(error.response?.data?.message || "Failed to fetch machine");
+        toast.error(error.response?.data?.message || "Failed to fetch problems");
       } else {
-        toast.error("Something went wrong while fetching machine");
+        toast.error("Something went wrong while fetching problems");
       }
-      throw new Error("Machine fetch failed");
+      throw new Error("Problem fetch failed");
     }
   };
 
   return useQuery({
-    queryKey: ["machine", page, limit],
-    queryFn: fetchAllMachine,
+    queryKey: ["problem", page, limit],
+    queryFn: fetchAllProblem,
     staleTime: 0,
     retry: 1,
   });
@@ -130,9 +89,9 @@ export const useFetchMachineOptions = () => {
         throw new Error(res.data?.message || "Failed to fetch machine");
       }
 
-      return res.data.data.map((machine: MachineDetails) => ({
+      return res.data.data.map((machine: ProblemDetails) => ({
         id: machine.id,
-        label: machine.machineType,
+        label: machine.problemType,
       }));
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
@@ -153,17 +112,17 @@ export const useFetchMachineOptions = () => {
 };
 
 /**
- * ➕ Create a new Machine
+ * ➕ Create a new Problem
  */
-export const useCreateMachine = () => {
+export const useCreateProblem = () => {
   const queryClient = useQueryClient();
 
-  const createMachine = async (newMachine: MachineDetails) => {
+  const createProblem = async (newProblem : ProblemDetails) => {
     try {
       const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
-      const res = await axiosInstance.post(apiRoutes.machineEntry, newMachine, {
+      const res = await axiosInstance.post(apiRoutes.problemDetails, newProblem, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -177,38 +136,38 @@ export const useCreateMachine = () => {
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         toast.error(
-          error.response?.data?.message || "Failed to create Machine",
+          error.response?.data?.message || "Failed to create Problem",
         );
       } else {
-        toast.error("Something went wrong while creating Machine");
+        toast.error("Something went wrong while creating Problem");
       }
       throw error;
     }
   };
 
   return useMutation({
-    mutationFn: createMachine,
+    mutationFn: createProblem,
     onSuccess: () => {
-      toast.success("Machine created successfully");
-      queryClient.invalidateQueries({ queryKey: ["machine"] });
+      toast.success("Problem created successfully");
+      queryClient.invalidateQueries({ queryKey: ["problem"] });
     },
   });
 };
 
 /**
- * ✏️ Edit an existing Machine
+ * ✏️ Edit an existing Problem
  */
-export const useEditMachine = () => {
+export const useEditProblem = () => {
   const queryClient = useQueryClient();
 
-  const editMachine = async (updatedMachine: MachineDetails) => {
+  const editProblem = async (updatedProblem: ProblemDetails) => {
     const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
-    const { id: machineId, ...payload } = updatedMachine;
+    const { id: problemId, ...payload } = updatedProblem;
 
     const res = await axiosInstance.put(
-      `${apiRoutes.machineEntry}/${machineId}`,
+      `${apiRoutes.problemDetails}/${problemId}`,
       payload,
       {
         headers: {
@@ -218,17 +177,17 @@ export const useEditMachine = () => {
     );
 
     if (res.status !== 200) {
-      throw new Error(res.data?.message || "Failed to update Machine");
+      throw new Error(res.data?.message || "Failed to update Problem");
     }
 
     return res.data;
   };
 
   return useMutation({
-    mutationFn: editMachine,
+    mutationFn: editProblem,
     onSuccess: () => {
-      toast.success("Machine updated successfully");
-      queryClient.invalidateQueries({ queryKey: ["machine"] });
+      toast.success("Problem updated successfully");
+      queryClient.invalidateQueries({ queryKey: ["problem"] });
     },
     onError: (error) => {
       if (axios.isAxiosError(error)) {
@@ -239,17 +198,17 @@ export const useEditMachine = () => {
 };
 
 /**
- * ❌ Delete a Macjhine
+ * ❌ Delete a Problem
  */
-export const useDeleteMachineEntry = () => {
+export const useDeleteProblem = () => {
   const queryClient = useQueryClient();
 
-  const deleteClient = async (client: MachineDetails) => {
+  const deleteProblem = async (problem: ProblemDetails) => {
     const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
     const res = await axiosInstance.delete(
-      `${apiRoutes.machineEntry}/${client.id}`,
+      `${apiRoutes.problemDetails}/${problem.id}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -258,17 +217,17 @@ export const useDeleteMachineEntry = () => {
     );
 
     if (res.status !== 200) {
-      throw new Error(res.data?.message || "Failed to delete Client");
+      throw new Error(res.data?.message || "Failed to delete Problem");
     }
 
     return res.data;
   };
 
   return useMutation({
-    mutationFn: deleteClient,
+    mutationFn: deleteProblem,
     onSuccess: () => {
       toast.success("Entry deleted successfully");
-      queryClient.invalidateQueries({ queryKey: ["machine"] });
+      queryClient.invalidateQueries({ queryKey: ["problem"] });
     },
     onError: (error) => {
       if (axios.isAxiosError(error)) {

@@ -124,7 +124,7 @@ const handleCancel = () => {
             </h1>
 
             <section className="ml-auto flex flex-row items-center gap-3">
-{(formState === "edit" || isDirty) && (
+{(formState === "edit" || (formState === "create" && isDirty)) && (
   <ButtonSm
     className="font-medium"
     text="Cancel"
@@ -132,6 +132,7 @@ const handleCancel = () => {
     onClick={handleCancel}
   />
 )}
+
 
 
               {formState === "create" && (

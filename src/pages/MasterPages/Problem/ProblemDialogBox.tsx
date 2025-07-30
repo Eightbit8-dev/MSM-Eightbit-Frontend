@@ -1,24 +1,24 @@
 import ButtonSm from "../../../components/common/Buttons";
-import { useDeleteLoan } from "../../../queries/masterQueries/LoanQuery";
-import type { LoanDetails } from "../../../types/masterApiTypes";
+import { useDeleteProblem } from "../../../queries/masterQueries/Problem-types";
+import type { LoanDetails, ProblemDetails } from "../../../types/masterApiTypes";
 import type { FormState } from "../../../types/appTypes";
 
-export const DeleteLoanDialogBox = ({
-  setIsDeleteLoanDialogOpen,
-  loan,
+export const DeleteProblemDialogBox = ({
+  setIsDeleteProblemDialogOpen,
+  problem,
   onDeleted,
 }: {
-  setIsDeleteLoanDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  loan: LoanDetails;
+  setIsDeleteProblemDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  problem: ProblemDetails ;
   onDeleted?: () => void;
 }) => {
-  const { mutate: deleteLoan, isPending: isDeleteLoanLoading } =
-    useDeleteLoan();
+  const { mutate: deleteProblem, isPending: isDeleteProblemLoading } =
+    useDeleteProblem();
 
     const handleDelete = () => {
-      deleteLoan(loan, {
+      deleteProblem(problem, {
         onSuccess: () => {
-          setIsDeleteLoanDialogOpen(false);
+          setIsDeleteProblemDialogOpen(false);
           if (onDeleted) {
             onDeleted();
           }
@@ -29,9 +29,9 @@ export const DeleteLoanDialogBox = ({
   return (
     <div className="flex w-full flex-col gap-4">
       <header className="header flex w-full flex-row items-center justify-between text-lg font-medium text-red-600">
-        Delete Loan
+        Delete Problem
         <img
-          onClick={() => setIsDeleteLoanDialogOpen(false)}
+          onClick={() => setIsDeleteProblemDialogOpen(false)}
           className="w-5 cursor-pointer"
           src="/icons/close-icon.svg"
           alt="close"
@@ -39,7 +39,7 @@ export const DeleteLoanDialogBox = ({
       </header>
 
       <p className="text-md font-medium text-zinc-700">
-        Are you sure you want to delete the branch <strong>{loan.name}</strong>? This action is irreversible.
+        Are you sure you want to delete the branch <strong>{problem?.problemType}</strong>? This action is irreversible.
       </p>
 
       <section className="mt-1 grid w-full grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-3">
@@ -47,13 +47,13 @@ export const DeleteLoanDialogBox = ({
           className="justify-center font-semibold"
           state="outline"
           text="Cancel"
-          onClick={() => setIsDeleteLoanDialogOpen(false)}
+          onClick={() => setIsDeleteProblemDialogOpen(false)}
         />
         <ButtonSm
           className="items-center justify-center bg-red-500 text-center text-white hover:bg-red-700 active:bg-red-500"
           state="default"
           onClick={handleDelete}
-          text={isDeleteLoanLoading ? "Deleting..." : "Delete"}
+          text={isDeleteProblemLoading ? "Deleting..." : "Delete"}
         />
       </section>
     </div>

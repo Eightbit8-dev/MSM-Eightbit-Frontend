@@ -53,7 +53,6 @@ const VendorsPage = () => {
   setFormState={setFormState}
   setVendor={setVendor}
   vendor={vendor!}
-  onDeleted={() => toast.success("Vendor deleted successfully!")}
   refetchVendors={refetch}
 />
           </DialogBox>

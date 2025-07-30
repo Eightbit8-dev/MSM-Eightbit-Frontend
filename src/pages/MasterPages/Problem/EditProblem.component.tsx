@@ -2,100 +2,89 @@ import { useEffect, useState } from "react";
 import Input from "../../../components/common/Input";
 import ButtonSm from "../../../components/common/Buttons";
 import type { FormState } from "../../../types/appTypes";
-import type { LoanDetails } from "../../../types/masterApiTypes";
+import type { ProblemDetails, ProductDetails } from "../../../types/masterApiTypes";
 import {
-  useCreateLoan,
-  useEditLoan,
-} from "../../../queries/masterQueries/LoanQuery";
+  useCreateProblem,
+  useEditProblem,
+} from "../../../queries/masterQueries/Problem-types";
 import TextArea from "../../../components/common/Textarea";
 import isEqual from "lodash.isequal";
 
-const emptyLoan: LoanDetails = {
+const emptyProblem: ProblemDetails = {
   id: 0,
-  name: "",
-  employeeWorkedMonths: 0,
-  maxEligibilityAmount: 0,
-  loanRepaymentPeriod: 0,
-  remarks: "",
+  problemType: "",
+  description: "",
 };
-
-const LoanEdit = ({
-  loanDetails,
+const ProblemEdit = ({
+  problemDetails,
   formState,
   setFormState,
-  setLoanData,
+  setProblemData,
 }: {
-  loanDetails: LoanDetails | null;
+  problemDetails: ProblemDetails | null;
   formState: FormState;
   setFormState: React.Dispatch<React.SetStateAction<FormState>>;
-  setLoanData: React.Dispatch<React.SetStateAction<LoanDetails | null>>;
+  setProblemData: React.Dispatch<React.SetStateAction<ProblemDetails | null>>;
 }) => {
-  const [newLoanData, setNewLoanData] = useState<LoanDetails>(emptyLoan);
+  const [newProblemData, setNewProblemData] = useState<ProblemDetails>(emptyProblem);
 
-  const { mutate: createLoan, isPending, isSuccess } = useCreateLoan();
+  const { mutate: createProblem, isPending, isSuccess } = useCreateProblem();
   const {
-    mutate: editLoan,
+    mutate: editProblem,
     isPending: isUpdatePending,
     isSuccess: isUpdatingSuccess,
-  } = useEditLoan();
+  } = useEditProblem();
 
   useEffect(() => {
     if (formState === "create") {
-      setNewLoanData(emptyLoan);
-    } else if (loanDetails) {
-      setNewLoanData(loanDetails); // Ensures ID is preserved
+      setNewProblemData(emptyProblem);
+    } else if (problemDetails) {
+      setNewProblemData(problemDetails); // Ensures ID is preserved
     }
-  }, [formState, loanDetails]);
+  }, [formState, problemDetails]);
 
   useEffect(() => {
     if (isSuccess || isUpdatingSuccess) {
       setFormState("create");
-      setLoanData(null);
-      setNewLoanData(emptyLoan);
+      setProblemData(null);
+      setNewProblemData(emptyProblem);
     }
-  }, [isSuccess, isUpdatingSuccess, setFormState, setLoanData]);
+  }, [isSuccess, isUpdatingSuccess, setFormState, setProblemData]);
 
   const handleCancel = () => {
     setFormState("create");
-    setLoanData(null);
-    setNewLoanData(emptyLoan);
+    setProblemData(null);
+    setNewProblemData(emptyProblem);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+const handleSubmit = (e: React.FormEvent) => {
+  e.preventDefault();
 
-    // Validate required fields
-    if (
-      !newLoanData.name ||
-      !newLoanData.employeeWorkedMonths ||
-      !newLoanData.maxEligibilityAmount ||
-      !newLoanData.loanRepaymentPeriod
-    ) {
-      console.log("Missing required fields");
-      return;
-    }
+  // Validate required fields
+  if (!newProblemData.problemType || !newProblemData.description) {
+    console.log("Missing required fields");
+    return;
+  }
 
-    console.log("Form submitted with state:", formState);
-    console.log("Loan data:", newLoanData);
+  console.log("Form submitted with state:", formState);
+  console.log("Problem data:", newProblemData);
 
-    if (formState === "create") {
-      createLoan(newLoanData);
-    } else if (formState === "edit") {
-      editLoan(newLoanData);
-    }
-  };
+  if (formState === "create") {
+    createProblem(newProblemData);
+  } else if (formState === "edit") {
+    editProblem(newProblemData);
+  }
+};
+
 
   const hasData =
-    newLoanData?.name ||
-    newLoanData?.employeeWorkedMonths ||
-    newLoanData?.maxEligibilityAmount ||
-    newLoanData?.loanRepaymentPeriod ||
-    newLoanData?.remarks;
+    newProblemData?.problemType ||
+    newProblemData?.description;
 
-  if (!newLoanData) {
+  if (!newProblemData) {
     return (
       <p className="text-center text-sm text-gray-500">
-        Select a loan to view details.
+        Select a problem to view details.
       </p>
     );
   }
@@ -107,8 +96,8 @@ const LoanEdit = ({
           <header className="header flex w-full flex-row items-center justify-between">
             <h1 className="text-start text-lg font-semibold text-zinc-800">
               {formState === "create"
-                ? "Loan Configuration"
-                : `${loanDetails?.name || "Loan"} Configuration`}
+                ? "Problem Configuration"
+                : `${problemDetails?.problemType || "Problem"} Configuration`}
             </h1>
             <section className="ml-auto flex flex-row items-center gap-3">
               {(formState === "edit" ||
@@ -121,7 +110,7 @@ const LoanEdit = ({
                   onClick={handleCancel}
                 />
               )}
-              {formState === "display" && newLoanData.id !== 0 && (
+              {formState === "display" && newProblemData.id !== 0 && (
                 <ButtonSm
                   className="font-medium"
                   text="Back"
@@ -146,7 +135,7 @@ const LoanEdit = ({
                   state="default"
                   type="submit"
                   disabled={
-                    isUpdatePending || isEqual(newLoanData, loanDetails)
+                    isUpdatePending || isEqual(newProblemData, problemDetails)
                   }
                 />
               )}
@@ -158,77 +147,27 @@ const LoanEdit = ({
               <Input
                 required
                 disabled={formState === "display"}
-                title="Loan Name"
+                title="Problem Type"
                 type="str"
-                inputValue={newLoanData.name}
-                name="loan"
-                placeholder="Enter loan name"
+                inputValue={newProblemData.problemType}
+                name="problem"
+                placeholder="Enter problem type"
                 maxLength={50}
                 onChange={(value) =>
-                  setNewLoanData({ ...newLoanData, name: value })
-                }
-              />
-              <Input
-                required
-                disabled={formState === "display"}
-                title="Employee Work"
-                prefixText="Months"
-                type="num"
-                inputValue={newLoanData.employeeWorkedMonths || ""}
-                name="months"
-                placeholder="Enter months"
-                onChange={(value) =>
-                  setNewLoanData({
-                    ...newLoanData,
-                    employeeWorkedMonths: +value || 0,
-                  })
-                }
-              />
-            </div>
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-3">
-              <Input
-                required
-                disabled={formState === "display"}
-                title="Max Eligible Amount"
-                prefixText="₹"
-                type="num"
-                inputValue={newLoanData.maxEligibilityAmount || ""}
-                name="amount"
-                placeholder="Enter amount"
-                onChange={(value) =>
-                  setNewLoanData({
-                    ...newLoanData,
-                    maxEligibilityAmount: +value || 0,
-                  })
-                }
-              />
-              <Input
-                required
-                disabled={formState === "display"}
-                title="Loan Repayment Period"
-                type="num"
-                prefixText="Months"
-                inputValue={newLoanData.loanRepaymentPeriod || ""}
-                name="repayment"
-                placeholder="Enter repayment months"
-                onChange={(value) =>
-                  setNewLoanData({
-                    ...newLoanData,
-                    loanRepaymentPeriod: +value || 0,
-                  })
+                  setNewProblemData({ ...newProblemData, problemType: value })
                 }
               />
             </div>
 
             <TextArea
               disabled={formState === "display"}
-              title="Remarks"
-              inputValue={newLoanData.remarks}
-              name="remarks"
-              placeholder="Enter remarks"
+              title="Description"
+              inputValue={newProblemData.description}
+              name="description"
+              placeholder="Enter description"
               maxLength={200}
               onChange={(value) =>
-                setNewLoanData({ ...newLoanData, remarks: value })
+                setNewProblemData({ ...newProblemData, description: value })
               }
             />
           </section>
@@ -238,4 +177,4 @@ const LoanEdit = ({
   );
 };
 
-export default LoanEdit;
+export default ProblemEdit;

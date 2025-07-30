@@ -9,7 +9,7 @@ export const apiRoutes = {
   products: "/api/admin/products",
   users: "/api/admin/users",
   machineSpares: "/api/admin/spares",
-  problemDetails: "/api/admin/problem-details",
+  problemDetails: "/api/admin/problem-types",
 
   // ------------------ Transaction API Routes ------------------
   machineEntry: "/api/admin/machine",
