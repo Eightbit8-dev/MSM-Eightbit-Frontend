@@ -10,16 +10,17 @@ import DialogBox from "../../../components/common/DialogBox";
 import DropdownSelect from "../../../components/common/DropDown";
 import PaginationControls from "../../../components/common/Pagination";
 
-import ProblemEdit from "./EditProblem.component";
-import { DeleteProblemDialogBox } from "../../MasterPages/Problem/ProblemDialogBox";
+import ProblemEdit from "./EditEngineers.component";
+import { DeleteServiceEngineerDialogBox } from "../ServiceEngineers/ServiceEngineersDialogBox";
 
-import { useFetchProblem } from "../../../queries/masterQueries/Problem-types";
+import { useFetchServiceEngineers } from "../../../queries/masterQueries/ServiceEngineersQuery";
 import { appRoutes } from "../../../routes/appRoutes";
 
 import type { FormState } from "../../../types/appTypes";
-import type { ProblemDetails } from "../../../types/masterApiTypes";
+import type { ServiceEngineerDetails } from "../../../types/masterApiTypes";
+import ServiceEngineerEdit from "./EditEngineers.component";
 
-const ProblemPage = () => {
+const ServiceEngineerPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,21 +29,21 @@ const ProblemPage = () => {
     }
   }, [navigate]);
 
-  const [isDeleteProblemDialogOpen, setIsDeleteProblemDialogOpen] = useState(false);
-  const [problem, setProblem] = useState<ProblemDetails | null>(null);
+  const [isDeleteServiceEngineerDialogOpen, setIsDeleteServiceEngineerDialogOpen] = useState(false);
+  const [serviceEngineer, setServiceEngineer] = useState<ServiceEngineerDetails | null>(null);
   const [formState, setFormState] = useState<FormState>("create");
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
-  const { data, isLoading, isError } = useFetchProblem(currentPage, itemsPerPage);
+  const { data, isLoading, isError } = useFetchServiceEngineers(currentPage, itemsPerPage);
 
-  const problemList = data?.data || [];
+  const serviceEngineerList = data?.data || [];
   const totalPages = data?.totalPages || 0;
   const totalRecords = data?.totalRecords || 0;
 
-  const handleProblemDeleted = () => {
-    setProblem(null);
+  const handleServiceEngineerDeleted = () => {
+    setServiceEngineer(null);
     setFormState("create");
   };
 
@@ -55,7 +56,7 @@ const ProblemPage = () => {
         {/* Table Section */}
         <section className="table-container flex w-full flex-col gap-3 rounded-[12px] bg-white/80 p-4 shadow-sm md:w-[50%]">
           <header className="flex flex-row items-center justify-between">
-            <PageHeader title="Problem Configuration" />
+            <PageHeader title="Service Engineer Configuration" />
           </header>
 
           <div className="tables flex w-full flex-col overflow-clip rounded-[9px]">
@@ -68,11 +69,11 @@ const ProblemPage = () => {
               <p className="min-w-[120px] text-start text-sm font-semibold text-zinc-900">Action</p>
             </header>
 
-            {problemList.length === 0 ? (
-              <h2 className="text-md my-3 text-center font-medium text-zinc-600">No Problems Found</h2>
+            {serviceEngineerList.length === 0 ? (
+              <h2 className="text-md my-3 text-center font-medium text-zinc-600">No Service Engineers Found</h2>
             ) : (
-              problemList.map((item, index) => {
-                const isSelected = problem?.id === item.id;
+              serviceEngineerList.map((item, index) => {
+                const isSelected = serviceEngineer?.id === item.id;
 
                 return (
                   <div
@@ -87,15 +88,15 @@ const ProblemPage = () => {
                     onClick={(e) => {
                       e.stopPropagation();
                       if (isSelected && formState === "display") return;
-                      setProblem(item);
+                      setServiceEngineer(item);
                       setFormState("display");
                     }}
                   >
                     <p className="w-max min-w-[100px] px-2 py-4 text-start text-sm font-medium">
                       {(currentPage - 1) * itemsPerPage + index + 1}
                     </p>
-                    <p className="w-full text-start text-sm font-medium">{item.problemType}</p>
-                    <p className="w-full text-start text-sm font-medium">{item.description}</p>
+                    <p className="w-full text-start text-sm font-medium">{item.engineerName}</p>
+                    <p className="w-full text-start text-sm font-medium">{item.engineerMobile}</p>
 
                     <div className="flex min-w-[120px] flex-row gap-2 text-start text-sm font-medium">
                       <ButtonSm
@@ -108,7 +109,7 @@ const ProblemPage = () => {
                         text="Edit"
                         onClick={(e) => {
                           e.stopPropagation();
-                          setProblem(item);
+                          setServiceEngineer(item);
                           setFormState("edit");
                         }}
                       />
@@ -118,8 +119,8 @@ const ProblemPage = () => {
                         text="Delete"
                         onClick={(e) => {
                           e.stopPropagation();
-                          setProblem(item);
-                          setIsDeleteProblemDialogOpen(true);
+                          setServiceEngineer(item);
+                          setIsDeleteServiceEngineerDialogOpen(true);
                         }}
                       />
                     </div>
@@ -157,22 +158,24 @@ const ProblemPage = () => {
 
         {/* Edit/Create Section */}
         <section className="table-container max-h-full w-full flex-col gap-3 rounded-[12px] bg-white/80 p-4 shadow-sm md:w-[50%]">
-          <ProblemEdit
-            problemDetails={problem}
+          <ServiceEngineerEdit
+          
+            serviceEngineerDetails={serviceEngineer}
             formState={formState}
             setFormState={setFormState}
-            setProblemData={setProblem}
+            setServiceEngineerData={setServiceEngineer}
+        
           />
         </section>
       </main>
 
       {/* Delete Dialog */}
-      {isDeleteProblemDialogOpen && problem && (
-        <DialogBox setToggleDialogueBox={setIsDeleteProblemDialogOpen}>
-          <DeleteProblemDialogBox
-            problem={problem}
-            onDeleted={handleProblemDeleted}
-            setIsDeleteProblemDialogOpen={setIsDeleteProblemDialogOpen}
+      {isDeleteServiceEngineerDialogOpen && serviceEngineer && (
+        <DialogBox setToggleDialogueBox={setIsDeleteServiceEngineerDialogOpen}>
+          <DeleteServiceEngineerDialogBox
+            serviceEngineer={serviceEngineer}
+            onDeleted={handleServiceEngineerDeleted}
+            setIsDeleteServiceEngineerDialogOpen={setIsDeleteServiceEngineerDialogOpen}
           />
         </DialogBox>
       )}
@@ -180,4 +183,4 @@ const ProblemPage = () => {
   );
 };
 
-export default ProblemPage;
+export default ServiceEngineerPage;

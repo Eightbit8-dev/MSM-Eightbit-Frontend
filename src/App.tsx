@@ -15,6 +15,7 @@ import ServiceEntry from "./pages/Transaction/ServiceEntry";
 import ServiceRequest from "./pages/Transaction/ServiceRequest";
 import QRScanner from "./pages/QR/ScanQr";
 import ProblemPage from "./pages/MasterPages/Problem/ProblemPage";
+import ServiceEngineerPage from "./pages/MasterPages/ServiceEngineers/ServiceEngineersPage";
 
 // ------------------Main Pages ---------------------------
 const DashBoardPage = lazy(() => import("./pages/DashBoardPage"));
@@ -34,7 +35,6 @@ const DepartmentsPage = lazy(
   () => import("./pages/MasterPages/Spares/SparesPage"),
 );
 const LoanMPage = lazy(() => import("./pages/MasterPages/Problem/ProblemPage"));
-const Bloodpage = lazy(() => import("./pages/MasterPages/Users/UsersPage"));
 
 const App = () => {
   return (
@@ -97,10 +97,6 @@ const App = () => {
               path={appRoutes.masterRoutes.children.products}
               element={<ResignationPage />}
             />
-            <Route
-              path={appRoutes.masterRoutes.children.users}
-              element={<Bloodpage />}
-            />
 
             <Route
               path={appRoutes.masterRoutes.children.machineSpares}
@@ -130,6 +126,10 @@ const App = () => {
             <Route 
             path={appRoutes.masterRoutes.children.problemDetails}
             element={<ProblemPage />}
+          />
+          <Route
+          path={appRoutes.masterRoutes.children.users}
+          element={<ServiceEngineerPage />}
           />
           </Route>
         </Route>

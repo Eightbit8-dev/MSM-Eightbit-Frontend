@@ -50,7 +50,18 @@ export interface ProblemResponse {
   totalPages: number;
   totalRecords: number;
 }
+export interface ServiceEngineerResponse {
+  data: ServiceEngineerDetails[];
+  page: number;
+  totalPages: number;
+  totalRecords: number;
+}
 
+export interface ServiceEngineerDetails {
+  id: number;
+  engineerName: string;
+  engineerMobile: number;
+}
 
 //-------------old remove this later ------------
 

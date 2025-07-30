@@ -17,12 +17,11 @@ export const appRoutes = {
       vendors: "/master/vendors",
       clients: "/master/clients",
       products: "/master/products",
-      users: "/master/users",
+      users: "/master/service-engineers",
       machineSpares: "/master/machine-spares",
       problemDetails: "/master/problem-details",
     },
   },
-
 
     scanPage:"/Sacn-qr",
 

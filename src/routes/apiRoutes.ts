@@ -7,7 +7,7 @@ export const apiRoutes = {
   // ------------------ Master API Routes ------------------
   clients: "/api/admin/clients",
   products: "/api/admin/products",
-  users: "/api/admin/users",
+  users: "/api/admin/service-engineers",
   machineSpares: "/api/admin/spares",
   problemDetails: "/api/admin/problem-types",
 
