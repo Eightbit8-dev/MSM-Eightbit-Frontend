@@ -181,7 +181,7 @@ const MachineEntry = () => {
                 {[
                   "Ref No",
                   "Machine S No",
-                  // "Reference No",
+                  "Reference No",
                   "Installation Date",
                   "Installed By",
                   "Client",
