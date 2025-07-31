@@ -94,7 +94,7 @@ const ClientEdit = ({
     clientData.contactNumber;
 
   return (
-    <main className="flex max-h-full w-full max-w-[870px] flex-col gap-2">
+    <main className="flex max-h-full  w-full max-w-[870px] flex-col gap-2">
       <div className="client-config-container flex flex-col gap-3 rounded-[20px]">
         <form
           className="flex flex-col gap-3"

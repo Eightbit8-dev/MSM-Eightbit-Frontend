@@ -83,9 +83,11 @@ const VendorsPage = () => {
 
       {/* Vendor List */}
       <section className="table-container flex w-full flex-col gap-3 rounded-[12px] bg-white/80 p-4 shadow-sm md:w-[50%]">
-        <header className="flex flex-row items-center justify-between">
-          <div className="flex flex-row items-center gap-2 w-full">
+        <header className="flex flex-col md:flex-row items-center justify-between">
+          <div className="flex flex-start items-center gap-2 w-full">
             <PageHeader title="Vendor Configuration" />
+          </div>
+                  <footer className="flex w-full flex-row items-center mt-3 md:justify-end gap-2 justify-between">
                       <DropdownSelect
             title=""
             direction="down"
@@ -102,10 +104,6 @@ const VendorsPage = () => {
               setCurrentPage(1);
             }}
           />
-          </div>
-
-                  <footer className="mt-2 flex w-full flex-row items-center justify-end">
-
           <PaginationControls
             totalPages={totalPages}
             currentPage={currentPage}
@@ -116,7 +114,7 @@ const VendorsPage = () => {
 
         <div className="tables flex w-full flex-col overflow-clip rounded-[9px]">
           <header className="header flex w-full flex-row items-center gap-2 bg-gray-200 px-3">
-            <p className="w-max min-w-[100px] px-2 py-4 text-start text-sm font-semibold text-zinc-900">
+            <p className="w-max min-w-[50px] md:min-w-[100px] px-2 py-4 text-start text-sm font-semibold text-zinc-900">
               S.No
             </p>
             <p className="w-full text-start text-sm font-semibold text-zinc-900">Name</p>
@@ -148,7 +146,7 @@ const VendorsPage = () => {
                     setVendor(item);
                   }}
                 >
-                  <p className="w-max min-w-[100px] px-2 py-4 text-start text-sm font-medium">
+                  <p className="w-max min-w-[50px] md:min-w-[100px] px-2 py-4 text-start text-sm font-medium">
                     {(currentPage - 1) * itemsPerPage + index + 1}
                   </p>
                   <p className="w-full text-start text-sm font-medium">{item.vendorName || ""}</p>

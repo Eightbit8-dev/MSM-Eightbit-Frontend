@@ -35,36 +35,39 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
   const showRightEllipsis = currentPage < totalPages - 1;
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 ">
+      {/* Previous */}
       <button
         onClick={() => onPageChange(Math.max(currentPage - 1, 1))}
         disabled={currentPage === 1}
-        className={`cursor-pointer rounded-[50px] shadow-sm px-2 py-2 text-sm font-medium transition ${
+        className={`rounded-full px-2 py-2 shadow-sm transition ${
           currentPage === 1
-            ? "cursor-not-allowed text-gray-600"
+            ? "cursor-not-allowed text-gray-400"
             : "text-slate-800 hover:bg-gray-200"
         }`}
       >
-       <img src="/icons/back.png" alt="Previous" className="inline-block w-4 h-4" />
+        <img src="/icons/back.png" alt="Previous" className="w-4 h-4" />
       </button>
 
+      {/* Left Ellipsis */}
       {showLeftEllipsis && (
         <>
           <button
             onClick={() => onPageChange(1)}
-            className="rounded px-3 py-1 text-sm text-gray-700 hover:bg-gray-200"
+            className="hidden xs:block rounded px-3 py-1 text-sm text-gray-700 hover:bg-gray-200"
           >
             1
           </button>
-          <span className="px-1 text-gray-500">...</span>
+          <span className="hidden xs:inline px-1 text-gray-500">...</span>
         </>
       )}
 
+      {/* Page Numbers */}
       {getPageNumbers().map((n) => (
         <button
           key={n}
           onClick={() => onPageChange(n)}
-          className={`aspect-square rounded px-3 py-1 transition ${
+          className={`rounded px-3 py-1 text-sm transition ${
             currentPage === n
               ? "bg-blue-500 text-white"
               : "bg-white text-gray-700 shadow-sm hover:bg-gray-200"
@@ -74,28 +77,30 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
         </button>
       ))}
 
+      {/* Right Ellipsis */}
       {showRightEllipsis && (
         <>
-          <span className="px-1 text-gray-500">...</span>
+          <span className="hidden xs:inline px-1 text-gray-500">...</span>
           <button
             onClick={() => onPageChange(totalPages)}
-            className="rounded px-3 py-1 text-sm text-gray-700 hover:bg-gray-200"
+            className="hidden xs:block rounded px-3 py-1 text-sm text-gray-700 hover:bg-gray-200"
           >
             {totalPages}
           </button>
         </>
       )}
 
+      {/* Next */}
       <button
         onClick={() => onPageChange(Math.min(currentPage + 1, totalPages))}
         disabled={currentPage === totalPages}
-        className={`cursor-pointer  rounded-[50px] shadow-sm px-2 py-2 text-sm font-medium transition ${
+        className={`rounded-full px-2 py-2 shadow-sm transition ${
           currentPage === totalPages
-            ? "cursor-not-allowed text-gray-600"
+            ? "cursor-not-allowed text-gray-400"
             : "text-slate-800 hover:bg-gray-200"
         }`}
       >
-        <img src="/icons/next.png" alt="Previous" className="inline-block w-4 h-4" /> 
+        <img src="/icons/next.png" alt="Next" className="w-4 h-4" />
       </button>
     </div>
   );

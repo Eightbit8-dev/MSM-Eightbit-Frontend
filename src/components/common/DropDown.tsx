@@ -122,9 +122,11 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
               : "border-slate-300"
         } ${disabled ? "pointer-events-none" : ""}`}
       >
-        <span className="text-sm font-medium text-slate-600">
-          {selected.label}
-        </span>
+<span className="text-sm font-medium text-slate-600 whitespace-nowrap overflow-hidden text-ellipsis">
+  {selected.label}
+</span>
+
+
         <img
           src="/icons/dropdown.svg"
           alt="Dropdown icon"
@@ -147,13 +149,13 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
               }`}
             >
               <span className="text-sm">{option.label}</span>
-              {selected.label === option.label && (
+              {/* {selected.label === option.label && (
                 <img
                   src="/icons/tick-icon-dark.svg"
                   alt="Selected"
                   className="h-4 w-4"
                 />
-              )}
+              )} */}
             </button>
           ))}
         </div>

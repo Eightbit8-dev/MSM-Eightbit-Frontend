@@ -3,7 +3,7 @@ import Input from "../../../components/common/Input";
 import ButtonSm from "../../../components/common/Buttons";
 import type { FormState } from "../../../types/appTypes";
 import type { SpareDetails } from "../../../types/masterApiTypes";
-import {  motion } from "framer-motion";
+import { motion } from "framer-motion";
 import isEqual from "lodash.isequal";
 import {
   useCreateSpare,
@@ -19,10 +19,12 @@ const SpareEdit = ({
   spareDetails,
   formState,
   setFormState,
+  setSelectedSpare,
 }: {
   spareDetails: SpareDetails | null;
   formState: FormState;
   setFormState: React.Dispatch<React.SetStateAction<FormState>>;
+  setSelectedSpare: React.Dispatch<React.SetStateAction<SpareDetails | null>>;
 }) => {
   const [spareData, setSpareData] = useState<SpareDetails | null>(null);
   const [newSpareData, setNewSpareData] = useState<SpareDetails | null>(null);
@@ -40,31 +42,32 @@ const SpareEdit = ({
     partNumber: "",
   };
 
-  // Setup initial data
   useEffect(() => {
-    if (spareDetails) {
+    if (formState === "create") {
+      setSpareData(emptySpare);
+      setNewSpareData(emptySpare);
+    } else if (spareDetails) {
       setSpareData(spareDetails);
       setNewSpareData(spareDetails);
     }
-  }, [spareDetails]);
+  }, [spareDetails, formState]);
 
-  // Reset after successful create
   useEffect(() => {
-    if (isSuccess && formState === "create") {
-      setNewSpareData(emptySpare);
-      setSpareData(null);
-      setFormState("create");
+    if (isSuccess || isUpdatingSuccess) {
+      resetForm();
     }
-  }, [isSuccess]);
+  }, [isSuccess, isUpdatingSuccess]);
 
-  // Reset after successful update
-  useEffect(() => {
-    if (isUpdatingSuccess && formState === "edit") {
-      setNewSpareData(emptySpare);
-      setSpareData(null);
-      setFormState("create");
-    }
-  }, [isUpdatingSuccess]);
+  const resetForm = () => {
+    setNewSpareData(emptySpare);
+    setSpareData(null);
+    setSelectedSpare(null);
+    setFormState("create");
+  };
+
+  const handleCancel = () => {
+    resetForm();
+  };
 
   if (!newSpareData && formState !== "create") {
     return (
@@ -74,7 +77,6 @@ const SpareEdit = ({
     );
   }
 
-  // Check if the form is dirty (modified)
   const isDirty =
     formState === "create"
       ? !isEqual(newSpareData, emptySpare)
@@ -84,25 +86,12 @@ const SpareEdit = ({
     e.preventDefault();
     if (!newSpareData) return;
 
-    console.log("Submitting spare data:", newSpareData);
-
     if (formState === "create") {
       createSpare(newSpareData);
     } else {
       updateSpare(newSpareData);
     }
   };
-
-const handleCancel = () => {
-  if (formState === "edit" && spareData) {
-    setNewSpareData(emptySpare);
-    setSpareData(null);
-    setFormState("create"); // 👈 switch back to create mode
-  } else {
-    setNewSpareData(emptySpare);
-  }
-};
-
 
   return (
     <motion.main
@@ -123,38 +112,38 @@ const handleCancel = () => {
                 : `${spareData?.spareName ?? "Spare"} Configuration`}
             </h1>
 
-            <section className="ml-auto flex flex-row items-center gap-3">
-{(formState === "edit" || (formState === "create" && isDirty)) && (
-  <ButtonSm
-    className="font-medium"
-    text="Cancel"
-    state="outline"
-    onClick={handleCancel}
-  />
-)}
+<section className="ml-auto flex flex-row items-center gap-3">
+  {(formState === "edit" || formState === "display" || (formState === "create" && isDirty)) && (
+    <ButtonSm
+      className="font-medium"
+      text="Cancel"
+      state="outline"
+      onClick={handleCancel}
+    />
+  )}
+
+  {formState === "create" && (
+    <ButtonSm
+      type="submit"
+      className="font-semibold text-white"
+      state="default"
+      text={isPending ? "Creating..." : "Create"}
+      disabled={!isDirty}
+    />
+  )}
+
+  {formState === "edit" && (
+    <ButtonSm
+      className="font-medium text-white disabled:opacity-50"
+      text={isUpdatePending ? "Updating..." : "Save Changes"}
+      state="default"
+      type="submit"
+      disabled={!isDirty}
+    />
+  )}
+</section>
 
 
-
-              {formState === "create" && (
-                <ButtonSm
-                  type="submit"
-                  className="font-semibold text-white"
-                  state="default"
-                  text={isPending ? "Creating..." : "Create"}
-                  disabled={!isDirty}
-                />
-              )}
-
-              {formState === "edit" && (
-                <ButtonSm
-                  className="font-medium text-white disabled:opacity-50"
-                  text={isUpdatePending ? "Updating..." : "Save Changes"}
-                  state="default"
-                  type="submit"
-                  disabled={!isDirty}
-                />
-              )}
-            </section>
           </header>
 
           <section className="spare-details-section flex max-h-full w-full flex-col gap-2 overflow-clip px-3">

@@ -78,10 +78,14 @@ const ProductsPage = () => {
 
       {/* Left Table */}
       <section className="table-container flex w-full flex-col gap-3 rounded-[12px] bg-white/80 p-4 shadow-sm md:w-[50%]">
-        <header className="flex h-max flex-row items-center w-full justify-between">
-          <div className="flex flex-row w-full items-center gap-2">
+        <header className="flex h-max flex-col md:flex-row items-center w-full justify-between">
+          <div className="  justify-start w-full items-center gap-2">
             <PageHeader title="Product Configuration" />
-                      <DropdownSelect
+        
+          </div>
+                  {/* Pagination Controls */}
+        <footer className="mt-3 md:mt-0 flex w-full flex-row md:justify-end gap-2 justify-between items-center">
+ <DropdownSelect
             title=""
             direction="down"
             options={[5, 10, 15, 20].map((item) => ({
@@ -98,10 +102,6 @@ const ProductsPage = () => {
               setCurrentPage(1);
             }}
           />
-          </div>
-                  {/* Pagination Controls */}
-        <footer className="mt-2 flex w-full flex-row justify-end items-center">
-
           <PaginationControls
             totalPages={totalPages}
             currentPage={currentPage}
@@ -110,7 +110,7 @@ const ProductsPage = () => {
         </footer>
         </header>
 
-        <div className="tables flex w-full flex-col overflow-clip rounded-[9px]">
+        <div className="tables overflow-hidden flex w-full flex-col rounded-[9px]">
           <header className="header flex w-full flex-row items-center gap-2 bg-gray-200 px-3">
             <p className="w-max min-w-[60px] px-2 py-4 text-start text-sm font-semibold text-zinc-900">
               S.No

@@ -54,12 +54,15 @@ const ProblemPage = () => {
       <main className="flex w-full max-w-full flex-col gap-4 md:flex-row">
         {/* Table Section */}
         <section className="table-container justify-between flex w-full flex-col gap-3 rounded-[12px] bg-white/80 p-4 shadow-sm md:w-[50%]">
-          <header className="flex flex-row items-center justify-between">
+          <header className="flex flex-col md:flex-row items-center justify-between">
 <div className="flex flex-row items-center gap-2 w-full">
               <PageHeader title="Problem Configuration" />
-                        <DropdownSelect
+                        
+</div>
+          <footer className="mt-3 md:mt-0 flex w-full gap-2 flex-row items-center md:justify-end justify-between">
+            <DropdownSelect
               title=""
-              direction="up"
+              direction="down"
               options={[5, 10, 15, 20].map((item) => ({
                 id: item,
                 label: `${item} Entries`,
@@ -73,8 +76,6 @@ const ProblemPage = () => {
                 setCurrentPage(1);
               }}
             />
-</div>
-          <footer className="mt-2 flex w-full flex-row items-center justify-end">
             <PaginationControls
               totalPages={totalPages}
               currentPage={currentPage}
@@ -85,7 +86,7 @@ const ProblemPage = () => {
 
           <div className="tables flex w-full flex-col overflow-clip rounded-[9px]">
             <header className="header flex w-full flex-row items-center gap-2 bg-gray-200 px-3">
-              <p className="w-max min-w-[100px] px-2 py-4 text-start text-sm font-semibold text-zinc-900">
+              <p className="w-max min-w-[50px] md:min-w-[100px] px-2 py-4 text-start text-sm font-semibold text-zinc-900">
                 S.No
               </p>
               <p className="w-full text-start text-sm font-semibold text-zinc-900">Name</p>
@@ -116,7 +117,7 @@ const ProblemPage = () => {
                       setFormState("display");
                     }}
                   >
-                    <p className="w-max min-w-[100px] px-2 py-4 text-start text-sm font-medium">
+                    <p className="w-max min-w-[50px] md:min-w-[100px] px-2 py-4 text-start text-sm font-medium">
                       {(currentPage - 1) * itemsPerPage + index + 1}
                     </p>
                     <p className="w-full text-start text-sm font-medium">{item.problemType}</p>
