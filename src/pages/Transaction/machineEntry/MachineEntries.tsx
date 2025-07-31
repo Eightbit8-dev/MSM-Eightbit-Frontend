@@ -84,6 +84,7 @@ const MachineEntry = () => {
           <p className="text-sm font-medium text-slate-500">
             Manage your Machine Entries
           </p>
+          
         </div>
         <div className="flex flex-row items-center gap-2">
           <ButtonSm
@@ -129,14 +130,15 @@ const MachineEntry = () => {
         ) : (
           <div className="flex flex-col items-start justify-start gap-2 overflow-clip rounded-[12px] bg-white/80 p-4">
             <div className="flex w-full items-center justify-between">
-              <section className="result-length flex flex-row items-center gap-2">
-                <div className="h-[10px] w-[10px] rounded-full bg-blue-500"></div>
+              <section className="result-length w-full justify-between flex flex-row items-center gap-2">
+<div className="flex items-center gap-2">
+                  <div className="h-[10px]  flex w-[10px] rounded-full bg-blue-500"></div>
                 <h2 className="text-md font-semibold text-zinc-800">
                   Showing {paginatedData.length} results of{" "}
                   {data?.totalRecords || 0}
                 </h2>
-              </section>
-              {/* ------selected------ */}
+</div>
+
               <div
                 className={`selectin-container flex flex-row gap-2 rounded-md border-1 border-blue-500 bg-blue-500/10 px-3 py-2 ${selectedIds.length === 0 ? "opacity-0" : ""}`}
               >
@@ -150,6 +152,18 @@ const MachineEntry = () => {
                   alt="x"
                 />
               </div>
+                <div>
+                   <PaginationControls
+                totalPages={totalPages}
+                currentPage={currentPage}
+                onPageChange={setCurrentPage}
+              />
+                </div>
+
+
+              </section>
+              {/* ------selected------ */}
+
             </div>
 
             <div className="tables flex min-h-[300px] w-full flex-col overflow-x-scroll rounded-[9px] bg-white shadow-sm">
@@ -308,11 +322,7 @@ const MachineEntry = () => {
                   setCurrentPage(1);
                 }}
               />
-              <PaginationControls
-                totalPages={totalPages}
-                currentPage={currentPage}
-                onPageChange={setCurrentPage}
-              />
+             
             </footer>
           </div>
         )}

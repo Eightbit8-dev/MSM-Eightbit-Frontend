@@ -1,6 +1,6 @@
 import axiosInstance from "../../utils/axios";
 import axios from "axios";
-import type { ProductDetails } from "../../types/masterApiTypes";
+import type { ProductDetails, ProductResponse } from "../../types/masterApiTypes";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { apiRoutes } from "../../routes/apiRoutes";
@@ -132,6 +132,53 @@ export const useFetchModelsOptions = () => {
     retry: 1,
   });
 };
+
+
+
+//paginated response 
+
+export const useFetchProductsPaginated = (page: number, limit: number) => {
+  const fetchAllProducts = async (): Promise<ProductResponse> => {
+    try {
+      const token = Cookies.get("token");
+      if (!token) throw new Error("Unauthorized to perform this action.");
+
+      const res = await axiosInstance.get(apiRoutes.products, {
+        headers: { Authorization: `Bearer ${token}` },
+        params: { page, limit },
+      });
+
+      if (res.status !== 200) {
+        throw new Error(res.data?.message || "Failed to fetch Products");
+      }
+
+      return {
+        data: res.data.data,
+        page: res.data.page,
+        totalPages: res.data.totalPages,
+        totalRecords: res.data.totalRecords,
+      };
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        toast.error(
+          error.response?.data?.message || "Failed to fetch Products",
+        );
+      } else {
+        toast.error("Something went wrong while fetching Products");
+      }
+      throw new Error("Product fetch failed");
+    }
+  };
+
+  return useQuery({
+    queryKey: ["productModels", page, limit],
+    queryFn: fetchAllProducts,
+    staleTime: 0,
+    retry: 1,
+  });
+};
+
+
 /**
  * ➕ Create a new Product
  */

@@ -13,6 +13,13 @@ export interface VendorDetails {
   state:string
 }
 
+export interface VendorResponse {
+  data: VendorDetails[];
+  page: number;
+  totalPages: number;
+  totalRecords: number;
+}
+
 export interface ClientDetails {
   id: number;
   clientName: string;
@@ -23,6 +30,14 @@ export interface ClientDetails {
   gstNumber: string;
 }
 
+
+export interface ClientResponse {
+  data: ClientDetails[];
+  page: number;
+  totalPages: number;
+  totalRecords: number;
+}
+
 export interface ProductDetails {
   id: number;
   machineType: string;
@@ -31,12 +46,25 @@ export interface ProductDetails {
   description: string;
 }
 
+export interface ProductResponse {
+  data: ProductDetails[];
+  page: number;
+  totalPages: number;
+  totalRecords: number;
+}
+
 export interface SpareDetails {
   id: number;
   spareName: string;
   partNumber: string;
 }
 
+export interface SpareResponse {
+  data: SpareDetails[];
+  page: number;
+  totalPages: number;
+  totalRecords: number;
+}
 
 export interface ProblemDetails {
   id: number;

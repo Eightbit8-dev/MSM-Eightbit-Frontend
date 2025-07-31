@@ -139,8 +139,10 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
         onSubmit={handleSubmit}
         className="flex flex-col gap-3 md:gap-4 lg:gap-4"
       >
-        <div className="grid-container grid gap-2 md:grid-cols-1 md:gap-6">
-          <Input
+
+        <div className="grid-container grid grid-cols-3 gap-2 md:gap-6">
+
+                              <Input
             title="Ref No"
             placeholder="Enter SL No"
             inputValue={machine.slNo}
@@ -148,8 +150,19 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
             required
             disabled={isView}
           />
-        </div>
-        <div className="grid-container grid grid-cols-3 gap-2 md:gap-6">
+                    <DateInput
+            title="Ref Date"
+            value={convertToFrontendDate(machine.installationDate)}
+            onChange={(val) =>
+              updateField(
+                "installationDate",
+                convertToBackendDate(val.toString()),
+              )
+            }
+            required
+            maxDate={new Date().toISOString().split("T")[0]}
+            disabled={isView}
+          />
           <DropdownSelect
             title="Client"
             options={clientOptions}
@@ -161,7 +174,20 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
             required
             disabled={isView}
           />
-          <DropdownSelect
+
+        </div>
+
+        <div className="grid-container grid gap-2 md:grid-cols-3 md:gap-6">
+
+          {/* <Input
+            title="Reference Number"
+            placeholder="Enter Reference Number"
+            inputValue={machine.referenceNumber}
+            onChange={(val) => updateField("referenceNumber", val)}
+            disabled={isView}
+          /> */}
+
+                    <DropdownSelect
             title="Machine Type"
             options={typeOptions}
             selected={selectedType}
@@ -183,16 +209,6 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
             required
             disabled={isView}
           />
-        </div>
-
-        <div className="grid-container grid gap-2 md:grid-cols-3 md:gap-6">
-          <Input
-            title="Reference Number"
-            placeholder="Enter Reference Number"
-            inputValue={machine.referenceNumber}
-            onChange={(val) => updateField("referenceNumber", val)}
-            disabled={isView}
-          />
           <Input
             title="Installed By"
             placeholder="Eg : John Doe"
@@ -200,19 +216,7 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
             onChange={(val) => updateField("installedBy", val)}
             disabled={isView}
           />
-          <DateInput
-            title="Ref Date"
-            value={convertToFrontendDate(machine.installationDate)}
-            onChange={(val) =>
-              updateField(
-                "installationDate",
-                convertToBackendDate(val.toString()),
-              )
-            }
-            required
-            maxDate={new Date().toISOString().split("T")[0]}
-            disabled={isView}
-          />
+
         </div>
         <div className="grid-container grid gap-2 md:grid-cols-3 md:gap-6">
           <DropdownSelect

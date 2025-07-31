@@ -1,6 +1,6 @@
 import axiosInstance from "../../utils/axios";
 import axios from "axios";
-import type { SpareDetails } from "../../types/masterApiTypes";
+import type { SpareDetails, SpareResponse } from "../../types/masterApiTypes";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { apiRoutes } from "../../routes/apiRoutes";
@@ -43,6 +43,50 @@ export const useFetchSpares = () => {
 
   return useQuery({
     queryKey: ["spares"],
+    queryFn: fetchAllSpares,
+    staleTime: 1000 * 60 * 0,
+    retry: 1,
+  });
+};
+
+export const useFetchSparesPaginated = (page: number, limit: number) => {
+  const fetchAllSpares = async (): Promise<SpareResponse> => {
+    try {
+      const token = Cookies.get("token");
+      if (!token) throw new Error("Unauthorized to perform this action.");
+
+      const res = await axiosInstance.get(apiRoutes.machineSpares, {
+        params: {
+          page: page - 1,
+          limit,
+        },
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (res.status !== 200) {
+        throw new Error(res.data?.message || "Failed to fetch spares");
+      }
+
+      return {
+        data: res.data.data,
+        page: res.data.page,
+        totalPages: res.data.totalPages,
+        totalRecords: res.data.totalRecords,
+      };
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        toast.error(
+          error.response?.data?.message || "Failed to fetch spares",
+        );
+      } else {
+        toast.error("Something went wrong while fetching spares");
+      }
+      throw new Error("Spare fetch failed");
+    }
+  };
+
+  return useQuery({
+    queryKey: ["spares", page, limit],
     queryFn: fetchAllSpares,
     staleTime: 1000 * 60 * 0,
     retry: 1,

@@ -1,6 +1,6 @@
 import axiosInstance from "../../utils/axios";
 import axios from "axios";
-import type { ClientDetails } from "../../types/masterApiTypes";
+import type { ClientDetails, ClientResponse } from "../../types/masterApiTypes";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { apiRoutes } from "../../routes/apiRoutes";
@@ -56,6 +56,52 @@ export const useFetchClients = () => {
     queryKey: ["Clients"],
     queryFn: fetchAllClients,
     staleTime: 1000 * 60 * 0,
+    retry: 1,
+  });
+};
+
+
+//paginated clients
+export const useFetchClientsPaginated = (page: number, limit: number) => {
+  const fetchAllClients = async (): Promise<ClientResponse> => {
+    try {
+      const token = Cookies.get("token");
+      if (!token) throw new Error("Unauthorized to perform this action.");
+
+      const res = await axiosInstance.get(apiRoutes.clients, {
+        params: {
+          page: page - 1,
+          limit,
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.status !== 200) {
+        throw new Error(res.data?.message || "Failed to fetch clients");
+      }
+
+      return {
+        data: res.data.data,
+        page: res.data.page,
+        totalPages: res.data.totalPages,
+        totalRecords: res.data.totalRecords,
+      };
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data?.message || "Failed to fetch clients");
+      } else {
+        toast.error("Something went wrong while fetching clients");
+      }
+      throw new Error("Client fetch failed");
+    }
+  };
+
+  return useQuery({
+    queryKey: ["clients", page, limit],
+    queryFn: fetchAllClients,
+    staleTime: 0,
     retry: 1,
   });
 };

@@ -1,19 +1,24 @@
-import ButtonSm from "../../../components/common/Buttons";
-import ClientEdit from "./EditClient.component";
-import PageHeader from "../../../components/masterPage.components/PageHeader";
+import { useState, useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
-import { useState } from "react";
-import DialogBox from "../../../components/common/DialogBox";
-import { DeleteClientDialogBox } from "./DeleteClientDialogBox";
-import { useFetchClients } from "../../../queries/masterQueries/ClientQuery";
+
+import PageHeader from "../../../components/masterPage.components/PageHeader";
 import MasterPagesSkeleton from "../../../components/masterPage.components/LoadingSkeleton";
 import ErrorComponent from "../../../components/common/Error";
+import DialogBox from "../../../components/common/DialogBox";
+import ButtonSm from "../../../components/common/Buttons";
+import DropdownSelect from "../../../components/common/DropDown";
+import PaginationControls from "../../../components/common/Pagination";
+
+import ClientEdit from "./EditClient.component";
+import { DeleteClientDialogBox } from "./DeleteClientDialogBox";
+
+import { useFetchClientsPaginated } from "../../../queries/masterQueries/ClientQuery";
+
 import type { FormState } from "../../../types/appTypes";
 import type { ClientDetails } from "../../../types/masterApiTypes";
 
 const ClientPage = () => {
-  const [isDeleteClientDialogOpen, setIsDeleteClientDialogOpen] =
-    useState(false);
+  const [isDeleteClientDialogOpen, setIsDeleteClientDialogOpen] = useState(false);
 
   const [client, setClient] = useState<ClientDetails>({
     id: 0,
@@ -27,7 +32,19 @@ const ClientPage = () => {
 
   const [formState, setFormState] = useState<FormState>("create");
 
-  const { data: clients, isLoading, isError } = useFetchClients();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  const {
+    data,
+    isLoading,
+    isError,
+    refetch,
+  } = useFetchClientsPaginated(currentPage, itemsPerPage);
+
+  const clientList = data?.data || [];
+  const totalPages = data?.totalPages || 0;
+  const totalRecords = data?.totalRecords || 0;
 
   const handleClientDeleted = () => {
     setClient({
@@ -40,7 +57,14 @@ const ClientPage = () => {
       gstNumber: "",
     });
     setFormState("create");
+    refetch();
   };
+
+  useEffect(() => {
+    if (!isLoading && clientList.length === 0 && currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    }
+  }, [clientList, isLoading]);
 
   if (isLoading) return <MasterPagesSkeleton />;
   if (isError) return <ErrorComponent />;
@@ -81,66 +105,91 @@ const ClientPage = () => {
             </p>
           </header>
 
-          {clients?.length === 0 && (
+          {clientList.length === 0 ? (
             <h2 className="text-md my-3 text-center font-medium text-zinc-600">
               No Clients Found
             </h2>
-          )}
-          {clients?.map((item: ClientDetails, index) => (
-            <div
-              key={item.id}
-              className={`cell-1 flex w-full cursor-pointer flex-row items-center gap-2 px-3 py-2 text-zinc-700 ${
-                client?.id === item.id
-                  ? "bg-blue-100 font-semibold text-blue-800"
-                  : index % 2 === 0
-                    ? "bg-white"
-                    : "bg-slate-50"
-              } hover:bg-slate-100 active:bg-slate-200`}
-              onClick={(e) => {
-                e.stopPropagation();
-                if (client?.id === item.id && formState !== "edit") return;
-                setFormState("display");
-                setClient({ ...item });
-              }}
-            >
-              <p className="w-max min-w-[100px] px-2 py-4 text-start text-sm font-medium">
-                {index + 1}
-              </p>
-              <p className="w-full text-start text-sm font-medium">
-                {item.clientName}
-              </p>
-              <p className="w-full text-start text-sm font-medium">
-                {item.contactNumber}
-              </p>
-
-              <div className="flex min-w-[120px] flex-row gap-2 text-start text-sm font-medium">
-                <ButtonSm
-                  className={`${
-                    formState === "edit" && client?.id === item.id
-                      ? "!hover:!bg-blue-500 !hover:!text-black !active:!bg-blue-600 !bg-blue-500 !text-white"
-                      : "bg-white"
-                  }`}
-                  state="outline"
-                  text="Edit"
+          ) : (
+            clientList.map((item: ClientDetails, index: number) => {
+              const isSelected = client?.id === item.id;
+              return (
+                <div
+                  key={item.id}
+                  className={`cell-1 flex w-full cursor-pointer flex-row items-center gap-2 px-3 py-2 text-zinc-700 ${
+                    isSelected
+                      ? "bg-blue-100 font-semibold text-blue-800"
+                      : index % 2 === 0
+                      ? "bg-white"
+                      : "bg-slate-50"
+                  } hover:bg-slate-100 active:bg-slate-200`}
                   onClick={(e) => {
                     e.stopPropagation();
-                    setFormState("edit");
+                    if (isSelected && formState !== "edit") return;
+                    setFormState("display");
                     setClient({ ...item });
                   }}
-                />
-                <ButtonSm
-                  className="bg-red-100 text-red-500 outline-1 outline-red-500 hover:bg-red-100 hover:text-red-500 active:bg-red-100 active:text-red-500"
-                  state="default"
-                  text="Delete"
-                  onClick={() => {
-                    setClient(item);
-                    setIsDeleteClientDialogOpen(true);
-                  }}
-                />
-              </div>
-            </div>
-          ))}
+                >
+                  <p className="w-max min-w-[100px] px-2 py-4 text-start text-sm font-medium">
+                    {(currentPage - 1) * itemsPerPage + index + 1}
+                  </p>
+                  <p className="w-full text-start text-sm font-medium">{item.clientName}</p>
+                  <p className="w-full text-start text-sm font-medium">{item.contactNumber}</p>
+
+                  <div className="flex min-w-[120px] flex-row gap-2 text-start text-sm font-medium">
+                    <ButtonSm
+                      className={`${
+                        formState === "edit" && isSelected
+                          ? "!hover:!bg-blue-500 !hover:!text-black !active:!bg-blue-600 !bg-blue-500 !text-white"
+                          : "bg-white"
+                      }`}
+                      state="outline"
+                      text="Edit"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setFormState("edit");
+                        setClient({ ...item });
+                      }}
+                    />
+                    <ButtonSm
+                      className="bg-red-100 text-red-500 outline-1 outline-red-500 hover:bg-red-100 hover:text-red-500 active:bg-red-100 active:text-red-500"
+                      state="default"
+                      text="Delete"
+                      onClick={() => {
+                        setClient(item);
+                        setIsDeleteClientDialogOpen(true);
+                      }}
+                    />
+                  </div>
+                </div>
+              );
+            })
+          )}
         </div>
+
+        {/* Pagination Footer */}
+        <footer className="mt-2 flex w-full flex-row items-center justify-between">
+          <DropdownSelect
+            title=""
+            direction="up"
+            options={[5, 10, 15, 20].map((item) => ({
+              id: item,
+              label: `${item} items per page`,
+            }))}
+            selected={{
+              id: itemsPerPage,
+              label: `${itemsPerPage} items per page`,
+            }}
+            onChange={(e) => {
+              setItemsPerPage(e.id);
+              setCurrentPage(1);
+            }}
+          />
+          <PaginationControls
+            totalPages={totalPages}
+            currentPage={currentPage}
+            onPageChange={setCurrentPage}
+          />
+        </footer>
       </section>
 
       {/* Right Form */}

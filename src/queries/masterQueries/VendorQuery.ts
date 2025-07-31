@@ -1,6 +1,6 @@
 import axiosInstance from "../../utils/axios";
 import axios from "axios";
-import type { VendorDetails } from "../../types/masterApiTypes";
+import type { VendorDetails, VendorResponse } from "../../types/masterApiTypes";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { apiRoutes } from "../../routes/apiRoutes";
@@ -55,6 +55,53 @@ export const useFetchVendors = () => {
     queryKey: ["vendors"], //cache key
     queryFn: fetchAllVendors,
     staleTime: 1000 * 60 * 0, //expoiy time
+    retry: 1,
+  });
+};
+
+
+//paginated vendors 
+
+export const useFetchVendorsPaginated = (page: number, limit: number) => {
+  const fetchAllVendors = async (): Promise<VendorResponse> => {
+    try {
+      const token = Cookies.get("token");
+      if (!token) throw new Error("Unauthorized to perform this action.");
+
+      const res = await axiosInstance.get(apiRoutes.vendors, {
+        params: {
+          page: page - 1,
+          limit,
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      
+      if (res.status !== 200) {
+        throw new Error(res.data?.message || "Failed to fetch vendors");
+      }
+
+      return {
+        data: res.data.data,
+        page: res.data.page,
+        totalPages: res.data.totalPages,
+        totalRecords: res.data.totalRecords,
+      };
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data?.message || "Failed to fetch vendors");
+      } else {
+        toast.error("Something went wrong while fetching vendors");
+      }
+      throw new Error("Vendor fetch failed");
+    }
+  };
+
+  return useQuery({
+    queryKey: ["vendors", page, limit],
+    queryFn: fetchAllVendors,
+    staleTime: 0,
     retry: 1,
   });
 };
