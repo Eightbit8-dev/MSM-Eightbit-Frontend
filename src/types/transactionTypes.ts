@@ -19,29 +19,34 @@ export interface MachineResponse {
   totalRecords: number;
 }
 
-export interface ServiceRequest {
-  referenceNumber: string;
-  requestDate: string;
-  complaintDetailsId: number;
-  otherComplaintDetails?: string;
-  clientId: number;
-  machineEntryId: number;
-}
+// export interface ServiceRequest {
+//   referenceNumber: string;
+//   requestDate: string;
+//   complaintDetailsId: number;
+//   otherComplaintDetails?: string;
+//   clientId: number;
+//   machineEntryId: number;
+// }
 
-export interface ServiceRequestItem {
+export interface ServiceRequest {
   id: number;
   referenceNumber: string;
   requestDate: string;
-  complaintDetails: string | null;
+  complaintDetails: string;
+  otherComplaintDetails?: string;
   clientName: string;
   machineType: string;
   brand: string;
   modelNumber: string;
   serialNumber: string;
+  // Optional only for  post and edit
+  complaintDetailsId?: number;
+  clientId?: number;
+  machineEntryId?: number;
 }
 
 export interface ServiceRequestResponse {
-  data: ServiceRequestItem[];
+  data: ServiceRequest[];
   page: number;
   totalPages: number;
   totalRecords: number;

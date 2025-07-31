@@ -102,3 +102,50 @@ export const useCreateServiceRequest = () => {
     },
   });
 };
+
+// --- erdit ----
+export const useEditServiceRequest = () => {
+  const queryClient = useQueryClient();
+
+  const editServiceRequest = async (updatedRequest: ServiceRequest) => {
+    try {
+      const token = Cookies.get("token");
+      if (!token) throw new Error("Unauthorized to perform this action.");
+
+      const { id, ...payload } = updatedRequest;
+
+      const res = await axiosInstance.put(
+        `${apiRoutes.serviceRequest}/${id}`,
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      if (res.status !== 200) {
+        throw new Error(
+          res.data?.message || "Failed to update Service Request",
+        );
+      }
+
+      return res.data;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data?.message || "Update failed");
+      } else {
+        toast.error("Something went wrong while updating the request");
+      }
+      throw error;
+    }
+  };
+
+  return useMutation({
+    mutationFn: editServiceRequest,
+    onSuccess: () => {
+      toast.success("Service Request updated successfully");
+      queryClient.invalidateQueries({ queryKey: ["service-request"] });
+    },
+  });
+};

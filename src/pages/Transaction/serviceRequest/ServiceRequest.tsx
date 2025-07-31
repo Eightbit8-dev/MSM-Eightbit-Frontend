@@ -8,15 +8,17 @@ import CheckboxInput from "@/components/common/CheckBox";
 import type { FormState } from "@/types/appTypes";
 import DropdownSelect from "@/components/common/DropDown";
 import { useBreakpoints } from "@/hooks/useBreakPoints";
-import type { ServiceRequestItem } from "@/types/transactionTypes";
+import type { ServiceRequest } from "@/types/transactionTypes";
 import { useState } from "react";
 import { useFetchServiceRequests } from "@/queries/TranscationQueries/ServiceRequestQuery";
+import ServiceRequestFormPage from "./ServiceForm";
 
 const ServiceRequestPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
-  const [selectedRequest, setSelectedRequest] =
-    useState<ServiceRequestItem | null>(null);
+  const [selectedRequest, setSelectedRequest] = useState<ServiceRequest | null>(
+    null,
+  );
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -51,7 +53,7 @@ const ServiceRequestPage = () => {
     );
   };
 
-  const dummyRequestData: ServiceRequestItem = {
+  const dummyRequestData: ServiceRequest = {
     id: 0,
     referenceNumber: "",
     requestDate: new Date().toISOString().split("T")[0],
@@ -274,17 +276,20 @@ const ServiceRequestPage = () => {
         )}
       </AnimatePresence> */}
 
-      {/* <AnimatePresence>
+      <AnimatePresence>
         {isFormOpen && selectedRequest && (
-          <DialogBox setToggleDialogueBox={setIsFormOpen} className="lg:min-w-[800px]">
-            <ServiceRequestForm
+          <DialogBox
+            setToggleDialogueBox={setIsFormOpen}
+            className="lg:min-w-[800px]"
+          >
+            <ServiceRequestFormPage
               mode={formState}
               requestFromParent={selectedRequest}
               setFormVisible={setIsFormOpen}
             />
           </DialogBox>
         )}
-      </AnimatePresence> */}
+      </AnimatePresence>
     </div>
   );
 };
