@@ -100,7 +100,7 @@ const MachineEntry = () => {
           />
           <ButtonSm
             className="font-medium text-white"
-            text={isSm ? "" : "New Entry"}
+            text={"New Entry"}
             state="default"
             type="button"
             onClick={() => {
@@ -164,145 +164,123 @@ const MachineEntry = () => {
               {/* ------selected------ */}
             </div>
 
-            <div className="tables flex min-h-[300px] w-full flex-col overflow-x-scroll rounded-[9px] bg-white shadow-sm">
-              {/* ------Table Header------- */}
-              <header className="header flex min-w-max flex-row items-center justify-between gap-2 bg-slate-200 px-3 py-3">
-                <div className="flex w-[70px] min-w-[70px] items-center justify-between gap-2">
-                  <p className="w-[40px] text-sm font-semibold text-zinc-900">
-                    S.No
-                  </p>
-
-                  <CheckboxInput
-                    checked={isAllSelected}
-                    onChange={handleSelectAllChange}
-                    label=""
-                  />
-                </div>
-                {[
-                  "Ref No",
-                  "Machine S No",
-                  // "Reference No",
-                  "Installation Date",
-                  "Installed By",
-                  "Client",
-                  "Machine Type",
-                  "Brand",
-                  "Model",
-                  "Action",
-                ].map((label, index) => (
-                  <p
-                    key={index}
-                    className={`text-start text-sm font-semibold text-zinc-900 ${
-                      label === "Ref No"
-                        ? "w-[100px] min-w-[100px]"
-                        : label === "Machine S No"
-                          ? // || label === "Reference No"
-                            "w-[140px] min-w-[140px]"
-                          : label === "Installation Date"
-                            ? "w-[140px] min-w-[140px]"
-                            : label === "Installed By"
-                              ? "w-[120px] min-w-[120px]"
-                              : label === "Client"
-                                ? "w-[160px] min-w-[160px]"
-                                : label === "Machine Type"
-                                  ? "w-[150px] min-w-[150px]"
-                                  : label === "Brand"
-                                    ? "w-[120px] min-w-[120px]"
-                                    : label === "Model"
-                                      ? "w-[100px] min-w-[100px]"
-                                      : label === "Action"
-                                        ? "min-w-[120px]"
-                                        : "w-[60px] min-w-[60px]"
-                    }`}
-                  >
-                    {label}
-                  </p>
-                ))}
-              </header>
-
-              {/* Table Body */}
-              {paginatedData.length === 0 ? (
-                <h2 className="text-md my-auto text-center font-medium text-zinc-600">
-                  No Entries Found
-                </h2>
-              ) : (
-                paginatedData.map((item, index) => (
-                  <div
-                    key={item.id}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      // setSelectedMachine(item);
-                      // setFormState("display");
-                      // setIsFormOpen(true);
-                    }}
-                    className="flex w-full cursor-pointer items-center justify-between gap-2 bg-white px-3 py-2 text-zinc-700 hover:bg-slate-50"
-                  >
-                    <div className="items-cener flex w-[70px] flex-row justify-between gap-1">
-                      <p className="w-[45px] text-sm">
-                        {(currentPage - 1) * itemsPerPage + index + 1}
-                      </p>
-                      <CheckboxInput
-                        key={item.id}
-                        checked={selectedIds.some((id) => id === item.id)}
-                        onChange={() => handleCheckboxChange(item.id)}
-                        label=""
-                      />
-                    </div>
-
-                    <p className="w-[100px] min-w-[100px] text-sm">
-                      {item.referenceNumber}
+            <div className="tables flex min-h-[300px] w-full flex-col overflow-x-auto rounded-[9px] bg-white shadow-sm">
+              <div className="flex min-w-full flex-col">
+                {/* ------Table Header------- */}
+                <header className="flex flex-row items-center gap-2 bg-slate-200 px-3 py-3">
+                  {/* S.No + Checkbox */}
+                  <div className="flex w-[70px] min-w-[70px] items-center justify-start gap-2">
+                    <p className="w-[40px] text-sm font-semibold text-zinc-900">
+                      S.No
                     </p>
-                    <p className="w-[140px] min-w-[140px] text-sm">
-                      {item.serialNumber}
-                    </p>
-                    {/* <p className="w-[140px] min-w-[140px] text-sm">
-                      {item.referenceNumber}
-                    </p> */}
-                    <p className="w-[140px] min-w-[140px] text-sm">
-                      {item.installationDate}
-                    </p>
-                    <p className="w-[120px] min-w-[120px] text-sm">
-                      {item.installedBy}
-                    </p>
-                    <p className="w-[160px] min-w-[160px] text-sm">
-                      {item.clientName}
-                    </p>
-                    <p className="w-[150px] min-w-[150px] text-sm">
-                      {item.machineType}
-                    </p>
-                    <p className="w-[120px] min-w-[120px] text-sm">
-                      {item.brand}
-                    </p>
-                    <p className="w-[100px] min-w-[100px] text-sm">
-                      {item.modelNumber}
-                    </p>
-                    <div className="flex min-w-[120px] flex-row gap-2">
-                      <ButtonSm
-                        className="aspect-square scale-90 border-1 border-blue-500 bg-blue-500/10"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedMachine(item);
-                          setFormState("edit");
-                          setIsFormOpen(true);
-                        }}
-                        state="outline"
-                        imgUrl="/icons/edit-icon.svg"
-                      />
-                      <ButtonSm
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedMachine(item);
-                          setIsDeleteMachineDialogOpen(true);
-                        }}
-                        className="aspect-square scale-90 border-1 border-red-500 bg-red-100 text-red-500 hover:bg-red-100 active:bg-red-100"
-                        state="default"
-                        imgUrl="/icons/delete-icon.svg"
-                      />
-                    </div>
+                    <CheckboxInput
+                      checked={isAllSelected}
+                      onChange={handleSelectAllChange}
+                      label=""
+                    />
                   </div>
-                ))
-              )}
+
+                  {/* Column Headers */}
+                  <div className="flex w-full flex-row gap-2">
+                    {[
+                      "Reference No",
+                      "Machine S No",
+                      "Installation Date",
+                      "Installed By",
+                      "Client",
+                      "Machine Type",
+                      "Brand",
+                      "Model",
+                    ].map((label, index) => (
+                      <p
+                        key={index}
+                        className="min-w-[70px] flex-1 text-sm font-semibold text-zinc-900"
+                      >
+                        {label}
+                      </p>
+                    ))}
+
+                    {/* Action Header */}
+                    <p className="min-w-[100px] text-sm font-semibold text-zinc-900">
+                      Action
+                    </p>
+                  </div>
+                </header>
+
+                {/* ------Table Body------ */}
+                {paginatedData.length === 0 ? (
+                  <h2 className="text-md my-auto text-center font-medium text-zinc-600">
+                    No Entries Found
+                  </h2>
+                ) : (
+                  paginatedData.map((item, index) => (
+                    <div
+                      key={item.id}
+                      className="flex min-w-full flex-row items-start gap-2 border-t px-3 py-2 text-sm text-zinc-700 hover:bg-slate-50"
+                    >
+                      {/* S.No + Checkbox */}
+                      <div className="flex w-[70px] min-w-[70px] items-center justify-start gap-2 pt-1">
+                        <p className="w-[40px]">
+                          {(currentPage - 1) * itemsPerPage + index + 1}
+                        </p>
+                        <CheckboxInput
+                          checked={selectedIds.includes(item.id)}
+                          onChange={() => handleCheckboxChange(item.id)}
+                          label=""
+                        />
+                      </div>
+
+                      {/* Row Data */}
+                      <div className="flex w-full flex-row gap-2">
+                        {[
+                          item.referenceNumber,
+                          item.serialNumber,
+                          item.installationDate,
+                          item.installedBy,
+                          item.clientName,
+                          item.machineType,
+                          item.brand,
+                          item.modelNumber,
+                        ].map((val, idx) => (
+                          <p
+                            key={idx}
+                            className="min-w-[70px] flex-1 pt-1 break-words"
+                          >
+                            {val || "—"}
+                          </p>
+                        ))}
+
+                        {/* Action Buttons */}
+                        <div className="flex min-w-[100px] items-center justify-start gap-2 pt-1">
+                          <ButtonSm
+                            className="aspect-square scale-90 border-1 border-blue-500 bg-blue-500/10"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedMachine(item);
+                              setFormState("edit");
+                              setIsFormOpen(true);
+                            }}
+                            state="outline"
+                            imgUrl="/icons/edit-icon.svg"
+                          />
+                          <ButtonSm
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedMachine(item);
+                              setIsDeleteMachineDialogOpen(true);
+                            }}
+                            className="aspect-square scale-90 border-1 border-red-500 bg-red-100 text-red-500 hover:bg-red-100 active:bg-red-100"
+                            state="default"
+                            imgUrl="/icons/delete-icon.svg"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
             </div>
+
             {/* --------- Table Footer -------- */}
             <footer className="flex w-full flex-row items-center justify-between">
               <DropdownSelect
