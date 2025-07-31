@@ -1,5 +1,3 @@
-
-
 export const appRoutes = {
   // -------- Public Pages --------
   homePage: "/",
@@ -23,7 +21,7 @@ export const appRoutes = {
     },
   },
 
-    scanPage:"/Sacn-qr",
+  scanPage: "/Sacn-qr",
 
   // -------- Transaction Routes --------
   transactionRoutes: {

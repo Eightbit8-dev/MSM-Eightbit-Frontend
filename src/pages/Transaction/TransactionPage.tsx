@@ -28,7 +28,7 @@ export const TransactionPage = () => {
       desc: "Manage your customer database for orders, deliveries, and support tracking.",
       btnText: "Configure",
       onAction: () =>
-        navigate(appRoutes.transactionRoutes.children.serviceEntry),
+        navigate(appRoutes.transactionRoutes.children.serviceRequest),
     },
     {
       img: "/icons/Master/Products.svg",
@@ -36,7 +36,7 @@ export const TransactionPage = () => {
       desc: "Catalog, track, and manage your products or items in one page.",
       btnText: "Configure",
       onAction: () =>
-        navigate(appRoutes.transactionRoutes.children.serviceRequest),
+        navigate(appRoutes.transactionRoutes.children.serviceEntry),
     },
   ];
   return (

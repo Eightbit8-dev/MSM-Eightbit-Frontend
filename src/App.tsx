@@ -11,11 +11,11 @@ import UsersPage from "./pages/UsersPage";
 import Report from "./pages/Report";
 import TransactionPage from "./pages/Transaction/TransactionPage";
 import MachineEntry from "./pages/Transaction/machineEntry/MachineEntries";
-import ServiceEntry from "./pages/Transaction/ServiceEntry";
-import ServiceRequest from "./pages/Transaction/ServiceRequest";
 import QRScanner from "./pages/QR/ScanQr";
 import ProblemPage from "./pages/MasterPages/Problem/ProblemPage";
 import ServiceEngineerPage from "./pages/MasterPages/ServiceEngineers/ServiceEngineersPage";
+import ServiceEntry from "./pages/Transaction/serviceRequest/ServiceRequest";
+import ServiceRequest from "./pages/Transaction/serviceRequest/ServiceRequest";
 
 // ------------------Main Pages ---------------------------
 const DashBoardPage = lazy(() => import("./pages/DashBoardPage"));
@@ -34,7 +34,6 @@ const VendorsPage = lazy(() => import("./pages/MasterPages/Vendor/VendorPage"));
 const DepartmentsPage = lazy(
   () => import("./pages/MasterPages/Spares/SparesPage"),
 );
-const LoanMPage = lazy(() => import("./pages/MasterPages/Problem/ProblemPage"));
 
 const App = () => {
   return (
@@ -119,18 +118,15 @@ const App = () => {
               path={appRoutes.transactionRoutes.children.serviceRequest}
               element={<ServiceRequest />}
             />
-            <Route 
-            path={appRoutes.scanPage}
-            element={<QRScanner/>}
+            <Route path={appRoutes.scanPage} element={<QRScanner />} />
+            <Route
+              path={appRoutes.masterRoutes.children.problemDetails}
+              element={<ProblemPage />}
             />
-            <Route 
-            path={appRoutes.masterRoutes.children.problemDetails}
-            element={<ProblemPage />}
-          />
-          <Route
-          path={appRoutes.masterRoutes.children.users}
-          element={<ServiceEngineerPage />}
-          />
+            <Route
+              path={appRoutes.masterRoutes.children.users}
+              element={<ServiceEngineerPage />}
+            />
           </Route>
         </Route>
       </Routes>
