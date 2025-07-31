@@ -196,23 +196,24 @@ const MachineEntry = () => {
                       label === "Ref No"
                         ? "w-[100px] min-w-[100px]"
                         : label === "Machine S No"
-                          ? // || label === "Reference No"
-                            "w-[140px] min-w-[140px]"
-                          : label === "Installation Date"
+                          ? "w-[140px] min-w-[140px]"
+                          : label === "Reference No"
                             ? "w-[140px] min-w-[140px]"
-                            : label === "Installed By"
-                              ? "w-[120px] min-w-[120px]"
-                              : label === "Client"
-                                ? "w-[160px] min-w-[160px]"
-                                : label === "Machine Type"
-                                  ? "w-[150px] min-w-[150px]"
-                                  : label === "Brand"
-                                    ? "w-[120px] min-w-[120px]"
-                                    : label === "Model"
-                                      ? "w-[100px] min-w-[100px]"
-                                      : label === "Action"
-                                        ? "min-w-[120px]"
-                                        : "w-[60px] min-w-[60px]"
+                            : label === "Installation Date"
+                              ? "w-[140px] min-w-[140px]"
+                              : label === "Installed By"
+                                ? "w-[120px] min-w-[120px]"
+                                : label === "Client"
+                                  ? "w-[160px] min-w-[160px]"
+                                  : label === "Machine Type"
+                                    ? "w-[150px] min-w-[150px]"
+                                    : label === "Brand"
+                                      ? "w-[120px] min-w-[120px]"
+                                      : label === "Model"
+                                        ? "w-[100px] min-w-[100px]"
+                                        : label === "Action"
+                                          ? "min-w-[120px]"
+                                          : "w-[60px] min-w-[60px]"
                     }`}
                   >
                     {label}
@@ -255,9 +256,9 @@ const MachineEntry = () => {
                     <p className="w-[140px] min-w-[140px] text-sm">
                       {item.serialNumber}
                     </p>
-                    {/* <p className="w-[140px] min-w-[140px] text-sm">
+                    <p className="w-[140px] min-w-[140px] text-sm">
                       {item.referenceNumber}
-                    </p> */}
+                    </p>
                     <p className="w-[140px] min-w-[140px] text-sm">
                       {item.installationDate}
                     </p>
