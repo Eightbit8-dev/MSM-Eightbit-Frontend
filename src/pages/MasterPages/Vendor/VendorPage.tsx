@@ -84,7 +84,34 @@ const VendorsPage = () => {
       {/* Vendor List */}
       <section className="table-container flex w-full flex-col gap-3 rounded-[12px] bg-white/80 p-4 shadow-sm md:w-[50%]">
         <header className="flex flex-row items-center justify-between">
-          <PageHeader title="Vendor Configuration" />
+          <div className="flex flex-row items-center gap-2 w-full">
+            <PageHeader title="Vendor Configuration" />
+                      <DropdownSelect
+            title=""
+            direction="down"
+            options={[5, 10, 15, 20].map((item) => ({
+              id: item,
+              label: `${item} Entries`,
+            }))}
+            selected={{
+              id: itemsPerPage,
+              label: `${itemsPerPage} Entries`,
+            }}
+            onChange={(e) => {
+              setItemsPerPage(e.id);
+              setCurrentPage(1);
+            }}
+          />
+          </div>
+
+                  <footer className="mt-2 flex w-full flex-row items-center justify-end">
+
+          <PaginationControls
+            totalPages={totalPages}
+            currentPage={currentPage}
+            onPageChange={setCurrentPage}
+          />
+        </footer>
         </header>
 
         <div className="tables flex w-full flex-col overflow-clip rounded-[9px]">
@@ -160,29 +187,7 @@ const VendorsPage = () => {
         </div>
 
         {/* Pagination Footer */}
-        <footer className="mt-2 flex w-full flex-row items-center justify-between">
-          <DropdownSelect
-            title=""
-            direction="up"
-            options={[5, 10, 15, 20].map((item) => ({
-              id: item,
-              label: `${item} items per page`,
-            }))}
-            selected={{
-              id: itemsPerPage,
-              label: `${itemsPerPage} items per page`,
-            }}
-            onChange={(e) => {
-              setItemsPerPage(e.id);
-              setCurrentPage(1);
-            }}
-          />
-          <PaginationControls
-            totalPages={totalPages}
-            currentPage={currentPage}
-            onPageChange={setCurrentPage}
-          />
-        </footer>
+
       </section>
 
       {/* Vendor Form */}
