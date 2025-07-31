@@ -148,7 +148,7 @@ export const useFetchAllDetailsOptions = () => {
 
     return res.data.data.map((client: ProductDetails) => ({
       id: client.id,
-      label: `${client.modelNumber} , ${client.brand}  ${client.machineType}`,
+      label: `${client.modelNumber} ,${client.machineType}, ${client.brand}  `,
     }));
   };
 

@@ -12,7 +12,7 @@ import {
 import {
   useFetchBrandsOptions,
   useFetchModelsOptions,
-  useFetchProductsOptions,
+  useFetchAllDetailsOptions,
 } from "@/queries/masterQueries/ProductQuery";
 import { useFetchClientOptions } from "@/queries/masterQueries/ClientQuery";
 import {
@@ -42,7 +42,7 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
   const { mutate: editMachine } = useEditMachine();
   const { mutate: createMachine } = useCreateMachine();
   const { data: clientOptions = [] } = useFetchClientOptions();
-  const { data: typeOptions = [] } = useFetchProductsOptions();
+  const { data: typeOptions = [] } = useFetchAllDetailsOptions();
   const { data: brandOptions = [] } = useFetchBrandsOptions();
   const { data: modelOptions = [] } = useFetchModelsOptions();
 
@@ -54,16 +54,16 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
   });
   const [selectedType, setSelectedType] = useState<DropdownOption>({
     id: 0,
-    label: "Select Type",
+    label: "Select Machine",
   });
-  const [selectedBrand, setSelectedBrand] = useState<DropdownOption>({
-    id: 0,
-    label: "Select Brand",
-  });
-  const [selectedModel, setSelectedModel] = useState<DropdownOption>({
-    id: 0,
-    label: "Select Model",
-  });
+  // const [selectedBrand, setSelectedBrand] = useState<DropdownOption>({
+  //   id: 0,
+  //   label: "Select Brand",
+  // });
+  // const [selectedModel, setSelectedModel] = useState<DropdownOption>({
+  //   id: 0,
+  //   label: "Select Model",
+  // });
 
   useEffect(() => {
     if ((isEdit || isView) && machineFromParent) {
@@ -78,15 +78,15 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
           (opt) => opt.label === machineFromParent.machineType,
         ) || selectedType,
       );
-      setSelectedBrand(
-        brandOptions.find((opt) => opt.label === machineFromParent.brand) ||
-          selectedBrand,
-      );
-      setSelectedModel(
-        modelOptions.find(
-          (opt) => opt.label === machineFromParent.modelNumber,
-        ) || selectedModel,
-      );
+      // setSelectedBrand(
+      //   brandOptions.find((opt) => opt.label === machineFromParent.brand) ||
+      //     selectedBrand,
+      // );
+      // setSelectedModel(
+      //   modelOptions.find(
+      //     (opt) => opt.label === machineFromParent.modelNumber,
+      //   ) || selectedModel,
+      // );
     }
   }, [
     machineFromParent,
@@ -194,7 +194,7 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
             required
             disabled={isView}
           />
-          <DropdownSelect
+          {/* <DropdownSelect
             title="Brand"
             options={brandOptions}
             selected={selectedBrand}
@@ -215,7 +215,7 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
             }}
             required
             disabled={isView}
-          />
+          /> */}
         </div>
         <div className="grid-container grid gap-2 md:grid-cols-3 md:gap-6">
           <Input
