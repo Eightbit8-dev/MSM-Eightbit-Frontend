@@ -5,7 +5,6 @@ import DropdownSelect, {
 } from "@/components/common/DropDown";
 import ButtonSm from "@/components/common/Buttons";
 import { toast } from "react-toastify";
-import { useFetchClientOptions } from "@/queries/masterQueries/ClientQuery";
 import { useFetchMachineById } from "@/queries/TranscationQueries/MachineQuery";
 import {
   useCreateServiceRequest,
@@ -18,6 +17,7 @@ import {
 } from "@/utils/commonUtils";
 import type { ServiceRequest } from "@/types/transactionTypes";
 import { Html5Qrcode } from "html5-qrcode";
+import { useFetchClientOptions } from "@/queries/masterQueries/ClientQuery";
 
 type Mode = "create" | "edit" | "display";
 
@@ -45,10 +45,19 @@ const ServiceRequestFormPage: React.FC<Props> = ({
     null,
   );
 
+  const { data: clientOptions = [] } = useFetchClientOptions();
+
   const [request, setRequest] = useState<ServiceRequest>(requestFromParent);
   const [selectedComplaint, setSelectedComplaint] = useState<DropdownOption>({
     id: 0,
     label: "Select Complaint",
+  });
+
+  const [scannedMachineInfo, setScannedMachineInfo] = useState({
+    clientName: "",
+    machineType: "",
+    brand: "",
+    modelNumber: "",
   });
 
   const { data: complaintOptions = [] } = useFetchProblemOptions();
@@ -56,13 +65,14 @@ const ServiceRequestFormPage: React.FC<Props> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (mode === "create") {
+    if (isCreate) {
       const now = new Date();
       const year = now.getFullYear();
       const timestamp = now.getTime();
       const randomSuffix = Math.floor(Math.random() * 90 + 10);
       const generatedRef = `SR-${year}-${timestamp}${randomSuffix}`;
       const today = now.toLocaleDateString("en-GB").split("/").join("-");
+
       setRequest((prev) => ({
         ...prev,
         referenceNumber: generatedRef,
@@ -128,17 +138,28 @@ const ServiceRequestFormPage: React.FC<Props> = ({
 
   const parseQRData = (data: string): { [key: string]: string } => {
     const result: { [key: string]: string } = {};
-    if (data.includes(":")) {
-      const lines = data.split("\n").filter((line) => line.trim() !== "");
-      for (const line of lines) {
-        const [key, value] = line.split(":");
-        if (key && value) {
-          result[key.trim()] = value.trim();
-        }
+    const lines = data.split("\n").filter((line) => line.trim() !== "");
+
+    for (const line of lines) {
+      const match = line.match(/([^:=#]+)[\s:=#]+(.+)/);
+      if (match) {
+        const rawKey = match[1].trim().toUpperCase();
+        const rawValue = match[2].trim();
+        const keyMap: Record<string, string> = {
+          MACHINE_ENTRY_ID: "machineEntryId",
+          "SERIAL #": "serialNumber",
+          "REF #": "referenceNumber",
+          CLIENT: "clientName",
+          TYPE: "machineType",
+          BRAND: "brand",
+          MODEL: "modelNumber",
+          INSTALLED: "installationDate",
+        };
+        const normalizedKey = keyMap[rawKey] ?? rawKey.toLowerCase();
+        result[normalizedKey] = rawValue;
       }
-    } else {
-      result["SL.NO"] = data.trim();
     }
+
     return result;
   };
 
@@ -152,19 +173,47 @@ const ServiceRequestFormPage: React.FC<Props> = ({
     try {
       const result = await html5QrCode.scanFile(file, true);
       const parsed = parseQRData(result);
-      const serialNumber = parsed.serialNumber;
-      if (!serialNumber) throw new Error("Serial number not found in QR");
 
-      // You can now fetch the machineEntryId using the serial number
-      // For now we'll assume machineEntryId is same as serialNumber for simplicity
-      // Replace below line with actual API call if needed
-      setMachineEntryId(Number(serialNumber.replace(/[^\d]/g, "")));
-      toast.success(`QR Scanned: ${serialNumber}`);
+      const entryId = parsed.machineEntryId;
+      const clientNamee = parsed.clientName;
+      if (!entryId) throw new Error("machineEntryId not found in QR");
+
+      // Update the values locally from parsed QR
+      setMachineEntryId(Number(entryId));
+
+      setClientId(Number(parsed.clientId ?? 0));
+
+      setRequest((prev) => ({
+        ...prev,
+        clientName: parsed.client || prev.clientName,
+        machineType: parsed.machineType || prev.machineType,
+        brand: parsed.brand || prev.brand,
+        modelNumber: parsed.modelNumber || prev.modelNumber,
+      }));
+
+      setRequest((prev) => ({ ...prev, clientName: clientNamee }));
+
+      toast.success(`QR Scanned: Machine ID ${entryId}`);
+
+      const matchedClient = clientOptions.find(
+        (client) => client.label.toLowerCase() === clientNamee?.toLowerCase(),
+      );
+
+      setClientId(matchedClient?.id ?? 0);
+
+      // Set clientId if match found
+      if (matchedClient) {
+        setClientId(matchedClient.id);
+      } else {
+        toast.warn(`Client '${clientNamee}' not found in client list`);
+      }
     } catch (err) {
       console.error("QR scan error", err);
       toast.error("Failed to scan QR code.");
     }
   };
+
+  const machineInfo = machineDetails || scannedMachineInfo;
 
   return (
     <div className="flex min-w-full flex-col gap-0 rounded-2xl bg-white">
@@ -211,29 +260,34 @@ const ServiceRequestFormPage: React.FC<Props> = ({
             disabled={isView}
           />
           <Input
-            onChange={(val) => {}}
             title="Client Name"
-            inputValue={machineDetails?.clientName || ""}
+            inputValue={request.clientName || machineDetails?.clientName || ""}
+            onChange={() => {}}
             disabled
           />
           <Input
-            onChange={(val) => {}}
             title="Machine Type"
-            inputValue={machineDetails?.machineType || ""}
+            inputValue={
+              machineDetails?.machineType || request.machineType || ""
+            }
+            onChange={() => {}}
             disabled
           />
           <Input
-            onChange={(val) => {}}
             title="Brand"
-            inputValue={machineDetails?.brand || ""}
+            inputValue={machineDetails?.brand || request.brand || ""}
+            onChange={() => {}}
             disabled
           />
           <Input
-            onChange={(val) => {}}
             title="Model Number"
-            inputValue={machineDetails?.modelNumber || ""}
+            inputValue={
+              machineDetails?.modelNumber || request.modelNumber || ""
+            }
+            onChange={() => {}}
             disabled
           />
+
           <DropdownSelect
             title="Complaint"
             options={complaintOptions}
