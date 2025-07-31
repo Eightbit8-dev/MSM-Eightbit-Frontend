@@ -73,20 +73,20 @@ export const useFetchProblem = (page: number, limit: number) => {
   });
 };
 
-export const useFetchMachineOptions = () => {
-  const fetchAllMachine = async (): Promise<DropdownOption[]> => {
+export const useFetchProblemOptions = () => {
+  const fetchAllProblem = async (): Promise<DropdownOption[]> => {
     try {
       const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
-      const res = await axiosInstance.get(apiRoutes.machineEntry, {
+      const res = await axiosInstance.get(apiRoutes.problemDetails, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
       if (res.status !== 200) {
-        throw new Error(res.data?.message || "Failed to fetch machine");
+        throw new Error(res.data?.message || "Failed to fetch Problems");
       }
 
       return res.data.data.map((machine: ProblemDetails) => ({
@@ -95,17 +95,17 @@ export const useFetchMachineOptions = () => {
       }));
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        toast.error(error.response?.data?.message || "Failed to fetch machine");
+        toast.error(error.response?.data?.message || "Failed to fetch Problems");
       } else {
-        toast.error("Something went wrong while fetching machine");
+        toast.error("Something went wrong while fetching Problems");
       }
-      throw new Error("Machine fetch failed");
+      throw new Error("Problems fetch failed");
     }
   };
 
   return useQuery({
-    queryKey: ["machine"],
-    queryFn: fetchAllMachine,
+    queryKey: ["problem"],
+    queryFn: fetchAllProblem,
     staleTime: 1000 * 60 * 0,
     retry: 1,
   });
