@@ -158,7 +158,7 @@ const ProblemPage = () => {
         </section>
 
         {/* Edit/Create Section */}
-        <section className="table-container max-h-full w-full flex-col gap-3 rounded-[12px] bg-white/80 p-4 shadow-sm md:w-[50%]">
+        <section className="table-container mb-20 md:mb-0 max-h-full w-full flex-col gap-3 rounded-[12px] bg-white/80 p-4 shadow-sm md:w-[50%]">
           <ProblemEdit
             problemDetails={problem}
             formState={formState}

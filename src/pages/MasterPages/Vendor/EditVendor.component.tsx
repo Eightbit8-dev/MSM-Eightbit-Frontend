@@ -143,7 +143,7 @@ const VendorEdit = ({
           </header>
 
           {/* Vendor Details */}
-          <section className="vendor-details-section grid grid-cols-2 flex w-full flex-col gap-2 overflow-clip px-3">
+          <section className="vendor-details-section grid md:grid-cols-2 grid-cols-1 flex w-full flex-col gap-2 overflow-clip px-3">
             <Input
               required
               disabled={formState === "display"}
