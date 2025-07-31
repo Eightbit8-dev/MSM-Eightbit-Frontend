@@ -37,8 +37,8 @@ export const MasterPage = () => {
     },
     {
       img: "/icons/Master/Users.svg",
-      title: "Users",
-      desc: "Create and manage system users with roles and permissions.",
+      title: "Service-engineers",
+      desc: "Create and manage system Service-engineers with roles and permissions.",
       btnText: "Configure",
       onAction: () => navigate(appRoutes.masterRoutes.children.users),
     },
@@ -51,7 +51,7 @@ export const MasterPage = () => {
     },
     {
       img: "/icons/Master/Problem.svg",
-      title: "Problem Details",
+      title: "Problem Types",
       desc: "Log and categorize recurring issues related to products, machines, or inventory.",
       btnText: "Configure",
       onAction: () => navigate(appRoutes.masterRoutes.children.problemDetails),

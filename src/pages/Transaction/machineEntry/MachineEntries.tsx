@@ -21,7 +21,7 @@ import { useBreakpoints } from "@/hooks/useBreakPoints";
 
 const MachineEntry = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
   const [selectedMachine, setSelectedMachine] = useState<MachineDetails | null>(
     null,
   );

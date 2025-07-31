@@ -144,7 +144,7 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
 
                               <Input
             title="Ref No"
-            placeholder="Enter SL No"
+            placeholder="Enter Ref No"
             inputValue={machine.slNo}
             onChange={(val) => updateField("slNo", val)}
             required
@@ -209,16 +209,6 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
             required
             disabled={isView}
           />
-          <Input
-            title="Installed By"
-            placeholder="Eg : John Doe"
-            inputValue={machine.installedBy}
-            onChange={(val) => updateField("installedBy", val)}
-            disabled={isView}
-          />
-
-        </div>
-        <div className="grid-container grid gap-2 md:grid-cols-3 md:gap-6">
           <DropdownSelect
             title="Model Number"
             options={modelOptions}
@@ -230,6 +220,10 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
             required
             disabled={isView}
           />
+
+        </div>
+        <div className="grid-container grid gap-2 md:grid-cols-3 md:gap-6">
+          
           <Input
             title="Machine Serial Number"
             placeholder="Enter Machine Serial Number"
@@ -238,6 +232,14 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
             required
             disabled={isView}
           />
+                    <Input
+            title="Installed By"
+            placeholder="Eg : John Doe"
+            inputValue={machine.installedBy}
+            onChange={(val) => updateField("installedBy", val)}
+            disabled={isView}
+          />
+
           <DateInput
             title="Installation Date"
             value={convertToFrontendDate(machine.installationDate)}
