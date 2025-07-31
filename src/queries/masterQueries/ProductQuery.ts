@@ -133,6 +133,32 @@ export const useFetchModelsOptions = () => {
   });
 };
 
+export const useFetchAllDetailsOptions = () => {
+  const fetchAllDetail = async (): Promise<DropdownOption[]> => {
+    const token = Cookies.get("token");
+    if (!token) throw new Error("Unauthorized to perform this action.");
+
+    const res = await axiosInstance.get(apiRoutes.products, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (res.status !== 200) {
+      throw new Error(res.data?.message || "Failed to fetch products options");
+    }
+
+    return res.data.data.map((client: ProductDetails) => ({
+      id: client.id,
+      label: `${client.modelNumber} , ${client.brand}  ${client.machineType}`,
+    }));
+  };
+
+  return useQuery({
+    queryKey: ["productAllProducts"],
+    queryFn: fetchAllDetail,
+    staleTime: 1000 * 60 * 0,
+    retry: 1,
+  });
+};
 
 
 //paginated response 
