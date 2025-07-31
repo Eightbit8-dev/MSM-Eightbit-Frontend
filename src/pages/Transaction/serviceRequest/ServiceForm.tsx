@@ -275,7 +275,7 @@ const ServiceRequestFormPage: React.FC<Props> = ({
       )}
 
       <form onSubmit={handleSubmit} className="flex min-w-full flex-col gap-4">
-        <div className="grid min-w-full grid-cols-2 gap-4">
+        <div className="grid min-w-full grid-cols-1 md:grid-cols-2 gap-4">
           <Input
             title="Reference Number"
             inputValue={request.referenceNumber}

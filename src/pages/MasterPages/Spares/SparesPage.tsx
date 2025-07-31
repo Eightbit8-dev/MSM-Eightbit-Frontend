@@ -57,7 +57,7 @@ const SparesPage = () => {
         )}
       </AnimatePresence>
 
-      <section className="table-container flex w-full flex-col gap-3 rounded-[12px] bg-white/80 p-4 shadow-sm md:w-[40%]">
+      <section className="table-container flex w-full flex-col gap-3 rounded-[12px] bg-white/80 p-4 shadow-sm md:w-[50%]">
         <header className="flex h-max flex-col md:flex-row items-center justify-between">
         <div className="flex flex-row items-center gap-2 w-full">
             <PageHeader title="Spare Configuration" />
@@ -167,7 +167,7 @@ const SparesPage = () => {
 
       </section>
 
-      <section className="table-container mb-20 md:mb-0 max-h-full w-full flex-col gap-3 rounded-[12px] bg-white/80 p-4 shadow-sm md:w-[60%]">
+      <section className="table-container mb-20 md:mb-0 max-h-full w-full flex-col gap-3 rounded-[12px] bg-white/80 p-4 shadow-sm md:w-[50%]">
 <SpareEdit
   spareDetails={selectedSpare}
   formState={formState}

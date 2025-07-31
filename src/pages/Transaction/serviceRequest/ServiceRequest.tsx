@@ -78,7 +78,7 @@ import { DeleteServiceRequestDialogBox } from "./ServiceRequestDelete.Dialog";
         <div className="flex flex-row items-center gap-2">
           <ButtonSm
             className="font-medium text-white"
-            text={isSm ? "" : "New Request"}
+            text={ "New Request"}
             state="default"
             type="button"
             onClick={() => {
