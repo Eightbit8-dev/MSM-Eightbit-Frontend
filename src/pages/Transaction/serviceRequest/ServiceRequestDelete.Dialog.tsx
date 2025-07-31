@@ -1,28 +1,33 @@
 import { toast } from "react-toastify";
 import ButtonSm from "../../../components/common/Buttons";
-import { useDeleteMachineEntry } from "../../../queries/TranscationQueries/MachineQuery";
-import type { MachineDetails } from "../../../types/transactionTypes";
+import { useDeleteServiceRequest } from "../../../queries/TranscationQueries/ServiceRequestQuery";
+import type { ServiceRequest } from "../../../types/transactionTypes";
 
-export const DeleteMachineDialogBox = ({
-  setIsDeleteMachineDialogOpen,
-  client,
+export const DeleteServiceRequestDialogBox = ({
+  setIsDeleteDialogOpen,
+  request,
   onDeleted,
 }: {
-  setIsDeleteMachineDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  client: MachineDetails;
+  setIsDeleteDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  request: ServiceRequest;
   onDeleted: () => void;
 }) => {
-  const { mutate: deleteMachine, isPending: isDeleting } =
-    useDeleteMachineEntry();
+  const { mutate: deleteServiceRequest, isPending: isDeleting } =
+    useDeleteServiceRequest();
 
   const handleDelete = () => {
-    deleteMachine(client, {
+    if (!request?.id) {
+      toast.error("Invalid request. Cannot delete.");
+      return;
+    }
+
+    deleteServiceRequest(request.id, {
       onSuccess: () => {
         onDeleted();
-        setIsDeleteMachineDialogOpen(false);
+        setIsDeleteDialogOpen(false);
       },
       onError: () => {
-        toast.error(`Failed to delete machine "${client.clientName}"`);
+        toast.error(`Failed to delete request "${request.referenceNumber}"`);
       },
     });
   };
@@ -36,9 +41,9 @@ export const DeleteMachineDialogBox = ({
       }}
     >
       <header className="header flex w-full flex-row items-center justify-between text-lg font-medium text-red-600">
-        Delete Machine
+        Delete Service Request
         <img
-          onClick={() => setIsDeleteMachineDialogOpen(false)}
+          onClick={() => setIsDeleteDialogOpen(false)}
           className="w-5 cursor-pointer"
           src="/icons/close-icon.svg"
           alt="close"
@@ -46,8 +51,11 @@ export const DeleteMachineDialogBox = ({
       </header>
 
       <p className="text-md font-medium text-zinc-700">
-        Are you sure you want to delete the machine{" "}
-        <strong>{client.clientName}</strong>? This action is irreversible.
+        Are you sure you want to delete the request{" "}
+        <strong>
+          {request.referenceNumber} {request.clientName}
+        </strong>
+        ? This action is irreversible.
       </p>
 
       <section className="mt-1 grid w-full grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-3">
@@ -56,7 +64,7 @@ export const DeleteMachineDialogBox = ({
           state="outline"
           text="Cancel"
           disabled={isDeleting}
-          onClick={() => setIsDeleteMachineDialogOpen(false)}
+          onClick={() => setIsDeleteDialogOpen(false)}
         />
         <ButtonSm
           className="items-center justify-center bg-red-500 text-center text-white hover:bg-red-700 active:bg-red-500"

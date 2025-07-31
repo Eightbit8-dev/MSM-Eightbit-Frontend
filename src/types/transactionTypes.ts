@@ -39,15 +39,21 @@ export interface ServiceRequest {
   brand: string;
   modelNumber: string;
   serialNumber: string;
-  // Optional only for  post and edit
-  complaintDetailsId?: number;
-  clientId?: number;
+  status?: string;
   machineEntryId?: number;
 }
-
 export interface ServiceRequestResponse {
   data: ServiceRequest[];
   page: number;
   totalPages: number;
   totalRecords: number;
+}
+
+export interface ServiceRequestPayload {
+  referenceNumber: string;
+  requestDate: string;
+  complaintDetailsId?: number;
+  otherComplaintDetails?: string;
+  clientId: number;
+  machineEntryId: number;
 }

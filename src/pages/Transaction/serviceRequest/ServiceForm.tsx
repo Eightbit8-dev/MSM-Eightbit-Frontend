@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Input, { DateInput } from "@/components/common/Input";
 import DropdownSelect, {
   type DropdownOption,
@@ -6,17 +6,18 @@ import DropdownSelect, {
 import ButtonSm from "@/components/common/Buttons";
 import { toast } from "react-toastify";
 import { useFetchClientOptions } from "@/queries/masterQueries/ClientQuery";
-import { useFetchMachineOptions } from "@/queries/TranscationQueries/MachineQuery";
+import { useFetchMachineById } from "@/queries/TranscationQueries/MachineQuery";
 import {
   useCreateServiceRequest,
   useEditServiceRequest,
 } from "@/queries/TranscationQueries/ServiceRequestQuery";
+import { useFetchProblemOptions } from "@/queries/masterQueries/Problem-types";
 import {
   convertToFrontendDate,
   convertToBackendDate,
 } from "@/utils/commonUtils";
 import type { ServiceRequest } from "@/types/transactionTypes";
-import { useFetchProblemOptions } from "@/queries/masterQueries/Problem-types";
+import { Html5Qrcode } from "html5-qrcode";
 
 type Mode = "create" | "edit" | "display";
 
@@ -33,52 +34,57 @@ const ServiceRequestFormPage: React.FC<Props> = ({
 }) => {
   const isView = mode === "display";
   const isEdit = mode === "edit";
+  const isCreate = mode === "create";
 
   const { mutateAsync: createServiceRequest } = useCreateServiceRequest();
   const { mutateAsync: editServiceRequest } = useEditServiceRequest();
 
-  const { data: clientOptions = [] } = useFetchClientOptions();
-  const { data: machineOptions = [] } = useFetchMachineOptions();
-  const { data: complaintOptions = [] } = useFetchProblemOptions();
+  const [machineEntryId, setMachineEntryId] = useState<number | null>(null);
+  const [clientId, setClientId] = useState<number | null>(null);
+  const [complaintDetailsId, setComplaintDetailsId] = useState<number | null>(
+    null,
+  );
 
   const [request, setRequest] = useState<ServiceRequest>(requestFromParent);
-
-  const [selectedClient, setSelectedClient] = useState<DropdownOption>({
-    id: 0,
-    label: "Select Client",
-  });
-  const [selectedMachine, setSelectedMachine] = useState<DropdownOption>({
-    id: 0,
-    label: "Select Machine",
-  });
   const [selectedComplaint, setSelectedComplaint] = useState<DropdownOption>({
     id: 0,
     label: "Select Complaint",
   });
 
+  const { data: complaintOptions = [] } = useFetchProblemOptions();
+  const { data: machineDetails } = useFetchMachineById(machineEntryId ?? 0);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (mode === "create") {
+      const now = new Date();
+      const year = now.getFullYear();
+      const timestamp = now.getTime();
+      const randomSuffix = Math.floor(Math.random() * 90 + 10);
+      const generatedRef = `SR-${year}-${timestamp}${randomSuffix}`;
+      const today = now.toLocaleDateString("en-GB").split("/").join("-");
+      setRequest((prev) => ({
+        ...prev,
+        referenceNumber: generatedRef,
+        requestDate: today,
+      }));
+    }
+  }, [mode]);
+
   useEffect(() => {
     if ((isEdit || isView) && requestFromParent) {
       setRequest(requestFromParent);
+      setMachineEntryId(requestFromParent.id || null);
 
-      setSelectedClient(
-        clientOptions.find(
-          (opt) => opt.label === requestFromParent.clientName,
-        ) || selectedClient,
+      const foundComplaint = complaintOptions.find(
+        (opt) => opt.label === requestFromParent.complaintDetails,
       );
-      setSelectedMachine(
-        machineOptions.find(
-          (opt) => opt.label === requestFromParent.machineType,
-        ) || selectedMachine,
-      );
-      if (requestFromParent.complaintDetails) {
-        setSelectedComplaint(
-          complaintOptions.find(
-            (opt) => opt.label === requestFromParent.complaintDetails,
-          ) || selectedComplaint,
-        );
+      if (foundComplaint) {
+        setSelectedComplaint(foundComplaint);
+        setComplaintDetailsId(foundComplaint.id);
       }
     }
-  }, [requestFromParent, clientOptions, machineOptions, complaintOptions]);
+  }, [requestFromParent, complaintOptions]);
 
   const updateField = (key: keyof ServiceRequest, value: string) => {
     setRequest((prev) => ({ ...prev, [key]: value }));
@@ -89,8 +95,7 @@ const ServiceRequestFormPage: React.FC<Props> = ({
     if (isView) return;
 
     if (
-      selectedClient.id === 0 ||
-      selectedMachine.id === 0 ||
+      !machineEntryId ||
       request.referenceNumber.trim() === "" ||
       request.requestDate.trim() === ""
     ) {
@@ -98,16 +103,18 @@ const ServiceRequestFormPage: React.FC<Props> = ({
       return;
     }
 
-    const payload: ServiceRequest = {
-      ...request,
-      clientId: selectedClient.id,
-      machineEntryId: selectedMachine.id,
-      complaintDetailsId: selectedComplaint.id || undefined,
+    const payload = {
+      referenceNumber: request.referenceNumber,
+      requestDate: request.requestDate,
+      complaintDetailsId: complaintDetailsId || undefined,
+      otherComplaintDetails: request.otherComplaintDetails || "",
+      clientId: clientId ?? 0,
+      machineEntryId: machineEntryId,
     };
 
     try {
       if (isEdit) {
-        await editServiceRequest(payload);
+        await editServiceRequest({ id: request.id, ...payload });
         toast.success("Service Request updated successfully!");
       } else {
         await createServiceRequest(payload);
@@ -119,27 +126,80 @@ const ServiceRequestFormPage: React.FC<Props> = ({
     }
   };
 
-  if ((isEdit || isView) && !requestFromParent) {
-    return <p className="p-4 text-red-600">No request data provided.</p>;
-  }
+  const parseQRData = (data: string): { [key: string]: string } => {
+    const result: { [key: string]: string } = {};
+    if (data.includes(":")) {
+      const lines = data.split("\n").filter((line) => line.trim() !== "");
+      for (const line of lines) {
+        const [key, value] = line.split(":");
+        if (key && value) {
+          result[key.trim()] = value.trim();
+        }
+      }
+    } else {
+      result["SL.NO"] = data.trim();
+    }
+    return result;
+  };
+
+  const handleQRImageUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const html5QrCode = new Html5Qrcode("qr-reader");
+    try {
+      const result = await html5QrCode.scanFile(file, true);
+      const parsed = parseQRData(result);
+      const serialNumber = parsed.serialNumber;
+      if (!serialNumber) throw new Error("Serial number not found in QR");
+
+      // You can now fetch the machineEntryId using the serial number
+      // For now we'll assume machineEntryId is same as serialNumber for simplicity
+      // Replace below line with actual API call if needed
+      setMachineEntryId(Number(serialNumber.replace(/[^\d]/g, "")));
+      toast.success(`QR Scanned: ${serialNumber}`);
+    } catch (err) {
+      console.error("QR scan error", err);
+      toast.error("Failed to scan QR code.");
+    }
+  };
 
   return (
     <div className="flex min-w-full flex-col gap-0 rounded-2xl bg-white">
       <h1 className="mb-6 text-2xl font-semibold capitalize">
         {mode} Service Request
       </h1>
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col gap-3 md:gap-4 lg:gap-4"
-      >
-        <div className="grid grid-cols-3 gap-2 md:gap-6">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        {isCreate && (
+          <div className="mb-2 flex flex-row items-center justify-between gap-2">
+            <input
+              type="file"
+              accept="image/*"
+              ref={fileInputRef}
+              onChange={handleQRImageUpload}
+              className="hidden"
+            />
+            <ButtonSm
+              type="button"
+              state="outline"
+              text="Scan QR Image"
+              onClick={() => fileInputRef.current?.click()}
+              className="border-blue-400 text-blue-500"
+            />
+            <div id="qr-reader" className="hidden" />
+          </div>
+        )}
+
+        <div className="grid grid-cols-2 gap-4">
           <Input
-            title="Reference No"
-            placeholder="Enter Reference Number"
+            title="Reference Number"
+            placeholder="Eg: SR-2025-0001"
             inputValue={request.referenceNumber}
             onChange={(val) => updateField("referenceNumber", val)}
             required
-            disabled={isView}
+            disabled
           />
           <DateInput
             title="Request Date"
@@ -148,33 +208,31 @@ const ServiceRequestFormPage: React.FC<Props> = ({
               updateField("requestDate", convertToBackendDate(val.toString()))
             }
             required
-            maxDate={new Date().toISOString().split("T")[0]}
             disabled={isView}
           />
-          <DropdownSelect
-            title="Client"
-            options={clientOptions}
-            selected={selectedClient}
-            onChange={(val) => {
-              setSelectedClient(val);
-              updateField("clientName", val.label);
-            }}
-            required
-            disabled={isView}
+          <Input
+            onChange={(val) => {}}
+            title="Client Name"
+            inputValue={machineDetails?.clientName || ""}
+            disabled
           />
-        </div>
-
-        <div className="grid grid-cols-3 gap-2 md:gap-6">
-          <DropdownSelect
-            title="Machine"
-            options={machineOptions}
-            selected={selectedMachine}
-            onChange={(val) => {
-              setSelectedMachine(val);
-              updateField("serialNumber", val.label);
-            }}
-            required
-            disabled={isView}
+          <Input
+            onChange={(val) => {}}
+            title="Machine Type"
+            inputValue={machineDetails?.machineType || ""}
+            disabled
+          />
+          <Input
+            onChange={(val) => {}}
+            title="Brand"
+            inputValue={machineDetails?.brand || ""}
+            disabled
+          />
+          <Input
+            onChange={(val) => {}}
+            title="Model Number"
+            inputValue={machineDetails?.modelNumber || ""}
+            disabled
           />
           <DropdownSelect
             title="Complaint"
@@ -182,24 +240,24 @@ const ServiceRequestFormPage: React.FC<Props> = ({
             selected={selectedComplaint}
             onChange={(val) => {
               setSelectedComplaint(val);
-              updateField("complaintDetails", val.label);
+              setComplaintDetailsId(val.id);
             }}
             disabled={isView}
           />
           <Input
-            title="Other Complaint (optional)"
-            placeholder="Enter if complaint not listed"
+            title="Other Complaint (Optional)"
+            placeholder="Enter details if not listed"
             inputValue={request.otherComplaintDetails || ""}
             onChange={(val) => updateField("otherComplaintDetails", val)}
             disabled={isView}
           />
         </div>
 
-        <div className="col-span-full mt-4 flex justify-end gap-4 md:gap-6">
+        <div className="col-span-full mt-4 flex justify-end gap-4">
           <ButtonSm
             type="button"
             state="outline"
-            className="boder-[1.5px] border-slate-300"
+            className="border-[1.5px] border-slate-300"
             onClick={() => setFormVisible(false)}
             text="Back"
           />

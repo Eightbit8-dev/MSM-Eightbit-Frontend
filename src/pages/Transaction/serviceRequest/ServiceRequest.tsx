@@ -12,8 +12,9 @@ import type { ServiceRequest } from "@/types/transactionTypes";
 import { useState } from "react";
 import { useFetchServiceRequests } from "@/queries/TranscationQueries/ServiceRequestQuery";
 import ServiceRequestFormPage from "./ServiceForm";
+import { DeleteServiceRequestDialogBox } from "./ServiceRequestDelete.Dialog";
 
-const ServiceRequestPage = () => {
+  const ServiceRequestPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [selectedRequest, setSelectedRequest] = useState<ServiceRequest | null>(
@@ -88,14 +89,6 @@ const ServiceRequestPage = () => {
             iconPosition="right"
             imgUrl="/icons/plus-icon.svg"
           />
-          <ButtonSm
-            className="font-medium text-white opacity-100"
-            text={isSm ? "" : "Import"}
-            state="default"
-            type="button"
-            iconPosition="right"
-            imgUrl="/icons/ArrowDown.svg"
-          />
         </div>
       </div>
 
@@ -137,10 +130,12 @@ const ServiceRequestPage = () => {
               </section>
             </div>
 
-            <div className="tables flex min-h-[300px] w-full flex-col overflow-x-scroll rounded-[9px] bg-white shadow-sm">
-              <header className="header flex min-w-max flex-row items-center justify-between gap-2 bg-slate-200 px-3 py-3">
-                <div className="flex w-[70px] min-w-[70px] items-center justify-between gap-2">
-                  <p className="w-[40px] text-sm font-semibold text-zinc-900">
+            <div className="tables flex min-h-[300px] w-full flex-col overflow-x-auto rounded-[9px] bg-white shadow-sm">
+              {/* Header */}
+              <header className="header flex min-w-max flex-row items-center bg-slate-200 px-3 py-3">
+                {/* S.No + Checkbox */}
+                <div className="flex w-[70px] min-w-[70px] items-center justify-start gap-2">
+                  <p className="selft-center w-[40px] text-sm font-semibold text-zinc-900">
                     S.No
                   </p>
                   <CheckboxInput
@@ -149,35 +144,35 @@ const ServiceRequestPage = () => {
                     label=""
                   />
                 </div>
-                {[
-                  "Ref No",
-                  "Request Date",
-                  "Client",
-                  "Machine Type",
-                  "Complaint",
-                  "Action",
-                ].map((label, index) => (
-                  <p
-                    key={index}
-                    className={`text-start text-sm font-semibold text-zinc-900 ${
-                      label === "Ref No"
-                        ? "w-[120px] min-w-[120px]"
-                        : label === "Request Date"
-                          ? "w-[140px] min-w-[140px]"
-                          : label === "Client"
-                            ? "w-[160px] min-w-[160px]"
-                            : label === "Machine Type"
-                              ? "w-[150px] min-w-[150px]"
-                              : label === "Complaint"
-                                ? "w-full min-w-max"
-                                : "min-w-[120px]"
-                    }`}
-                  >
-                    {label}
+
+                {/* Column Headers */}
+                <div className="flex w-full flex-row gap-2">
+                  {[
+                    "Ref No",
+                    "Request Date",
+                    "Client",
+                    "Machine Type",
+                    "Brand",
+                    "Model Number",
+                    "Complaint",
+                    "Status",
+                  ].map((label, index) => (
+                    <p
+                      key={index}
+                      className="min-w-[70px] flex-1 self-center text-sm font-semibold break-words text-zinc-900"
+                    >
+                      {label}
+                    </p>
+                  ))}
+
+                  {/* Action Header */}
+                  <p className="min-w-[80px] text-sm font-semibold text-zinc-900">
+                    Action
                   </p>
-                ))}
+                </div>
               </header>
 
+              {/* No data message */}
               {paginatedData.length === 0 ? (
                 <h2 className="text-md my-auto text-center font-medium text-zinc-600">
                   No Entries Found
@@ -186,54 +181,64 @@ const ServiceRequestPage = () => {
                 paginatedData.map((item, index) => (
                   <div
                     key={item.id}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                    }}
-                    className="flex w-full cursor-pointer items-center justify-between gap-2 bg-white px-3 py-2 text-zinc-700 hover:bg-slate-50"
+                    className="flex min-w-full flex-row items-start gap-2 border-t px-3 py-2 text-sm text-zinc-700 hover:bg-slate-50"
                   >
-                    <div className="items-cener flex w-[70px] flex-row justify-between gap-1">
-                      <p className="w-[45px] text-sm">
+                    {/* S.No + Checkbox */}
+                    <div className="flex w-[70px] min-w-[70px] items-center justify-start gap-2 pt-1">
+                      <p className="w-[40px]">
                         {(currentPage - 1) * itemsPerPage + index + 1}
                       </p>
                       <CheckboxInput
-                        key={item.id}
-                        checked={selectedIds.some((id) => id === item.id)}
+                        checked={selectedIds.includes(item.id)}
                         onChange={() => handleCheckboxChange(item.id)}
                         label=""
                       />
                     </div>
-                    <p className="min-w-[120px] text-sm">
-                      {item.referenceNumber}
-                    </p>
-                    <p className="min-w-[140px] text-sm">{item.requestDate}</p>
-                    <p className="min-w-[160px] text-sm">{item.clientName}</p>
-                    <p className="min-w-[150px] text-sm">{item.machineType}</p>
-                    <p className="w-full min-w-max text-sm">
-                      {item.complaintDetails}
-                    </p>
 
-                    <div className="flex min-w-[120px] flex-row gap-2">
-                      <ButtonSm
-                        className="aspect-square scale-90 border-1 border-blue-500 bg-blue-500/10"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedRequest(item);
-                          setFormState("edit");
-                          setIsFormOpen(true);
-                        }}
-                        state="outline"
-                        imgUrl="/icons/edit-icon.svg"
-                      />
-                      <ButtonSm
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedRequest(item);
-                          setIsDeleteDialogOpen(true);
-                        }}
-                        className="aspect-square scale-90 border-1 border-red-500 bg-red-100 text-red-500 hover:bg-red-100 active:bg-red-100"
-                        state="default"
-                        imgUrl="/icons/delete-icon.svg"
-                      />
+                    {/* Data Columns */}
+                    <div className="flex w-full flex-row gap-2">
+                      {[
+                        item.referenceNumber,
+                        item.requestDate,
+                        item.clientName,
+                        item.machineType,
+                        item.brand,
+                        item.modelNumber,
+                        item.complaintDetails,
+                        "Pending",
+                      ].map((val, idx) => (
+                        <p
+                          key={idx}
+                          className="min-w-[70px] flex-1 pt-1 break-words"
+                        >
+                          {val}
+                        </p>
+                      ))}
+
+                      {/* Action Buttons */}
+                      <div className="flex min-w-[80px] items-center justify-start gap-2 pt-1">
+                        <ButtonSm
+                          className="aspect-square scale-90 border-1 border-blue-500 bg-blue-500/10"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedRequest(item);
+                            setFormState("edit");
+                            setIsFormOpen(true);
+                          }}
+                          state="outline"
+                          imgUrl="/icons/edit-icon.svg"
+                        />
+                        <ButtonSm
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedRequest(item);
+                            setIsDeleteDialogOpen(true);
+                          }}
+                          className="aspect-square scale-90 border-1 border-red-500 bg-red-100 text-red-500 hover:bg-red-100 active:bg-red-100"
+                          state="default"
+                          imgUrl="/icons/delete-icon.svg"
+                        />
+                      </div>
                     </div>
                   </div>
                 ))
@@ -262,9 +267,12 @@ const ServiceRequestPage = () => {
         )}
       </div>
 
-      {/* <AnimatePresence>
+      <AnimatePresence>
         {isDeleteDialogOpen && selectedRequest && (
-          <DialogBox setToggleDialogueBox={setIsFormOpen} className="lg:min-w-[600px]">
+          <DialogBox
+            setToggleDialogueBox={setIsFormOpen}
+            className="p-3 lg:min-w-[400px]"
+          >
             <DeleteServiceRequestDialogBox
               request={selectedRequest}
               setIsDeleteDialogOpen={setIsDeleteDialogOpen}
@@ -274,7 +282,7 @@ const ServiceRequestPage = () => {
             />
           </DialogBox>
         )}
-      </AnimatePresence> */}
+      </AnimatePresence>
 
       <AnimatePresence>
         {isFormOpen && selectedRequest && (

@@ -114,6 +114,39 @@ export const useFetchMachine = (page: number, limit: number) => {
   });
 };
 
+export const useFetchMachineById = (machineId?: number) => {
+  const fetchMachine = async (): Promise<MachineDetails> => {
+    if (!machineId) throw new Error("Machine ID is required");
+
+    const token = Cookies.get("token");
+    if (!token) throw new Error("Unauthorized to perform this action.");
+
+    const res = await axios.get<MachineDetails>(
+      `${apiRoutes.machineEntry}/${machineId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    if (res.status !== 200) {
+      throw new Error("Failed to fetch machine details");
+      toast.error("Failed to fetch machine details");
+    }
+
+    return res.data;
+  };
+
+  return useQuery({
+    queryKey: ["machineById", machineId],
+    queryFn: fetchMachine,
+    enabled: !!machineId,
+    staleTime: 1000 * 60 * 5,
+    retry: 1,
+  });
+};
+
 export const useFetchMachineOptions = () => {
   const fetchAllMachine = async (): Promise<DropdownOption[]> => {
     try {
@@ -132,7 +165,7 @@ export const useFetchMachineOptions = () => {
 
       return res.data.data.map((machine: MachineDetails) => ({
         id: machine.id,
-        label: machine.machineType,
+        label: machine.modelNumber,
       }));
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {

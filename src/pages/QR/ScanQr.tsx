@@ -1,6 +1,6 @@
 // components/QRScanner.tsx
 import React, { useEffect, useRef, useState } from "react";
-import { Html5QrcodeScanner } from "html5-qrcode";
+import { Html5Qrcode, Html5QrcodeScanner } from "html5-qrcode";
 
 type QRData = {
   [key: string]: string;
@@ -9,17 +9,21 @@ type QRData = {
 const QRScanner: React.FC = () => {
   const [scannedText, setScannedText] = useState<string | null>(null);
   const [parsedData, setParsedData] = useState<QRData | null>(null);
-  const scannerRef = useRef<HTMLDivElement | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const parseQRData = (data: string): QRData => {
-    const lines = data.split("\n").filter((line) => line.trim() !== "");
     const result: QRData = {};
 
-    for (const line of lines) {
-      const [key, value] = line.split(":");
-      if (key && value) {
-        result[key.trim()] = value.trim();
+    if (data.includes(":")) {
+      const lines = data.split("\n").filter((line) => line.trim() !== "");
+      for (const line of lines) {
+        const [key, value] = line.split(":");
+        if (key && value) {
+          result[key.trim()] = value.trim();
+        }
       }
+    } else {
+      result["serialNumber"] = data.trim();
     }
 
     return result;
@@ -28,11 +32,8 @@ const QRScanner: React.FC = () => {
   useEffect(() => {
     const scanner = new Html5QrcodeScanner(
       "qr-reader",
-      {
-        fps: 10,
-        qrbox: { width: 250, height: 250 },
-      },
-      false
+      { fps: 10, qrbox: { width: 250, height: 250 } },
+      false,
     );
 
     scanner.render(
@@ -40,11 +41,11 @@ const QRScanner: React.FC = () => {
         setScannedText(decodedText);
         const parsed = parseQRData(decodedText);
         setParsedData(parsed);
-        scanner.clear();
+        scanner.clear(); // stop scanner after success
       },
-      (errorMessage) => {
-        console.warn("QR Code scan error", errorMessage);
-      }
+      (err) => {
+        console.warn("Scan error", err);
+      },
     );
 
     return () => {
@@ -52,16 +53,47 @@ const QRScanner: React.FC = () => {
     };
   }, []);
 
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const html5QrCode = new Html5Qrcode("qr-reader");
+    try {
+      const result = await html5QrCode.scanFile(file, true);
+      setScannedText(result);
+      setParsedData(parseQRData(result));
+    } catch (err) {
+      console.error("Image scan error", err);
+    }
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center p-6 min-h-screen bg-gradient-to-br from-white to-blue-50">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-white to-blue-50 p-6">
       <div
         id="qr-reader"
-        className="custom-scanner-ui w-full max-w-md border-2 border-indigo-300 rounded-xl shadow-lg p-4 bg-white"
+        className="custom-scanner-ui w-full max-w-md rounded-xl border-2 border-indigo-300 bg-white p-4 shadow-lg"
       />
 
+      <input
+        type="file"
+        accept="image/*"
+        ref={fileInputRef}
+        onChange={handleImageUpload}
+        className="hidden"
+      />
+
+      <button
+        onClick={() => fileInputRef.current?.click()}
+        className="mt-4 rounded bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700"
+      >
+        Upload QR Image
+      </button>
+
       {parsedData && (
-        <div className="mt-8 w-full max-w-md border border-gray-200 rounded-lg p-4 bg-white shadow-md">
-          <h2 className="text-xl font-bold mb-4 text-indigo-700">Machine Details</h2>
+        <div className="mt-8 w-full max-w-md rounded-lg border border-gray-200 bg-white p-4 shadow-md">
+          <h2 className="mb-4 text-xl font-bold text-indigo-700">
+            Machine Details
+          </h2>
           <ul className="space-y-2">
             {Object.entries(parsedData).map(([key, value]) => (
               <li key={key} className="flex justify-between">
