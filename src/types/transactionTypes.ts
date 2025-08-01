@@ -10,6 +10,7 @@ export interface MachineDetails {
   machineType: string;
   brand: string;
   modelNumber: string;
+  productId: number;
 }
 
 export interface MachineResponse {

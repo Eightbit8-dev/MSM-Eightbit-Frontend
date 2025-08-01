@@ -371,17 +371,20 @@ const getProductDropdownOptions = async ({
 
   const rawData = res.data.data;
 
-  // 🧠 Conditional mapping based on level
-  if (level === "models") {
-    // Expecting models to be in format: [{ id, label }, ...]
-    return rawData as DropdownOption[];
-  } else {
-    // Map raw string array (e.g., brand names) into DropdownOption[]
-    return (rawData as string[]).map((item, idx) => ({
-      id: idx + 1,
-      label: item,
-    }));
-  }
+if (level === "models") {
+  return (rawData as { productId: string; modelNumber: number }[]).map(
+    (item) => ({
+      id: Number(item.productId), // Ensure it's number
+      label: item.modelNumber.toString(), // Convert model number to string if needed
+    }),
+  );
+} else {
+  return (rawData as string[]).map((item, idx) => ({
+    id: idx + 1,
+    label: item,
+  }));
+}
+
 };
 
 export const useFetchProductDropdownOptions = (

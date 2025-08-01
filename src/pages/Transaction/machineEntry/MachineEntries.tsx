@@ -72,6 +72,7 @@ const MachineEntry = () => {
     clientName: "",
     machineType: "",
     brand: "",
+    productId:0,
     modelNumber: "",
   };
 
