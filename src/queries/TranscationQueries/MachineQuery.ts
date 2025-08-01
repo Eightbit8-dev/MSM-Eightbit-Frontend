@@ -310,3 +310,64 @@ export const useDeleteMachineEntry = () => {
     },
   });
 };
+
+// ----------------------------
+
+type MachineDropdownParams = {
+  level: "brands" | "models" | "serials";
+  type: string;
+  brand?: string;
+  model?: string;
+};
+
+const getMachineDropdownOptions = async ({
+  level,
+  type,
+  brand,
+  model,
+}: MachineDropdownParams): Promise<DropdownOption[]> => {
+  const token = Cookies.get("token");
+  if (!token) throw new Error("Unauthorized");
+
+  const endpoint = `/api/admin/machine/${level}`;
+  const params: Record<string, string> = { type };
+  if (brand) params.brand = brand;
+  if (model) params.model = model;
+
+  const res = await axiosInstance.get(endpoint, {
+    params,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (res.status !== 200) {
+    throw new Error(res.data?.message || `Failed to fetch ${level}`);
+  }
+
+  const rawList: string[] = res.data.data;
+
+  // 🧙 Map into DropdownOption with index as ID
+  return rawList.map((item, idx) => ({
+    id: idx + 1,
+    label: item,
+  }));
+};
+
+export const useFetchMachineDropdownOptions = (
+  params: MachineDropdownParams,
+) => {
+  const { level, type, brand, model } = params;
+
+  return useQuery({
+    queryKey: ["machineDropdown", level, type, brand, model],
+    queryFn: () => getMachineDropdownOptions(params),
+    staleTime: 0,
+    retry: 1,
+    enabled:
+      !!type &&
+      !!level &&
+      (level !== "models" || !!brand) &&
+      (level !== "serials" || !!model),
+  });
+};

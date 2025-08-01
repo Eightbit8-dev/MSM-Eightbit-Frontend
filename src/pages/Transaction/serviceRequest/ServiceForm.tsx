@@ -5,7 +5,10 @@ import DropdownSelect, {
 } from "@/components/common/DropDown";
 import ButtonSm from "@/components/common/Buttons";
 import { toast } from "react-toastify";
-import { useFetchMachineById } from "@/queries/TranscationQueries/MachineQuery";
+import {
+  useFetchMachineById,
+  useFetchMachineDropdownOptions,
+} from "@/queries/TranscationQueries/MachineQuery";
 import {
   useCreateServiceRequest,
   useEditServiceRequest,
@@ -62,7 +65,35 @@ const ServiceRequestFormPage: React.FC<Props> = ({
     label: "Select Complaint",
   });
 
-  // ------------------ Init Stuff ------------------
+  const defaultOption: DropdownOption = { id: 0, label: "Select" };
+  const [selectedType, setSelectedType] =
+    useState<DropdownOption>(defaultOption);
+  const [selectedBrand, setSelectedBrand] =
+    useState<DropdownOption>(defaultOption);
+  const [selectedModel, setSelectedModel] =
+    useState<DropdownOption>(defaultOption);
+  const [selectedSerial, setSelectedSerial] =
+    useState<DropdownOption>(defaultOption);
+
+  const { data: brandOptions = [] } = useFetchMachineDropdownOptions({
+    level: "brands",
+    type: selectedType?.label || "",
+  });
+
+  const { data: modelOptions = [] } = useFetchMachineDropdownOptions({
+    level: "models",
+    type: selectedType?.label || "",
+    brand: selectedBrand?.label || "",
+  });
+
+  const { data: serialOptions = [] } = useFetchMachineDropdownOptions({
+    level: "serials",
+    type: selectedType?.label || "",
+    brand: selectedBrand?.label || "",
+    model: selectedModel?.label || "",
+  });
+
+
   useEffect(() => {
     if (isCreate) {
       const now = new Date();
@@ -95,7 +126,6 @@ const ServiceRequestFormPage: React.FC<Props> = ({
     }
   }, [requestFromParent, complaintOptions]);
 
-  // ------------------ QR Logic ------------------
   const parseQRData = (data: string): { [key: string]: string } => {
     const result: { [key: string]: string } = {};
     const lines = data.split("\n").filter((line) => line.trim() !== "");
@@ -164,6 +194,7 @@ const ServiceRequestFormPage: React.FC<Props> = ({
       toast.error("Failed to scan image QR");
     }
   };
+
   const updateField = (key: keyof ServiceRequest, value: string) => {
     setRequest((prev) => ({ ...prev, [key]: value }));
   };
@@ -198,7 +229,6 @@ const ServiceRequestFormPage: React.FC<Props> = ({
     };
   }, [showQRDialog]);
 
-  // ------------------ Submit ------------------
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isView) return;
@@ -219,6 +249,10 @@ const ServiceRequestFormPage: React.FC<Props> = ({
       otherComplaintDetails: request.otherComplaintDetails || "",
       clientId: clientId ?? 0,
       machineEntryId,
+      machineType: selectedType?.label || "",
+      brand: selectedBrand?.label || "",
+      modelNumber: selectedModel?.label || "",
+      serialNumber: selectedSerial?.label || "",
     };
 
     try {
@@ -235,50 +269,48 @@ const ServiceRequestFormPage: React.FC<Props> = ({
     }
   };
 
-  // ------------------ Render ------------------
   return (
-    <div className="flex min-w-full py-30 max-h-screen overflow-y-auto flex-col rounded-2xl bg-white p-4">
+    <div className="flex max-h-screen min-w-full flex-col overflow-y-auto rounded-2xl bg-white p-4 py-30 md:overflow-visible md:py-0">
+      <div className="flex items-center justify-between">
+        <h1 className="mb-6 text-2xl font-semibold capitalize">
+          New Service Request
+        </h1>
 
-     <div className="flex items-center justify-between">
-       <h1 className="mb-6 text-2xl font-semibold capitalize">
-         New Service Request
-      </h1>
-
-      {isCreate && (
-        <>
-          <ButtonSm
-            type="button"
-            text="Scan QR"
-            state="default"
-            className="mb-4 w-fit border-blue-400 text-white"
-            onClick={() => setShowQRDialog(true)}
-          />
-          {showQRDialog && (
-            <div className="bg-opacity-40 fixed inset-0 z-50 flex items-center justify-center bg-black">
-              <div className="w-[95%] max-w-md rounded-lg bg-white p-4 shadow-xl">
-                <div className="mb-4 flex items-center justify-between">
-                  <h2 className="text-lg font-semibold text-slate-700">
-                    Scan QR
-                  </h2>
-                  <button onClick={() => setShowQRDialog(false)}>✖</button>
+        {isCreate && (
+          <>
+            <ButtonSm
+              type="button"
+              text="Scan QR"
+              state="default"
+              className="mb-4 w-fit border-blue-400 text-white"
+              onClick={() => setShowQRDialog(true)}
+            />
+            {showQRDialog && (
+              <div className="bg-opacity-40 bg fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
+                <div className="w-[95%] max-w-md rounded-lg bg-white p-4 shadow-xl">
+                  <div className="mb-4 flex items-center justify-between">
+                    <h2 className="text-lg font-semibold text-slate-700">
+                      Scan QR
+                    </h2>
+                    <button onClick={() => setShowQRDialog(false)}>✖</button>
+                  </div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleQRImageUpload}
+                    className="mb-4 block w-full rounded border p-1"
+                  />
+                  <div id="qr-reader-live" className="rounded-md border p-2" />
+                  <div id="qr-reader-img" className="hidden" />
                 </div>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleQRImageUpload}
-                  className="mb-4 block w-full rounded border p-1"
-                />
-                <div id="qr-reader-live" className="rounded-md border p-2" />
-                <div id="qr-reader-img" className="hidden" />
               </div>
-            </div>
-          )}
-        </>
-      )}
-     </div>
+            )}
+          </>
+        )}
+      </div>
 
       <form onSubmit={handleSubmit} className="flex min-w-full flex-col gap-4">
-        <div className="grid w-full grid-cols-1  md:grid-cols-2 gap-4">
+        <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2">
           <Input
             title="Reference Number"
             inputValue={request.referenceNumber}
@@ -295,36 +327,49 @@ const ServiceRequestFormPage: React.FC<Props> = ({
             disabled={isView}
             required
           />
-          <Input
-            title="Client Name"
-            inputValue={request.clientName || ""}
-            disabled
-            onChange={() => {}}
-          />
-          <Input
+          <DropdownSelect
             title="Machine Type"
-            inputValue={
-              machineDetails?.machineType || request.machineType || ""
-            }
-            disabled
-            onChange={() => {}}
+            options={machineO}
+            selected={selectedType}
+            onChange={(val) => {
+              setSelectedType(val);
+              setSelectedBrand(defaultOption);
+              setSelectedModel(defaultOption);
+              setSelectedSerial(defaultOption);
+            }}
+            disabled={isView}
           />
-          <Input
+          <DropdownSelect
             title="Brand"
-            inputValue={machineDetails?.brand || request.brand || ""}
-            disabled
-            onChange={() => {}}
+            options={brandOptions}
+            selected={selectedBrand}
+            onChange={(val) => {
+              setSelectedBrand(val);
+              setSelectedModel(defaultOption);
+              setSelectedSerial(defaultOption);
+            }}
+            disabled={isView || !selectedType}
           />
-          <Input
-            title="Model Number"
-            inputValue={
-              machineDetails?.modelNumber || request.modelNumber || ""
-            }
-            disabled
-            onChange={() => {}}
+          <DropdownSelect
+            title="Model"
+            options={modelOptions}
+            selected={selectedModel}
+            onChange={(val) => {
+              setSelectedModel(val);
+              setSelectedSerial(defaultOption);
+            }}
+            disabled={isView || !selectedBrand}
+          />
+          <DropdownSelect
+            title="Serial Number"
+            options={serialOptions}
+            selected={selectedSerial}
+            onChange={(val) => setSelectedSerial(val)}
+            disabled={isView || !selectedModel}
           />
           <DropdownSelect
             title="Complaint"
+            direction="up"
             options={complaintOptions}
             selected={selectedComplaint}
             onChange={(val) => {
