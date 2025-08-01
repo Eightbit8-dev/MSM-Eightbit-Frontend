@@ -99,11 +99,9 @@ const ServiceRequestFormPage: React.FC<Props> = ({
 
   useEffect(() => {
     if (isCreate) {
-      const now = new Date();
-      const year = now.getFullYear();
-      const timestamp = now.getTime();
-      const generatedRef = `SR-${year}-${timestamp}`;
-      const today = now.toLocaleDateString("en-GB").split("/").join("-");
+      const rand = Math.floor(10000 + Math.random() * 90000);
+      const generatedRef = `SR-${rand}`; // e.g., "SR48392"
+      const today = new Date().toLocaleDateString("en-GB").split("/").join("-");
 
       setRequest((prev) => ({
         ...prev,
@@ -128,28 +126,29 @@ const ServiceRequestFormPage: React.FC<Props> = ({
     }
   }, [requestFromParent, complaintOptions]);
 
-  const parseQRData = (data: string): { [key: string]: string } => {
-    const result: { [key: string]: string } = {};
-    const lines = data.split("\n").filter((line) => line.trim() !== "");
-    for (const line of lines) {
-      const match = line.match(/([^:=#]+)[\s:=#]+(.+)/);
-      if (match) {
-        const rawKey = match[1].trim().toUpperCase();
-        const rawValue = match[2].trim();
-        const keyMap: Record<string, string> = {
-          MACHINE_ENTRY_ID: "machineEntryId",
-          "SERIAL #": "serialNumber",
-          "REF #": "referenceNumber",
-          CLIENT: "clientName",
-          TYPE: "machineType",
-          BRAND: "brand",
-          MODEL: "modelNumber",
-          INSTALLED: "installationDate",
-        };
-        const normalizedKey = keyMap[rawKey] ?? rawKey.toLowerCase();
-        result[normalizedKey] = rawValue;
-      }
+  const parseQRData = (data: string): Record<string, string> => {
+    const result: Record<string, string> = {};
+    const keyMap: Record<string, string> = {
+      MACHINE_ENTRY_ID: "machineEntryId",
+      "SERIAL #": "serialNumber",
+      "REF #": "referenceNumber",
+      CLIENT: "clientName",
+      TYPE: "machineType",
+      BRAND: "brand",
+      MODEL: "modelNumber",
+      INSTALLED: "installationDate",
+    };
+
+    // Match all key-value like pairs (e.g., KEY: value, KEY= value, KEY #: value)
+    const regex = /([A-Z_ #]+)[\s:=]+([^:\n\r]+)/gi;
+    let match;
+    while ((match = regex.exec(data)) !== null) {
+      const rawKey = match[1].trim().toUpperCase();
+      const value = match[2].trim();
+      const normalizedKey = keyMap[rawKey] ?? rawKey.toLowerCase();
+      result[normalizedKey] = value;
     }
+
     return result;
   };
 
@@ -157,14 +156,15 @@ const ServiceRequestFormPage: React.FC<Props> = ({
     const parsed = parseQRData(data);
     const entryId = parsed.machineEntryId;
     const clientName = parsed.clientName;
-    toast.success(`QR Scanned: client ID ${clientName}`);
-
     const clieendId = clientOptions.find(
       (client) => client.label === clientName,
     );
 
-    setSelectedClient({ id: clieendId?.id || 0, label: "" });
     setMachineEntryId(Number(entryId));
+    setSelectedBrand({ id: 404, label: parsed.brand || "" });
+    setSelectedModel({ id: 404, label: parsed.modelNumber || "" });
+    setSelectedType({ id: 404, label: parsed.machineType || "" });
+    setSelectedSerial({ id: 404, label: parsed.serialNumber || "" });
 
     if (!entryId) {
       toast.error("QR missing machineEntryId");
@@ -186,7 +186,6 @@ const ServiceRequestFormPage: React.FC<Props> = ({
     if (matchedClient) setClientId(matchedClient.id);
     else toast.warn(`Client '${clientName}' not found`);
 
-    toast.success(`QR Scanned: Machine ID ${entryId}`);
     setShowQRDialog(false);
   };
 
@@ -334,7 +333,7 @@ const ServiceRequestFormPage: React.FC<Props> = ({
             disabled={isView}
             required
           />
-                    <DropdownSelect
+          <DropdownSelect
             title="Client"
             direction="down"
             options={clientOptions}
@@ -405,7 +404,6 @@ const ServiceRequestFormPage: React.FC<Props> = ({
             onChange={(val) => updateField("otherComplaintDetails", val)}
             disabled={isView}
           /> */}
-
         </div>
 
         <div className="mt-4 flex justify-end gap-4">

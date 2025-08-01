@@ -74,9 +74,9 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
 
   const generateRefNo = () => {
     const now = new Date();
-    const datePart = now.toISOString().slice(0, 10).replace(/-/g, "");
-    const randomPart = Math.floor(1000 + Math.random() * 9000);
-    return `REF-${datePart}-${randomPart}`;
+    const datePart = `${now.getFullYear().toString().slice(-1)}${now.getMonth() + 1}${now.getDate()}`; // e.g., "581" for Aug 1, 2025
+    const randomPart = Math.floor(10 + Math.random() * 90); // Two-digit random number (10–99)
+    return `R-${datePart}${randomPart}`; // e.g., "R-58147"
   };
 
   useEffect(() => {
@@ -94,13 +94,15 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
       setMachine(machineFromParent);
 
       setSelectedClient(
-        clientOptions.find((opt) => opt.label === machineFromParent.clientName) ||
-          { id: 0, label: "Select Client" },
+        clientOptions.find(
+          (opt) => opt.label === machineFromParent.clientName,
+        ) || { id: 0, label: "Select Client" },
       );
 
       setSelectedType(
-        typeOptions.find((opt) => opt.label === machineFromParent.machineType) ||
-          { id: 0, label: "Select Machine Type" },
+        typeOptions.find(
+          (opt) => opt.label === machineFromParent.machineType,
+        ) || { id: 0, label: "Select Machine Type" },
       );
 
       setSelectedBrand(
