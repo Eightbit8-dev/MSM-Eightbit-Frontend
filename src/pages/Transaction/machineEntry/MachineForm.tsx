@@ -76,6 +76,7 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
       brand: selectedBrand.label,
     });
 
+  // Initialize dropdowns from machineFromParent
   useEffect(() => {
     if ((isEdit || isView) && machineFromParent) {
       setMachine(machineFromParent);
@@ -105,6 +106,22 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
       );
     }
   }, [machineFromParent, clientOptions, typeOptions]);
+
+  // Populate selected brand once brandOptions arrive
+  useEffect(() => {
+    if (machineFromParent.brand) {
+      const brandOption = brandOptions.find((opt) => opt.label === machineFromParent.brand);
+      if (brandOption) setSelectedBrand(brandOption);
+    }
+  }, [brandOptions]);
+
+  // Populate selected model once modelOptions arrive
+  useEffect(() => {
+    if (machineFromParent.modelNumber) {
+      const modelOption = modelOptions.find((opt) => opt.label === machineFromParent.modelNumber);
+      if (modelOption) setSelectedModel(modelOption);
+    }
+  }, [modelOptions]);
 
   const updateField = (key: keyof MachineDetails, value: string) => {
     setMachine((prev) => ({ ...prev, [key]: value }));
@@ -211,6 +228,7 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
             }}
             required
             disabled={isView || selectedType.id === 0}
+            
           />
           <DropdownSelect
             title="Model"
