@@ -4,7 +4,7 @@ import DropdownSelect, { type DropdownOption } from "@/components/common/DropDow
 import ButtonSm from "@/components/common/Buttons";
 import { toast } from "react-toastify";
 import { useEditMachine, useCreateMachine } from "@/queries/TranscationQueries/MachineQuery";
-import { useFetchProductsType } from "@/queries/masterQueries/ProductQuery";
+import { useFetchProductsType , useFetchProductDropdownOptions } from "@/queries/masterQueries/ProductQuery";
 import { useFetchClientOptions } from "@/queries/masterQueries/ClientQuery";
 import { convertToBackendDate, convertToFrontendDate } from "@/utils/commonUtils";
 import type { MachineDetails } from "@/types/transactionTypes";
@@ -33,24 +33,52 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
 
   const [machine, setMachine] = useState<MachineDetails>(machineFromParent);
 
-  const [selectedClient, setSelectedClient] = useState<DropdownOption>({
-    id: 0,
-    label: "Select Client",
+  const [selectedClient, setSelectedClient] = useState<DropdownOption>({ id: 0, label: "Select Client" });
+  const [selectedType, setSelectedType] = useState<DropdownOption>({ id: 0, label: "Select Machine Type" });
+  const [selectedBrand, setSelectedBrand] = useState<DropdownOption>({ id: 0, label: "Select Brand" });
+  const [selectedModel, setSelectedModel] = useState<DropdownOption>({ id: 0, label: "Select Model" });
+
+  // Fetch brand options based on selected machine type
+  const {
+    data: brandOptions = [],
+    isFetching: isFetchingBrands,
+  } = useFetchProductDropdownOptions({
+    level: "brands",
+    type: selectedType.label,
   });
 
-  const [selectedType, setSelectedType] = useState<DropdownOption>({
-    id: 0,
-    label: "Select Machine",
+  // Fetch model options based on selected brand and type
+  const {
+    data: modelOptions = [],
+    isFetching: isFetchingModels,
+  } = useFetchProductDropdownOptions({
+    level: "models",
+    type: selectedType.label,
+    brand: selectedBrand.label,
   });
 
   useEffect(() => {
     if ((isEdit || isView) && machineFromParent) {
       setMachine(machineFromParent);
+
       setSelectedClient(
-        clientOptions.find((opt) => opt.label === machineFromParent.clientName) || selectedClient
+        clientOptions.find((opt) => opt.label === machineFromParent.clientName) || { id: 0, label: "Select Client" }
       );
+
       setSelectedType(
-        typeOptions.find((opt) => opt.label === machineFromParent.machineType) || selectedType
+        typeOptions.find((opt) => opt.label === machineFromParent.machineType) || { id: 0, label: "Select Machine Type" }
+      );
+
+      setSelectedBrand(
+        machineFromParent.brand
+          ? { id: 1, label: machineFromParent.brand }
+          : { id: 0, label: "Select Brand" }
+      );
+
+      setSelectedModel(
+        machineFromParent.modelNumber
+          ? { id: 1, label: machineFromParent.modelNumber }
+          : { id: 0, label: "Select Model" }
       );
     }
   }, [machineFromParent, clientOptions, typeOptions]);
@@ -67,7 +95,9 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
       machine.slNo.trim() === "" ||
       machine.serialNumber.trim() === "" ||
       selectedClient.id === 0 ||
-      selectedType.id === 0
+      selectedType.id === 0 ||
+      selectedBrand.id === 0 ||
+      selectedModel.id === 0
     ) {
       toast.error("Please fill all required fields.");
       return;
@@ -77,9 +107,12 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
       ...machine,
       clientId: selectedClient.id,
       productId: selectedType.id,
+      brand: selectedBrand.label,
+      model: selectedModel.label,
     };
 
     const onSuccess = () => {
+      toast.success(`Machine ${isEdit ? "updated" : "created"} successfully!`);
       setFormVisible(false);
     };
 
@@ -95,7 +128,7 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
     <div className="flex min-w-full flex-col gap-0 rounded-2xl bg-white">
       <h1 className="mb-6 text-2xl font-semibold capitalize">{mode} Machine</h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-3 md:gap-4 lg:gap-4">
-        <div className="grid-container grid grid-cols-3 gap-2 md:gap-6">
+        <div className="grid grid-cols-3 gap-2 md:gap-6">
           <Input
             title="Ref No"
             placeholder="Enter Ref No"
@@ -107,9 +140,7 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
           <DateInput
             title="Ref Date"
             value={convertToFrontendDate(machine.installationDate)}
-            onChange={(val) =>
-              updateField("installationDate", convertToBackendDate(val.toString()))
-            }
+            onChange={(val) => updateField("installationDate", convertToBackendDate(val.toString()))}
             required
             maxDate={new Date().toISOString().split("T")[0]}
             disabled={isView}
@@ -127,7 +158,7 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
           />
         </div>
 
-        <div className="grid-container grid gap-2 md:grid-cols-3 md:gap-6">
+        <div className="grid grid-cols-3 gap-2 md:gap-6">
           <DropdownSelect
             title="Machine Type"
             options={typeOptions}
@@ -135,13 +166,38 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
             onChange={(val) => {
               setSelectedType(val);
               updateField("machineType", val.label);
+              setSelectedBrand({ id: 0, label: "Select Brand" });
+              setSelectedModel({ id: 0, label: "Select Model" });
             }}
             required
             disabled={isView}
           />
+          <DropdownSelect
+            title="Brand"
+            options={brandOptions}
+            selected={selectedBrand}
+            onChange={(val) => {
+              setSelectedBrand(val);
+              updateField("brand", val.label);
+              setSelectedModel({ id: 0, label: "Select Model" });
+            }}
+            required
+            disabled={isView || selectedType.id === 0}
+          />
+          <DropdownSelect
+            title="Model"
+            options={modelOptions}
+            selected={selectedModel}
+            onChange={(val) => {
+              setSelectedModel(val);
+              updateField("modelNumber", val.label);
+            }}
+            required
+            disabled={isView || selectedBrand.id === 0}
+          />
         </div>
 
-        <div className="grid-container grid gap-2 md:grid-cols-3 md:gap-6">
+        <div className="grid grid-cols-3 gap-2 md:gap-6">
           <Input
             title="Machine Serial Number"
             placeholder="Enter Machine Serial Number"
@@ -152,7 +208,7 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
           />
           <Input
             title="Installed By"
-            placeholder="Eg : John Doe"
+            placeholder="Eg: John Doe"
             inputValue={machine.installedBy}
             onChange={(val) => updateField("installedBy", val)}
             disabled={isView}
@@ -160,9 +216,7 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
           <DateInput
             title="Installation Date"
             value={convertToFrontendDate(machine.installationDate)}
-            onChange={(val) =>
-              updateField("installationDate", convertToBackendDate(val.toString()))
-            }
+            onChange={(val) => updateField("installationDate", convertToBackendDate(val.toString()))}
             required
             maxDate={new Date().toISOString().split("T")[0]}
             disabled={isView}
@@ -175,7 +229,7 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
           <ButtonSm
             type="button"
             state="outline"
-            className="boder-[1.5px] border-slate-300"
+            className="border-[1.5px] border-slate-300"
             onClick={() => setFormVisible(false)}
             text="Back"
           />

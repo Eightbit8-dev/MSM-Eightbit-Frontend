@@ -57,7 +57,7 @@ const ProblemPage = () => {
           <header className="flex flex-col md:flex-row items-center justify-between">
 <div className="flex flex-row items-center gap-2 w-full">
               <PageHeader title="Problem Configuration" />
-                        
+    
 </div>
           <footer className="mt-3 md:mt-0 flex w-full gap-2 flex-row items-center md:justify-end justify-between">
             <DropdownSelect

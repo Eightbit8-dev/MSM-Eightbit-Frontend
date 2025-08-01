@@ -339,3 +339,65 @@ export const useDeleteProduct = () => {
     },
   });
 };
+
+
+type ProductDropdownParams = {
+  level: "brands" | "models";
+  type: string;
+  brand?: string;
+  model?: string;
+};
+const getProductDropdownOptions = async ({
+  level,
+  type,
+  brand,
+}: ProductDropdownParams): Promise<DropdownOption[]> => {
+  const token = Cookies.get("token");
+  if (!token) throw new Error("Unauthorized");
+
+  const endpoint = `/api/admin/products/${level}`;
+  const params: Record<string, string> = { type };
+  if (brand) params.brand = brand;
+
+  const res = await axiosInstance.get(endpoint, {
+    params,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (res.status !== 200) {
+    throw new Error(res.data?.message || `Failed to fetch ${level}`);
+  }
+
+  const rawData = res.data.data;
+
+  // 🧠 Conditional mapping based on level
+  if (level === "models") {
+    // Expecting models to be in format: [{ id, label }, ...]
+    return rawData as DropdownOption[];
+  } else {
+    // Map raw string array (e.g., brand names) into DropdownOption[]
+    return (rawData as string[]).map((item, idx) => ({
+      id: idx + 1,
+      label: item,
+    }));
+  }
+};
+
+export const useFetchProductDropdownOptions = (
+  params: ProductDropdownParams
+) => {
+  const { level, type, brand } = params;
+
+  return useQuery({
+    queryKey: ["ProductDropdown", level, type, brand],
+    queryFn: () => getProductDropdownOptions(params),
+    staleTime: 0,
+    retry: 1,
+    enabled:
+      !!type &&
+      !!level &&
+      (level !== "models" || !!brand), // Only require brand when fetching models
+  });
+};
