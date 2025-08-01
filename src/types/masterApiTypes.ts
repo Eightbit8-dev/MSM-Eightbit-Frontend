@@ -26,7 +26,11 @@ export interface ClientDetails {
   contactPerson: string;
   contactNumber: string;
   email: string;
-  address: string;
+  addressLine1: string;
+  addressLine2: string;
+  city: string;
+  pinCode: number;
+  state: string;
   gstNumber: string;
 }
 

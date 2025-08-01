@@ -334,6 +334,16 @@ const ServiceRequestFormPage: React.FC<Props> = ({
             disabled={isView}
             required
           />
+                    <DropdownSelect
+            title="Client"
+            direction="down"
+            options={clientOptions}
+            selected={selectedClient}
+            onChange={(val) => {
+              setSelectedClient(val);
+            }}
+            disabled={isView}
+          />
           <DropdownSelect
             title="Machine Type"
             options={machineOptions}
@@ -395,16 +405,7 @@ const ServiceRequestFormPage: React.FC<Props> = ({
             onChange={(val) => updateField("otherComplaintDetails", val)}
             disabled={isView}
           /> */}
-          <DropdownSelect
-            title="Client"
-            direction="up"
-            options={clientOptions}
-            selected={selectedClient}
-            onChange={(val) => {
-              setSelectedClient(val);
-            }}
-            disabled={isView}
-          />
+
         </div>
 
         <div className="mt-4 flex justify-end gap-4">

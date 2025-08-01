@@ -26,7 +26,11 @@ const ClientPage = () => {
     contactPerson: "",
     contactNumber: "",
     email: "",
-    address: "",
+    addressLine1: "",
+    addressLine2:"",
+    pinCode:0,
+    city:"",
+    state:"",
     gstNumber: "",
   });
 
@@ -48,13 +52,17 @@ const ClientPage = () => {
 
   const handleClientDeleted = () => {
     setClient({
-      id: 0,
-      clientName: "",
-      contactPerson: "",
-      contactNumber: "",
-      email: "",
-      address: "",
-      gstNumber: "",
+    id: 0,
+    clientName: "",
+    contactPerson: "",
+    contactNumber: "",
+    email: "",
+    addressLine1: "",
+    addressLine2:"",
+    pinCode:0,
+    city:"",
+    state:"",
+    gstNumber: "",
     });
     setFormState("create");
     refetch();

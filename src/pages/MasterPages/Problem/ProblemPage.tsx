@@ -28,22 +28,17 @@ const ProblemPage = () => {
     }
   }, [navigate]);
 
-  const [isDeleteProblemDialogOpen, setIsDeleteProblemDialogOpen] =
-    useState(false);
+  const [isDeleteProblemDialogOpen, setIsDeleteProblemDialogOpen] = useState(false);
   const [problem, setProblem] = useState<ProblemDetails | null>(null);
   const [formState, setFormState] = useState<FormState>("create");
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
 
-  const { data, isLoading, isError } = useFetchProblem(
-    currentPage,
-    itemsPerPage,
-  );
+  const { data, isLoading, isError } = useFetchProblem(currentPage, itemsPerPage);
 
   const problemList = data?.data || [];
-  const totalPages = data?.totalPages || 0;
-  const totalRecords = data?.totalRecords || 0;
+  const totalPages = data?.totalPages || 1;
 
   const handleProblemDeleted = () => {
     setProblem(null);
@@ -76,13 +71,13 @@ const ProblemPage = () => {
                 }}
                 onChange={(e) => {
                   setItemsPerPage(e.id);
-                  setCurrentPage(1);
+                  setCurrentPage(1); // Reset to page 1 when changing itemsPerPage
                 }}
               />
               <PaginationControls
                 totalPages={totalPages}
                 currentPage={currentPage}
-                onPageChange={setCurrentPage}
+                onPageChange={(page) => setCurrentPage(page)}
               />
             </footer>
           </header>
@@ -110,7 +105,6 @@ const ProblemPage = () => {
             ) : (
               problemList.map((item, index) => {
                 const isSelected = problem?.id === item.id;
-
                 return (
                   <div
                     key={item.id}
@@ -137,7 +131,6 @@ const ProblemPage = () => {
                     <p className="w-full text-start text-sm font-medium">
                       {item.description}
                     </p>
-
                     <div className="flex min-w-[120px] flex-row gap-2 text-start text-sm font-medium">
                       <ButtonSm
                         className={`${

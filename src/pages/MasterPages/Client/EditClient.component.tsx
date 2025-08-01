@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import Input from "../../../components/common/Input";
-import TextArea from "../../../components/common/Textarea";
 import ButtonSm from "../../../components/common/Buttons";
 import type { FormState } from "../../../types/appTypes";
 import type { ClientDetails } from "../../../types/masterApiTypes";
@@ -34,24 +33,31 @@ const ClientEdit = ({
     isSuccess: isUpdatingSuccess,
   } = useEditClient();
 
+  const resetData: ClientDetails = {
+    id: 0,
+    clientName: "",
+    contactPerson: "",
+    contactNumber: "",
+    email: "",
+    addressLine1: "",
+    addressLine2: "",
+    city: "",
+    pinCode: 0,
+    state: "",
+    gstNumber: "",
+  };
+
   const disableButton =
     clientDetails?.clientName === clientData?.clientName &&
     clientDetails?.contactNumber === clientData?.contactNumber &&
     clientDetails?.contactPerson === clientData?.contactPerson &&
     clientDetails?.email === clientData?.email &&
-    clientDetails?.address === clientData?.address &&
+    clientDetails?.addressLine1 === clientData?.addressLine1 &&
+    clientDetails?.addressLine2 === clientData?.addressLine2 &&
+    clientDetails?.city === clientData?.city &&
+    clientDetails?.pinCode === clientData?.pinCode &&
+    clientDetails?.state === clientData?.state &&
     clientDetails?.gstNumber === clientData?.gstNumber;
-
-
-    const resetData = {
-      id: 0,
-      clientName: "",
-      contactPerson: "",
-      contactNumber: "",
-      email: "",
-      address: "",
-      gstNumber: "",
-    };
 
   useEffect(() => {
     if (formState === "create") {
@@ -63,7 +69,6 @@ const ClientEdit = ({
 
   useEffect(() => {
     if (isSuccess) {
-     
       setFormState("create");
       setClient(resetData);
       setClientData(resetData);
@@ -75,7 +80,6 @@ const ClientEdit = ({
 
   const handleCancel = () => {
     setFormState("create");
-    
     setClient(resetData);
     setClientData(resetData);
   };
@@ -94,7 +98,7 @@ const ClientEdit = ({
     clientData.contactNumber;
 
   return (
-    <main className="flex max-h-full  w-full max-w-[870px] flex-col gap-2">
+    <main className="flex max-h-full w-full max-w-[870px] flex-col gap-2">
       <div className="client-config-container flex flex-col gap-3 rounded-[20px]">
         <form
           className="flex flex-col gap-3"
@@ -160,8 +164,8 @@ const ClientEdit = ({
             </section>
           </header>
 
-          {/* Client Fields */}
-          <section className="flex w-full flex-col gap-2 overflow-clip px-3">
+          {/* Form Fields */}
+          <section className="flex grid grid-cols-2 w-full flex-col gap-2 overflow-clip px-3">
             <Input
               required
               disabled={formState === "display"}
@@ -193,7 +197,6 @@ const ClientEdit = ({
               disabled={formState === "display"}
               title="Contact Number"
               type="str"
-              minLength={10}
               inputValue={clientData.contactNumber}
               name="contactNumber"
               placeholder="Enter contact number"
@@ -212,15 +215,55 @@ const ClientEdit = ({
                 setClientData({ ...clientData, email: value })
               }
             />
-            <TextArea
+            <Input
               disabled={formState === "display"}
-              title="Address"
-              inputValue={clientData.address}
-              name="address"
-              placeholder="Enter address"
-              maxLength={300}
+              title="Address Line 1"
+              inputValue={clientData.addressLine1}
+              name="addressLine1"
+              placeholder="Enter address line 1"
               onChange={(value) =>
-                setClientData({ ...clientData, address: value })
+                setClientData({ ...clientData, addressLine1: value })
+              }
+            />
+            <Input
+              disabled={formState === "display"}
+              title="Address Line 2"
+              inputValue={clientData.addressLine2}
+              name="addressLine2"
+              placeholder="Enter address line 2"
+              onChange={(value) =>
+                setClientData({ ...clientData, addressLine2: value })
+              }
+            />
+            <Input
+              disabled={formState === "display"}
+              title="City"
+              inputValue={clientData.city}
+              name="city"
+              placeholder="Enter city"
+              onChange={(value) =>
+                setClientData({ ...clientData, city: value })
+              }
+            />
+            <Input
+              disabled={formState === "display"}
+              title="Pin Code"
+              type="num"
+              inputValue={clientData.pinCode.toString()}
+              name="pinCode"
+              placeholder="Enter pin code"
+              onChange={(value) =>
+                setClientData({ ...clientData, pinCode: Number(value) })
+              }
+            />
+            <Input
+              disabled={formState === "display"}
+              title="State"
+              inputValue={clientData.state}
+              name="state"
+              placeholder="Enter state"
+              onChange={(value) =>
+                setClientData({ ...clientData, state: value })
               }
             />
             <Input
