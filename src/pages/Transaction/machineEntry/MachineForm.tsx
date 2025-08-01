@@ -61,35 +61,46 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
     label: "Select Model",
   });
 
-  // Fetch brand options based on selected machine type
-  const { data: brandOptions = [], isFetching: isFetchingBrands } =
-    useFetchProductDropdownOptions({
-      level: "brands",
-      type: selectedType.label,
-    });
+  const { data: brandOptions = [] } = useFetchProductDropdownOptions({
+    level: "brands",
+    type: selectedType.label,
+  });
 
-  // Fetch model options based on selected brand and type
-  const { data: modelOptions = [], isFetching: isFetchingModels } =
-    useFetchProductDropdownOptions({
-      level: "models",
-      type: selectedType.label,
-      brand: selectedBrand.label,
-    });
+  const { data: modelOptions = [] } = useFetchProductDropdownOptions({
+    level: "models",
+    type: selectedType.label,
+    brand: selectedBrand.label,
+  });
+
+  const generateRefNo = () => {
+    const now = new Date();
+    const datePart = now.toISOString().slice(0, 10).replace(/-/g, "");
+    const randomPart = Math.floor(1000 + Math.random() * 9000);
+    return `REF-${datePart}-${randomPart}`;
+  };
+
+  useEffect(() => {
+    if (mode === "create") {
+      const generatedRef = generateRefNo();
+      setMachine((prev) => ({
+        ...prev,
+        referenceNumber: generatedRef,
+      }));
+    }
+  }, [mode]);
 
   useEffect(() => {
     if ((isEdit || isView) && machineFromParent) {
       setMachine(machineFromParent);
 
       setSelectedClient(
-        clientOptions.find(
-          (opt) => opt.label === machineFromParent.clientName,
-        ) || { id: 0, label: "Select Client" },
+        clientOptions.find((opt) => opt.label === machineFromParent.clientName) ||
+          { id: 0, label: "Select Client" },
       );
 
       setSelectedType(
-        typeOptions.find(
-          (opt) => opt.label === machineFromParent.machineType,
-        ) || { id: 0, label: "Select Machine Type" },
+        typeOptions.find((opt) => opt.label === machineFromParent.machineType) ||
+          { id: 0, label: "Select Machine Type" },
       );
 
       setSelectedBrand(
@@ -106,6 +117,24 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
     }
   }, [machineFromParent, clientOptions, typeOptions]);
 
+  useEffect(() => {
+    if (machineFromParent.brand) {
+      const brandOption = brandOptions.find(
+        (opt) => opt.label === machineFromParent.brand,
+      );
+      if (brandOption) setSelectedBrand(brandOption);
+    }
+  }, [brandOptions]);
+
+  useEffect(() => {
+    if (machineFromParent.modelNumber) {
+      const modelOption = modelOptions.find(
+        (opt) => opt.label === machineFromParent.modelNumber,
+      );
+      if (modelOption) setSelectedModel(modelOption);
+    }
+  }, [modelOptions]);
+
   const updateField = (key: keyof MachineDetails, value: string) => {
     setMachine((prev) => ({ ...prev, [key]: value }));
   };
@@ -115,11 +144,9 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
     if (isView) return;
 
     if (
-      machine.slNo.trim() === "" ||
+      machine.referenceNumber?.trim() === "" ||
       machine.serialNumber.trim() === "" ||
       selectedClient.id === 0 ||
-      selectedType.id === 0 ||
-      selectedBrand.id === 0 ||
       selectedModel.id === 0
     ) {
       toast.error("Please fill all required fields.");
@@ -127,7 +154,11 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
     }
 
     const payload = {
-      ...machine,
+      referenceNumber: machine.referenceNumber,
+      serialNumber: machine.serialNumber,
+      installedBy: machine.installedBy,
+      installationDate: machine.installationDate,
+      clientId: selectedClient.id,
       productId: selectedModel.id,
     };
 
@@ -154,9 +185,9 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
         <div className="grid grid-cols-3 gap-2 md:gap-6">
           <Input
             title="Ref No"
-            placeholder="Enter Ref No"
-            inputValue={machine.slNo}
-            onChange={(val) => updateField("slNo", val)}
+            placeholder="Auto-generated Ref No"
+            inputValue={machine.referenceNumber}
+            onChange={(val) => updateField("referenceNumber", val)}
             required
             disabled={isView}
           />
@@ -193,7 +224,6 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
             selected={selectedType}
             onChange={(val) => {
               setSelectedType(val);
-              updateField("machineType", val.label);
               setSelectedBrand({ id: 0, label: "Select Brand" });
               setSelectedModel({ id: 0, label: "Select Model" });
             }}
@@ -206,7 +236,6 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
             selected={selectedBrand}
             onChange={(val) => {
               setSelectedBrand(val);
-              updateField("brand", val.label);
               setSelectedModel({ id: 0, label: "Select Model" });
             }}
             required
@@ -218,7 +247,6 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
             selected={selectedModel}
             onChange={(val) => {
               setSelectedModel(val);
-              updateField("modelNumber", val.label);
             }}
             required
             disabled={isView || selectedBrand.id === 0}

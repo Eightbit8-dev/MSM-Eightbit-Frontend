@@ -91,7 +91,7 @@ export const useCreateServiceRequest = () => {
   });
 };
 
-// --- erdit ----
+// --- edit ----
 export const useEditServiceRequest = () => {
   const queryClient = useQueryClient();
 
