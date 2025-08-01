@@ -21,11 +21,7 @@ const ClientEdit = ({
 }) => {
   const [clientData, setClientData] = useState<ClientDetails | null>(null);
 
-  const {
-    mutate: createClient,
-    isPending,
-    isSuccess,
-  } = useCreateClient();
+  const { mutate: createClient, isPending, isSuccess } = useCreateClient();
 
   const {
     mutate: updateClient,
@@ -165,7 +161,7 @@ const ClientEdit = ({
           </header>
 
           {/* Form Fields */}
-          <section className="flex grid grid-cols-2 w-full flex-col gap-2 overflow-clip px-3">
+          <section className="flex w-full flex-col gap-2 overflow-clip px-3 md:grid md:grid-cols-2">
             <Input
               required
               disabled={formState === "display"}
