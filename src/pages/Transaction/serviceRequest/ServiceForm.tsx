@@ -97,21 +97,21 @@ const ServiceRequestFormPage: React.FC<Props> = ({
     model: selectedModel?.label || "",
   });
 
-  useEffect(() => {
-    if (isCreate) {
-      const now = new Date();
-      const year = now.getFullYear();
-      const timestamp = now.getTime();
-      const generatedRef = `SR-${year}-${timestamp}`;
-      const today = now.toLocaleDateString("en-GB").split("/").join("-");
+useEffect(() => {
+  if (isCreate) {
+    const randomPart = Math.floor(10000 + Math.random() * 90000); // 5-digit random number
+    const generatedRef = `SR-${randomPart}`; // e.g., "SR48392"
+    const today = new Date().toLocaleDateString("en-GB").split("/").join("-");
 
-      setRequest((prev) => ({
-        ...prev,
-        referenceNumber: generatedRef,
-        requestDate: today,
-      }));
-    }
-  }, [mode]);
+    setRequest((prev) => ({
+      ...prev,
+      referenceNumber: generatedRef,
+      requestDate: today,
+    }));
+  }
+}, [mode]);
+
+
 
   useEffect(() => {
     if ((isEdit || isView) && requestFromParent) {
