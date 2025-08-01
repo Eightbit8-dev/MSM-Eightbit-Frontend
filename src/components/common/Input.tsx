@@ -259,6 +259,7 @@ interface DateInputProps {
   required?: boolean;
   disabled?: boolean;
   maxDate?: string;
+  className?: string;
 }
 
 export const DateInput: React.FC<DateInputProps> = ({
@@ -266,6 +267,7 @@ export const DateInput: React.FC<DateInputProps> = ({
   value,
   onChange,
   name = "",
+  className = "",
   placeholder = "Select date",
   required = false,
   disabled = false,
@@ -276,7 +278,7 @@ export const DateInput: React.FC<DateInputProps> = ({
   };
 
   return (
-    <div className="relative w-full min-w-[180px] self-stretch">
+    <div className={`relative w-full min-w-[180px]  self-stretch ${className}`}>
       <h3 className="mb-0.5 w-full justify-start text-xs leading-loose font-semibold text-slate-700">
         {title} {required && <span className="text-red-500"> *</span>}
       </h3>

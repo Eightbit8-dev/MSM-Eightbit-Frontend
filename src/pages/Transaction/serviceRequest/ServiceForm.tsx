@@ -237,9 +237,11 @@ const ServiceRequestFormPage: React.FC<Props> = ({
 
   // ------------------ Render ------------------
   return (
-    <div className="flex min-w-full flex-col rounded-2xl bg-white">
-      <h1 className="mb-6 text-2xl font-semibold capitalize">
-        {mode} Service Request
+    <div className="flex min-w-full py-30 max-h-screen overflow-y-auto flex-col rounded-2xl bg-white p-4">
+
+     <div className="flex items-center justify-between">
+       <h1 className="mb-6 text-2xl font-semibold capitalize">
+         New Service Request
       </h1>
 
       {isCreate && (
@@ -247,8 +249,8 @@ const ServiceRequestFormPage: React.FC<Props> = ({
           <ButtonSm
             type="button"
             text="Scan QR"
-            state="outline"
-            className="mb-4 w-fit border-blue-400 text-blue-500"
+            state="default"
+            className="mb-4 w-fit border-blue-400 text-white"
             onClick={() => setShowQRDialog(true)}
           />
           {showQRDialog && (
@@ -273,9 +275,10 @@ const ServiceRequestFormPage: React.FC<Props> = ({
           )}
         </>
       )}
+     </div>
 
       <form onSubmit={handleSubmit} className="flex min-w-full flex-col gap-4">
-        <div className="grid min-w-full grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid w-full grid-cols-1  md:grid-cols-2 gap-4">
           <Input
             title="Reference Number"
             inputValue={request.referenceNumber}
