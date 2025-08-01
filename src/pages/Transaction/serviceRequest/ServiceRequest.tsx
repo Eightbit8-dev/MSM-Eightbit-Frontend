@@ -14,7 +14,7 @@ import { useFetchServiceRequests } from "@/queries/TranscationQueries/ServiceReq
 import ServiceRequestFormPage from "./ServiceForm";
 import { DeleteServiceRequestDialogBox } from "./ServiceRequestDelete.Dialog";
 
-  const ServiceRequestPage = () => {
+const ServiceRequestPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [selectedRequest, setSelectedRequest] = useState<ServiceRequest | null>(
@@ -78,7 +78,7 @@ import { DeleteServiceRequestDialogBox } from "./ServiceRequestDelete.Dialog";
         <div className="flex flex-row items-center gap-2">
           <ButtonSm
             className="font-medium text-white"
-            text={ "New Request"}
+            text={"New Request"}
             state="default"
             type="button"
             onClick={() => {
@@ -138,11 +138,11 @@ import { DeleteServiceRequestDialogBox } from "./ServiceRequestDelete.Dialog";
                   <p className="selft-center w-[40px] text-sm font-semibold text-zinc-900">
                     S.No
                   </p>
-                  <CheckboxInput
+                  {/* <CheckboxInput
                     checked={isAllSelected}
                     onChange={handleSelectAllChange}
                     label=""
-                  />
+                  /> */}
                 </div>
 
                 {/* Column Headers */}
@@ -188,11 +188,11 @@ import { DeleteServiceRequestDialogBox } from "./ServiceRequestDelete.Dialog";
                       <p className="w-[40px]">
                         {(currentPage - 1) * itemsPerPage + index + 1}
                       </p>
-                      <CheckboxInput
+                      {/* <CheckboxInput
                         checked={selectedIds.includes(item.id)}
                         onChange={() => handleCheckboxChange(item.id)}
                         label=""
-                      />
+                      /> */}
                     </div>
 
                     {/* Data Columns */}

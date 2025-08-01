@@ -42,9 +42,7 @@ export const useFetchClients = () => {
       return res.data.data;
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        toast.error(
-          error.response?.data?.message || "Failed to fetch Clients"
-        );
+        toast.error(error.response?.data?.message || "Failed to fetch Clients");
       } else {
         toast.error("Something went wrong while fetching Clients");
       }
@@ -53,13 +51,12 @@ export const useFetchClients = () => {
   };
 
   return useQuery({
-    queryKey: ["Clients"],
+    queryKey: ["clients"],
     queryFn: fetchAllClients,
     staleTime: 1000 * 60 * 0,
     retry: 1,
   });
 };
-
 
 //paginated clients
 export const useFetchClientsPaginated = (page: number, limit: number) => {
@@ -160,9 +157,7 @@ export const useCreateClient = () => {
       return res.data;
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        toast.error(
-          error.response?.data?.message || "Failed to create Client"
-        );
+        toast.error(error.response?.data?.message || "Failed to create Client");
       } else {
         toast.error("Something went wrong while creating Client");
       }
@@ -174,7 +169,7 @@ export const useCreateClient = () => {
     mutationFn: createClient,
     onSuccess: () => {
       toast.success("Client created successfully");
-      queryClient.invalidateQueries({ queryKey: ["Clients"] });
+      queryClient.invalidateQueries({ queryKey: ["clients"] });
     },
   });
 };
@@ -198,7 +193,7 @@ export const useEditClient = () => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
 
     if (res.status !== 200) {
@@ -212,7 +207,7 @@ export const useEditClient = () => {
     mutationFn: editClient,
     onSuccess: () => {
       toast.success("Client updated successfully");
-      queryClient.invalidateQueries({ queryKey: ["Clients"] });
+      queryClient.invalidateQueries({ queryKey: ["clients"] });
     },
     onError: (error) => {
       if (axios.isAxiosError(error)) {
@@ -232,16 +227,19 @@ export const useDeleteClient = () => {
     const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
-    const res = await axiosInstance.delete(`${apiRoutes.clients}/${client.id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
+    const res = await axiosInstance.delete(
+      `${apiRoutes.clients}/${client.id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
-    });
+    );
 
-if (res.status !== 200 && res.status !== 204) {
-  throw new Error(res.data?.message || "Failed to delete Client");
-}
-console.log(res.data)
+    if (res.status !== 200 && res.status !== 204) {
+      throw new Error(res.data?.message || "Failed to delete Client");
+    }
+    console.log(res.data);
     return res.data;
   };
 
@@ -249,7 +247,7 @@ console.log(res.data)
     mutationFn: deleteClient,
     onSuccess: () => {
       toast.success("Client deleted successfully");
-      queryClient.invalidateQueries({ queryKey: ["Clients"] });
+      queryClient.invalidateQueries({ queryKey: ["clients"] });
     },
     onError: (error) => {
       if (axios.isAxiosError(error)) {
