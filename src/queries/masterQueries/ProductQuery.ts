@@ -1,6 +1,9 @@
 import axiosInstance from "../../utils/axios";
 import axios from "axios";
-import type { ProductDetails, ProductResponse } from "../../types/masterApiTypes";
+import type {
+  ProductDetails,
+  ProductResponse,
+} from "../../types/masterApiTypes";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { apiRoutes } from "../../routes/apiRoutes";
@@ -77,7 +80,6 @@ export const useFetchProductsOptions = () => {
     retry: 1,
   });
 };
-
 
 export const useFetchBrandsOptions = () => {
   const fetchBrand = async (): Promise<DropdownOption[]> => {
@@ -160,8 +162,7 @@ export const useFetchAllDetailsOptions = () => {
   });
 };
 
-
-//paginated response 
+//paginated response
 
 export const useFetchProductsPaginated = (page: number, limit: number) => {
   const fetchAllProducts = async (): Promise<ProductResponse> => {
@@ -203,7 +204,6 @@ export const useFetchProductsPaginated = (page: number, limit: number) => {
     retry: 1,
   });
 };
-
 
 /**
  * ➕ Create a new Product

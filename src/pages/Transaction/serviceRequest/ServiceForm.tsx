@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import {
   useFetchMachineById,
   useFetchMachineDropdownOptions,
+  useFetchMachineOptions,
 } from "@/queries/TranscationQueries/MachineQuery";
 import {
   useCreateServiceRequest,
@@ -57,7 +58,7 @@ const ServiceRequestFormPage: React.FC<Props> = ({
 
   const { data: clientOptions = [] } = useFetchClientOptions();
   const { data: complaintOptions = [] } = useFetchProblemOptions();
-  const { data: machineDetails } = useFetchMachineById(machineEntryId ?? 0);
+  const { data: machineOptions = [] } = useFetchMachineOptions();
 
   const [request, setRequest] = useState<ServiceRequest>(requestFromParent);
   const [selectedComplaint, setSelectedComplaint] = useState<DropdownOption>({
@@ -92,7 +93,6 @@ const ServiceRequestFormPage: React.FC<Props> = ({
     brand: selectedBrand?.label || "",
     model: selectedModel?.label || "",
   });
-
 
   useEffect(() => {
     if (isCreate) {
@@ -329,7 +329,7 @@ const ServiceRequestFormPage: React.FC<Props> = ({
           />
           <DropdownSelect
             title="Machine Type"
-            options={machineO}
+            options={machineOptions}
             selected={selectedType}
             onChange={(val) => {
               setSelectedType(val);
