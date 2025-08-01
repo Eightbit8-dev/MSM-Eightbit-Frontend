@@ -165,7 +165,7 @@ export const useFetchMachineOptions = () => {
 
       return res.data.data.map((machine: MachineDetails) => ({
         id: machine.id,
-        label: machine.modelNumber,
+        label: machine.machineType,
       }));
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
