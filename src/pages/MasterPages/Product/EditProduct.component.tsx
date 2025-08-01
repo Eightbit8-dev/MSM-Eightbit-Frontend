@@ -42,14 +42,13 @@ const ProductEdit = ({
 
   useEffect(() => {
     if (formState === "create") {
-      const newData: ProductDetails = {
+      setProductData({
         id: 0,
         machineType: "",
         brand: "",
         modelNumber: "",
         description: "",
-      };
-      setProductData(newData);
+      });
     } else if (productDetails) {
       setProductData(productDetails);
     }
@@ -118,6 +117,7 @@ const ProductEdit = ({
                 ? "Product Configuration"
                 : `${productDetails?.machineType} Configuration`}
             </h1>
+
             <section className="ml-auto flex flex-row items-center gap-3">
               {(formState === "edit" ||
                 (formState === "create" && hasData)) && (
@@ -210,10 +210,10 @@ const ProductEdit = ({
             />
             <TextArea
               disabled={formState === "display"}
-              title="Description"
+              title="Description (optional)"
               inputValue={productData.description}
               name="description"
-              placeholder="Enter description"
+              placeholder="Enter description (optional)"
               maxLength={300}
               onChange={(value) =>
                 setProductData({ ...productData, description: value })
