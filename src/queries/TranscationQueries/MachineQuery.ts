@@ -348,8 +348,12 @@ const getMachineDropdownOptions = async ({
   const rawList = res.data.data;
 
   if (level === "serials") {
-    // Expecting models to be in format: [{ id, label }, ...]
-    return rawList as DropdownOption[];
+    return (rawList as { serialNumber: string; machineEntryId: number }[]).map(
+      (item) => ({
+        id: item.machineEntryId,
+        label: item.serialNumber,
+      }),
+    );
   }
 
   // 🧙 Map into DropdownOption with index as ID

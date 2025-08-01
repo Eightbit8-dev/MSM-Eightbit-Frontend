@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { use, useEffect, useRef, useState } from "react";
 import Input, { DateInput } from "@/components/common/Input";
 import DropdownSelect, {
   type DropdownOption,
@@ -74,6 +74,9 @@ const ServiceRequestFormPage: React.FC<Props> = ({
   const [selectedModel, setSelectedModel] =
     useState<DropdownOption>(defaultOption);
   const [selectedSerial, setSelectedSerial] =
+    useState<DropdownOption>(defaultOption);
+
+  const [selectedClient, setSelectedClient] =
     useState<DropdownOption>(defaultOption);
 
   const { data: brandOptions = [] } = useFetchMachineDropdownOptions({
@@ -155,6 +158,14 @@ const ServiceRequestFormPage: React.FC<Props> = ({
     const parsed = parseQRData(data);
     const entryId = parsed.machineEntryId;
     const clientName = parsed.clientName;
+    toast.success(`QR Scanned: client ID ${clientName}`);
+
+    const clieendId = clientOptions.find(
+      (client) => client.label === clientName,
+    );
+
+    setSelectedClient({ id: clieendId?.id || 0, label: "" });
+    setMachineEntryId(Number(entryId));
 
     if (!entryId) {
       toast.error("QR missing machineEntryId");
@@ -247,12 +258,8 @@ const ServiceRequestFormPage: React.FC<Props> = ({
       requestDate: request.requestDate,
       complaintDetailsId: complaintDetailsId || undefined,
       otherComplaintDetails: request.otherComplaintDetails || "",
-      clientId: clientId ?? 0,
-      machineEntryId: selectedSerial.id,
-      machineType: selectedType?.label || "",
-      brand: selectedBrand?.label || "",
-      modelNumber: selectedModel?.label || "",
-      serialNumber: selectedSerial?.label || "",
+      clientId: selectedClient?.id,
+      machineEntryId: machineEntryId || 0,
     };
 
     try {
@@ -382,11 +389,21 @@ const ServiceRequestFormPage: React.FC<Props> = ({
             }}
             disabled={isView}
           />
-          <Input
+          {/* <Input
             title="Other Complaint (Optional)"
             inputValue={request.otherComplaintDetails || ""}
             placeholder="Enter details if not listed"
             onChange={(val) => updateField("otherComplaintDetails", val)}
+            disabled={isView}
+          /> */}
+          <DropdownSelect
+            title="Client"
+            direction="up"
+            options={clientOptions}
+            selected={selectedClient}
+            onChange={(val) => {
+              setSelectedClient(val);
+            }}
             disabled={isView}
           />
         </div>
