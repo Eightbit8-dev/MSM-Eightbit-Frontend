@@ -102,8 +102,7 @@ const ServiceRequestFormPage: React.FC<Props> = ({
       const now = new Date();
       const year = now.getFullYear();
       const timestamp = now.getTime();
-      const randomSuffix = Math.floor(Math.random() * 90 + 10);
-      const generatedRef = `SR-${year}-${timestamp}${randomSuffix}`;
+      const generatedRef = `SR-${year}-${timestamp}`;
       const today = now.toLocaleDateString("en-GB").split("/").join("-");
 
       setRequest((prev) => ({
