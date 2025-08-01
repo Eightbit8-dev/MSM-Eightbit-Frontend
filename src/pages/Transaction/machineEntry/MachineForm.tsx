@@ -1,12 +1,23 @@
 import React, { useEffect, useState } from "react";
 import Input, { DateInput } from "@/components/common/Input";
-import DropdownSelect, { type DropdownOption } from "@/components/common/DropDown";
+import DropdownSelect, {
+  type DropdownOption,
+} from "@/components/common/DropDown";
 import ButtonSm from "@/components/common/Buttons";
 import { toast } from "react-toastify";
-import { useEditMachine, useCreateMachine } from "@/queries/TranscationQueries/MachineQuery";
-import { useFetchProductsType , useFetchProductDropdownOptions } from "@/queries/masterQueries/ProductQuery";
+import {
+  useEditMachine,
+  useCreateMachine,
+} from "@/queries/TranscationQueries/MachineQuery";
+import {
+  useFetchProductsType,
+  useFetchProductDropdownOptions,
+} from "@/queries/masterQueries/ProductQuery";
 import { useFetchClientOptions } from "@/queries/masterQueries/ClientQuery";
-import { convertToBackendDate, convertToFrontendDate } from "@/utils/commonUtils";
+import {
+  convertToBackendDate,
+  convertToFrontendDate,
+} from "@/utils/commonUtils";
 import type { MachineDetails } from "@/types/transactionTypes";
 import MultiFileUpload from "@/components/common/FileUploadBox";
 
@@ -33,52 +44,64 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
 
   const [machine, setMachine] = useState<MachineDetails>(machineFromParent);
 
-  const [selectedClient, setSelectedClient] = useState<DropdownOption>({ id: 0, label: "Select Client" });
-  const [selectedType, setSelectedType] = useState<DropdownOption>({ id: 0, label: "Select Machine Type" });
-  const [selectedBrand, setSelectedBrand] = useState<DropdownOption>({ id: 0, label: "Select Brand" });
-  const [selectedModel, setSelectedModel] = useState<DropdownOption>({ id: 0, label: "Select Model" });
+  const [selectedClient, setSelectedClient] = useState<DropdownOption>({
+    id: 0,
+    label: "Select Client",
+  });
+  const [selectedType, setSelectedType] = useState<DropdownOption>({
+    id: 0,
+    label: "Select Machine Type",
+  });
+  const [selectedBrand, setSelectedBrand] = useState<DropdownOption>({
+    id: 0,
+    label: "Select Brand",
+  });
+  const [selectedModel, setSelectedModel] = useState<DropdownOption>({
+    id: 0,
+    label: "Select Model",
+  });
 
   // Fetch brand options based on selected machine type
-  const {
-    data: brandOptions = [],
-    isFetching: isFetchingBrands,
-  } = useFetchProductDropdownOptions({
-    level: "brands",
-    type: selectedType.label,
-  });
+  const { data: brandOptions = [], isFetching: isFetchingBrands } =
+    useFetchProductDropdownOptions({
+      level: "brands",
+      type: selectedType.label,
+    });
 
   // Fetch model options based on selected brand and type
-  const {
-    data: modelOptions = [],
-    isFetching: isFetchingModels,
-  } = useFetchProductDropdownOptions({
-    level: "models",
-    type: selectedType.label,
-    brand: selectedBrand.label,
-  });
+  const { data: modelOptions = [], isFetching: isFetchingModels } =
+    useFetchProductDropdownOptions({
+      level: "models",
+      type: selectedType.label,
+      brand: selectedBrand.label,
+    });
 
   useEffect(() => {
     if ((isEdit || isView) && machineFromParent) {
       setMachine(machineFromParent);
 
       setSelectedClient(
-        clientOptions.find((opt) => opt.label === machineFromParent.clientName) || { id: 0, label: "Select Client" }
+        clientOptions.find(
+          (opt) => opt.label === machineFromParent.clientName,
+        ) || { id: 0, label: "Select Client" },
       );
 
       setSelectedType(
-        typeOptions.find((opt) => opt.label === machineFromParent.machineType) || { id: 0, label: "Select Machine Type" }
+        typeOptions.find(
+          (opt) => opt.label === machineFromParent.machineType,
+        ) || { id: 0, label: "Select Machine Type" },
       );
 
       setSelectedBrand(
         machineFromParent.brand
           ? { id: 1, label: machineFromParent.brand }
-          : { id: 0, label: "Select Brand" }
+          : { id: 0, label: "Select Brand" },
       );
 
       setSelectedModel(
         machineFromParent.modelNumber
           ? { id: 1, label: machineFromParent.modelNumber }
-          : { id: 0, label: "Select Model" }
+          : { id: 0, label: "Select Model" },
       );
     }
   }, [machineFromParent, clientOptions, typeOptions]);
@@ -105,10 +128,7 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
 
     const payload = {
       ...machine,
-      clientId: selectedClient.id,
-      productId: selectedType.id,
-      brand: selectedBrand.label,
-      model: selectedModel.label,
+      productId: selectedModel.id,
     };
 
     const onSuccess = () => {
@@ -127,7 +147,10 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
   return (
     <div className="flex min-w-full flex-col gap-0 rounded-2xl bg-white">
       <h1 className="mb-6 text-2xl font-semibold capitalize">{mode} Machine</h1>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-3 md:gap-4 lg:gap-4">
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col gap-3 md:gap-4 lg:gap-4"
+      >
         <div className="grid grid-cols-3 gap-2 md:gap-6">
           <Input
             title="Ref No"
@@ -140,7 +163,12 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
           <DateInput
             title="Ref Date"
             value={convertToFrontendDate(machine.installationDate)}
-            onChange={(val) => updateField("installationDate", convertToBackendDate(val.toString()))}
+            onChange={(val) =>
+              updateField(
+                "installationDate",
+                convertToBackendDate(val.toString()),
+              )
+            }
             required
             maxDate={new Date().toISOString().split("T")[0]}
             disabled={isView}
@@ -216,7 +244,12 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
           <DateInput
             title="Installation Date"
             value={convertToFrontendDate(machine.installationDate)}
-            onChange={(val) => updateField("installationDate", convertToBackendDate(val.toString()))}
+            onChange={(val) =>
+              updateField(
+                "installationDate",
+                convertToBackendDate(val.toString()),
+              )
+            }
             required
             maxDate={new Date().toISOString().split("T")[0]}
             disabled={isView}

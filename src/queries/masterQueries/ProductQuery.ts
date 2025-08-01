@@ -340,7 +340,6 @@ export const useDeleteProduct = () => {
   });
 };
 
-
 type ProductDropdownParams = {
   level: "brands" | "models";
   type: string;
@@ -386,18 +385,17 @@ const getProductDropdownOptions = async ({
 };
 
 export const useFetchProductDropdownOptions = (
-  params: ProductDropdownParams
+  params: ProductDropdownParams,
 ) => {
   const { level, type, brand } = params;
+
+  console.log("Dropdown Query Triggered:", params);
 
   return useQuery({
     queryKey: ["ProductDropdown", level, type, brand],
     queryFn: () => getProductDropdownOptions(params),
     staleTime: 0,
     retry: 1,
-    enabled:
-      !!type &&
-      !!level &&
-      (level !== "models" || !!brand), // Only require brand when fetching models
+    enabled: !!type && !!level && (level !== "models" || !!brand),
   });
 };
