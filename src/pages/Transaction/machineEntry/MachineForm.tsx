@@ -72,12 +72,15 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
     brand: selectedBrand.label,
   });
 
-  const generateRefNo = () => {
-    const now = new Date();
-    const datePart = `${now.getFullYear().toString().slice(-1)}${now.getMonth() + 1}${now.getDate()}`; // e.g., "581" for Aug 1, 2025
-    const randomPart = Math.floor(10 + Math.random() * 90); // Two-digit random number (10–99)
-    return `R-${datePart}${randomPart}`; // e.g., "R-58147"
-  };
+
+const generateRefNo = () => {
+  const now = new Date();
+  const datePart = `${now.getFullYear().toString().slice(-1)}${now.getMonth() + 1}${now.getDate()}`; // e.g., "581" for Aug 1, 2025
+  const randomPart = Math.floor(10 + Math.random() * 90); // 2-digit random number
+  return `R-${datePart}${randomPart}`; // e.g., "R58147"
+};
+
+
 
   useEffect(() => {
     if (mode === "create") {
