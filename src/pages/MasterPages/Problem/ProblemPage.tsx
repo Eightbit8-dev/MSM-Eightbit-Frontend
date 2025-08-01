@@ -28,14 +28,18 @@ const ProblemPage = () => {
     }
   }, [navigate]);
 
-  const [isDeleteProblemDialogOpen, setIsDeleteProblemDialogOpen] = useState(false);
+  const [isDeleteProblemDialogOpen, setIsDeleteProblemDialogOpen] =
+    useState(false);
   const [problem, setProblem] = useState<ProblemDetails | null>(null);
   const [formState, setFormState] = useState<FormState>("create");
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
 
-  const { data, isLoading, isError } = useFetchProblem(currentPage, itemsPerPage);
+  const { data, isLoading, isError } = useFetchProblem(
+    currentPage,
+    itemsPerPage,
+  );
 
   const problemList = data?.data || [];
   const totalPages = data?.totalPages || 1;
@@ -88,10 +92,10 @@ const ProblemPage = () => {
                 S.No
               </p>
               <p className="w-full text-start text-sm font-semibold text-zinc-900">
-                Name
+                Problem types
               </p>
               <p className="w-full text-start text-sm font-semibold text-zinc-900">
-                Max-Eligible Amount
+                Description
               </p>
               <p className="min-w-[120px] text-start text-sm font-semibold text-zinc-900">
                 Action
