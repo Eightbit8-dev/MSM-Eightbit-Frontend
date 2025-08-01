@@ -169,7 +169,7 @@ export const useFetchProductsPaginated = (page: number, limit: number) => {
 
       const res = await axiosInstance.get(apiRoutes.products, {
         headers: { Authorization: `Bearer ${token}` },
-        params: { page, limit },
+        params: { page: page - 1, limit },
       });
 
       if (res.status !== 200) {
@@ -371,20 +371,19 @@ const getProductDropdownOptions = async ({
 
   const rawData = res.data.data;
 
-if (level === "models") {
-  return (rawData as { productId: string; modelNumber: number }[]).map(
-    (item) => ({
-      id: Number(item.productId), // Ensure it's number
-      label: item.modelNumber.toString(), // Convert model number to string if needed
-    }),
-  );
-} else {
-  return (rawData as string[]).map((item, idx) => ({
-    id: idx + 1,
-    label: item,
-  }));
-}
-
+  if (level === "models") {
+    return (rawData as { productId: string; modelNumber: number }[]).map(
+      (item) => ({
+        id: Number(item.productId), // Ensure it's number
+        label: item.modelNumber.toString(), // Convert model number to string if needed
+      }),
+    );
+  } else {
+    return (rawData as string[]).map((item, idx) => ({
+      id: idx + 1,
+      label: item,
+    }));
+  }
 };
 
 export const useFetchProductDropdownOptions = (
