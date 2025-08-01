@@ -28,14 +28,18 @@ const ProblemPage = () => {
     }
   }, [navigate]);
 
-  const [isDeleteProblemDialogOpen, setIsDeleteProblemDialogOpen] = useState(false);
+  const [isDeleteProblemDialogOpen, setIsDeleteProblemDialogOpen] =
+    useState(false);
   const [problem, setProblem] = useState<ProblemDetails | null>(null);
   const [formState, setFormState] = useState<FormState>("create");
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
 
-  const { data, isLoading, isError } = useFetchProblem(currentPage, itemsPerPage);
+  const { data, isLoading, isError } = useFetchProblem(
+    currentPage,
+    itemsPerPage,
+  );
 
   const problemList = data?.data || [];
   const totalPages = data?.totalPages || 0;
@@ -53,49 +57,56 @@ const ProblemPage = () => {
     <>
       <main className="flex w-full max-w-full flex-col gap-4 md:flex-row">
         {/* Table Section */}
-        <section className="table-container justify-between flex w-full flex-col gap-3 rounded-[12px] bg-white/80 p-4 shadow-sm md:w-[50%]">
-          <header className="flex flex-col md:flex-row items-center justify-between">
-<div className="flex flex-row items-center gap-2 w-full">
+        <section className="table-container flex w-full flex-col gap-3 rounded-[12px] bg-white/80 p-4 shadow-sm md:w-[50%]">
+          <header className="flex flex-col items-center justify-between md:flex-row">
+            <div className="flex w-full flex-row items-center gap-2">
               <PageHeader title="Problem Configuration" />
-    
-</div>
-          <footer className="mt-3 md:mt-0 flex w-full gap-2 flex-row items-center md:justify-end justify-between">
-            <DropdownSelect
-              title=""
-              direction="down"
-              options={[5, 10, 15, 20].map((item) => ({
-                id: item,
-                label: `${item} Entries`,
-              }))}
-              selected={{
-                id: itemsPerPage,
-                label: `${itemsPerPage} Entries`,
-              }}
-              onChange={(e) => {
-                setItemsPerPage(e.id);
-                setCurrentPage(1);
-              }}
-            />
-            <PaginationControls
-              totalPages={totalPages}
-              currentPage={currentPage}
-              onPageChange={setCurrentPage}
-            />
-          </footer>
+            </div>
+            <footer className="mt-3 flex w-full flex-row items-center justify-between gap-2 md:mt-0 md:justify-end">
+              <DropdownSelect
+                title=""
+                direction="down"
+                options={[5, 10, 15, 20].map((item) => ({
+                  id: item,
+                  label: `${item} Entries`,
+                }))}
+                selected={{
+                  id: itemsPerPage,
+                  label: `${itemsPerPage} Entries`,
+                }}
+                onChange={(e) => {
+                  setItemsPerPage(e.id);
+                  setCurrentPage(1);
+                }}
+              />
+              <PaginationControls
+                totalPages={totalPages}
+                currentPage={currentPage}
+                onPageChange={setCurrentPage}
+              />
+            </footer>
           </header>
 
-          <div className="tables flex w-full flex-col overflow-clip rounded-[9px]">
+          <div className="tables flex w-full flex-col items-start overflow-clip rounded-[9px]">
             <header className="header flex w-full flex-row items-center gap-2 bg-gray-200 px-3">
-              <p className="w-max min-w-[50px] md:min-w-[100px] px-2 py-4 text-start text-sm font-semibold text-zinc-900">
+              <p className="w-max min-w-[50px] px-2 py-4 text-start text-sm font-semibold text-zinc-900 md:min-w-[100px]">
                 S.No
               </p>
-              <p className="w-full text-start text-sm font-semibold text-zinc-900">Name</p>
-              <p className="w-full text-start text-sm font-semibold text-zinc-900">Max-Eligible Amount</p>
-              <p className="min-w-[120px] text-start text-sm font-semibold text-zinc-900">Action</p>
+              <p className="w-full text-start text-sm font-semibold text-zinc-900">
+                Name
+              </p>
+              <p className="w-full text-start text-sm font-semibold text-zinc-900">
+                Max-Eligible Amount
+              </p>
+              <p className="min-w-[120px] text-start text-sm font-semibold text-zinc-900">
+                Action
+              </p>
             </header>
 
             {problemList.length === 0 ? (
-              <h2 className="text-md my-3 text-center font-medium text-zinc-600">No Problems Found</h2>
+              <h2 className="text-md my-3 text-center font-medium text-zinc-600">
+                No Problems Found
+              </h2>
             ) : (
               problemList.map((item, index) => {
                 const isSelected = problem?.id === item.id;
@@ -107,8 +118,8 @@ const ProblemPage = () => {
                       isSelected
                         ? "bg-gray-100"
                         : index % 2 === 0
-                        ? "bg-white"
-                        : "bg-slate-50"
+                          ? "bg-white"
+                          : "bg-slate-50"
                     } hover:bg-slate-100 active:bg-slate-200`}
                     onClick={(e) => {
                       e.stopPropagation();
@@ -117,11 +128,15 @@ const ProblemPage = () => {
                       setFormState("display");
                     }}
                   >
-                    <p className="w-max min-w-[50px] md:min-w-[100px] px-2 py-4 text-start text-sm font-medium">
+                    <p className="w-max min-w-[50px] px-2 py-4 text-start text-sm font-medium md:min-w-[100px]">
                       {(currentPage - 1) * itemsPerPage + index + 1}
                     </p>
-                    <p className="w-full text-start text-sm font-medium">{item.problemType}</p>
-                    <p className="w-full text-start text-sm font-medium">{item.description}</p>
+                    <p className="w-full text-start text-sm font-medium">
+                      {item.problemType}
+                    </p>
+                    <p className="w-full text-start text-sm font-medium">
+                      {item.description}
+                    </p>
 
                     <div className="flex min-w-[120px] flex-row gap-2 text-start text-sm font-medium">
                       <ButtonSm
@@ -154,11 +169,10 @@ const ProblemPage = () => {
               })
             )}
           </div>
-
         </section>
 
         {/* Edit/Create Section */}
-        <section className="table-container mb-20 md:mb-0 max-h-full w-full flex-col gap-3 rounded-[12px] bg-white/80 p-4 shadow-sm md:w-[50%]">
+        <section className="table-container mb-20 max-h-full w-full flex-col gap-3 rounded-[12px] bg-white/80 p-4 shadow-sm md:mb-0 md:w-[50%]">
           <ProblemEdit
             problemDetails={problem}
             formState={formState}

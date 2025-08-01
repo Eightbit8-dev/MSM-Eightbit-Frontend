@@ -17,7 +17,7 @@ export const MasterPage = () => {
     {
       img: "/icons/Master/Vendor.svg",
       title: "Vendors",
-      desc: "Register and manage your external suppliers and service providers .",
+      desc: "Register and manage your external suppliers and service providers with ease.",
       btnText: "Configure",
       onAction: () => navigate(appRoutes.masterRoutes.children.vendors),
     },
@@ -31,13 +31,13 @@ export const MasterPage = () => {
     {
       img: "/icons/Master/Products.svg",
       title: "Products",
-      desc: "Catalog, track, and manage your products or items in one page.",
+      desc: "Catalog, track, and manage your products , items & machines in one page.",
       btnText: "Configure",
       onAction: () => navigate(appRoutes.masterRoutes.children.products),
     },
     {
       img: "/icons/Master/Users.svg",
-      title: "Service-engineers",
+      title: "Service Engineers",
       desc: "Create and manage system Service-engineers with roles and permissions.",
       btnText: "Configure",
       onAction: () => navigate(appRoutes.masterRoutes.children.users),

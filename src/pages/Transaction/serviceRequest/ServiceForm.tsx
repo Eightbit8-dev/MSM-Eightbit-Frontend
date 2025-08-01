@@ -248,7 +248,7 @@ const ServiceRequestFormPage: React.FC<Props> = ({
       complaintDetailsId: complaintDetailsId || undefined,
       otherComplaintDetails: request.otherComplaintDetails || "",
       clientId: clientId ?? 0,
-      machineEntryId,
+      machineEntryId: selectedSerial.id,
       machineType: selectedType?.label || "",
       brand: selectedBrand?.label || "",
       modelNumber: selectedModel?.label || "",
@@ -260,6 +260,7 @@ const ServiceRequestFormPage: React.FC<Props> = ({
         await editServiceRequest({ id: request.id, ...payload });
         toast.success("Service Request updated successfully!");
       } else {
+        toast.success(JSON.stringify(payload));
         await createServiceRequest(payload);
         toast.success("Service Request created successfully!");
       }
@@ -364,7 +365,10 @@ const ServiceRequestFormPage: React.FC<Props> = ({
             title="Serial Number"
             options={serialOptions}
             selected={selectedSerial}
-            onChange={(val) => setSelectedSerial(val)}
+            onChange={(val) => {
+              setMachineEntryId(val.id);
+              setSelectedSerial(val);
+            }}
             disabled={isView || !selectedModel}
           />
           <DropdownSelect

@@ -98,7 +98,7 @@ export const useFetchBrandsOptions = () => {
   };
 
   return useQuery({
-    queryKey: ["productBrands"],
+    queryKey: ["Products"],
     queryFn: fetchBrand,
     staleTime: 1000 * 60 * 0,
     retry: 1,
@@ -125,7 +125,7 @@ export const useFetchModelsOptions = () => {
   };
 
   return useQuery({
-    queryKey: ["productModels"],
+    queryKey: ["Products"],
     queryFn: fetchModel,
     staleTime: 1000 * 60 * 0,
     retry: 1,
@@ -152,7 +152,7 @@ export const useFetchAllDetailsOptions = () => {
   };
 
   return useQuery({
-    queryKey: ["productAllProducts"],
+    queryKey: ["Products"],
     queryFn: fetchAllDetail,
     staleTime: 1000 * 60 * 0,
     retry: 1,
@@ -195,7 +195,7 @@ export const useFetchProductsPaginated = (page: number, limit: number) => {
   };
 
   return useQuery({
-    queryKey: ["productModels", page, limit],
+    queryKey: ["Products", page, limit],
     queryFn: fetchAllProducts,
     staleTime: 0,
     retry: 1,

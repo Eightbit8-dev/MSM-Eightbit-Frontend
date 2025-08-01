@@ -345,10 +345,15 @@ const getMachineDropdownOptions = async ({
     throw new Error(res.data?.message || `Failed to fetch ${level}`);
   }
 
-  const rawList: string[] = res.data.data;
+  const rawList = res.data.data;
+
+  if (level === "serials") {
+    // Expecting models to be in format: [{ id, label }, ...]
+    return rawList as DropdownOption[];
+  }
 
   // 🧙 Map into DropdownOption with index as ID
-  return rawList.map((item, idx) => ({
+  return (rawList as string[]).map((item, idx) => ({
     id: idx + 1,
     label: item,
   }));
