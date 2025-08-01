@@ -205,7 +205,7 @@ import { DeleteServiceRequestDialogBox } from "./ServiceRequestDelete.Dialog";
                         item.brand,
                         item.modelNumber,
                         item.complaintDetails,
-                        "Pending",
+                        item.status,
                       ].map((val, idx) => (
                         <p
                           key={idx}
