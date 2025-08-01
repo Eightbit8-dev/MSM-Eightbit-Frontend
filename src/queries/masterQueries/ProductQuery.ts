@@ -11,12 +11,6 @@ import Cookies from "js-cookie";
 import type { DropdownOption } from "@/components/common/DropDown";
 
 /**
- * -------------------------------------------
- * Product Service Hooks - CRUD Operations
- * -------------------------------------------
- */
-
-/**
  * 🔍 Fetch all Products
  */
 export const useFetchProducts = () => {
@@ -54,7 +48,10 @@ export const useFetchProducts = () => {
   });
 };
 
-export const useFetchProductsOptions = () => {
+/**
+ * 🔍 Fetch  Product Type
+ */
+export const useFetchProductsType = () => {
   const fetchOptions = async (): Promise<DropdownOption[]> => {
     const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");

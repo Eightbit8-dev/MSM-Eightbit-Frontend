@@ -1,24 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Input, { DateInput } from "@/components/common/Input";
-import DropdownSelect, {
-  type DropdownOption,
-} from "@/components/common/DropDown";
+import DropdownSelect, { type DropdownOption } from "@/components/common/DropDown";
 import ButtonSm from "@/components/common/Buttons";
 import { toast } from "react-toastify";
-import {
-  useEditMachine,
-  useCreateMachine,
-} from "@/queries/TranscationQueries/MachineQuery";
-import {
-  useFetchBrandsOptions,
-  useFetchModelsOptions,
-  useFetchAllDetailsOptions,
-} from "@/queries/masterQueries/ProductQuery";
+import { useEditMachine, useCreateMachine } from "@/queries/TranscationQueries/MachineQuery";
+import { useFetchProductsType } from "@/queries/masterQueries/ProductQuery";
 import { useFetchClientOptions } from "@/queries/masterQueries/ClientQuery";
-import {
-  convertToBackendDate,
-  convertToFrontendDate,
-} from "@/utils/commonUtils";
+import { convertToBackendDate, convertToFrontendDate } from "@/utils/commonUtils";
 import type { MachineDetails } from "@/types/transactionTypes";
 import MultiFileUpload from "@/components/common/FileUploadBox";
 
@@ -37,14 +25,11 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
 }) => {
   const isView = mode === "display";
   const isEdit = mode === "edit";
-  // const isCreate = mode === "create";
 
   const { mutate: editMachine } = useEditMachine();
   const { mutate: createMachine } = useCreateMachine();
   const { data: clientOptions = [] } = useFetchClientOptions();
-  const { data: typeOptions = [] } = useFetchAllDetailsOptions();
-  const { data: brandOptions = [] } = useFetchBrandsOptions();
-  const { data: modelOptions = [] } = useFetchModelsOptions();
+  const { data: typeOptions = [] } = useFetchProductsType();
 
   const [machine, setMachine] = useState<MachineDetails>(machineFromParent);
 
@@ -52,49 +37,23 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
     id: 0,
     label: "Select Client",
   });
+
   const [selectedType, setSelectedType] = useState<DropdownOption>({
     id: 0,
     label: "Select Machine",
   });
-  // const [selectedBrand, setSelectedBrand] = useState<DropdownOption>({
-  //   id: 0,
-  //   label: "Select Brand",
-  // });
-  // const [selectedModel, setSelectedModel] = useState<DropdownOption>({
-  //   id: 0,
-  //   label: "Select Model",
-  // });
 
   useEffect(() => {
     if ((isEdit || isView) && machineFromParent) {
       setMachine(machineFromParent);
       setSelectedClient(
-        clientOptions.find(
-          (opt) => opt.label === machineFromParent.clientName,
-        ) || selectedClient,
+        clientOptions.find((opt) => opt.label === machineFromParent.clientName) || selectedClient
       );
       setSelectedType(
-        typeOptions.find(
-          (opt) => opt.label === machineFromParent.machineType,
-        ) || selectedType,
+        typeOptions.find((opt) => opt.label === machineFromParent.machineType) || selectedType
       );
-      // setSelectedBrand(
-      //   brandOptions.find((opt) => opt.label === machineFromParent.brand) ||
-      //     selectedBrand,
-      // );
-      // setSelectedModel(
-      //   modelOptions.find(
-      //     (opt) => opt.label === machineFromParent.modelNumber,
-      //   ) || selectedModel,
-      // );
     }
-  }, [
-    machineFromParent,
-    clientOptions,
-    typeOptions,
-    brandOptions,
-    modelOptions,
-  ]);
+  }, [machineFromParent, clientOptions, typeOptions]);
 
   const updateField = (key: keyof MachineDetails, value: string) => {
     setMachine((prev) => ({ ...prev, [key]: value }));
@@ -135,10 +94,7 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
   return (
     <div className="flex min-w-full flex-col gap-0 rounded-2xl bg-white">
       <h1 className="mb-6 text-2xl font-semibold capitalize">{mode} Machine</h1>
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col gap-3 md:gap-4 lg:gap-4"
-      >
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3 md:gap-4 lg:gap-4">
         <div className="grid-container grid grid-cols-3 gap-2 md:gap-6">
           <Input
             title="Ref No"
@@ -152,10 +108,7 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
             title="Ref Date"
             value={convertToFrontendDate(machine.installationDate)}
             onChange={(val) =>
-              updateField(
-                "installationDate",
-                convertToBackendDate(val.toString()),
-              )
+              updateField("installationDate", convertToBackendDate(val.toString()))
             }
             required
             maxDate={new Date().toISOString().split("T")[0]}
@@ -175,14 +128,6 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
         </div>
 
         <div className="grid-container grid gap-2 md:grid-cols-3 md:gap-6">
-          {/* <Input
-            title="Reference Number"
-            placeholder="Enter Reference Number"
-            inputValue={machine.referenceNumber}
-            onChange={(val) => updateField("referenceNumber", val)}
-            disabled={isView}
-          /> */}
-
           <DropdownSelect
             title="Machine Type"
             options={typeOptions}
@@ -194,29 +139,8 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
             required
             disabled={isView}
           />
-          {/* <DropdownSelect
-            title="Brand"
-            options={brandOptions}
-            selected={selectedBrand}
-            onChange={(val) => {
-              setSelectedBrand(val);
-              updateField("brand", val.label);
-            }}
-            required
-            disabled={isView}
-          />
-          <DropdownSelect
-            title="Model Number"
-            options={modelOptions}
-            selected={selectedModel}
-            onChange={(val) => {
-              setSelectedModel(val);
-              updateField("modelNumber", val.label);
-            }}
-            required
-            disabled={isView}
-          /> */}
         </div>
+
         <div className="grid-container grid gap-2 md:grid-cols-3 md:gap-6">
           <Input
             title="Machine Serial Number"
@@ -233,15 +157,11 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
             onChange={(val) => updateField("installedBy", val)}
             disabled={isView}
           />
-
           <DateInput
             title="Installation Date"
             value={convertToFrontendDate(machine.installationDate)}
             onChange={(val) =>
-              updateField(
-                "installationDate",
-                convertToBackendDate(val.toString()),
-              )
+              updateField("installationDate", convertToBackendDate(val.toString()))
             }
             required
             maxDate={new Date().toISOString().split("T")[0]}

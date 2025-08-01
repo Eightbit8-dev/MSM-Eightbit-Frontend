@@ -92,7 +92,7 @@ const MultiFileUpload: React.FC<MultiFileUploadProps> = ({
         className="flex h-full w-full flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 p-6 text-slate-500"
       >
         <p className="mb-2 text-lg font-medium">Upload Image</p>
-        <p className="mb-4 text-sm text-slate-400">JPEG, PNG, PDF, DOC</p>
+        <p className="mb-4 text-sm text-slate-400">JPEG, PNG</p>
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
