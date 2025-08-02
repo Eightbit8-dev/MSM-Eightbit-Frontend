@@ -7,7 +7,7 @@ export const appRoutes = {
 
   // -------- Dashboard --------
   dashboardPage: "/dashboard",
-  dashboard:"/count",
+  dashboard: "/count",
 
   // -------- Master Routes --------
   masterRoutes: {
@@ -19,7 +19,6 @@ export const appRoutes = {
       users: "/master/service-engineers",
       machineSpares: "/master/machine-spares",
       problemDetails: "/master/problem-details",
-
     },
   },
 
@@ -33,7 +32,7 @@ export const appRoutes = {
       machineEntry: "/transactions/machine-entry",
       serviceRequest: "/transactions/service-request",
       serviceEntry: "/transactions/service-entry",
-      serviceEntryEdit: "/transactions/service-entry-edit/:id",
+      serviceEntryEdit: "/transactions/service-entry/:id",
       machineEdit: "/transactions/machine-edit/:id",
       machineCreate: "/transactions/machine-create",
     },

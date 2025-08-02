@@ -48,6 +48,31 @@ export const useFetchServiceRequests = (page: number, limit: number) => {
   });
 };
 
+export const useFetchServiceRequestById = (id: number) => {
+  const fetchServiceRequestByID = async (): Promise<ServiceRequest> => {
+    const token = Cookies.get("token");
+    if (!token) throw new Error("Unauthorized");
+
+    const res = await axiosInstance.get(`${apiRoutes.serviceRequest}/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (res.status !== 200) {
+      throw new Error(res.data?.message || "Failed to fetch service requests");
+    }
+    return res.data.data;
+  };
+
+  return useQuery({
+    queryKey: ["serviceRequest", id],
+    enabled: !!id,
+    queryFn: fetchServiceRequestByID,
+    staleTime: 0,
+    retry: 1,
+  });
+};
 /**
  * ➕ Create a new Service Request
  */

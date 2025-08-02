@@ -1,7 +1,46 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useFetchServiceRequests } from "../queries/TranscationQueries/ServiceRequestQuery"; // Adjust path
-import ButtonSm from "../components/common/Buttons"; // Adjust path
+import { useFetchServiceRequests } from "../queries/TranscationQueries/ServiceRequestQuery";
+import ButtonSm from "../components/common/Buttons";
+import { appRoutes } from "@/routes/appRoutes";
+
+const stats = [
+  {
+    title: "Total Machine",
+    value: "02",
+    bgColor: "bg-[#F2EFE1]",
+    textColor: "text-[#FF9F00]",
+    borderColor: "border-[#F7D251]",
+  },
+  {
+    title: "Breakdown Machine",
+    value: "01",
+    bgColor: "bg-[#FFECEC]",
+    textColor: "text-[#FF0000]",
+    borderColor: "border-[#FF8A8A]",
+  },
+  {
+    title: "Service Machine",
+    value: "03",
+    bgColor: "bg-[#E8F6FF]",
+    textColor: "text-[#00A3FF]",
+    borderColor: "border-[#6BD8FF]",
+  },
+  {
+    title: "Assigned Engineers",
+    value: "05",
+    bgColor: "bg-[#E9FCEF]",
+    textColor: "text-[#00C853]",
+    borderColor: "border-[#74E69D]",
+  },
+  {
+    title: "Available Engineers",
+    value: "07",
+    bgColor: "bg-[#F4EEFF]",
+    textColor: "text-[#7E57C2]",
+    borderColor: "border-[#B39DDB]",
+  },
+];
 
 const DashBoardPage: React.FC = () => {
   const [page, setPage] = useState(1);
@@ -11,9 +50,10 @@ const DashBoardPage: React.FC = () => {
   const { data, isLoading, isError } = useFetchServiceRequests(page, limit);
 
   if (isLoading) return <div className="p-4">Loading...</div>;
-  if (isError) return <div className="p-4 text-red-500">Failed to load data.</div>;
+  if (isError)
+    return <div className="p-4 text-red-500">Failed to load data.</div>;
 
-  const totalPages = Math.ceil(data?.totalRecords || 0 / limit);
+  const totalPages = Math.ceil((data?.totalRecords || 0) / limit);
 
   return (
     <div className="dashboard-page-container flex w-full flex-col px-6 py-4">
@@ -32,14 +72,36 @@ const DashBoardPage: React.FC = () => {
         </h3>
       </section>
 
-      {/* Data List */}
+      {/* Dash Stats Boxes */}
+      <section className="mb-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {stats.map((item, index) => (
+          <div
+            key={index}
+            className="flex h-[100px] transform cursor-pointer flex-row items-center justify-center rounded-[9px] bg-white transition-transform duration-200 hover:scale-105 hover:shadow-md"
+          >
+            <div className="flex w-[50%] items-center justify-center px-3 py-3">
+              <p className={`text-[16px] font-medium ${item.textColor}`}>
+                {item.title}
+              </p>
+            </div>
+            <div className="flex w-[50%] items-center justify-center">
+              <p
+                className={`rounded-[9px] ${item.bgColor} w-fit p-4 ${item.textColor} border ${item.borderColor}`}
+              >
+                {item.value}
+              </p>
+            </div>
+          </div>
+        ))}
+      </section>
+
+      {/* Service Request List */}
       <section className="flex w-full flex-col gap-4">
         {data?.data.map((request) => (
           <div
             key={request.id}
-            className="flex flex-col rounded-md border bg-white border-gray-200 p-4 shadow-sm md:flex-row md:items-center md:justify-between"
+            className="flex flex-col rounded-md border border-gray-200 bg-white p-4 shadow-sm md:flex-row md:items-center md:justify-between"
           >
-            {/* Request Info */}
             <div className="mb-4 md:mb-0">
               <p className="text-sm text-gray-600">
                 <strong>Ref#:</strong> {request.referenceNumber}
@@ -67,14 +129,20 @@ const DashBoardPage: React.FC = () => {
                 state="outline"
                 text="View"
                 onClick={() =>
-                  alert(`Viewing request ${request.referenceNumber}`)
+                  navigate(
+                    `/transactions/service-entry/${request.id}?mode=display`,
+                  )
                 }
               />
               <ButtonSm
                 state="default"
                 text="Report"
                 className="text-white"
-                onClick={() => navigate(`/transactions/service-entry-edit/${request.id}`)}
+                onClick={() =>
+                  navigate(
+                    `/transactions/service-entry/${request.id}?mode=create`,
+                  )
+                }
               />
             </div>
           </div>
@@ -82,11 +150,11 @@ const DashBoardPage: React.FC = () => {
       </section>
 
       {/* Pagination Controls */}
-      <section className="mt-6 flex justify-between items-center">
+      <section className="mt-6 flex items-center justify-between">
         <button
           onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
           disabled={page === 1}
-          className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+          className="rounded bg-gray-200 px-4 py-2 hover:bg-gray-300 disabled:opacity-50"
         >
           Previous
         </button>
@@ -96,7 +164,7 @@ const DashBoardPage: React.FC = () => {
         <button
           onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
           disabled={page === totalPages}
-          className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+          className="rounded bg-gray-200 px-4 py-2 hover:bg-gray-300 disabled:opacity-50"
         >
           Next
         </button>

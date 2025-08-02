@@ -58,3 +58,20 @@ export interface ServiceRequestPayload {
   clientId: number;
   machineEntryId: number;
 }
+
+// --- service entry ----
+export interface ServiceEntryRequest {
+  id?: number; // remove this later
+  refNumber: string;
+  serviceDate: string;
+  maintenanceType: string;
+  maintenanceSubType: string;
+  serviceRequestId: number;
+  vendorId: number;
+  engineerId: number;
+  engineerDiagnostics: string;
+  serviceStatus: string;
+  remarks: string;
+  complaintSparePhotoUrl: string;
+  spareParts: [];
+}

@@ -5,6 +5,16 @@ export const formatAadhar = (value: string) => {
   return digits.replace(/(\d{4})(?=\d)/g, "$1 ");
 };
 
+export const getTodayDate = () => {
+  return new Date().toISOString().split("T")[0];
+};
+
+export const generateReferenceNumber = (prefix: string) => {
+  const now = new Date();
+  const datePart = now.toISOString().split("T")[0].replace(/-/g, "");
+  return `${prefix}-${datePart}`;
+};
+
 export const get18YearsAgo = () => {
   const today = new Date();
   today.setFullYear(today.getFullYear() - 18);
