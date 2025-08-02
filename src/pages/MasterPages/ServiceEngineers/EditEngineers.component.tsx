@@ -9,14 +9,15 @@ import {
 } from "../../../queries/masterQueries/ServiceEngineersQuery";
 import TextArea from "../../../components/common/Textarea";
 import isEqual from "lodash.isequal";
-import DropdownSelect, { type DropdownOption } from "@/components/common/DropDown";
+import DropdownSelect from "@/components/common/DropDown";
 import { useFetchClientOptions } from "@/queries/masterQueries/ClientQuery";
 const emptyServiceEngineer: ServiceEngineerDetails = {
   id: 0,
   engineerName: "",
   engineerMobile: 0,
   remarks: "",
-  clientId:0,
+  clientName: "",
+  clientId: 0,
 };
 const ServiceEngineerEdit = ({
   serviceEngineerDetails,
@@ -27,25 +28,25 @@ const ServiceEngineerEdit = ({
   serviceEngineerDetails: ServiceEngineerDetails | null;
   formState: FormState;
   setFormState: React.Dispatch<React.SetStateAction<FormState>>;
-  setServiceEngineerData: React.Dispatch<React.SetStateAction<ServiceEngineerDetails | null>>;
+  setServiceEngineerData: React.Dispatch<
+    React.SetStateAction<ServiceEngineerDetails | null>
+  >;
 }) => {
-  const [newServiceEngineerData, setNewServiceEngineerData] = useState<ServiceEngineerDetails>(emptyServiceEngineer);
-  const { data: clientOptions = [] } = useFetchClientOptions();
-  const { mutate: createServiceEngineer, isPending, isSuccess } = useCreateServiceEngineer();
+  const [newServiceEngineerData, setNewServiceEngineerData] =
+    useState<ServiceEngineerDetails>(emptyServiceEngineer);
+  const { data: clientOptions = [], isLoading: isClientOptinsLoading } =
+    useFetchClientOptions();
+  const {
+    mutate: createServiceEngineer,
+    isPending,
+    isSuccess,
+  } = useCreateServiceEngineer();
   const {
     mutate: editServiceEngineer,
     isPending: isUpdatePending,
     isSuccess: isUpdatingSuccess,
   } = useEditServiceEngineer();
 
-  
-    const updateField = (key: keyof ServiceEngineerDetails, value: string) => {
-      setServiceEngineerData((prev) => ({ ...prev, [key]: value }));
-    };
-    const [selectedClient, setSelectedClient] = useState<DropdownOption>({
-      id: 0,
-      label: "Select Client",
-    });
   useEffect(() => {
     if (formState === "create") {
       setNewServiceEngineerData(emptyServiceEngineer);
@@ -68,34 +69,44 @@ const ServiceEngineerEdit = ({
     setNewServiceEngineerData(emptyServiceEngineer);
   };
 
-const handleSubmit = (e: React.FormEvent) => {
-  e.preventDefault();
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
 
-  // Validate required fields
-  if (!newServiceEngineerData.engineerName || !newServiceEngineerData.engineerMobile) {
-    console.log("Missing required fields");
-    return;
-  }
+    // Validate required fields
+    if (
+      !newServiceEngineerData.engineerName ||
+      !newServiceEngineerData.engineerMobile
+    ) {
+      console.log("Missing required fields");
+      return;
+    }
 
-  console.log("Form submitted with state:", formState);
-  console.log("Service Engineer data:", newServiceEngineerData);
+    console.log("Form submitted with state:", formState);
+    console.log("Service Engineer data:", newServiceEngineerData);
 
-  if (formState === "create") {
-    createServiceEngineer(newServiceEngineerData);
-  } else if (formState === "edit") {
-    editServiceEngineer(newServiceEngineerData);
-  }
-};
+    if (formState === "create") {
+      createServiceEngineer(newServiceEngineerData);
+    } else if (formState === "edit") {
+      editServiceEngineer(newServiceEngineerData);
+    }
+  };
 
-const hasData =
-  newServiceEngineerData.engineerName.trim() !== "" ||
-  newServiceEngineerData.engineerMobile !== 0;
-
+  const hasData =
+    newServiceEngineerData.engineerName.trim() !== "" ||
+    newServiceEngineerData.engineerMobile !== 0;
 
   if (!newServiceEngineerData) {
     return (
       <p className="text-center text-sm text-gray-500">
         Select a service engineer to view details.
+      </p>
+    );
+  }
+
+  if (isClientOptinsLoading) {
+    return (
+      <p className="text-center text-sm text-gray-500">
+        Loading client options...
       </p>
     );
   }
@@ -146,14 +157,15 @@ const hasData =
                   state="default"
                   type="submit"
                   disabled={
-                    isUpdatePending || isEqual(newServiceEngineerData, serviceEngineerDetails)
+                    isUpdatePending ||
+                    isEqual(newServiceEngineerData, serviceEngineerDetails)
                   }
                 />
               )}
             </section>
           </header>
 
-          <section className="loan-details-section flex w-full flex-col gap-2 overflow-clip px-3">
+          <section className="loan-details-section flex w-full flex-col gap-2 px-3">
             <div className="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-3">
               <Input
                 required
@@ -165,48 +177,69 @@ const hasData =
                 placeholder="Enter engineer name"
                 maxLength={50}
                 onChange={(value) =>
-                  setNewServiceEngineerData({ ...newServiceEngineerData, engineerName: value })
+                  setNewServiceEngineerData({
+                    ...newServiceEngineerData,
+                    engineerName: value,
+                  })
                 }
               />
             </div>
-
             <Input
               disabled={formState === "display"}
               title="Mobile Number"
               type="num"
-  inputValue={
-    newServiceEngineerData.engineerMobile === 0
-      ? ""
-      : newServiceEngineerData.engineerMobile
-  }
+              inputValue={
+                newServiceEngineerData.engineerMobile === 0
+                  ? ""
+                  : newServiceEngineerData.engineerMobile
+              }
               name="engineerMobile"
               placeholder="Enter mobile number"
               maxLength={200}
               onChange={(value) =>
-                setNewServiceEngineerData({ ...newServiceEngineerData, engineerMobile: value === "" ? 0 : value })
+                setNewServiceEngineerData({
+                  ...newServiceEngineerData,
+                  engineerMobile: value === "" ? 0 : value,
+                })
               }
             />
-                      <DropdownSelect
-            title="Client"
-            options={clientOptions}
-            selected={selectedClient}
-            onChange={(val) => {
-              setSelectedClient(val);
-              updateField("clientName", val.label);
-            }}
-            required
-          />
+
+            <DropdownSelect
+              title="Client"
+              options={clientOptions}
+              selected={
+                clientOptions.find(
+                  (client) =>
+                    client.label === newServiceEngineerData.clientName,
+                ) || {
+                  id: 0,
+                  label: "Select client",
+                }
+              }
+              onChange={(val) => {
+                setNewServiceEngineerData({
+                  ...newServiceEngineerData,
+                  clientName: val.label,
+                });
+              }}
+              required
+            />
           </section>
           <div className="px-3">
-              <TextArea
-            title="Remarks"
-            name="Remarks"
-            placeholder="Remarks"
-            disabled={formState === "display"}
-            inputValue={newServiceEngineerData.remarks}
-            onChange={(value)=>setNewServiceEngineerData({...newServiceEngineerData , remarks:value})}
+            <TextArea
+              title="Remarks"
+              name="Remarks"
+              placeholder="Remarks"
+              disabled={formState === "display"}
+              inputValue={newServiceEngineerData.remarks}
+              onChange={(value) =>
+                setNewServiceEngineerData({
+                  ...newServiceEngineerData,
+                  remarks: value,
+                })
+              }
             />
-</div>
+          </div>
         </form>
       </div>
     </main>
