@@ -176,6 +176,8 @@ const VendorEdit = ({
               required
               disabled={formState === "display"}
               title="Contact Number"
+              min={10}
+              max={10}
               type="str"
               inputValue={newVendorData.contactNumber}
               name="contactNumber"
@@ -198,12 +200,11 @@ const VendorEdit = ({
               }
             />
             <Input
-              required
               disabled={formState === "display"}
-              title="AddressLine1"
+              title="Address Line1"
               type="str"
               inputValue={newVendorData.addressLine1}
-              name="AddressLine1"
+              name="Address Line1"
               placeholder="Enter AddressLine1"
               maxLength={150}
               onChange={(value) =>
@@ -211,12 +212,12 @@ const VendorEdit = ({
               }
             />
                         <Input
-              required
+
               disabled={formState === "display"}
-              title="addressLine2"
+              title="Address Line2"
               type="str"
               inputValue={newVendorData.addressLine2}
-              name="addressLine2"
+              name="Address Line2"
               placeholder="Enter addressLine2"
               maxLength={150}
               onChange={(value) =>
@@ -224,9 +225,8 @@ const VendorEdit = ({
               }
             />
                         <Input
-              required
               disabled={formState === "display"}
-              title="city"
+              title="City"
               type="str"
               inputValue={newVendorData.city}
               name="city"
@@ -237,9 +237,8 @@ const VendorEdit = ({
               }
             />
                                     <Input
-              required
               disabled={formState === "display"}
-              title="state"
+              title="State"
               type="str"
               inputValue={newVendorData.state}
               name="state"
@@ -250,7 +249,6 @@ const VendorEdit = ({
               }
             />
 <Input
-  required
   disabled={formState === "display"}
   title="PinCode"
   type="str"
@@ -267,7 +265,6 @@ const VendorEdit = ({
 />
 
             <Input
-              required
               disabled={formState === "display"}
               title="GST Number"
               type="str"

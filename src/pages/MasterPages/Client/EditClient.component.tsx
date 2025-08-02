@@ -219,7 +219,8 @@ const ClientEdit = ({
               title="Address Line 1"
               inputValue={clientData.addressLine1}
               name="addressLine1"
-              placeholder="Enter address line 1"
+              maxLength={100}
+              placeholder="Enter Address line 1"
               onChange={(value) =>
                 setClientData({ ...clientData, addressLine1: value })
               }
@@ -229,7 +230,8 @@ const ClientEdit = ({
               title="Address Line 2"
               inputValue={clientData.addressLine2}
               name="addressLine2"
-              placeholder="Enter address line 2"
+              placeholder="Enter Address line 2"
+              maxLength={100}
               onChange={(value) =>
                 setClientData({ ...clientData, addressLine2: value })
               }

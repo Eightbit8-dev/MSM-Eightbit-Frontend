@@ -32,6 +32,7 @@ const ClientPage = () => {
     city:"",
     state:"",
     gstNumber: "",
+    remarks:""
   });
 
   const [formState, setFormState] = useState<FormState>("create");
@@ -63,6 +64,7 @@ const ClientPage = () => {
     city:"",
     state:"",
     gstNumber: "",
+    remarks:""
     });
     setFormState("create");
     refetch();
