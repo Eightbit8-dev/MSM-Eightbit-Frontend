@@ -16,28 +16,7 @@ import { useCreateServiceEntry } from "@/queries/TranscationQueries/ServiceEntry
 import { convertToBackendDate } from "@/utils/commonUtils";
 import { useFetchVendorOptions } from "@/queries/masterQueries/VendorQuery";
 
-// Helper to generate a random reference number
-
-// const { data: vendorOptions = [], isLoading: vendorLoading } = useFetchVendorOptions();
-
-// Helper to get today's date in YYYY-MM-DD
-
 const RequestEntry = () => {
-  // const [form, setForm] = useState({
-  //   referenceNo: generateReferenceNumber(),
-  //   serviceDate: getTodayDate(),
-  //   clientName: "",
-  //   maintenanceType: "", // General / Breakdown / Warranty / Non-Warranty
-  //   problemReported: null as DropdownOption | null,
-  //   vendor: null as DropdownOption | null,
-  //   engineer: null as DropdownOption | null,
-  //   brand: "",
-  //   type: "",
-  //   model: "",
-  //   serialNumber: "",
-  //   engineerDiagnostics: "",
-  // });
-
   //Scroped to this only as we dont use it anywhere else
   const getMaxDate = () => {
     const today = new Date();
@@ -133,10 +112,52 @@ const RequestEntry = () => {
         <Input
           title="Reference No"
           name="referenceNo"
+          disabled
           inputValue={formData.refNumber}
           onChange={(val) => {
             setFormData({ ...formData, refNumber: val });
           }}
+        />
+
+        <DropdownSelect
+          title="Client Name"
+          disabled
+          options={[]}
+          selected={{ id: 0, label: serviceRequestData.clientName }}
+          onChange={() => {}}
+          required
+        />
+
+        <DropdownSelect
+          title="Machine Brand"
+          options={[]}
+          disabled={true}
+          selected={{ id: 404, label: serviceRequestData.brand }}
+          onChange={() => {}}
+        />
+
+        <DropdownSelect
+          title="Machine Type"
+          options={[]}
+          disabled
+          selected={{ id: 404, label: serviceRequestData.machineType }}
+          onChange={() => {}}
+        />
+
+        <DropdownSelect
+          title="Machine Model"
+          options={[]}
+          disabled
+          selected={{ id: 404, label: serviceRequestData.modelNumber }}
+          onChange={() => {}}
+        />
+
+        <DropdownSelect
+          title="Machine Serial Number"
+          disabled
+          options={[]}
+          selected={{ id: 404, label: serviceRequestData.brand }}
+          onChange={() => {}}
         />
         <DateInput
           title="Service Date"
@@ -148,12 +169,7 @@ const RequestEntry = () => {
           maxDate={getMaxDate()}
           required
         />
-        {/* <Input
-          title="Client Name"
-          inputValue={formData.clientName}
-          onChange={(val) => updateField("clientName", val)}
-          required
-        /> */}
+
         <DropdownSelect
           title="Maintenance Type"
           disabled={formState === "display"}
@@ -207,43 +223,6 @@ const RequestEntry = () => {
           }
           onChange={(val) => setFormData({ ...formData, engineerId: val.id })}
         />
-        {/* <DropdownSelect
-          title="Brand"
-          options={brandOptions}
-          selected={
-            brandOptions.find((b) => b.label === form.brand) || brandOptions[0]
-          }
-          onChange={(val) => updateField("brand", val.label)}
-        />
-
-        <DropdownSelect
-          title="Type"
-          options={typeOptions}
-          selected={
-            typeOptions.find((t) => t.label === form.type) || typeOptions[0]
-          }
-          onChange={(val) => updateField("type", val.label)}
-        />
-
-        <DropdownSelect
-          title="Model"
-          options={modelOptions}
-          selected={
-            modelOptions.find((m) => m.label === form.model) || modelOptions[0]
-          }
-          onChange={(val) => updateField("model", val.label)}
-        /> */}
-
-        {/* <DropdownSelect
-          title="Serial Number"
-          options={serialOptions}
-          selected={
-            serialOptions.find((s) => s.label === form.serialNumber) ||
-            serialOptions[0]
-          }
-          onChange={(val) => updateField("serialNumber", val.label)}
-        /> */}
-
         <Input
           title="Engineer Diagnostics"
           name="engineerDiagnostics"
@@ -253,15 +232,9 @@ const RequestEntry = () => {
           }
           placeholder="Enter diagnosis"
         />
-        <TextArea
-          title="Remarks"
-          name="RequestEntryRemarks"
-          placeholder="Eg : Completed within the scheduled time frame."
-          inputValue={formData.remarks}
-          onChange={(val) => setFormData({ ...formData, remarks: val })}
-        />
         <DropdownSelect
           title="Service Status"
+          direction="up"
           disabled={formState === "display"}
           options={statusOptions}
           selected={
@@ -274,6 +247,14 @@ const RequestEntry = () => {
             setFormData({ ...formData, serviceStatus: val.label })
           }
         />
+        <TextArea
+          title="Remarks"
+          name="RequestEntryRemarks"
+          placeholder="Eg : Completed within the scheduled time frame."
+          inputValue={formData.remarks}
+          onChange={(val) => setFormData({ ...formData, remarks: val })}
+        />
+
         <MultiFileUpload />
         <div className="col-span-1 mt-4 flex justify-end md:col-span-2">
           <ButtonSm

@@ -145,7 +145,7 @@ const ClientEdit = ({
 
               {formState === "edit" && (
                 <ButtonSm
-                  className="font-medium text-white disabled:opacity-50"
+                  className="font-medium text-white disabled:opacity-60"
                   text={isUpdatePending ? "Updating..." : "Save Changes"}
                   state="default"
                   type="button"

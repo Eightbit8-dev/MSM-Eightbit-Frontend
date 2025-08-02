@@ -90,7 +90,10 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
   const isInvalid = required && selected.id === 0 && wasSubmitted;
 
   return (
-    <div className={`relative ${className}`} ref={dropdownRef}>
+    <div
+      className={`relative ${className} disabled:cursor-not-allowed`}
+      ref={dropdownRef}
+    >
       {title && (
         <h3 className="mb-0.5 w-full justify-start text-xs leading-loose font-semibold text-slate-700">
           {title}
@@ -100,32 +103,30 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
 
       {/* Hidden input triggers native validation */}
       <input
-        id={`dropdown-hidden-${title}`}
+        id={`dropdown-hidden-${title} `}
         type="text"
         required={required}
         value={selected.id === 0 ? "" : selected.id}
         onChange={() => {}}
         disabled={disabled}
-        className="hidden"
+        className="hidden disabled:cursor-not-allowed"
         tabIndex={-1}
       />
 
       <motion.div
+        style={{ cursor: disabled ? "not-allowed" : "pointer" }}
         onClick={toggleDropdown}
         animate={shake ? { x: [-5, 5, -5, 5, 0] } : {}}
         transition={{ duration: 0.4 }}
-        className={`input-container flex cursor-pointer flex-row items-center justify-between rounded-xl border-2 bg-white px-3 py-3 transition-all ${
-          isInvalid
-            ? "border-red-500"
-            : isOpen
-              ? "border-slate-500"
-              : "border-slate-300"
-        } ${disabled ? "pointer-events-none" : ""}`}
+        className={`input-container flex items-center justify-between rounded-xl border-2 bg-white px-3 py-3 transition-all ${
+          disabled
+            ? "pointer-events-none cursor-not-allowed opacity-60"
+            : "cursor-pointer"
+        } ${isInvalid ? "border-red-500" : isOpen ? "border-slate-500" : "border-slate-300"}`}
       >
-<span className="text-sm font-medium text-slate-600 whitespace-nowrap overflow-hidden text-ellipsis">
-  {selected.label}
-</span>
-
+        <span className="overflow-hidden text-sm font-medium text-ellipsis whitespace-nowrap text-slate-600">
+          {selected.label}
+        </span>
 
         <img
           src="/icons/dropdown.svg"
