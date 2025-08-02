@@ -118,19 +118,19 @@ const MultiFileUpload: React.FC<MultiFileUploadProps> = ({
         {files.length === 0 ? (
           <p className="text-sm text-slate-400">No files uploaded yet.</p>
         ) : (
-          <ul className="flex flex-col gap-4">
+          <ul className="flex flex-row flex-wrap gap-4">
             {files.map((file) => {
               const result = fileResults.find((r) => r.fileName === file.name);
               return (
                 <li
                   key={file.name}
-                  className="flex items-center justify-between rounded-md border-1 border-slate-300/50 bg-white p-3 shadow-sm"
+                  className="flex items-center justify-start gap-2 w-fit  rounded-md "
                 >
                   <div>
                     <p className="text-sm font-medium text-slate-700">
                       {file.name}
                     </p>
-                    <p
+                    {/* <p
                       className={`text-xs ${
                         result?.loadResult === "danger"
                           ? "text-red-500"
@@ -140,14 +140,15 @@ const MultiFileUpload: React.FC<MultiFileUploadProps> = ({
                       {result?.loadResult === "success"
                         ? "Uploaded successfully"
                         : result?.error || "Uploading..."}
-                    </p>
+                    </p> */}
                   </div>
-                  <ButtonSm
-                    state="default"
-                    text="Remove"
-                    className="self-end bg-red-100 text-red-600 hover:bg-red-200 active:bg-red-300"
-                    onClick={() => removeFile(file.name)}
-                  />
+
+                                            <ButtonSm
+                                              onClick={() => removeFile(file.name)}
+                                              className="aspect-square scale-90 border-1 h-10 p-3 w-10 border-red-500 bg-red-100 text-red-500 hover:bg-red-100 active:bg-red-100"
+                                              state="default"
+                                              imgUrl="/icons/delete-icon.svg"
+                                            />
                 </li>
               );
             })}
