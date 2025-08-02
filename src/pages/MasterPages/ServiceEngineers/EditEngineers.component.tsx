@@ -9,11 +9,14 @@ import {
 } from "../../../queries/masterQueries/ServiceEngineersQuery";
 import TextArea from "../../../components/common/Textarea";
 import isEqual from "lodash.isequal";
-
+import DropdownSelect, { type DropdownOption } from "@/components/common/DropDown";
+import { useFetchClientOptions } from "@/queries/masterQueries/ClientQuery";
 const emptyServiceEngineer: ServiceEngineerDetails = {
   id: 0,
   engineerName: "",
   engineerMobile: 0,
+  remarks: "",
+  clientId:0;
 };
 const ServiceEngineerEdit = ({
   serviceEngineerDetails,
@@ -27,7 +30,7 @@ const ServiceEngineerEdit = ({
   setServiceEngineerData: React.Dispatch<React.SetStateAction<ServiceEngineerDetails | null>>;
 }) => {
   const [newServiceEngineerData, setNewServiceEngineerData] = useState<ServiceEngineerDetails>(emptyServiceEngineer);
-
+  const { data: clientOptions = [] } = useFetchClientOptions();
   const { mutate: createServiceEngineer, isPending, isSuccess } = useCreateServiceEngineer();
   const {
     mutate: editServiceEngineer,
@@ -35,6 +38,14 @@ const ServiceEngineerEdit = ({
     isSuccess: isUpdatingSuccess,
   } = useEditServiceEngineer();
 
+  
+    const updateField = (key: keyof ServiceEngineerDetails, value: string) => {
+      setServiceEngineerData((prev) => ({ ...prev, [key]: value }));
+    };
+    const [selectedClient, setSelectedClient] = useState<DropdownOption>({
+      id: 0,
+      label: "Select Client",
+    });
   useEffect(() => {
     if (formState === "create") {
       setNewServiceEngineerData(emptyServiceEngineer);
@@ -175,7 +186,27 @@ const hasData =
                 setNewServiceEngineerData({ ...newServiceEngineerData, engineerMobile: value === "" ? 0 : value })
               }
             />
+                      <DropdownSelect
+            title="Client"
+            options={clientOptions}
+            selected={selectedClient}
+            onChange={(val) => {
+              setSelectedClient(val);
+              updateField("clientName", val.label);
+            }}
+            required
+          />
           </section>
+          <div className="px-3">
+              <TextArea
+            title="Remarks"
+            name="Remarks"
+            placeholder="Remarks"
+            disabled={formState === "display"}
+            inputValue={newServiceEngineerData.remarks}
+            onChange={(value)=>setNewServiceEngineerData({...newServiceEngineerData , remarks:value})}
+            />
+</div>
         </form>
       </div>
     </main>

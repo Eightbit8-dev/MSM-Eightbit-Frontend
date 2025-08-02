@@ -14,6 +14,7 @@ const emptyProblem: ProblemDetails = {
   id: 0,
   problemType: "",
   description: "",
+  remarks:""
 };
 const ProblemEdit = ({
   problemDetails,
@@ -171,6 +172,16 @@ const handleSubmit = (e: React.FormEvent) => {
               }
             />
           </section>
+          <div className="px-3">
+              <TextArea
+            title="Remarks"
+            name="Remarks"
+            placeholder="Remarks"
+            disabled={formState === "display"}
+            inputValue={newProblemData.remarks}
+            onChange={(value)=>setNewProblemData({...newProblemData , remarks:value})}
+            />
+</div>
         </form>
       </div>
     </main>

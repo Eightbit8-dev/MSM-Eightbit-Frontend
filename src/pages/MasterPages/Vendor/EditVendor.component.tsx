@@ -7,6 +7,7 @@ import {
   useEditVendor,
 } from "../../../queries/masterQueries/VendorQuery";
 import type { VendorDetails } from "../../../types/masterApiTypes";
+import TextArea from "@/components/common/Textarea";
 
 const VendorEdit = ({
   vendorDetails,
@@ -38,6 +39,7 @@ const VendorEdit = ({
     pinCode:0,
     state:"",
     gstNumber: "",
+    remarks:""
 
   };
 
@@ -277,7 +279,18 @@ const VendorEdit = ({
                 setNewVendorData({ ...newVendorData, gstNumber: value })
               }
             />
+          
           </section>
+<div className="px-3">
+              <TextArea
+            title="Remarks"
+            name="Remarks"
+            placeholder="Remarks"
+            disabled={formState === "display"}
+            inputValue={newVendorData.remarks}
+            onChange={(value)=>setNewVendorData({...newVendorData , remarks:value})}
+            />
+</div>
         </form>
       </div>
     </main>

@@ -7,6 +7,8 @@ import {
   useCreateClient,
   useEditClient,
 } from "../../../queries/masterQueries/ClientQuery";
+import TextArea from "@/components/common/Textarea";
+
 
 const ClientEdit = ({
   clientDetails,
@@ -41,6 +43,7 @@ const ClientEdit = ({
     pinCode: 0,
     state: "",
     gstNumber: "",
+    remarks:""
   };
 
   const disableButton =
@@ -275,6 +278,16 @@ const ClientEdit = ({
               }
             />
           </section>
+          <div className="px-3">
+              <TextArea
+            title="Remarks"
+            name="Remarks"
+            placeholder="Remarks"
+            disabled={formState === "display"}
+            inputValue={clientData.remarks}
+            onChange={(value)=>setClientData({...clientData , remarks:value})}
+            />
+</div>
         </form>
       </div>
     </main>

@@ -9,6 +9,7 @@ import {
   useCreateSpare,
   useEditSpare,
 } from "../../../queries/masterQueries/SpareQuery";
+import TextArea from "@/components/common/Textarea";
 
 const containerVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -40,6 +41,7 @@ const SpareEdit = ({
     id: 0,
     spareName: "",
     partNumber: "",
+    remarks:""
   };
 
   useEffect(() => {
@@ -177,6 +179,18 @@ const SpareEdit = ({
               }}
             />
           </section>
+                    <div className="px-3">
+              <TextArea
+            title="Remarks"
+            name="Remarks"
+            placeholder="Remarks"
+            disabled={formState === "display"}
+            inputValue={newSpareData?.remarks ?? ""}
+            onChange={(value)=>{
+              if (!newSpareData) return;
+              setNewSpareData({...newSpareData , remarks:value})}}
+            />
+</div>
         </form>
       </motion.div>
     </motion.main>

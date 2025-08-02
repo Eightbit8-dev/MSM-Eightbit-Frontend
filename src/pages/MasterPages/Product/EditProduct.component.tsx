@@ -48,6 +48,7 @@ const ProductEdit = ({
         brand: "",
         modelNumber: "",
         description: "",
+        remarks:""
       });
     } else if (productDetails) {
       setProductData(productDetails);
@@ -62,6 +63,7 @@ const ProductEdit = ({
         brand: "",
         modelNumber: "",
         description: "",
+        remarks:""
       };
       setFormState("create");
       setProduct(resetData);
@@ -80,6 +82,7 @@ const ProductEdit = ({
       brand: "",
       modelNumber: "",
       description: "",
+      remarks:""
     };
     setProduct(resetData);
     setProductData(resetData);
@@ -220,6 +223,16 @@ const ProductEdit = ({
               }
             />
           </section>
+          <div className="px-3">
+              <TextArea
+            title="Remarks"
+            name="Remarks"
+            placeholder="Remarks"
+            disabled={formState === "display"}
+            inputValue={productData.remarks}
+            onChange={(value)=>setProductData({...productData , remarks:value})}
+            />
+</div>
         </form>
       </div>
     </main>

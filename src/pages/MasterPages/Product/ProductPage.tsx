@@ -24,6 +24,7 @@ const ProductsPage = () => {
     brand: "",
     modelNumber: "",
     description: "",
+    remarks:""
   });
 
   const [formState, setFormState] = useState<FormState>("create");
@@ -48,6 +49,7 @@ const ProductsPage = () => {
       brand: "",
       modelNumber: "",
       description: "",
+      remarks:""
     });
     setFormState("create");
     refetch();

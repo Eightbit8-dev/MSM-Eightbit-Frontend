@@ -19,6 +19,7 @@ import {
   convertToFrontendDate,
 } from "@/utils/commonUtils";
 import type { MachineDetails } from "@/types/transactionTypes";
+
 import MultiFileUpload from "@/components/common/FileUploadBox";
 
 type Mode = "create" | "edit" | "display";

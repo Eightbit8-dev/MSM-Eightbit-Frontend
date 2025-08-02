@@ -10,7 +10,8 @@ export interface VendorDetails {
   addressLine2:string;
   city:string;
   pinCode:number;
-  state:string
+  state:string;
+  remarks:string;
 }
 
 export interface VendorResponse {
@@ -32,6 +33,7 @@ export interface ClientDetails {
   pinCode: number;
   state: string;
   gstNumber: string;
+  remarks:string;
 }
 
 
@@ -48,6 +50,7 @@ export interface ProductDetails {
   brand: string;
   modelNumber: string;
   description: string;
+  remarks:string;
 }
 
 export interface ProductResponse {
@@ -61,6 +64,7 @@ export interface SpareDetails {
   id: number;
   spareName: string;
   partNumber: string;
+  remarks:string;
 }
 
 export interface SpareResponse {
@@ -74,6 +78,7 @@ export interface ProblemDetails {
   id: number;
   problemType: string;
   description: string;
+  remarks:string;
 }
 
 export interface ProblemResponse {
@@ -93,6 +98,9 @@ export interface ServiceEngineerDetails {
   id: number;
   engineerName: string;
   engineerMobile: number;
+  remarks:string;
+  clientId: number;
+  clientName: string;
 }
 
 //-------------old remove this later ------------
