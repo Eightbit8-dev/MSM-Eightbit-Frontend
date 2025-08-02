@@ -86,23 +86,32 @@ const ServiceEngineerEdit = ({
     console.log("Service Engineer data:", newServiceEngineerData);
 
     if (formState === "create") {
-      setNewServiceEngineerData({
-        ...newServiceEngineerData,
+      const payload = {
+        id: 0,
+        clientName: newServiceEngineerData.clientName,
+        engineerName: newServiceEngineerData.engineerName,
+        engineerMobile: newServiceEngineerData.engineerMobile,
         clientId:
           clientOptions.find(
             (client) => client.label === newServiceEngineerData.clientName,
           )?.id || 0,
-      });
-      createServiceEngineer(newServiceEngineerData);
+        remarks: newServiceEngineerData.remarks,
+      };
+
+      createServiceEngineer(payload);
     } else if (formState === "edit") {
-      setNewServiceEngineerData({
-        ...newServiceEngineerData,
+      const payload = {
+        id: 0,
+        clientName: newServiceEngineerData.clientName,
+        engineerName: newServiceEngineerData.engineerName,
+        engineerMobile: newServiceEngineerData.engineerMobile,
         clientId:
           clientOptions.find(
             (client) => client.label === newServiceEngineerData.clientName,
           )?.id || 0,
-      });
-      editServiceEngineer(newServiceEngineerData);
+        remarks: newServiceEngineerData.remarks,
+      };
+      editServiceEngineer(payload);
     }
   };
 
