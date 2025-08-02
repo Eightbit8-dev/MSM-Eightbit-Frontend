@@ -13,7 +13,10 @@ import { toast } from "react-toastify";
 import type { ServiceEntryRequest } from "@/types/transactionTypes";
 import { useFetchServiceEngineerOptions } from "@/queries/masterQueries/ServiceEngineersQuery";
 import { useCreateServiceEntry } from "@/queries/TranscationQueries/ServiceEntryQuery";
-import { convertToBackendDate } from "@/utils/commonUtils";
+import {
+  convertToBackendDate,
+  generateReferenceNumber,
+} from "@/utils/commonUtils";
 import { useFetchVendorOptions } from "@/queries/masterQueries/VendorQuery";
 import {
   maintenanceOptions,
@@ -104,7 +107,7 @@ const RequestEntry = () => {
     if (serviceRequestData) {
       setFormData((prev) => ({
         ...prev,
-        refNumber: serviceRequestData.referenceNumber,
+        refNumber: generateReferenceNumber("SE"),
         serviceRequestId: serviceRequestData.id,
         spareParts: selectedSpares.map((spare: DropdownOption) => {
           return {
@@ -196,6 +199,18 @@ const RequestEntry = () => {
           }}
         />
 
+        <DateInput
+          title="Service Date"
+          disabled={formState === "display"}
+          value={formData.serviceDate}
+          onChange={(val) => {
+            setFormData({ ...formData, serviceDate: val });
+          }}
+          maxDate={getMaxDate()}
+          //inniku naliku nalaniku
+          required
+        />
+
         <DropdownSelect
           title="Client Name"
           disabled
@@ -203,6 +218,71 @@ const RequestEntry = () => {
           selected={{ id: 0, label: serviceRequestData.clientName }}
           onChange={() => {}}
           required
+        />
+
+        <div className="flex w-full flex-col gap-3 md:flex-row">
+          <DropdownSelect
+            required
+            className="w-full"
+            title="Maintenance Type"
+            disabled={formState === "display"}
+            options={maintenanceOptions}
+            selected={
+              maintenanceOptions.find(
+                (m) => m.label === formData.maintenanceType,
+              ) || { id: 0, label: "Select Maintenance Type" }
+            }
+            onChange={(val) =>
+              setFormData({ ...formData, maintenanceType: val.label })
+            }
+          />
+
+          {formData.maintenanceType === "Non-Warranty" && (
+            <DropdownSelect
+              required={formData.maintenanceType === "Non-Warranty"}
+              title="Non-warranty Type"
+              className="w-full"
+              disabled={
+                formData.maintenanceType !== "Non-Warranty" ||
+                formState === "display"
+              }
+              options={maintenanceSubtTypeOptions}
+              selected={
+                maintenanceSubtTypeOptions.find(
+                  (m) => m.label === formData.maintenanceSubType,
+                ) || { id: 0, label: "Select Non-warranty Type" }
+              }
+              onChange={(val) =>
+                setFormData({ ...formData, maintenanceSubType: val.label })
+              }
+            />
+          )}
+        </div>
+        <DropdownSelect
+          required
+          title="Vendor Name"
+          options={vendorOptions}
+          selected={
+            vendorOptions.find((m) => m.id === formData.vendorId) || {
+              id: 0,
+              label: "Select Vendor",
+            }
+          }
+          onChange={(val) => setFormData({ ...formData, vendorId: val.id })}
+        />
+
+        <DropdownSelect
+          required
+          title="Engineer Name"
+          disabled={formState === "display"}
+          options={engineerOptions}
+          selected={
+            engineerOptions.find((opt) => opt.id === formData.engineerId) || {
+              id: 0,
+              label: "Select Engineer",
+            }
+          }
+          onChange={(val) => setFormData({ ...formData, engineerId: val.id })}
         />
 
         <DropdownSelect
@@ -236,109 +316,21 @@ const RequestEntry = () => {
           selected={{ id: 404, label: serviceRequestData.brand }}
           onChange={() => {}}
         />
-        <DateInput
-          title="Service Date"
-          disabled={formState === "display"}
-          value={formData.serviceDate}
-          onChange={(val) => {
-            setFormData({ ...formData, serviceDate: val });
-          }}
-          maxDate={getMaxDate()}
-          required
-        />
 
-        <DropdownSelect
-          required
-          title="Maintenance Type"
-          disabled={formState === "display"}
-          options={maintenanceOptions}
-          selected={
-            maintenanceOptions.find(
-              (m) => m.label === formData.maintenanceType,
-            ) || { id: 0, label: "Select Maintenance Type" }
-          }
-          onChange={(val) =>
-            setFormData({ ...formData, maintenanceType: val.label })
-          }
-        />
-
-        <DropdownSelect
-          title="Non-warranty Type"
-          disabled={
-            formData.maintenanceType !== "Non-Warranty" ||
-            formState === "display"
-          }
-          options={maintenanceSubtTypeOptions}
-          selected={
-            maintenanceSubtTypeOptions.find(
-              (m) => m.label === formData.maintenanceSubType,
-            ) || { id: 0, label: "Select Non-warranty Type" }
-          }
-          onChange={(val) =>
-            setFormData({ ...formData, maintenanceSubType: val.label })
-          }
-        />
-
-        <DropdownSelect
-          required
-          title="Vendor Name"
-          options={vendorOptions}
-          selected={
-            vendorOptions.find((m) => m.id === formData.vendorId) || {
-              id: 0,
-              label: "Select Vendor",
-            }
-          }
-          onChange={(val) => setFormData({ ...formData, vendorId: val.id })}
-        />
-
-        <DropdownSelect
-          required
-          title="Engineer Name"
-          disabled={formState === "display"}
-          options={engineerOptions}
-          selected={
-            engineerOptions.find((opt) => opt.id === formData.engineerId) || {
-              id: 0,
-              label: "Select Engineer",
-            }
-          }
-          onChange={(val) => setFormData({ ...formData, engineerId: val.id })}
-        />
-        <Input
+        <TextArea
           required
           title="Engineer Diagnostics"
           name="engineerDiagnostics"
+          className="min-h-full"
           inputValue={formData.engineerDiagnostics}
           onChange={(val) =>
             setFormData({ ...formData, engineerDiagnostics: val })
           }
           placeholder="Enter diagnosis"
         />
-        <DropdownSelect
-          required
-          title="Service Status"
-          direction="up"
-          disabled={formState === "display"}
-          options={statusOptions}
-          selected={
-            statusOptions.find((m) => m.label === formData.serviceStatus) ?? {
-              id: 0,
-              label: "Select Service Status",
-            }
-          }
-          onChange={(val) =>
-            setFormData({ ...formData, serviceStatus: val.label })
-          }
-        />
-        <Input
-          title="Remarks"
-          name="RequestEntryRemarks"
-          placeholder="Eg : Completed within the scheduled time frame."
-          inputValue={formData.remarks}
-          onChange={(val) => setFormData({ ...formData, remarks: val })}
-        />
-        <div className="flex flex-col gap-3">
+
+        <MultiFileUpload />
+        <div className="multi-select-container flex flex-col gap-3">
           <MultiSelectDropdown
             title="Spares"
             options={sparesOptions}
@@ -391,6 +383,7 @@ const RequestEntry = () => {
                         className="w-16 items-center rounded border border-slate-300 px-2 py-1 text-center text-sm"
                       />
                       <button
+                        disabled={spareQuantities[spare.id] >= 10}
                         type="button"
                         onClick={() =>
                           updateSpareQuantity(
@@ -409,12 +402,34 @@ const RequestEntry = () => {
             </div>
           )}
         </div>
-        <MultiFileUpload />
+        <DropdownSelect
+          required
+          title="Service Status"
+          direction="up"
+          disabled={formState === "display"}
+          options={statusOptions}
+          selected={
+            statusOptions.find((m) => m.label === formData.serviceStatus) ?? {
+              id: 0,
+              label: "Pending",
+            }
+          }
+          onChange={(val) =>
+            setFormData({ ...formData, serviceStatus: val.label })
+          }
+        />
+        <Input
+          title="Remarks"
+          name="RequestEntryRemarks"
+          placeholder="Eg : Completed within the scheduled time frame."
+          inputValue={formData.remarks}
+          onChange={(val) => setFormData({ ...formData, remarks: val })}
+        />
         <div className="col-span-1 mt-4 flex justify-end md:col-span-2">
           <ButtonSm
             isPending={isCreateServiceEntryPending}
             type="submit"
-            text="Submit Request"
+            text="Submit"
             state="default"
             className="text-white"
           />

@@ -11,7 +11,7 @@ import TextArea from "../../../components/common/Textarea";
 import isEqual from "lodash.isequal";
 import DropdownSelect from "@/components/common/DropDown";
 import { useFetchClientOptions } from "@/queries/masterQueries/ClientQuery";
-import { set } from "zod";
+
 const emptyServiceEngineer: ServiceEngineerDetails = {
   id: 0,
   engineerName: "",
@@ -100,21 +100,20 @@ const ServiceEngineerEdit = ({
 
       createServiceEngineer(payload);
     } else if (formState === "edit") {
-  const payload = {
-    id: newServiceEngineerData.id, // ✅ Pass selected engineer ID
-    clientName: newServiceEngineerData.clientName,
-    engineerName: newServiceEngineerData.engineerName,
-    engineerMobile: newServiceEngineerData.engineerMobile,
-    clientId:
-      clientOptions.find(
-        (client) => client.label === newServiceEngineerData.clientName
-      )?.id || 0,
-    remarks: newServiceEngineerData.remarks,
-  };
+      const payload = {
+        id: newServiceEngineerData.id, // ✅ Pass selected engineer ID
+        clientName: newServiceEngineerData.clientName,
+        engineerName: newServiceEngineerData.engineerName,
+        engineerMobile: newServiceEngineerData.engineerMobile,
+        clientId:
+          clientOptions.find(
+            (client) => client.label === newServiceEngineerData.clientName,
+          )?.id || 0,
+        remarks: newServiceEngineerData.remarks,
+      };
 
-  editServiceEngineer(payload); // ✅ ID is passed via payload
-}
-
+      editServiceEngineer(payload); // ✅ ID is passed via payload
+    }
   };
 
   const hasData =

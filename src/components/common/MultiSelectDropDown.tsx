@@ -113,7 +113,7 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
   return (
     <div className={`${className} w-full`}>
       {title && (
-        <h3 className="mb-2 text-xs leading-loose font-semibold text-slate-700">
+        <h3 className="mb-0.5 text-xs leading-loose font-semibold text-slate-700">
           {title}
           {required && <span className="text-red-500">*</span>}
         </h3>

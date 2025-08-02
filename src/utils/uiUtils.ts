@@ -26,9 +26,8 @@ export const maintenanceSubtTypeOptions: DropdownOption[] = [
 ];
 
 export const statusOptions: DropdownOption[] = [
-  { id: 1, label: "Pending" },
-  { id: 2, label: "Completed" },
-  { id: 3, label: "Cancelled" },
+  { id: 1, label: "Completed" },
+  { id: 2, label: "Not Completed" },
 ];
 
 export const fetchEmployeeSuggestions = async (query: string) => {

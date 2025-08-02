@@ -113,7 +113,7 @@ const MultiFileUpload: React.FC<MultiFileUploadProps> = ({
       {/* Right: Uploaded Files List */}
       <div className="w-full rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
         <h3 className="mb-3 text-base font-semibold text-slate-700">
-          Uploaded Files ( Max : 3 Photos )
+          Photos of complaint Spares ( Max : 3 Photos )
         </h3>
         {files.length === 0 ? (
           <p className="text-sm text-slate-400">No files uploaded yet.</p>
