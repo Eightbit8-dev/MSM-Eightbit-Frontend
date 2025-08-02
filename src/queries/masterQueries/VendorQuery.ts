@@ -5,6 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { apiRoutes } from "../../routes/apiRoutes";
 import Cookies from "js-cookie";
+import type { DropdownOption } from "@/components/common/DropDown";
 /**
  * -------------------------------------------
  * Branch Service Hooks - CRUD Operations
@@ -55,6 +56,42 @@ export const useFetchVendors = () => {
     queryKey: ["vendors"], //cache key
     queryFn: fetchAllVendors,
     staleTime: 1000 * 60 * 0, //expoiy time
+    retry: 1,
+  });
+};
+
+
+export const useFetchVendorOptions = () => {
+  const fetchVendor = async (): Promise<DropdownOption[]> => {
+    try {
+      const token = Cookies.get("token");
+      if (!token) throw new Error("Unauthorized to perform this action.");
+
+      const res = await axiosInstance.get(apiRoutes.vendors, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (res.status !== 200) {
+        throw new Error(res.data?.message || "Failed to fetch Vendor options");
+      }
+
+      return res.data.data.map((vendor: VendorDetails) => ({
+        id: vendor.id,
+        label: vendor.vendorName,
+      }));
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data?.message || "Failed to fetch vendors");
+      } else {
+        toast.error("Something went wrong while fetching vendor options");
+      }
+      throw new Error("Vendor options fetch failed");
+    }
+  };
+
+  return useQuery({
+    queryKey: ["vendorOptions"], // lowercase for consistency
+    queryFn: fetchVendor,
     retry: 1,
   });
 };

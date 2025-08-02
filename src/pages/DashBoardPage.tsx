@@ -1,12 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useFetchServiceRequests } from "../queries/TranscationQueries/ServiceRequestQuery"; // Adjust path
 import ButtonSm from "../components/common/Buttons"; // Adjust path
 
 const DashBoardPage: React.FC = () => {
-  const { data, isLoading, isError } = useFetchServiceRequests(1, 10); // page 1, limit 10
+  const [page, setPage] = useState(1);
+  const limit = 10;
+
+  const navigate = useNavigate();
+  const { data, isLoading, isError } = useFetchServiceRequests(page, limit);
 
   if (isLoading) return <div className="p-4">Loading...</div>;
   if (isError) return <div className="p-4 text-red-500">Failed to load data.</div>;
+
+  const totalPages = Math.ceil(data?.totalRecords || 0 / limit);
 
   return (
     <div className="dashboard-page-container flex w-full flex-col px-6 py-4">
@@ -20,7 +27,8 @@ const DashBoardPage: React.FC = () => {
           />
         </button>
         <h3 className="text-zinc-800">
-          Service Requests <span className="text-blue-500">({data?.totalRecords})</span>
+          Service Requests{" "}
+          <span className="text-blue-500">({data?.totalRecords})</span>
         </h3>
       </section>
 
@@ -40,7 +48,8 @@ const DashBoardPage: React.FC = () => {
                 <strong>Client:</strong> {request.clientName}
               </p>
               <p className="text-sm text-gray-600">
-                <strong>Machine:</strong> {request.machineType} - {request.brand} {request.modelNumber}
+                <strong>Machine:</strong> {request.machineType} -{" "}
+                {request.brand} {request.modelNumber}
               </p>
               <p className="text-sm text-gray-600">
                 <strong>Serial:</strong> {request.serialNumber}
@@ -57,17 +66,40 @@ const DashBoardPage: React.FC = () => {
               <ButtonSm
                 state="outline"
                 text="View"
-                onClick={() => alert(`Viewing request ${request.referenceNumber}`)}
+                onClick={() =>
+                  alert(`Viewing request ${request.referenceNumber}`)
+                }
               />
               <ButtonSm
                 state="default"
-                text="Accept"
+                text="Report"
                 className="text-white"
-                onClick={() => alert(`Accepted request ${request.referenceNumber}`)}
+                onClick={() => navigate(`/transactions/service-entry-edit/${request.id}`)}
               />
             </div>
           </div>
         ))}
+      </section>
+
+      {/* Pagination Controls */}
+      <section className="mt-6 flex justify-between items-center">
+        <button
+          onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+          disabled={page === 1}
+          className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+        >
+          Previous
+        </button>
+        <span className="text-gray-600">
+          Page {page} of {totalPages}
+        </span>
+        <button
+          onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+          disabled={page === totalPages}
+          className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+        >
+          Next
+        </button>
       </section>
     </div>
   );

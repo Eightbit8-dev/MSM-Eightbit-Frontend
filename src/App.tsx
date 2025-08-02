@@ -16,6 +16,8 @@ import ProblemPage from "./pages/MasterPages/Problem/ProblemPage";
 import ServiceEngineerPage from "./pages/MasterPages/ServiceEngineers/ServiceEngineersPage";
 import ServiceEntry from "./pages/Transaction/serviceRequest/ServiceRequest";
 import ServiceRequest from "./pages/Transaction/serviceRequest/ServiceRequest";
+import ServiceEntryPage from "./pages/Transaction/serviceEntry/ServiceEntry";
+import RequestEntry from "./pages/RequestEntry";
 
 // ------------------Main Pages ---------------------------
 const DashBoardPage = lazy(() => import("./pages/DashBoardPage"));
@@ -112,7 +114,7 @@ const App = () => {
 
             <Route
               path={appRoutes.transactionRoutes.children.serviceEntry}
-              element={<ServiceEntry />}
+              element={<ServiceEntryPage/>}
             />
             <Route
               path={appRoutes.transactionRoutes.children.serviceRequest}
@@ -122,6 +124,10 @@ const App = () => {
             <Route
               path={appRoutes.masterRoutes.children.problemDetails}
               element={<ProblemPage />}
+            />
+            <Route 
+            path={appRoutes.transactionRoutes.children.serviceEntryEdit}
+            element={<RequestEntry/>}
             />
             <Route
               path={appRoutes.masterRoutes.children.users}
