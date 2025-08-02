@@ -7,6 +7,7 @@ interface TextAreaProps {
   onChange: (value: string) => void;
   name?: string;
   prefixText?: string;
+  className?: string;
   required?: boolean;
   maxLength?: number;
   disabled?: boolean;
@@ -16,6 +17,7 @@ interface TextAreaProps {
 const TextArea: React.FC<TextAreaProps> = ({
   title,
   placeholder = "",
+  className = "",
   inputValue,
   onChange,
   minLength = 10,
@@ -37,7 +39,7 @@ const TextArea: React.FC<TextAreaProps> = ({
   };
 
   return (
-    <div className="relative w-full min-w-[180px] self-stretch">
+    <div className={`relative w-full min-w-[180px] self-stretch ${className}`}>
       <div className="flex min-w-full flex-row items-center justify-between">
         <h3 className="mb-0.5 w-full justify-start text-xs leading-loose font-semibold text-slate-700">
           {title}
