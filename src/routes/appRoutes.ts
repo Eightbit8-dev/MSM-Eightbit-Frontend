@@ -7,6 +7,7 @@ export const appRoutes = {
 
   // -------- Dashboard --------
   dashboardPage: "/dashboard",
+  dashboard:"/count",
 
   // -------- Master Routes --------
   masterRoutes: {
