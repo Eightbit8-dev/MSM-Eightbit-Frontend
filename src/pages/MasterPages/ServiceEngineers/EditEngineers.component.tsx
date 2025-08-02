@@ -11,6 +11,7 @@ import TextArea from "../../../components/common/Textarea";
 import isEqual from "lodash.isequal";
 import DropdownSelect from "@/components/common/DropDown";
 import { useFetchClientOptions } from "@/queries/masterQueries/ClientQuery";
+import { set } from "zod";
 const emptyServiceEngineer: ServiceEngineerDetails = {
   id: 0,
   engineerName: "",
@@ -85,8 +86,22 @@ const ServiceEngineerEdit = ({
     console.log("Service Engineer data:", newServiceEngineerData);
 
     if (formState === "create") {
+      setNewServiceEngineerData({
+        ...newServiceEngineerData,
+        clientId:
+          clientOptions.find(
+            (client) => client.label === newServiceEngineerData.clientName,
+          )?.id || 0,
+      });
       createServiceEngineer(newServiceEngineerData);
     } else if (formState === "edit") {
+      setNewServiceEngineerData({
+        ...newServiceEngineerData,
+        clientId:
+          clientOptions.find(
+            (client) => client.label === newServiceEngineerData.clientName,
+          )?.id || 0,
+      });
       editServiceEngineer(newServiceEngineerData);
     }
   };
