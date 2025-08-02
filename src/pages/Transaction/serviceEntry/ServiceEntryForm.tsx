@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Input, { DateInput } from "@/components/common/Input";
 import DropdownSelect, {
   type DropdownOption,
@@ -64,6 +64,10 @@ const RequestEntry = () => {
     [key: number]: number;
   }>({});
 
+  ///for scrolling into view when addinf new spare
+  const [latestSpareId, setLatestSpareId] = useState<number | null>(null);
+  const latestSpareRef = useRef<HTMLDivElement>(null);
+
   // --------- external apis -----------
 
   const {
@@ -123,10 +127,17 @@ const RequestEntry = () => {
 
   // Helper function to clean up quantities when spares are removed
   const handleSparesChange = (newSpares: DropdownOption[]) => {
+    const newSpareIds = new Set(newSpares.map((spare) => spare.id));
+    const oldSpareIds = new Set(selectedSpares.map((spare) => spare.id));
+
+    const addedSpare = newSpares.find((spare) => !oldSpareIds.has(spare.id));
+    if (addedSpare) {
+      setLatestSpareId(addedSpare.id);
+    }
+
     setSelectedSpares(newSpares);
 
-    // Clean up quantities for removed spares
-    const newSpareIds = new Set(newSpares.map((spare) => spare.id));
+    // Clean up removed quantities
     setSpareQuantities((prev) => {
       const cleaned = { ...prev };
       Object.keys(cleaned).forEach((spareIdStr) => {
@@ -138,6 +149,16 @@ const RequestEntry = () => {
       return cleaned;
     });
   };
+
+  useEffect(() => {
+    if (latestSpareRef.current && latestSpareId !== null) {
+      latestSpareRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+      setLatestSpareId(null); // Reset after scrolling
+    }
+  }, [selectedSpares]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -337,6 +358,7 @@ const RequestEntry = () => {
                 {selectedSpares.map((spare) => (
                   <div
                     key={spare.id}
+                    ref={spare.id === latestSpareId ? latestSpareRef : null}
                     className="flex items-center justify-between rounded-lg bg-slate-50 p-2"
                   >
                     <h3 className="mb-2 text-xs leading-loose font-semibold text-slate-700">
