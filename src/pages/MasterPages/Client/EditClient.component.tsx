@@ -205,6 +205,8 @@ const ClientEdit = ({
               }
             />
             <Input
+
+              required
               disabled={formState === "display"}
               title="Email"
               inputValue={clientData.email}
