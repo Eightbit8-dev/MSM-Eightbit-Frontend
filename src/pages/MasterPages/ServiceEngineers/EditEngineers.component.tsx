@@ -16,7 +16,7 @@ const emptyServiceEngineer: ServiceEngineerDetails = {
   engineerName: "",
   engineerMobile: 0,
   remarks: "",
-  clientId:0;
+  clientId:0,
 };
 const ServiceEngineerEdit = ({
   serviceEngineerDetails,
