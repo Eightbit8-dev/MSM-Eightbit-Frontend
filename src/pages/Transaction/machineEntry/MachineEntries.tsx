@@ -185,13 +185,14 @@ const MachineEntry = () => {
                   <div className="flex w-full flex-row gap-2">
                     {[
                       "Reference No",
-                      "Machine S No",
-                      "Installation Date",
-                      "Installed By",
-                      "Client",
+                       "Client",
                       "Machine Type",
                       "Brand",
                       "Model",
+                      "Machine S No",
+                      "Installation Date",
+                      "Installed By",
+                     
                     ].map((label, index) => (
                       <p
                         key={index}
@@ -235,13 +236,14 @@ const MachineEntry = () => {
                       <div className="flex w-full flex-row gap-2">
                         {[
                           item.referenceNumber,
-                          item.serialNumber,
-                          item.installationDate,
-                          item.installedBy,
                           item.clientName,
                           item.machineType,
                           item.brand,
                           item.modelNumber,
+                          item.serialNumber,
+                          item.installationDate,
+                          item.installedBy,
+                          
                         ].map((val, idx) => (
                           <p
                             key={idx}

@@ -2,28 +2,23 @@ import ButtonSm from "@/components/common/Buttons";
 import PageHeader from "@/components/masterPage.components/PageHeader";
 import PaginationControls from "../../../components/common/Pagination";
 import EmployeeTableSkeleton from "../../TableSkleton";
+import DropdownSelect from "@/components/common/DropDown";
 import DialogBox from "@/components/common/DialogBox";
 import { AnimatePresence } from "motion/react";
-import type { FormState } from "@/types/appTypes";
-import DropdownSelect from "@/components/common/DropDown";
-import type { ServiceRequest } from "@/types/transactionTypes";
+
 import { useState } from "react";
-import { useFetchServiceRequests } from "@/queries/TranscationQueries/ServiceRequestQuery";
+import { useFetchEntry } from "@/queries/TranscationQueries/ServiceEntryQuery";
+import { DeleteEntryDialogBox } from "./ServiceEntryDelete.Dialog"; // <- your dialog file
+import type { ServiceEntryRequest } from "@/types/transactionTypes";
 
 const ServiceEntryPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
-  const [selectedRequest, setSelectedRequest] = useState<ServiceRequest | null>(
-    null,
-  );
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [formState, setFormState] = useState<FormState>("create");
+  const [selectedEntry, setSelectedEntry] = useState<ServiceEntryRequest | null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
-  const { data, isLoading } = useFetchServiceRequests(
-    currentPage,
-    itemsPerPage,
-  );
+  const { data, isLoading } = useFetchEntry(currentPage, itemsPerPage);
 
   const paginatedData = data?.data || [];
   const totalPages = data?.totalPages || 0;
@@ -80,28 +75,20 @@ const ServiceEntryPage = () => {
             <div className="tables flex min-h-[300px] w-full flex-col overflow-x-auto rounded-[9px] bg-white shadow-sm">
               {/* Header */}
               <header className="header flex min-w-max flex-row items-center bg-slate-200 px-3 py-3">
-                {/* S.No + Checkbox */}
                 <div className="flex w-[70px] min-w-[70px] items-center justify-start gap-2">
                   <p className="selft-center w-[40px] text-sm font-semibold text-zinc-900">
                     S.No
                   </p>
-                  {/* <CheckboxInput
-                    checked={isAllSelected}
-                    onChange={handleSelectAllChange}
-                    label=""
-                  /> */}
                 </div>
 
-                {/* Column Headers */}
                 <div className="flex w-full flex-row gap-2">
                   {[
                     "Ref No",
-                    "Request Date",
+                    "Service Date",
                     "Client",
-                    "Machine Type",
-                    "Brand",
-                    "Model Number",
-                    "Complaint",
+                    "Maintenance Type",
+                    "Engineer Name",
+                    "Diagnostics",
                     "Status",
                   ].map((label, index) => (
                     <p
@@ -111,15 +98,13 @@ const ServiceEntryPage = () => {
                       {label}
                     </p>
                   ))}
-
-                  {/* Action Header */}
                   <p className="min-w-[80px] text-sm font-semibold text-zinc-900">
                     Action
                   </p>
                 </div>
               </header>
 
-              {/* No data message */}
+              {/* Table Rows */}
               {paginatedData.length === 0 ? (
                 <h2 className="text-md my-auto text-center font-medium text-zinc-600">
                   No Entries Found
@@ -130,29 +115,21 @@ const ServiceEntryPage = () => {
                     key={item.id}
                     className="flex min-w-full flex-row items-start gap-2 border-t px-3 py-2 text-sm text-zinc-700 hover:bg-slate-50"
                   >
-                    {/* S.No + Checkbox */}
                     <div className="flex w-[70px] min-w-[70px] items-center justify-start gap-2 pt-1">
                       <p className="w-[40px]">
                         {(currentPage - 1) * itemsPerPage + index + 1}
                       </p>
-                      {/* <CheckboxInput
-                        checked={selectedIds.includes(item.id)}
-                        onChange={() => handleCheckboxChange(item.id)}
-                        label=""
-                      /> */}
                     </div>
 
-                    {/* Data Columns */}
                     <div className="flex w-full flex-row gap-2">
                       {[
-                        item.referenceNumber,
-                        item.requestDate,
+                        item.refNumber,
+                        item.serviceDate,
                         item.clientName,
-                        item.machineType,
-                        item.brand,
-                        item.modelNumber,
-                        item.complaintDetails,
-                        item.status,
+                        item.maintenanceType,
+                        item.engineerName,
+                        item.engineerDiagnostics,
+                        item.serviceStatus,
                       ].map((val, idx) => (
                         <p
                           key={idx}
@@ -162,19 +139,16 @@ const ServiceEntryPage = () => {
                         </p>
                       ))}
 
-                      {/* Action Buttons */}
                       <div className="flex min-w-[80px] items-center justify-start gap-2 pt-1">
                         <ButtonSm
-                          className="h-min scale-90 border-1 border-blue-500 bg-blue-500/10"
                           onClick={(e) => {
                             e.stopPropagation();
-                            setSelectedRequest(item);
-                            setFormState("edit");
-                            setIsFormOpen(true);
+                            setSelectedEntry(item);
+                            setIsDeleteDialogOpen(true);
                           }}
-                          text="Service"
-                          state="outline"
-                          imgUrl="/icons/edit-icon.svg"
+                          className="aspect-square scale-90 border-1 border-red-500 bg-red-100 text-red-500 hover:bg-red-100 active:bg-red-100"
+                          state="default"
+                          imgUrl="/icons/delete-icon.svg"
                         />
                       </div>
                     </div>
@@ -206,15 +180,14 @@ const ServiceEntryPage = () => {
       </div>
 
       <AnimatePresence>
-        {isFormOpen && selectedRequest && (
-          <DialogBox
-            setToggleDialogueBox={setIsFormOpen}
-            className="lg:min-w-[800px]"
-          >
-            <ServiceRequestFormPage
-              mode={formState}
-              requestFromParent={selectedRequest}
-              setFormVisible={setIsFormOpen}
+        {isDeleteDialogOpen && selectedEntry && (
+          <DialogBox setToggleDialogueBox={setIsDeleteDialogOpen}>
+            <DeleteEntryDialogBox
+              Entry={selectedEntry}
+              setIsDeleteMachineDialogOpen={setIsDeleteDialogOpen}
+              onDeleted={() => {
+                setSelectedEntry(null);
+              }}
             />
           </DialogBox>
         )}

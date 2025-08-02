@@ -74,6 +74,18 @@ export interface ServiceEntryRequest {
   remarks: string;
   complaintSparePhotoUrl: string;
   spareParts: sparePart[];
+
+  //unique in reposne 
+  clientName:string;
+  engineerName:string;
+  complaintDetails:string;
+}
+
+export interface ServiceEntryResponse {
+  data: ServiceEntryRequest[];
+  page: number;
+  totalPages: number;
+  totalRecords: number;
 }
 
 export interface sparePart {

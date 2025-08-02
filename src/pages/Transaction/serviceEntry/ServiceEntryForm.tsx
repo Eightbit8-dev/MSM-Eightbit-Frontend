@@ -51,6 +51,11 @@ const RequestEntry = () => {
     remarks: "",
     complaintSparePhotoUrl: "",
     spareParts: [],
+    clientName:"",
+    complaintDetails:"",
+    engineerName:"",
+    id:0
+    
   };
 
   const { id } = useParams();
