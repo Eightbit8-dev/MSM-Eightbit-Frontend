@@ -100,19 +100,21 @@ const ServiceEngineerEdit = ({
 
       createServiceEngineer(payload);
     } else if (formState === "edit") {
-      const payload = {
-        id: 0,
-        clientName: newServiceEngineerData.clientName,
-        engineerName: newServiceEngineerData.engineerName,
-        engineerMobile: newServiceEngineerData.engineerMobile,
-        clientId:
-          clientOptions.find(
-            (client) => client.label === newServiceEngineerData.clientName,
-          )?.id || 0,
-        remarks: newServiceEngineerData.remarks,
-      };
-      editServiceEngineer(payload);
-    }
+  const payload = {
+    id: newServiceEngineerData.id, // ✅ Pass selected engineer ID
+    clientName: newServiceEngineerData.clientName,
+    engineerName: newServiceEngineerData.engineerName,
+    engineerMobile: newServiceEngineerData.engineerMobile,
+    clientId:
+      clientOptions.find(
+        (client) => client.label === newServiceEngineerData.clientName
+      )?.id || 0,
+    remarks: newServiceEngineerData.remarks,
+  };
+
+  editServiceEngineer(payload); // ✅ ID is passed via payload
+}
+
   };
 
   const hasData =
