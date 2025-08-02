@@ -9,7 +9,6 @@ import DropdownSelect from "@/components/common/DropDown";
 import type { ServiceRequest } from "@/types/transactionTypes";
 import { useState } from "react";
 import { useFetchServiceRequests } from "@/queries/TranscationQueries/ServiceRequestQuery";
-import ServiceRequestFormPage from "./ServiceEntryForm";
 
 const ServiceEntryPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -21,7 +20,6 @@ const ServiceEntryPage = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [formState, setFormState] = useState<FormState>("create");
 
-
   const { data, isLoading } = useFetchServiceRequests(
     currentPage,
     itemsPerPage,
@@ -29,8 +27,6 @@ const ServiceEntryPage = () => {
 
   const paginatedData = data?.data || [];
   const totalPages = data?.totalPages || 0;
-
-
 
   return (
     <div className="mb-32 flex flex-col gap-4">
@@ -169,7 +165,7 @@ const ServiceEntryPage = () => {
                       {/* Action Buttons */}
                       <div className="flex min-w-[80px] items-center justify-start gap-2 pt-1">
                         <ButtonSm
-                          className="aspect-square h-fit scale-90 border-1 border-blue-500 bg-blue-500/10"
+                          className="h-min scale-90 border-1 border-blue-500 bg-blue-500/10"
                           onClick={(e) => {
                             e.stopPropagation();
                             setSelectedRequest(item);
@@ -180,7 +176,6 @@ const ServiceEntryPage = () => {
                           state="outline"
                           imgUrl="/icons/edit-icon.svg"
                         />
-   
                       </div>
                     </div>
                   </div>

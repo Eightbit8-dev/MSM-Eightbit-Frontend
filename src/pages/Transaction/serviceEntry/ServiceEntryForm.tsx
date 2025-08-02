@@ -1,435 +1,405 @@
-import React, { use, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Input, { DateInput } from "@/components/common/Input";
 import DropdownSelect, {
   type DropdownOption,
 } from "@/components/common/DropDown";
 import ButtonSm from "@/components/common/Buttons";
+import MultiFileUpload from "@/components/common/FileUploadBox";
+import TextArea from "@/components/common/Textarea";
+import { useFetchServiceRequestById } from "@/queries/TranscationQueries/ServiceRequestQuery";
+import { useParams, useSearchParams } from "react-router-dom";
+import type { FormState } from "@/types/appTypes";
 import { toast } from "react-toastify";
+import type { ServiceEntryRequest } from "@/types/transactionTypes";
+import { useFetchServiceEngineerOptions } from "@/queries/masterQueries/ServiceEngineersQuery";
+import { useCreateServiceEntry } from "@/queries/TranscationQueries/ServiceEntryQuery";
+import { convertToBackendDate } from "@/utils/commonUtils";
+import { useFetchVendorOptions } from "@/queries/masterQueries/VendorQuery";
 import {
-  useFetchMachineById,
-  useFetchMachineDropdownOptions,
-  useFetchMachineOptions,
-} from "@/queries/TranscationQueries/MachineQuery";
-import {
-  useCreateServiceRequest,
-  useEditServiceRequest,
-} from "@/queries/TranscationQueries/ServiceRequestQuery";
-import { useFetchProblemOptions } from "@/queries/masterQueries/Problem-types";
-import { useFetchClientOptions } from "@/queries/masterQueries/ClientQuery";
-import {
-  convertToFrontendDate,
-  convertToBackendDate,
-} from "@/utils/commonUtils";
-import {
-  Html5Qrcode,
-  Html5QrcodeScanner,
-  Html5QrcodeScanType,
-} from "html5-qrcode";
-import type { ServiceRequest } from "@/types/transactionTypes";
+  maintenanceOptions,
+  maintenanceSubtTypeOptions,
+  statusOptions,
+} from "@/utils/uiUtils";
+import MultiSelectDropdown from "@/components/common/MultiSelectDropDown";
+import { useFetchSparesOptions } from "@/queries/masterQueries/SpareQuery";
+import RequestEntrySkeleton from "./ServiceEntryFormSkeleton";
 
-type Mode = "create" | "edit" | "display";
+const RequestEntry = () => {
+  //Scroped to this only as we dont use it anywhere else
+  const getMaxDate = () => {
+    const today = new Date();
+    today.setDate(today.getDate() - 2); // Go back 2 days
+    return today.toISOString().split("T")[0]; // Format to 'YYYY-MM-DD'
+  };
 
-interface Props {
-  mode: Mode;
-  requestFromParent: ServiceRequest;
-  setFormVisible: React.Dispatch<React.SetStateAction<boolean>>;
-}
+  /**
+   * We fetch the serviceRequest made by the clien(users) and use it to build this form which is serviceEntryForm this is used by technicians
+   */
+  const emptyData: ServiceEntryRequest = {
+    refNumber: "",
+    serviceDate: "",
+    maintenanceType: "", //DropDownUi
+    maintenanceSubType: "", //DropDownUi
+    serviceRequestId: 0,
+    vendorId: 0, //MasterDropDown from APi
+    engineerId: 0, //MasterDropDown from APi
+    engineerDiagnostics: "",
+    serviceStatus: "", //DropDownUI
+    remarks: "",
+    complaintSparePhotoUrl: "",
+    spareParts: [],
+  };
 
-const ServiceRequestFormPage: React.FC<Props> = ({
-  mode,
-  requestFromParent,
-  setFormVisible,
-}) => {
-  const isView = mode === "display";
-  const isEdit = mode === "edit";
-  const isCreate = mode === "create";
+  const { id } = useParams();
+  const [searchParams] = useSearchParams();
 
-  const [machineEntryId, setMachineEntryId] = useState<number | null>(null);
-  const [clientId, setClientId] = useState<number | null>(null);
-  const [complaintDetailsId, setComplaintDetailsId] = useState<number | null>(
-    null,
-  );
-  const [showQRDialog, setShowQRDialog] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const scannerRef = useRef<Html5QrcodeScanner | null>(null);
+  // ---------- states ----------
+  const modeParam = searchParams.get("mode") as FormState;
+  const [formState, setFormState] = useState<FormState>("display");
 
-  const { mutateAsync: createServiceRequest } = useCreateServiceRequest();
-  const { mutateAsync: editServiceRequest } = useEditServiceRequest();
+  const [formData, setFormData] = useState<ServiceEntryRequest>(emptyData);
 
-  const { data: clientOptions = [] } = useFetchClientOptions();
-  const { data: complaintOptions = [] } = useFetchProblemOptions();
-  const { data: machineOptions = [] } = useFetchMachineOptions();
+  const [selectedSpares, setSelectedSpares] = useState<DropdownOption[]>([]);
+  const [spareQuantities, setSpareQuantities] = useState<{
+    [key: number]: number;
+  }>({});
 
-  const [request, setRequest] = useState<ServiceRequest>(requestFromParent);
-  const [selectedComplaint, setSelectedComplaint] = useState<DropdownOption>({
-    id: 0,
-    label: "Select Complaint",
-  });
+  // --------- external apis -----------
 
-  const defaultOption: DropdownOption = { id: 0, label: "Select" };
-  const [selectedType, setSelectedType] =
-    useState<DropdownOption>(defaultOption);
-  const [selectedBrand, setSelectedBrand] =
-    useState<DropdownOption>(defaultOption);
-  const [selectedModel, setSelectedModel] =
-    useState<DropdownOption>(defaultOption);
-  const [selectedSerial, setSelectedSerial] =
-    useState<DropdownOption>(defaultOption);
+  const {
+    data: serviceRequestData,
+    isLoading,
+    error,
+  } = useFetchServiceRequestById(Number(id));
 
-  const [selectedClient, setSelectedClient] =
-    useState<DropdownOption>(defaultOption);
+  const { data: engineerOptions = [], isLoading: isEngineerOptionsLoading } =
+    useFetchServiceEngineerOptions();
 
-  const { data: brandOptions = [] } = useFetchMachineDropdownOptions({
-    level: "brands",
-    type: selectedType?.label || "",
-  });
+  const { data: vendorOptions = [], isLoading: isVendorLoading } =
+    useFetchVendorOptions();
 
-  const { data: modelOptions = [] } = useFetchMachineDropdownOptions({
-    level: "models",
-    type: selectedType?.label || "",
-    brand: selectedBrand?.label || "",
-  });
+  const { data: sparesOptions = [], isLoading: isSparesLoading } =
+    useFetchSparesOptions();
 
-  const { data: serialOptions = [] } = useFetchMachineDropdownOptions({
-    level: "serials",
-    type: selectedType?.label || "",
-    brand: selectedBrand?.label || "",
-    model: selectedModel?.label || "",
-  });
-
-
-useEffect(() => {
-  if (isCreate) {
-    const randomPart = Math.floor(10000 + Math.random() * 90000); // 5-digit random number
-    const generatedRef = `SR-${randomPart}`; // e.g., "SR48392"
-    const today = new Date().toLocaleDateString("en-GB").split("/").join("-");
-
-    setRequest((prev) => ({
-      ...prev,
-      referenceNumber: generatedRef,
-      requestDate: today,
-    }));
-  }
-}, [mode]);
-
-
-
+  const {
+    mutateAsync: createServiceEntry,
+    isPending: isCreateServiceEntryPending,
+  } = useCreateServiceEntry();
+  // ---------- use effects ----------
 
   useEffect(() => {
-    if ((isEdit || isView) && requestFromParent) {
-      setRequest(requestFromParent);
-      setMachineEntryId(requestFromParent.id || null);
-
-      const foundComplaint = complaintOptions.find(
-        (opt) => opt.label === requestFromParent.complaintDetails,
-      );
-      if (foundComplaint) {
-        setSelectedComplaint(foundComplaint);
-        setComplaintDetailsId(foundComplaint.id);
-      }
+    if (modeParam) {
+      setFormState(modeParam);
+    } else {
+      toast.error("Invalid url");
     }
-  }, [requestFromParent, complaintOptions]);
+  }, [modeParam]);
 
-  const parseQRData = (data: string): Record<string, string> => {
-    const result: Record<string, string> = {};
-    const keyMap: Record<string, string> = {
-      MACHINE_ENTRY_ID: "machineEntryId",
-      "SERIAL #": "serialNumber",
-      "REF #": "referenceNumber",
-      CLIENT: "clientName",
-      TYPE: "machineType",
-      BRAND: "brand",
-      MODEL: "modelNumber",
-      INSTALLED: "installationDate",
-    };
-
-    // Match all key-value like pairs (e.g., KEY: value, KEY= value, KEY #: value)
-    const regex = /([A-Z_ #]+)[\s:=]+([^:\n\r]+)/gi;
-    let match;
-    while ((match = regex.exec(data)) !== null) {
-      const rawKey = match[1].trim().toUpperCase();
-      const value = match[2].trim();
-      const normalizedKey = keyMap[rawKey] ?? rawKey.toLowerCase();
-      result[normalizedKey] = value;
-    }
-
-    return result;
-  };
-
-  const handleQRProcess = (data: string) => {
-    const parsed = parseQRData(data);
-    const entryId = parsed.machineEntryId;
-    const clientName = parsed.clientName;
-    const clieendId = clientOptions.find(
-      (client) => client.label === clientName,
-    );
-
-    setMachineEntryId(Number(entryId));
-    setSelectedBrand({ id: 404, label: parsed.brand || "" });
-    setSelectedModel({ id: 404, label: parsed.modelNumber || "" });
-    setSelectedType({ id: 404, label: parsed.machineType || "" });
-    setSelectedSerial({ id: 404, label: parsed.serialNumber || "" });
-
-    if (!entryId) {
-      toast.error("QR missing machineEntryId");
-      return;
-    }
-
-    setMachineEntryId(Number(entryId));
-    setRequest((prev) => ({
-      ...prev,
-      clientName: parsed.clientName || prev.clientName,
-      machineType: parsed.machineType || prev.machineType,
-      brand: parsed.brand || prev.brand,
-      modelNumber: parsed.modelNumber || prev.modelNumber,
-    }));
-
-    const matchedClient = clientOptions.find(
-      (client) => client.label.toLowerCase() === clientName?.toLowerCase(),
-    );
-    if (matchedClient) setClientId(matchedClient.id);
-    else toast.warn(`Client '${clientName}' not found`);
-
-    setShowQRDialog(false);
-  };
-
-  const handleQRImageUpload = async (
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const html5QrCode = new Html5Qrcode("qr-reader-img");
-    try {
-      const result = await html5QrCode.scanFile(file, true);
-      handleQRProcess(result);
-    } catch {
-      toast.error("Failed to scan image QR");
-    }
-  };
-
-  const updateField = (key: keyof ServiceRequest, value: string) => {
-    setRequest((prev) => ({ ...prev, [key]: value }));
-  };
-
+  //Fetching the service reqeest dynamically after mouting
   useEffect(() => {
-    if (!showQRDialog) return;
+    if (serviceRequestData) {
+      setFormData((prev) => ({
+        ...prev,
+        refNumber: serviceRequestData.referenceNumber,
+        serviceRequestId: serviceRequestData.id,
+        spareParts: selectedSpares.map((spare: DropdownOption) => {
+          return {
+            spareId: spare.id,
+            quantity: spareQuantities[spare.id] || 1, // Get quantity from state or default to 1
+            sparePhotoUrl: "http://example.com/sparepart2.jpg",
+          };
+        }),
+      }));
+    }
+  }, [serviceRequestData, selectedSpares, spareQuantities]); // Add spareQuantities to dependencies
 
-    scannerRef.current = new Html5QrcodeScanner(
-      "qr-reader-live",
-      {
-        fps: 10,
-        qrbox: { width: 250, height: 250 },
-        aspectRatio: 1.0,
-        rememberLastUsedCamera: true,
-        supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA],
-      },
-      false,
-    );
+  // Helper function to update quantity
+  const updateSpareQuantity = (spareId: number, quantity: number) => {
+    setSpareQuantities((prev) => ({
+      ...prev,
+      [spareId]: Math.max(1, quantity), // Ensure minimum quantity of 1
+    }));
+  };
 
-    scannerRef.current.render(
-      (text) => {
-        handleQRProcess(text);
-        scannerRef.current?.clear().catch(() => {});
-        scannerRef.current = null;
-      },
-      (err) => console.warn("Live scan error", err),
-    );
+  // Helper function to clean up quantities when spares are removed
+  const handleSparesChange = (newSpares: DropdownOption[]) => {
+    setSelectedSpares(newSpares);
 
-    return () => {
-      scannerRef.current?.clear().catch(() => {});
-      scannerRef.current = null;
-    };
-  }, [showQRDialog]);
+    // Clean up quantities for removed spares
+    const newSpareIds = new Set(newSpares.map((spare) => spare.id));
+    setSpareQuantities((prev) => {
+      const cleaned = { ...prev };
+      Object.keys(cleaned).forEach((spareIdStr) => {
+        const spareId = parseInt(spareIdStr);
+        if (!newSpareIds.has(spareId)) {
+          delete cleaned[spareId];
+        }
+      });
+      return cleaned;
+    });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (isView) return;
+    const payload: ServiceEntryRequest = {
+      ...formData,
+      serviceDate: convertToBackendDate(formData.serviceDate),
 
-    if (
-      !machineEntryId ||
-      request.referenceNumber.trim() === "" ||
-      request.requestDate.trim() === ""
-    ) {
-      toast.error("Please fill all required fields.");
-      return;
-    }
-
-    const payload = {
-      referenceNumber: request.referenceNumber,
-      requestDate: request.requestDate,
-      complaintDetailsId: complaintDetailsId || undefined,
-      otherComplaintDetails: request.otherComplaintDetails || "",
-      clientId: selectedClient?.id,
-      machineEntryId: machineEntryId || 0,
+      complaintSparePhotoUrl: "https://example.com/complaint-spare-photo.jpg",
     };
-
-    try {
-      if (isEdit) {
-        await editServiceRequest({ id: request.id, ...payload });
-        toast.success("Service Request updated successfully!");
-      } else {
-        toast.success(JSON.stringify(payload));
-        await createServiceRequest(payload);
-        toast.success("Service Request created successfully!");
-      }
-      setFormVisible(false);
-    } catch {
-      toast.error("Something went wrong. Please try again.");
-    }
+    createServiceEntry(payload);
   };
 
+  if (
+    isLoading ||
+    isEngineerOptionsLoading ||
+    isVendorLoading ||
+    isSparesLoading
+  )
+    return <RequestEntrySkeleton />;
+  if (error || !serviceRequestData) return <p>Something went wrong</p>;
   return (
-    <div className="flex max-h-screen min-w-full flex-col overflow-y-auto rounded-2xl bg-white p-4 py-30 md:overflow-visible md:py-0">
-      <div className="flex items-center justify-between">
-        <h1 className="mb-6 text-2xl font-semibold capitalize">
-          New Service Request
-        </h1>
+    <div className="mb-16 w-full rounded-lg bg-white p-6 shadow-md md:mb-0">
+      <h2 className="mb-4 text-xl font-semibold">Request Entry</h2>
+      <form
+        onSubmit={handleSubmit}
+        className="grid grid-cols-1 items-start gap-4 md:grid-cols-2"
+      >
+        <Input
+          title="Reference No"
+          name="referenceNo"
+          disabled
+          inputValue={formData.refNumber}
+          onChange={(val) => {
+            setFormData({ ...formData, refNumber: val });
+          }}
+        />
 
-        {isCreate && (
-          <>
-            <ButtonSm
-              type="button"
-              text="Scan QR"
-              state="default"
-              className="mb-4 w-fit border-blue-400 text-white"
-              onClick={() => setShowQRDialog(true)}
-            />
-            {showQRDialog && (
-              <div className="bg-opacity-40 bg fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
-                <div className="w-[95%] max-w-md rounded-lg bg-white p-4 shadow-xl">
-                  <div className="mb-4 flex items-center justify-between">
-                    <h2 className="text-lg font-semibold text-slate-700">
-                      Scan QR
-                    </h2>
-                    <button onClick={() => setShowQRDialog(false)}>✖</button>
-                  </div>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleQRImageUpload}
-                    className="mb-4 block w-full rounded border p-1"
-                  />
-                  <div id="qr-reader-live" className="rounded-md border p-2" />
-                  <div id="qr-reader-img" className="hidden" />
-                </div>
-              </div>
-            )}
-          </>
-        )}
-      </div>
+        <DropdownSelect
+          title="Client Name"
+          disabled
+          options={[]}
+          selected={{ id: 0, label: serviceRequestData.clientName }}
+          onChange={() => {}}
+          required
+        />
 
-      <form onSubmit={handleSubmit} className="flex min-w-full flex-col gap-4">
-        <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2">
-          <Input
-            title="Reference Number"
-            inputValue={request.referenceNumber}
-            disabled
-            required
-            onChange={() => {}}
-          />
-          <DateInput
-            title="Request Date"
-            value={convertToFrontendDate(request.requestDate)}
-            onChange={(val) =>
-              updateField("requestDate", convertToBackendDate(val.toString()))
+        <DropdownSelect
+          title="Machine Brand"
+          options={[]}
+          disabled={true}
+          selected={{ id: 404, label: serviceRequestData.brand }}
+          onChange={() => {}}
+        />
+
+        <DropdownSelect
+          title="Machine Type"
+          options={[]}
+          disabled
+          selected={{ id: 404, label: serviceRequestData.machineType }}
+          onChange={() => {}}
+        />
+
+        <DropdownSelect
+          title="Machine Model"
+          options={[]}
+          disabled
+          selected={{ id: 404, label: serviceRequestData.modelNumber }}
+          onChange={() => {}}
+        />
+
+        <DropdownSelect
+          title="Machine Serial Number"
+          disabled
+          options={[]}
+          selected={{ id: 404, label: serviceRequestData.brand }}
+          onChange={() => {}}
+        />
+        <DateInput
+          title="Service Date"
+          disabled={formState === "display"}
+          value={formData.serviceDate}
+          onChange={(val) => {
+            setFormData({ ...formData, serviceDate: val });
+          }}
+          maxDate={getMaxDate()}
+          required
+        />
+
+        <DropdownSelect
+          required
+          title="Maintenance Type"
+          disabled={formState === "display"}
+          options={maintenanceOptions}
+          selected={
+            maintenanceOptions.find(
+              (m) => m.label === formData.maintenanceType,
+            ) || { id: 0, label: "Select Maintenance Type" }
+          }
+          onChange={(val) =>
+            setFormData({ ...formData, maintenanceType: val.label })
+          }
+        />
+
+        <DropdownSelect
+          title="Non-warranty Type"
+          disabled={
+            formData.maintenanceType !== "Non-Warranty" ||
+            formState === "display"
+          }
+          options={maintenanceSubtTypeOptions}
+          selected={
+            maintenanceSubtTypeOptions.find(
+              (m) => m.label === formData.maintenanceSubType,
+            ) || { id: 0, label: "Select Non-warranty Type" }
+          }
+          onChange={(val) =>
+            setFormData({ ...formData, maintenanceSubType: val.label })
+          }
+        />
+
+        <DropdownSelect
+          required
+          title="Vendor Name"
+          options={vendorOptions}
+          selected={
+            vendorOptions.find((m) => m.id === formData.vendorId) || {
+              id: 0,
+              label: "Select Vendor",
             }
-            disabled={isView}
-            required
-          />
-          <DropdownSelect
-            title="Client"
-            direction="down"
-            options={clientOptions}
-            selected={selectedClient}
-            onChange={(val) => {
-              setSelectedClient(val);
-            }}
-            disabled={isView}
-          />
-          <DropdownSelect
-            title="Machine Type"
-            options={machineOptions}
-            selected={selectedType}
-            onChange={(val) => {
-              setSelectedType(val);
-              setSelectedBrand(defaultOption);
-              setSelectedModel(defaultOption);
-              setSelectedSerial(defaultOption);
-            }}
-            disabled={isView}
-          />
-          <DropdownSelect
-            title="Brand"
-            options={brandOptions}
-            selected={selectedBrand}
-            onChange={(val) => {
-              setSelectedBrand(val);
-              setSelectedModel(defaultOption);
-              setSelectedSerial(defaultOption);
-            }}
-            disabled={isView || !selectedType}
-          />
-          <DropdownSelect
-            title="Model"
-            options={modelOptions}
-            selected={selectedModel}
-            onChange={(val) => {
-              setSelectedModel(val);
-              setSelectedSerial(defaultOption);
-            }}
-            disabled={isView || !selectedBrand}
-          />
-          <DropdownSelect
-            title="Serial Number"
-            options={serialOptions}
-            selected={selectedSerial}
-            onChange={(val) => {
-              setMachineEntryId(val.id);
-              setSelectedSerial(val);
-            }}
-            disabled={isView || !selectedModel}
-          />
-          <DropdownSelect
-            title="Complaint"
-            direction="up"
-            options={complaintOptions}
-            selected={selectedComplaint}
-            onChange={(val) => {
-              setSelectedComplaint(val);
-              setComplaintDetailsId(val.id);
-            }}
-            disabled={isView}
-          />
-          {/* <Input
-            title="Other Complaint (Optional)"
-            inputValue={request.otherComplaintDetails || ""}
-            placeholder="Enter details if not listed"
-            onChange={(val) => updateField("otherComplaintDetails", val)}
-            disabled={isView}
-          /> */}
-        </div>
+          }
+          onChange={(val) => setFormData({ ...formData, vendorId: val.id })}
+        />
 
-        <div className="mt-4 flex justify-end gap-4">
-          <ButtonSm
-            type="button"
-            state="outline"
-            className="border-[1.5px] border-slate-300"
-            onClick={() => setFormVisible(false)}
-            text="Back"
+        <DropdownSelect
+          required
+          title="Engineer Name"
+          disabled={formState === "display"}
+          options={engineerOptions}
+          selected={
+            engineerOptions.find((opt) => opt.id === formData.engineerId) || {
+              id: 0,
+              label: "Select Engineer",
+            }
+          }
+          onChange={(val) => setFormData({ ...formData, engineerId: val.id })}
+        />
+        <Input
+          required
+          title="Engineer Diagnostics"
+          name="engineerDiagnostics"
+          inputValue={formData.engineerDiagnostics}
+          onChange={(val) =>
+            setFormData({ ...formData, engineerDiagnostics: val })
+          }
+          placeholder="Enter diagnosis"
+        />
+        <DropdownSelect
+          required
+          title="Service Status"
+          direction="up"
+          disabled={formState === "display"}
+          options={statusOptions}
+          selected={
+            statusOptions.find((m) => m.label === formData.serviceStatus) ?? {
+              id: 0,
+              label: "Select Service Status",
+            }
+          }
+          onChange={(val) =>
+            setFormData({ ...formData, serviceStatus: val.label })
+          }
+        />
+        <Input
+          title="Remarks"
+          name="RequestEntryRemarks"
+          placeholder="Eg : Completed within the scheduled time frame."
+          inputValue={formData.remarks}
+          onChange={(val) => setFormData({ ...formData, remarks: val })}
+        />
+        <div className="flex flex-col gap-3">
+          <MultiSelectDropdown
+            title="Spares"
+            options={sparesOptions}
+            selectedOptions={selectedSpares}
+            onChange={handleSparesChange} // Use the helper function
+            placeholder="Select spares to add"
+            required={true}
           />
-          {!isView && (
-            <ButtonSm
-              type="submit"
-              state="default"
-              text={isEdit ? "Save Changes" : "Create Request"}
-              className="bg-blue-500 text-white hover:bg-blue-700"
-            />
+
+          {/* Quantity inputs for selected spares dont even mind this component*/}
+          {selectedSpares.length > 0 && (
+            <div className="my-3 flex w-full flex-col space-y-3">
+              <h4 className="text-sm font-medium text-slate-700">
+                Quantities:
+              </h4>
+              <div className="mt-2 grid grid-cols-1 gap-2">
+                {selectedSpares.map((spare) => (
+                  <div
+                    key={spare.id}
+                    className="flex items-center justify-between rounded-lg bg-slate-50 p-2"
+                  >
+                    <h3 className="mb-2 text-xs leading-loose font-semibold text-slate-700">
+                      {spare.label} <span className="text-red-500">*</span>
+                    </h3>
+                    <div className="flex flex-row items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          updateSpareQuantity(
+                            spare.id,
+                            (spareQuantities[spare.id] || 1) - 1,
+                          )
+                        }
+                        className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-200 leading-0 text-slate-600 hover:bg-slate-300"
+                        disabled={spareQuantities[spare.id] <= 1}
+                      >
+                        <img src="/icons/minus.svg" alt="-" />
+                      </button>
+                      <input
+                        type="number"
+                        min="1"
+                        value={spareQuantities[spare.id] || 1}
+                        onChange={(e) =>
+                          updateSpareQuantity(
+                            spare.id,
+                            parseInt(e.target.value) || 1,
+                          )
+                        }
+                        className="w-16 items-center rounded border border-slate-300 px-2 py-1 text-center text-sm"
+                      />
+                      <button
+                        type="button"
+                        onClick={() =>
+                          updateSpareQuantity(
+                            spare.id,
+                            (spareQuantities[spare.id] || 1) + 1,
+                          )
+                        }
+                        className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-200 text-slate-600 hover:bg-slate-300"
+                      >
+                        <img src="/icons/plus.svg" alt="-" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           )}
+        </div>
+        <MultiFileUpload />
+        <div className="col-span-1 mt-4 flex justify-end md:col-span-2">
+          <ButtonSm
+            isPending={isCreateServiceEntryPending}
+            type="submit"
+            text="Submit Request"
+            state="default"
+            className="text-white"
+          />
         </div>
       </form>
     </div>
   );
 };
 
-export default ServiceRequestFormPage;
+export default RequestEntry;

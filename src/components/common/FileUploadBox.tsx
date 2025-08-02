@@ -73,7 +73,7 @@ const MultiFileUpload: React.FC<MultiFileUploadProps> = ({
   };
 
   return (
-    <div className="grid w-full grid-cols-2 gap-6">
+    <div className="grid w-full grid-cols-2 gap-6 md:mt-3">
       {/* Left: Upload Area */}
       <div
         onDragOver={(e) => e.preventDefault()}
@@ -124,7 +124,7 @@ const MultiFileUpload: React.FC<MultiFileUploadProps> = ({
               return (
                 <li
                   key={file.name}
-                  className="flex items-center justify-start gap-2 w-fit  rounded-md "
+                  className="flex w-fit items-center justify-start gap-2 rounded-md"
                 >
                   <div>
                     <p className="text-sm font-medium text-slate-700">
@@ -143,12 +143,12 @@ const MultiFileUpload: React.FC<MultiFileUploadProps> = ({
                     </p> */}
                   </div>
 
-                                            <ButtonSm
-                                              onClick={() => removeFile(file.name)}
-                                              className="aspect-square scale-90 border-1 h-10 p-3 w-10 border-red-500 bg-red-100 text-red-500 hover:bg-red-100 active:bg-red-100"
-                                              state="default"
-                                              imgUrl="/icons/delete-icon.svg"
-                                            />
+                  <ButtonSm
+                    onClick={() => removeFile(file.name)}
+                    className="aspect-square h-10 w-10 scale-90 border-1 border-red-500 bg-red-100 p-3 text-red-500 hover:bg-red-100 active:bg-red-100"
+                    state="default"
+                    imgUrl="/icons/delete-icon.svg"
+                  />
                 </li>
               );
             })}

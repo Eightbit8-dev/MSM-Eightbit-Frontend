@@ -5,6 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { apiRoutes } from "../../routes/apiRoutes";
 import Cookies from "js-cookie";
+import type { DropdownOption } from "@/components/common/DropDown";
 /**
  * -------------------------------------------
  * Department Service Hooks - CRUD Operations
@@ -31,9 +32,43 @@ export const useFetchSpares = () => {
       return res.data.data;
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        toast.error(
-          error.response?.data?.message || "Failed to fetch spares",
-        );
+        toast.error(error.response?.data?.message || "Failed to fetch spares");
+      } else {
+        toast.error("Something went wrong while fetching spares");
+      }
+      throw new Error("Spare fetch failed");
+    }
+  };
+
+  return useQuery({
+    queryKey: ["spares"],
+    queryFn: fetchAllSpares,
+    staleTime: 1000 * 60 * 0,
+    retry: 1,
+  });
+};
+
+export const useFetchSparesOptions = () => {
+  const fetchAllSpares = async (): Promise<DropdownOption[]> => {
+    try {
+      const token = Cookies.get("token");
+      if (!token) throw new Error("Unauthorized to perform this action.");
+
+      const res = await axiosInstance.get(apiRoutes.machineSpares, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (res.status !== 200) {
+        throw new Error(res.data?.message || "Failed to fetch spares");
+      }
+
+      return res.data.data.map((spare: SpareDetails) => ({
+        id: spare.id,
+        label: spare.spareName,
+      }));
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data?.message || "Failed to fetch spares");
       } else {
         toast.error("Something went wrong while fetching spares");
       }
@@ -75,9 +110,7 @@ export const useFetchSparesPaginated = (page: number, limit: number) => {
       };
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        toast.error(
-          error.response?.data?.message || "Failed to fetch spares",
-        );
+        toast.error(error.response?.data?.message || "Failed to fetch spares");
       } else {
         toast.error("Something went wrong while fetching spares");
       }
@@ -103,12 +136,9 @@ export const useCreateSpare = () => {
     try {
       const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
-      const res = await axiosInstance.post(
-        apiRoutes.machineSpares,newSpare,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        },
-      );
+      const res = await axiosInstance.post(apiRoutes.machineSpares, newSpare, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       if (![200, 201].includes(res.status)) {
         throw new Error(res.data?.message || "Failed to create Spare");
@@ -117,9 +147,7 @@ export const useCreateSpare = () => {
       return res.data;
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        toast.error(
-          error.response?.data?.message || "Failed to create Spare",
-        );
+        toast.error(error.response?.data?.message || "Failed to create Spare");
       } else {
         toast.error("Something went wrong while creating Spare");
       }

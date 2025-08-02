@@ -47,13 +47,19 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
 
   // 🔥 Listen to form submission attempt to shake only on submit
   useEffect(() => {
-    const inputId = `dropdown-hidden-${title}`;
+    // Fixed: Removed extra space in template literal
+    const inputId = `dropdown-hidden-${title?.replace(/\s/g, "")}`;
     const input = document.getElementById(inputId);
 
     const handleInvalid = (event: Event) => {
-      event.preventDefault(); // prevent default browser tooltip
+      event.preventDefault();
       setWasSubmitted(true);
       setShake(true);
+      // Scroll to the actual visible dropdown container instead of hidden input
+      dropdownRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
       setTimeout(() => setShake(false), 400);
     };
 
@@ -87,7 +93,7 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
     }
   };
 
-  const isInvalid = required && selected.id === 0 && wasSubmitted;
+  const isInvalid = required && (selected?.id ?? 0) === 0 && wasSubmitted;
 
   return (
     <div
@@ -101,9 +107,9 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
         </h3>
       )}
 
-      {/* Hidden input triggers native validation */}
+      {/* Fixed: Removed extra space in id template literal */}
       <input
-        id={`dropdown-hidden-${title} `}
+        id={`dropdown-hidden-${title?.replace(/\s/g, "")}`}
         type="text"
         required={required}
         value={selected.id === 0 ? "" : selected.id}
@@ -137,7 +143,7 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
 
       {isOpen && (
         <div
-          className={`absolute z-10 max-h-[200px] w-full overflow-hidden overflow-y-scroll rounded-xl border border-slate-200 bg-white shadow-lg ${getDirectionClass()}`}
+          className={`absolute z-10 max-h-[200px] w-full overflow-hidden overflow-y-scroll rounded-xl border border-slate-200 bg-white shadow-sm ${getDirectionClass()}`}
         >
           {options.map((option) => (
             <button
@@ -150,13 +156,6 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
               }`}
             >
               <span className="text-sm">{option.label}</span>
-              {/* {selected.label === option.label && (
-                <img
-                  src="/icons/tick-icon-dark.svg"
-                  alt="Selected"
-                  className="h-4 w-4"
-                />
-              )} */}
             </button>
           ))}
         </div>

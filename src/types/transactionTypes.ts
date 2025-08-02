@@ -73,5 +73,11 @@ export interface ServiceEntryRequest {
   serviceStatus: string;
   remarks: string;
   complaintSparePhotoUrl: string;
-  spareParts: [];
+  spareParts: sparePart[];
+}
+
+export interface sparePart {
+  spareId: number;
+  quantity: number;
+  sparePhotoUrl: string;
 }
