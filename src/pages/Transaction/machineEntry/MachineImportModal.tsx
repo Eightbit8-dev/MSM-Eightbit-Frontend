@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useImportMachines } from "../../../queries/TranscationQueries/MachineQuery";
-import { useDownloadTemplate } from "../../../queries/masterQueries/SpareQuery";
+import { useDownloadTemplate } from "../../../queries/TranscationQueries/MachineQuery";
 
 interface ImportModalProps {
   isOpen: boolean;
@@ -37,8 +37,8 @@ const MachineImportModal = ({ isOpen, onClose }: ImportModalProps) => {
     try {
       await refetch(); 
       if (data) {
-        const contentDisposition = "attachment; filename=product-template.xlsx"; 
-        let filename = "product-template.xlsx";
+        const contentDisposition = "attachment; filename=MachineEntry.xlsx"; 
+        let filename = "MachineEntry-template.xlsx";
         if (contentDisposition) {
           const filenameMatch = contentDisposition.match(/filename="(.+)"/);
           if (filenameMatch && filenameMatch[1]) {
@@ -65,7 +65,7 @@ const MachineImportModal = ({ isOpen, onClose }: ImportModalProps) => {
     <div className="fixed inset-0 flex items-center justify-center z-50">
       <div className="absolute inset-0 backdrop-filter backdrop-blur-sm bg-black/30"></div>
       <div className="relative z-50 bg-white shadow-2xl rounded-2xl p-6 w-[500px] max-w-[90%] transform transition-all duration-300 hover:shadow-3xl border border-gray-200">
-        <h2 className="text-xl font-bold text-gray-800 mb-5 border-b pb-2">Upload Staff Data</h2>
+        <h2 className="text-xl font-bold text-gray-800 mb-5 border-b pb-2">Upload MachineEntry Data</h2>
         <div className="flex flex-col gap-6">
           <div className="flex items-center gap-4">
             <input
@@ -87,7 +87,8 @@ const MachineImportModal = ({ isOpen, onClose }: ImportModalProps) => {
             <h3 className="text-md font-semibold text-blue-600 mb-2">Notes:</h3>
             <ol className="list-decimal list-inside text-sm text-gray-700 space-y-1">
               <li>Don't change heading.</li> 
-              <li>Mandatory master fields: MAchineType, Brand, ModelNumber</li>
+                 <li>Mandatory master fields: ClientName, MachineType, MachineModel,	Machine Serial </li>
+              <li>Mandatory fields: Reference Number,Reference Date, Installation Date,Installedby</li>        
               <li>Date Format Must Be DD.MM.YYYY</li>
             </ol>
           </div>

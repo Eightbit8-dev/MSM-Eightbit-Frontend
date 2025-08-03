@@ -36,8 +36,8 @@ const ProductImportModal = ({ isOpen, onClose }: ImportModalProps) => {
     try {
       await refetch(); // Trigger the query to fetch the template
       if (data) {
-        const contentDisposition = "attachment; filename=product-template.xlsx"; // Match backend header
-        let filename = "product-template.xlsx";
+        const contentDisposition = "attachment; filename=productMaster-template.xlsx"; // Match backend header
+        let filename = "productMaster-template.xlsx";
         if (contentDisposition) {
           const filenameMatch = contentDisposition.match(/filename="(.+)"/);
           if (filenameMatch && filenameMatch[1]) {

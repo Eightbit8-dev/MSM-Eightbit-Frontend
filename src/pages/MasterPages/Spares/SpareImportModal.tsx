@@ -36,8 +36,8 @@ const SpareImportModal = ({ isOpen, onClose }: ImportModalProps) => {
     try {
       await refetch(); // Trigger the query to fetch the template
       if (data) {
-        const contentDisposition = "attachment; filename=product-template.xlsx"; // Match backend header
-        let filename = "product-template.xlsx";
+        const contentDisposition = "attachment; filename=SparesMaster-template.xlsx"; // Match backend header
+        let filename = "SparesMaster-template.xlsx";
         if (contentDisposition) {
           const filenameMatch = contentDisposition.match(/filename="(.+)"/);
           if (filenameMatch && filenameMatch[1]) {
@@ -64,7 +64,7 @@ const SpareImportModal = ({ isOpen, onClose }: ImportModalProps) => {
     <div className="fixed inset-0 flex items-center justify-center z-50">
       <div className="absolute inset-0 backdrop-filter backdrop-blur-sm bg-black/30"></div>
       <div className="relative z-50 bg-white shadow-2xl rounded-2xl p-6 w-[500px] max-w-[90%] transform transition-all duration-300 hover:shadow-3xl border border-gray-200">
-        <h2 className="text-xl font-bold text-gray-800 mb-5 border-b pb-2">Upload Staff Data</h2>
+        <h2 className="text-xl font-bold text-gray-800 mb-5 border-b pb-2">Upload SparesMaster Data</h2>
         <div className="flex flex-col gap-6">
           <div className="flex items-center gap-4">
             <input
