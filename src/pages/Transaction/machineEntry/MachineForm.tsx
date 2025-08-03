@@ -292,7 +292,7 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
             disabled={isView}
           />
         </div>
-        <Textarea
+        <Input
           title="Remarks"
           className="max-h-[50px]"
           placeholder="Enter Remarks"
