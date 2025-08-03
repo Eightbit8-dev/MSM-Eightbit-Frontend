@@ -18,7 +18,8 @@ export const DeleteVendorDialogBox = ({
   onDeleted?: () => void;
   refetchVendors: () => void;
 }) => {
-  const { mutate: deleteVendor, isPending: isDeleteVendorLoading } = useDeleteVendor();
+  const { mutate: deleteVendor, isPending: isDeleteVendorLoading } =
+    useDeleteVendor();
 
   const handleDelete = () => {
     if (!vendor) return;
@@ -62,7 +63,8 @@ export const DeleteVendorDialogBox = ({
           className="items-center justify-center bg-red-500 text-white hover:bg-red-700 active:bg-red-500"
           state="default"
           onClick={handleDelete}
-          text={isDeleteVendorLoading ? "Deleting..." : "Delete"}
+          isPending={isDeleteVendorLoading}
+          text={"Delete"}
         />
       </section>
     </div>

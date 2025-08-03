@@ -62,6 +62,7 @@ export const DeleteProductDialogBox = ({
           state="default"
           text={isDeleting ? "Deleting..." : "Delete"}
           type="submit"
+          isPending={isDeleting}
           disabled={isDeleting}
         />
       </section>

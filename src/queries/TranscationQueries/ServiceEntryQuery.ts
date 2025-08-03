@@ -26,7 +26,8 @@ export const useCreateServiceEntry = () => {
       vendorId: payload.vendorId,
       engineerId: payload.engineerId,
       engineerDiagnostics: payload.engineerDiagnostics,
-      serviceStatus: payload.serviceStatus,
+      serviceStatus:
+        payload.serviceStatus === "Completed" ? "COMPLETED" : "NOT_COMPLETED",
       remarks: payload.remarks || "-",
       complaintSparePhotoUrl: "http://example.com/sparephoto.jpg",
       spareParts: payload.spareParts,

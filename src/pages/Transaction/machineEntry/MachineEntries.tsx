@@ -93,7 +93,8 @@ const MachineEntry = () => {
             className={`${
               selectedIds.length > 0 ? "text-white" : "disabled:opacity-60"
             } min-h-full self-stretch font-medium`}
-            text={isCreateQRPending ? "Generating QR" : "Generate QR"}
+            text={"Generate QR"}
+            isPending={isCreateQRPending}
             state={selectedIds.length > 0 ? "default" : "outline"}
             type="button"
             onClick={() => {

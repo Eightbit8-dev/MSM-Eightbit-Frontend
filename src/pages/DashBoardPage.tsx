@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFetchServiceRequests } from "../queries/TranscationQueries/ServiceRequestQuery";
 import ButtonSm from "../components/common/Buttons";
-import { appRoutes } from "@/routes/appRoutes";
+import StaffProfileSkeleton from "./Transaction/PageSkeleton";
 
 const stats = [
   {
@@ -49,7 +49,7 @@ const DashBoardPage: React.FC = () => {
   const navigate = useNavigate();
   const { data, isLoading, isError } = useFetchServiceRequests(page, limit);
 
-  if (isLoading) return <div className="p-4">Loading...</div>;
+  if (isLoading) return <StaffProfileSkeleton />;
   if (isError)
     return <div className="p-4 text-red-500">Failed to load data.</div>;
 

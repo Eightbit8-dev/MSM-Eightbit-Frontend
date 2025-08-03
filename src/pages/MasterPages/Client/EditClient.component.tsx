@@ -9,7 +9,6 @@ import {
 } from "../../../queries/masterQueries/ClientQuery";
 import TextArea from "@/components/common/Textarea";
 
-
 const ClientEdit = ({
   clientDetails,
   formState,
@@ -43,7 +42,7 @@ const ClientEdit = ({
     pinCode: 0,
     state: "",
     gstNumber: "",
-    remarks:""
+    remarks: "",
   };
 
   const disableButton =
@@ -139,7 +138,8 @@ const ClientEdit = ({
               {formState === "create" && (
                 <ButtonSm
                   className="font-medium text-white"
-                  text={isPending ? "Creating..." : "Create New"}
+                  text={"Create New"}
+                  isPending={isPending}
                   state="default"
                   type="submit"
                   disabled={isPending}
@@ -149,7 +149,8 @@ const ClientEdit = ({
               {formState === "edit" && (
                 <ButtonSm
                   className="font-medium text-white disabled:opacity-60"
-                  text={isUpdatePending ? "Updating..." : "Save Changes"}
+                  text={"Save Changes"}
+                  isPending={isUpdatePending}
                   state="default"
                   type="button"
                   disabled={disableButton || isUpdatePending}
@@ -205,7 +206,6 @@ const ClientEdit = ({
               }
             />
             <Input
-
               required
               disabled={formState === "display"}
               title="Email"
@@ -283,15 +283,17 @@ const ClientEdit = ({
             />
           </section>
           <div className="px-3">
-              <TextArea
-            title="Remarks"
-            name="Remarks"
-            placeholder="Remarks"
-            disabled={formState === "display"}
-            inputValue={clientData.remarks}
-            onChange={(value)=>setClientData({...clientData , remarks:value})}
+            <TextArea
+              title="Remarks"
+              name="Remarks"
+              placeholder="Remarks"
+              disabled={formState === "display"}
+              inputValue={clientData.remarks}
+              onChange={(value) =>
+                setClientData({ ...clientData, remarks: value })
+              }
             />
-</div>
+          </div>
         </form>
       </div>
     </main>

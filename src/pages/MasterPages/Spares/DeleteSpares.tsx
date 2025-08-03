@@ -10,9 +10,7 @@ export const DeleteSpareDialogBox = ({
   setSpare,
   spare,
 }: {
-  setIsDeleteSpareDialogOpen: React.Dispatch<
-    React.SetStateAction<boolean>
-  >;
+  setIsDeleteSpareDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setFormState: React.Dispatch<React.SetStateAction<FormState>>;
   setSpare: React.Dispatch<React.SetStateAction<SpareDetails | null>>;
   spare: SpareDetails;
@@ -26,6 +24,7 @@ export const DeleteSpareDialogBox = ({
   //Dummy data for cleanuo
   const emptySpare: SpareDetails = {
     spareName: "",
+    remarks: "",
     partNumber: "",
     id: 0,
   };
@@ -78,7 +77,8 @@ export const DeleteSpareDialogBox = ({
         <ButtonSm
           className="items-center justify-center bg-red-500 text-white hover:bg-red-700 active:bg-red-500"
           state="default"
-          text={isDeleteSpareLoading ? "Deleting..." : "Delete"}
+          text={"Delete"}
+          isPending={isDeleteSpareLoading}
           onClick={() => {
             handleDelete(spare);
             setIsDeleteSpareDialogOpen(false);

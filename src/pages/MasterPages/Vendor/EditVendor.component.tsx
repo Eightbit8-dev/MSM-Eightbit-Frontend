@@ -21,11 +21,21 @@ const VendorEdit = ({
   setVendorData: React.Dispatch<React.SetStateAction<VendorDetails | null>>;
 }) => {
   const [vendorData, setVendorDataLocal] = useState<VendorDetails | null>(null);
-  const [newVendorData, setNewVendorData] = useState<VendorDetails | null>(null);
+  const [newVendorData, setNewVendorData] = useState<VendorDetails | null>(
+    null,
+  );
   const [title, setTitle] = useState("");
 
-  const { mutate: createVendor, isPending: isCreating, isSuccess: isCreateSuccess } = useCreateVendor();
-  const { mutate: editVendor, isPending: isEditing, isSuccess: isEditSuccess } = useEditVendor();
+  const {
+    mutate: createVendor,
+    isPending: isCreating,
+    isSuccess: isCreateSuccess,
+  } = useCreateVendor();
+  const {
+    mutate: editVendor,
+    isPending: isEditing,
+    isSuccess: isEditSuccess,
+  } = useEditVendor();
 
   const emptyVendor: VendorDetails = {
     id: 0,
@@ -34,13 +44,12 @@ const VendorEdit = ({
     contactNumber: "",
     emailAddress: "",
     addressLine1: "",
-    addressLine2:"",
-    city:"",
-    pinCode:0,
-    state:"",
+    addressLine2: "",
+    city: "",
+    pinCode: 0,
+    state: "",
     gstNumber: "",
-    remarks:""
-
+    remarks: "",
   };
 
   useEffect(() => {
@@ -105,7 +114,8 @@ const VendorEdit = ({
                 : `${title || "Vendor"} Configuration`}
             </h1>
             <section className="ml-auto flex flex-row items-center gap-3">
-              {(formState === "edit" || (formState === "create" && hasData)) && (
+              {(formState === "edit" ||
+                (formState === "create" && hasData)) && (
                 <ButtonSm
                   className="font-medium"
                   text="Cancel"
@@ -126,7 +136,8 @@ const VendorEdit = ({
               {formState === "create" && (
                 <ButtonSm
                   className="font-medium text-white"
-                  text={isCreating ? "Creating..." : "Create New"}
+                  text={"Create New"}
+                  isPending={isCreating}
                   state="default"
                   type="submit"
                   disabled={isCreating}
@@ -135,7 +146,8 @@ const VendorEdit = ({
               {formState === "edit" && (
                 <ButtonSm
                   className="font-medium text-white"
-                  text={isEditing ? "Saving..." : "Save Changes"}
+                  text={"Save Changes"}
+                  isPending={isEditing}
                   state="default"
                   type="submit"
                   disabled={isEditing}
@@ -145,7 +157,7 @@ const VendorEdit = ({
           </header>
 
           {/* Vendor Details */}
-          <section className="vendor-details-section grid md:grid-cols-2 grid-cols-1 flex w-full flex-col gap-2 overflow-clip px-3">
+          <section className="vendor-details-section flex grid w-full grid-cols-1 flex-col gap-2 overflow-clip px-3 md:grid-cols-2">
             <Input
               required
               disabled={formState === "display"}
@@ -211,8 +223,7 @@ const VendorEdit = ({
                 setNewVendorData({ ...newVendorData, addressLine1: value })
               }
             />
-                        <Input
-
+            <Input
               disabled={formState === "display"}
               title="Address Line2"
               type="str"
@@ -224,7 +235,7 @@ const VendorEdit = ({
                 setNewVendorData({ ...newVendorData, addressLine2: value })
               }
             />
-                        <Input
+            <Input
               disabled={formState === "display"}
               title="City"
               type="str"
@@ -236,7 +247,7 @@ const VendorEdit = ({
                 setNewVendorData({ ...newVendorData, city: value })
               }
             />
-                                    <Input
+            <Input
               disabled={formState === "display"}
               title="State"
               type="str"
@@ -248,21 +259,23 @@ const VendorEdit = ({
                 setNewVendorData({ ...newVendorData, state: value })
               }
             />
-<Input
-  disabled={formState === "display"}
-  title="PinCode"
-  type="str"
-  inputValue={newVendorData.pinCode === 0 ? "" : newVendorData.pinCode}
-  onChange={(value) =>
-    setNewVendorData({
-      ...newVendorData,
-      pinCode: Number(value) || 0,
-    })
-  }
-  name="PinCode"
-  placeholder="Enter PinCode"
-  maxLength={150}
-/>
+            <Input
+              disabled={formState === "display"}
+              title="PinCode"
+              type="str"
+              inputValue={
+                newVendorData.pinCode === 0 ? "" : newVendorData.pinCode
+              }
+              onChange={(value) =>
+                setNewVendorData({
+                  ...newVendorData,
+                  pinCode: Number(value) || 0,
+                })
+              }
+              name="PinCode"
+              placeholder="Enter PinCode"
+              maxLength={150}
+            />
 
             <Input
               disabled={formState === "display"}
@@ -276,18 +289,19 @@ const VendorEdit = ({
                 setNewVendorData({ ...newVendorData, gstNumber: value })
               }
             />
-          
           </section>
-<div className="px-3">
-              <TextArea
-            title="Remarks"
-            name="Remarks"
-            placeholder="Remarks"
-            disabled={formState === "display"}
-            inputValue={newVendorData.remarks}
-            onChange={(value)=>setNewVendorData({...newVendorData , remarks:value})}
+          <div className="px-3">
+            <TextArea
+              title="Remarks"
+              name="Remarks"
+              placeholder="Remarks"
+              disabled={formState === "display"}
+              inputValue={newVendorData.remarks}
+              onChange={(value) =>
+                setNewVendorData({ ...newVendorData, remarks: value })
+              }
             />
-</div>
+          </div>
         </form>
       </div>
     </main>

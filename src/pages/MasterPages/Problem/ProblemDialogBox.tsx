@@ -1,7 +1,6 @@
 import ButtonSm from "../../../components/common/Buttons";
 import { useDeleteProblem } from "../../../queries/masterQueries/Problem-types";
-import type { LoanDetails, ProblemDetails } from "../../../types/masterApiTypes";
-import type { FormState } from "../../../types/appTypes";
+import type { ProblemDetails } from "../../../types/masterApiTypes";
 
 export const DeleteProblemDialogBox = ({
   setIsDeleteProblemDialogOpen,
@@ -9,22 +8,22 @@ export const DeleteProblemDialogBox = ({
   onDeleted,
 }: {
   setIsDeleteProblemDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  problem: ProblemDetails ;
+  problem: ProblemDetails;
   onDeleted?: () => void;
 }) => {
   const { mutate: deleteProblem, isPending: isDeleteProblemLoading } =
     useDeleteProblem();
 
-    const handleDelete = () => {
-      deleteProblem(problem, {
-        onSuccess: () => {
-          setIsDeleteProblemDialogOpen(false);
-          if (onDeleted) {
-            onDeleted();
-          }
-        },
-      });
-    };
+  const handleDelete = () => {
+    deleteProblem(problem, {
+      onSuccess: () => {
+        setIsDeleteProblemDialogOpen(false);
+        if (onDeleted) {
+          onDeleted();
+        }
+      },
+    });
+  };
 
   return (
     <div className="flex w-full flex-col gap-4">
@@ -39,7 +38,8 @@ export const DeleteProblemDialogBox = ({
       </header>
 
       <p className="text-md font-medium text-zinc-700">
-        Are you sure you want to delete the branch <strong>{problem?.problemType}</strong>? This action is irreversible.
+        Are you sure you want to delete the branch{" "}
+        <strong>{problem?.problemType}</strong>? This action is irreversible.
       </p>
 
       <section className="mt-1 grid w-full grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-3">
@@ -53,7 +53,8 @@ export const DeleteProblemDialogBox = ({
           className="items-center justify-center bg-red-500 text-center text-white hover:bg-red-700 active:bg-red-500"
           state="default"
           onClick={handleDelete}
-          text={isDeleteProblemLoading ? "Deleting..." : "Delete"}
+          text={"Delete"}
+          isPending={isDeleteProblemLoading}
         />
       </section>
     </div>

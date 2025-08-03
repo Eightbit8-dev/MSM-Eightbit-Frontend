@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Input from "../../../components/common/Input";
 import ButtonSm from "../../../components/common/Buttons";
 import type { FormState } from "../../../types/appTypes";
-import type { ProblemDetails, ProductDetails } from "../../../types/masterApiTypes";
+import type { ProblemDetails } from "../../../types/masterApiTypes";
 import {
   useCreateProblem,
   useEditProblem,
@@ -14,7 +14,7 @@ const emptyProblem: ProblemDetails = {
   id: 0,
   problemType: "",
   description: "",
-  remarks:""
+  remarks: "",
 };
 const ProblemEdit = ({
   problemDetails,
@@ -27,7 +27,8 @@ const ProblemEdit = ({
   setFormState: React.Dispatch<React.SetStateAction<FormState>>;
   setProblemData: React.Dispatch<React.SetStateAction<ProblemDetails | null>>;
 }) => {
-  const [newProblemData, setNewProblemData] = useState<ProblemDetails>(emptyProblem);
+  const [newProblemData, setNewProblemData] =
+    useState<ProblemDetails>(emptyProblem);
 
   const { mutate: createProblem, isPending, isSuccess } = useCreateProblem();
   const {
@@ -58,29 +59,26 @@ const ProblemEdit = ({
     setNewProblemData(emptyProblem);
   };
 
-const handleSubmit = (e: React.FormEvent) => {
-  e.preventDefault();
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
 
-  // Validate required fields
-  if (!newProblemData.problemType || !newProblemData.description) {
-    console.log("Missing required fields");
-    return;
-  }
+    // Validate required fields
+    if (!newProblemData.problemType || !newProblemData.description) {
+      console.log("Missing required fields");
+      return;
+    }
 
-  console.log("Form submitted with state:", formState);
-  console.log("Problem data:", newProblemData);
+    console.log("Form submitted with state:", formState);
+    console.log("Problem data:", newProblemData);
 
-  if (formState === "create") {
-    createProblem(newProblemData);
-  } else if (formState === "edit") {
-    editProblem(newProblemData);
-  }
-};
+    if (formState === "create") {
+      createProblem(newProblemData);
+    } else if (formState === "edit") {
+      editProblem(newProblemData);
+    }
+  };
 
-
-  const hasData =
-    newProblemData?.problemType ||
-    newProblemData?.description;
+  const hasData = newProblemData?.problemType || newProblemData?.description;
 
   if (!newProblemData) {
     return (
@@ -123,8 +121,9 @@ const handleSubmit = (e: React.FormEvent) => {
               {formState === "create" && (
                 <ButtonSm
                   className="font-medium text-white"
-                  text={isPending ? "Creating..." : "Create New"}
+                  text={"Create New"}
                   state="default"
+                  isPending={isPending}
                   type="submit"
                   disabled={isPending}
                 />
@@ -132,7 +131,8 @@ const handleSubmit = (e: React.FormEvent) => {
               {formState === "edit" && (
                 <ButtonSm
                   className="font-medium text-white disabled:opacity-50"
-                  text={isUpdatePending ? "Updating..." : "Save Changes"}
+                  text="Save Changes"
+                  isPending={isUpdatePending}
                   state="default"
                   type="submit"
                   disabled={
@@ -173,15 +173,17 @@ const handleSubmit = (e: React.FormEvent) => {
             />
           </section>
           <div className="px-3">
-              <TextArea
-            title="Remarks"
-            name="Remarks"
-            placeholder="Remarks"
-            disabled={formState === "display"}
-            inputValue={newProblemData.remarks}
-            onChange={(value)=>setNewProblemData({...newProblemData , remarks:value})}
+            <TextArea
+              title="Remarks"
+              name="Remarks"
+              placeholder="Remarks"
+              disabled={formState === "display"}
+              inputValue={newProblemData.remarks}
+              onChange={(value) =>
+                setNewProblemData({ ...newProblemData, remarks: value })
+              }
             />
-</div>
+          </div>
         </form>
       </div>
     </main>

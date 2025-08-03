@@ -5,7 +5,7 @@ import DropdownSelect, {
 } from "@/components/common/DropDown";
 import ButtonSm from "@/components/common/Buttons";
 import MultiFileUpload from "@/components/common/FileUploadBox";
-import TextArea from "@/components/common/Textarea";
+
 import { useFetchServiceRequestById } from "@/queries/TranscationQueries/ServiceRequestQuery";
 import { useParams, useSearchParams } from "react-router-dom";
 import type { FormState } from "@/types/appTypes";
@@ -345,7 +345,7 @@ const RequestEntry = () => {
         <DropdownSelect
           required
           title="Service Status"
-          direction="up"
+          direction="down"
           disabled={formState === "display"}
           options={statusOptions}
           selected={

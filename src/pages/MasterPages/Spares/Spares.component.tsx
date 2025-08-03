@@ -41,7 +41,7 @@ const SpareEdit = ({
     id: 0,
     spareName: "",
     partNumber: "",
-    remarks:""
+    remarks: "",
   };
 
   useEffect(() => {
@@ -114,38 +114,40 @@ const SpareEdit = ({
                 : `${spareData?.spareName ?? "Spare"} Configuration`}
             </h1>
 
-<section className="ml-auto flex flex-row items-center gap-3">
-  {(formState === "edit" || formState === "display" || (formState === "create" && isDirty)) && (
-    <ButtonSm
-      className="font-medium"
-      text="Cancel"
-      state="outline"
-      onClick={handleCancel}
-    />
-  )}
+            <section className="ml-auto flex flex-row items-center gap-3">
+              {(formState === "edit" ||
+                formState === "display" ||
+                (formState === "create" && isDirty)) && (
+                <ButtonSm
+                  className="font-medium"
+                  text="Cancel"
+                  state="outline"
+                  onClick={handleCancel}
+                />
+              )}
 
-  {formState === "create" && (
-    <ButtonSm
-      type="submit"
-      className="font-semibold text-white"
-      state="default"
-      text={isPending ? "Creating..." : "Create"}
-      disabled={!isDirty}
-    />
-  )}
+              {formState === "create" && (
+                <ButtonSm
+                  type="submit"
+                  className="font-semibold text-white"
+                  state="default"
+                  text={"Create"}
+                  isPending={isPending}
+                  disabled={!isDirty}
+                />
+              )}
 
-  {formState === "edit" && (
-    <ButtonSm
-      className="font-medium text-white disabled:opacity-50"
-      text={isUpdatePending ? "Updating..." : "Save Changes"}
-      state="default"
-      type="submit"
-      disabled={!isDirty}
-    />
-  )}
-</section>
-
-
+              {formState === "edit" && (
+                <ButtonSm
+                  className="font-medium text-white disabled:opacity-50"
+                  text={"Save Changes"}
+                  isPending={isUpdatePending}
+                  state="default"
+                  type="submit"
+                  disabled={!isDirty}
+                />
+              )}
+            </section>
           </header>
 
           <section className="spare-details-section flex max-h-full w-full flex-col gap-2 overflow-clip px-3">
@@ -179,18 +181,19 @@ const SpareEdit = ({
               }}
             />
           </section>
-                    <div className="px-3">
-              <TextArea
-            title="Remarks"
-            name="Remarks"
-            placeholder="Remarks"
-            disabled={formState === "display"}
-            inputValue={newSpareData?.remarks ?? ""}
-            onChange={(value)=>{
-              if (!newSpareData) return;
-              setNewSpareData({...newSpareData , remarks:value})}}
+          <div className="px-3">
+            <TextArea
+              title="Remarks"
+              name="Remarks"
+              placeholder="Remarks"
+              disabled={formState === "display"}
+              inputValue={newSpareData?.remarks ?? ""}
+              onChange={(value) => {
+                if (!newSpareData) return;
+                setNewSpareData({ ...newSpareData, remarks: value });
+              }}
             />
-</div>
+          </div>
         </form>
       </motion.div>
     </motion.main>

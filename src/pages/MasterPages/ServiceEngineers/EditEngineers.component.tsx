@@ -171,6 +171,7 @@ const ServiceEngineerEdit = ({
                   className="font-medium text-white"
                   text={isPending ? "Creating..." : "Create New"}
                   state="default"
+                  isPending={isPending}
                   type="submit"
                   disabled={isPending}
                 />
@@ -180,6 +181,7 @@ const ServiceEngineerEdit = ({
                   className="font-medium text-white disabled:opacity-50"
                   text={isUpdatePending ? "Updating..." : "Save Changes"}
                   state="default"
+                  isPending={isUpdatePending}
                   type="submit"
                   disabled={
                     isUpdatePending ||

@@ -8,6 +8,7 @@ import { useFetchServiceEngineerOptions } from "@/queries/masterQueries/ServiceE
 import type { ServiceRequest } from "@/types/transactionTypes";
 import { usePatchServiceRequest } from "@/queries/TranscationQueries/ServiceRequestQuery";
 
+
 export const AssignEngineerDialogBox = ({
   setIsAssignDialogOpen,
   serviceRequestData,
@@ -40,12 +41,17 @@ export const AssignEngineerDialogBox = ({
       return;
     }
 
-    {
-      updateServiceEngineer({
+    updateServiceEngineer(
+      {
         id: serviceRequestData.id,
         engineerId: selectedEngineer.id,
-      });
-    }
+      },
+      {
+        onSuccess: () => {
+          setIsAssignDialogOpen(false);
+        },
+      },
+    );
   };
 
   return (
@@ -85,7 +91,8 @@ export const AssignEngineerDialogBox = ({
         <ButtonSm
           className="items-center justify-center bg-indigo-500 text-center text-white hover:bg-indigo-600 active:bg-indigo-700"
           state="default"
-          text={isAssigning ? "Assigning..." : "Assign"}
+          text={"Assign"}
+          isPending={isAssigning}
           type="submit"
           disabled={isAssigning}
         />
