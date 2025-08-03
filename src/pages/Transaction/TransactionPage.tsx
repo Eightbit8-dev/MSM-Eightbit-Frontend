@@ -33,7 +33,7 @@ export const TransactionPage = () => {
     {
       img: "/icons/Master/Products.svg",
       title: "Service Entry",
-      desc: "Catalog, track, and manage your products or items in one page.",
+      desc: "Catalog, track, and manage your machines, products or items all in one page.",
       btnText: "Configure",
       onAction: () =>
         navigate(appRoutes.transactionRoutes.children.serviceEntry),
