@@ -148,7 +148,7 @@ const SparePartsManager: React.FC<SparePartsManagerProps> = ({
             <button
               type="button"
               onClick={() => removeFile(spareId, type)}
-              className="absolute top-1 right-1 rounded-full bg-red-500 p-1 text-white opacity-100 transition-opacity "
+              className="absolute top-1 right-1 rounded-full bg-red-500 p-1 text-white opacity-100 transition-opacity"
             >
               <X size={14} />
             </button>
@@ -339,7 +339,7 @@ const SparePartsManager: React.FC<SparePartsManagerProps> = ({
       )}
 
       {/* Status Summary */}
-      <div className="mt-0 rounded-lg border border-blue-200 bg-blue-50 p-3">
+      <div className="mt-2 rounded-lg border border-blue-200 bg-blue-50 p-3">
         <div className="flex items-center justify-between text-sm">
           <span className="font-medium text-blue-700">
             {selectedSpares.length} spare part

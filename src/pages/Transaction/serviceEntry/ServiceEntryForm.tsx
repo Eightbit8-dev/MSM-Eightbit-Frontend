@@ -4,7 +4,6 @@ import DropdownSelect, {
   type DropdownOption,
 } from "@/components/common/DropDown";
 import ButtonSm from "@/components/common/Buttons";
-import MultiFileUpload from "@/components/common/FileUploadBox";
 
 import { useFetchServiceRequestById } from "@/queries/TranscationQueries/ServiceRequestQuery";
 import { useParams, useSearchParams } from "react-router-dom";
@@ -27,23 +26,26 @@ import {
 import MultiSelectDropdown from "@/components/common/MultiSelectDropDown";
 import { useFetchSparesOptions } from "@/queries/masterQueries/SpareQuery";
 import RequestEntrySkeleton from "./ServiceEntryFormSkeleton";
+import SparePartsManager from "./SparesImageUploader.component";
+
+interface SparePartData {
+  spareId: number;
+  quantity: number;
+  complaintSparePhotoUrl?: File;
+  sparePhotoUrl?: File;
+}
 
 const RequestEntry = () => {
-  //Scroped to this only as we dont use it anywhere else
-
-  /**
-   * We fetch the serviceRequest made by the clien(users) and use it to build this form which is serviceEntryForm this is used by technicians
-   */
   const emptyData: ServiceEntryRequest = {
     refNumber: "",
     serviceDate: "",
-    maintenanceType: "", //DropDownUi
-    maintenanceSubType: "", //DropDownUi
+    maintenanceType: "",
+    maintenanceSubType: "",
     serviceRequestId: 0,
-    vendorId: 0, //MasterDropDown from APi
-    engineerId: 0, //MasterDropDown from APi
+    vendorId: 0,
+    engineerId: 0,
     engineerDiagnostics: "",
-    serviceStatus: "", //DropDownUI
+    serviceStatus: "",
     remarks: "",
     complaintSparePhotoUrl: "",
     spareParts: [],
@@ -59,20 +61,18 @@ const RequestEntry = () => {
   // ---------- states ----------
   const modeParam = searchParams.get("mode") as FormState;
   const [formState, setFormState] = useState<FormState>("display");
-
   const [formData, setFormData] = useState<ServiceEntryRequest>(emptyData);
-
+  const [sparePartsData, setSparePartsData] = useState<SparePartData[]>([]);
   const [selectedSpares, setSelectedSpares] = useState<DropdownOption[]>([]);
   const [spareQuantities, setSpareQuantities] = useState<{
     [key: number]: number;
   }>({});
 
-  ///for scrolling into view when addinf new spare
+  // For scrolling into view when adding new spare
   const [latestSpareId, setLatestSpareId] = useState<number | null>(null);
   const latestSpareRef = useRef<HTMLDivElement>(null);
 
   // --------- external apis -----------
-
   const {
     data: serviceRequestData,
     isLoading,
@@ -92,8 +92,8 @@ const RequestEntry = () => {
     mutateAsync: createServiceEntry,
     isPending: isCreateServiceEntryPending,
   } = useCreateServiceEntry();
-  // ---------- use effects ----------
 
+  // ---------- use effects ----------
   useEffect(() => {
     if (modeParam) {
       setFormState(modeParam);
@@ -102,33 +102,26 @@ const RequestEntry = () => {
     }
   }, [modeParam]);
 
-  //Fetching the service reqeest dynamically after mouting
+  // Set initial form data when service request is loaded
   useEffect(() => {
     if (serviceRequestData) {
       setFormData((prev) => ({
         ...prev,
         refNumber: generateReferenceNumber("SE"),
         serviceRequestId: serviceRequestData.id,
-        spareParts: selectedSpares.map((spare: DropdownOption) => {
-          return {
-            spareId: spare.id,
-            quantity: spareQuantities[spare.id] || 1, // Get quantity from state or default to 1
-            sparePhotoUrl: "http://example.com/sparepart2.jpg",
-          };
-        }),
       }));
     }
-  }, [serviceRequestData, selectedSpares, spareQuantities]); // Add spareQuantities to dependencies
+  }, [serviceRequestData]);
 
-  // Helper function to update quantity
+  // Update spare quantities
   const updateSpareQuantity = (spareId: number, quantity: number) => {
     setSpareQuantities((prev) => ({
       ...prev,
-      [spareId]: Math.max(1, quantity), // Ensure minimum quantity of 1
+      [spareId]: Math.max(1, quantity),
     }));
   };
 
-  // Helper function to clean up quantities when spares are removed
+  // Handle spare selection changes
   const handleSparesChange = (newSpares: DropdownOption[]) => {
     const newSpareIds = new Set(newSpares.map((spare) => spare.id));
     const oldSpareIds = new Set(selectedSpares.map((spare) => spare.id));
@@ -151,27 +144,91 @@ const RequestEntry = () => {
       });
       return cleaned;
     });
+
+    // Clean up removed spare parts data
+    setSparePartsData((prev) =>
+      prev.filter((spare) => newSpareIds.has(spare.spareId)),
+    );
   };
 
+  // Scroll to latest spare
   useEffect(() => {
     if (latestSpareRef.current && latestSpareId !== null) {
       latestSpareRef.current.scrollIntoView({
         behavior: "smooth",
         block: "center",
       });
-      setLatestSpareId(null); // Reset after scrolling
+      setLatestSpareId(null);
     }
   }, [selectedSpares]);
 
+  // Handle form submission
+  // Fixed handleSubmit function in RequestEntry component
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const payload: ServiceEntryRequest = {
-      ...formData,
-      serviceDate: convertToBackendDate(formData.serviceDate),
 
-      complaintSparePhotoUrl: "https://example.com/complaint-spare-photo.jpg",
-    };
-    createServiceEntry(payload);
+    // Create FormData for file uploads
+    const formDataToSend = new FormData();
+
+    // Add basic form fields
+    formDataToSend.append("refNumber", formData.refNumber);
+    formDataToSend.append(
+      "serviceDate",
+      convertToBackendDate(formData.serviceDate),
+    );
+    formDataToSend.append("maintenanceType", formData.maintenanceType);
+    formDataToSend.append("maintenanceSubType", formData.maintenanceSubType);
+    formDataToSend.append(
+      "serviceRequestId",
+      formData.serviceRequestId.toString(),
+    );
+    formDataToSend.append("vendorId", formData.vendorId.toString());
+    formDataToSend.append("engineerId", formData.engineerId.toString());
+    formDataToSend.append("engineerDiagnostics", formData.engineerDiagnostics);
+    formDataToSend.append("serviceStatus", formData.serviceStatus);
+    formDataToSend.append("remarks", formData.remarks);
+
+    // Add spare parts data with proper file handling
+    sparePartsData.forEach((spare, index) => {
+      formDataToSend.append(
+        `spareParts[${index}][spareId]`,
+        spare.spareId.toString(),
+      );
+      formDataToSend.append(
+        `spareParts[${index}][quantity]`,
+        spare.quantity.toString(),
+      );
+
+      // Add files with correct field names and null checks
+      if (spare.complaintSparePhotoUrl instanceof File) {
+        formDataToSend.append(
+          `spareParts[${index}][complaintSparePhotoUrl]`, // Fixed field name
+          spare.complaintSparePhotoUrl,
+          spare.complaintSparePhotoUrl.name, // Include filename
+        );
+      }
+
+      if (spare.sparePhotoUrl instanceof File) {
+        formDataToSend.append(
+          `spareParts[${index}][sparePhotoUrl]`, // Fixed field name
+          spare.sparePhotoUrl,
+          spare.sparePhotoUrl.name, // Include filename
+        );
+      }
+    });
+
+    // Debug: Log FormData contents (remove in production)
+    console.log("FormData contents:");
+    for (const pair of formDataToSend.entries()) {
+      console.log(pair[0] + ": " + pair[1]);
+    }
+
+    try {
+      await createServiceEntry(formDataToSend);
+    } catch (error) {
+      toast.error("Failed to create service entry");
+      console.error(error);
+    }
   };
 
   if (
@@ -182,6 +239,7 @@ const RequestEntry = () => {
   )
     return <RequestEntrySkeleton />;
   if (error || !serviceRequestData) return <p>Something went wrong</p>;
+
   return (
     <div className="mb-16 w-full rounded-lg bg-white p-6 shadow-md md:mb-0">
       <h2 className="mb-4 text-xl font-semibold">Service Entry</h2>
@@ -206,9 +264,8 @@ const RequestEntry = () => {
           onChange={(val) => {
             setFormData({ ...formData, serviceDate: val });
           }}
-          minDate={getMaxDateFromToday(0)} //yesterday is not selectable
-          maxDate={getMaxDateFromToday(2)} // Go forward 2 days
-          //inniku naliku nalaniku
+          minDate={getMaxDateFromToday(0)}
+          maxDate={getMaxDateFromToday(2)}
           required
         />
 
@@ -259,6 +316,7 @@ const RequestEntry = () => {
             />
           )}
         </div>
+
         <DropdownSelect
           required
           title="Vendor Name"
@@ -317,6 +375,7 @@ const RequestEntry = () => {
           selected={{ id: 404, label: serviceRequestData.serialNumber }}
           onChange={() => {}}
         />
+
         <DropdownSelect
           title="ComplaintType"
           options={[]}
@@ -324,6 +383,7 @@ const RequestEntry = () => {
           selected={{ id: 404, label: serviceRequestData.complaintDetails }}
           onChange={() => {}}
         />
+
         <Input
           title="Remarks"
           name="RequestEntryRemarks"
@@ -331,6 +391,7 @@ const RequestEntry = () => {
           inputValue={formData.remarks}
           onChange={(val) => setFormData({ ...formData, remarks: val })}
         />
+
         <Input
           required
           title="Engineer Diagnostics"
@@ -342,6 +403,7 @@ const RequestEntry = () => {
           }
           placeholder="Enter diagnosis"
         />
+
         <DropdownSelect
           required
           title="Service Status"
@@ -359,82 +421,24 @@ const RequestEntry = () => {
           }
         />
 
-        <div className="multi-select-container flex flex-col gap-3">
-          <MultiSelectDropdown
-            title="Spares"
-            options={sparesOptions}
-            selectedOptions={selectedSpares}
-            onChange={handleSparesChange} // Use the helper function
-            placeholder="Select spares to add"
-            required={true}
-          />
+        <MultiSelectDropdown
+          title="Spares"
+          options={sparesOptions}
+          selectedOptions={selectedSpares}
+          onChange={handleSparesChange}
+          placeholder="Select spares to add"
+          required={true}
+        />
 
-          {/* Quantity inputs for selected spares dont even mind this component*/}
-          {selectedSpares.length > 0 && (
-            <div className="my-3 flex w-full flex-col space-y-3">
-              <h4 className="text-sm font-medium text-slate-700">
-                Quantities:
-              </h4>
-              <div className="mt-2 grid grid-cols-1 gap-2">
-                {selectedSpares.map((spare) => (
-                  <div
-                    key={spare.id}
-                    ref={spare.id === latestSpareId ? latestSpareRef : null}
-                    className="flex items-center justify-between rounded-lg bg-slate-50 p-2"
-                  >
-                    <h3 className="mb-2 text-xs leading-loose font-semibold text-slate-700">
-                      {spare.label} <span className="text-red-500">*</span>
-                    </h3>
-                    <div className="flex flex-row items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() =>
-                          updateSpareQuantity(
-                            spare.id,
-                            (spareQuantities[spare.id] || 1) - 1,
-                          )
-                        }
-                        className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-200 leading-0 text-slate-600 hover:bg-slate-300"
-                        disabled={spareQuantities[spare.id] <= 1}
-                      >
-                        <img src="/icons/minus.svg" alt="-" />
-                      </button>
-                      <input
-                        type="number"
-                        min="1"
-                        value={spareQuantities[spare.id] || 1}
-                        onChange={(e) =>
-                          updateSpareQuantity(
-                            spare.id,
-                            parseInt(e.target.value) || 1,
-                          )
-                        }
-                        className="w-16 items-center rounded border border-slate-300 px-2 py-1 text-center text-sm"
-                      />
-                      <button
-                        disabled={spareQuantities[spare.id] >= 10}
-                        type="button"
-                        onClick={() =>
-                          updateSpareQuantity(
-                            spare.id,
-                            (spareQuantities[spare.id] || 1) + 1,
-                          )
-                        }
-                        className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-200 text-slate-600 hover:bg-slate-300"
-                      >
-                        <img src="/icons/plus.svg" alt="-" />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-        <div className="flex-row">
-          <MultiFileUpload title="Photos of damaged spares " />
-          <MultiFileUpload title="Photos of spares " />
-        </div>
+        <SparePartsManager
+          selectedSpares={selectedSpares}
+          spareQuantities={spareQuantities}
+          updateSpareQuantity={updateSpareQuantity}
+          onSpareDataChange={setSparePartsData}
+          latestSpareId={latestSpareId}
+          latestSpareRef={latestSpareRef}
+        />
+
         <div className="col-span-1 mt-4 flex justify-end md:col-span-2">
           <ButtonSm
             isPending={isCreateServiceEntryPending}

@@ -30,8 +30,7 @@ const MachineEntry = () => {
   const [isDeleteDialogOpen, setIsDeleteMachineDialogOpen] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [formState, setFormState] = useState<FormState>("create");
-    const [isImportModalOpen, setIsImportModalOpen] = useState(false);
-
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
 
   const { isSm } = useBreakpoints();
 
@@ -50,8 +49,7 @@ const MachineEntry = () => {
         : [...prevSelected, id],
     );
   };
- const handleImportClick = () => {
-    console.log("Import button clicked, setting isImportModalOpen to true");
+  const handleImportClick = () => {
     setIsImportModalOpen(true);
   };
 
@@ -376,7 +374,7 @@ const MachineEntry = () => {
           </DialogBox>
         )}
       </AnimatePresence>
-       <MachineImportModal
+      <MachineImportModal
         isOpen={isImportModalOpen}
         onClose={() => setIsImportModalOpen(false)}
       />
