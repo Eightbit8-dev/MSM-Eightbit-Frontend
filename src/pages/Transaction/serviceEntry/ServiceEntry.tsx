@@ -14,7 +14,7 @@ import type { ServiceEntryRequest } from "@/types/transactionTypes";
 const ServiceEntryPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
-  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+
   const [selectedEntry, setSelectedEntry] =
     useState<ServiceEntryRequest | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);

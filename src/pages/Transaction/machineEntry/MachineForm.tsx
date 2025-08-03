@@ -23,7 +23,6 @@ import type { MachineDetails } from "@/types/transactionTypes";
 
 import MultiFileUpload from "@/components/common/FileUploadBox";
 import { useFetchServiceEngineerOptions } from "@/queries/masterQueries/ServiceEngineersQuery";
-import Textarea from "@/components/common/Textarea";
 
 type Mode = "create" | "edit" | "display";
 
@@ -125,6 +124,11 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
           ? { id: 1, label: machineFromParent.modelNumber }
           : { id: 0, label: "Select Model" },
       );
+      setSelectedEngineer(
+        machineFromParent.installedByEngineerName
+          ? { id: 1, label: machineFromParent.installedByEngineerName }
+          : { id: 0, label: "Select Model" },
+      );
     }
   }, [machineFromParent, clientOptions, typeOptions]);
 
@@ -173,9 +177,9 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
       clientId: selectedClient.id,
       productId: selectedModel.id,
     };
-
-    if (isEdit) editMachine(payload);
-    else createMachine(payload);
+    const onSuccess = () => setFormVisible(false);
+    if (isEdit) editMachine(payload, { onSuccess: onSuccess });
+    else createMachine(payload, { onSuccess: onSuccess });
   };
 
   if ((isEdit || isView) && !machineFromParent) {
@@ -276,6 +280,7 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
             onChange={(val) => {
               setSelectedEngineer(val);
             }}
+            required
             disabled={isView}
           />
           <DateInput
