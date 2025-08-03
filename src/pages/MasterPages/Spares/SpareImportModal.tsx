@@ -86,7 +86,7 @@ const SpareImportModal = ({ isOpen, onClose }: ImportModalProps) => {
             <h3 className="text-md font-semibold text-blue-600 mb-2">Notes:</h3>
             <ol className="list-decimal list-inside text-sm text-gray-700 space-y-1">
               <li>Don't change heading.</li> 
-              <li>Mandatory master fields: MAchineType, Brand, ModelNumber</li>
+              <li>Mandatory master fields: Spare Name, PartNumber</li>
               <li>Date Format Must Be DD.MM.YYYY</li>
             </ol>
           </div>

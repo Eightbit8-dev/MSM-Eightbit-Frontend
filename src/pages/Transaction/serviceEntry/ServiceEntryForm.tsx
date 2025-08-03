@@ -314,7 +314,7 @@ const RequestEntry = () => {
           title="Machine Serial Number"
           disabled
           options={[]}
-          selected={{ id: 404, label: serviceRequestData.brand }}
+          selected={{ id: 404, label: serviceRequestData.serialNumber }}
           onChange={() => {}}
         />
         <DropdownSelect
