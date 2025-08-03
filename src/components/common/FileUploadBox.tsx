@@ -11,6 +11,7 @@ interface ReadFileData {
 interface MultiFileUploadProps {
   allowedTypes?: string[];
   simulateFailure?: boolean;
+  title: string;
 }
 
 const MultiFileUpload: React.FC<MultiFileUploadProps> = ({
@@ -21,6 +22,7 @@ const MultiFileUpload: React.FC<MultiFileUploadProps> = ({
     "application/msword",
   ],
   simulateFailure = false,
+  title,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [files, setFiles] = useState<File[]>([]);
@@ -112,9 +114,7 @@ const MultiFileUpload: React.FC<MultiFileUploadProps> = ({
 
       {/* Right: Uploaded Files List */}
       <div className="w-full rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-        <h3 className="mb-3 text-base font-semibold text-slate-700">
-          Photos of complaint Spares ( Max : 3 Photos )
-        </h3>
+        <h3 className="mb-3 text-base font-semibold text-slate-700">{title}</h3>
         {files.length === 0 ? (
           <p className="text-sm text-slate-400">No files uploaded yet.</p>
         ) : (

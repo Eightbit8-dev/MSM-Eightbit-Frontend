@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useFetchServiceRequests } from "../queries/TranscationQueries/ServiceRequestQuery";
 import ButtonSm from "../components/common/Buttons";
 import StaffProfileSkeleton from "./Transaction/PageSkeleton";
+import { appRoutes } from "@/routes/appRoutes";
 
 const stats = [
   {
@@ -129,9 +130,7 @@ const DashBoardPage: React.FC = () => {
                 state="outline"
                 text="View"
                 onClick={() =>
-                  navigate(
-                    `/transactions/service-entry/${request.id}?mode=display`,
-                  )
+                  navigate(appRoutes.transactionRoutes.children.serviceRequest)
                 }
               />
               <ButtonSm

@@ -359,7 +359,6 @@ const RequestEntry = () => {
           }
         />
 
-        <MultiFileUpload />
         <div className="multi-select-container flex flex-col gap-3">
           <MultiSelectDropdown
             title="Spares"
@@ -432,7 +431,10 @@ const RequestEntry = () => {
             </div>
           )}
         </div>
-
+        <div className="flex-row">
+          <MultiFileUpload title="Photos of damaged spares " />
+          <MultiFileUpload title="Photos of spares " />
+        </div>
         <div className="col-span-1 mt-4 flex justify-end md:col-span-2">
           <ButtonSm
             isPending={isCreateServiceEntryPending}

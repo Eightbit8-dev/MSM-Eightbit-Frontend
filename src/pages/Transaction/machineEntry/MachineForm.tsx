@@ -305,7 +305,7 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
           onChange={(val) => updateField("remarks", val)}
           disabled={isView}
         />
-        <MultiFileUpload />
+        <MultiFileUpload title="Photos of Machine ( Max : 3 Photos )" />
 
         <div className="col-span-full mt-4 flex justify-end gap-4 md:gap-6">
           <ButtonSm
