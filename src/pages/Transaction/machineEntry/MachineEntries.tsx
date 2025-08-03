@@ -170,7 +170,7 @@ const MachineEntry = () => {
             {/* Table Container */}
             <div className="tables flex min-h-[300px] w-full flex-col overflow-x-auto bg-white shadow-sm md:overflow-x-auto md:rounded-[9px]">
               {/* Header */}
-              <header className="header flex w-max min-w-full flex-row items-center justify-between bg-slate-200 px-3 py-3 md:min-w-max">
+              <header className="header flex w-full min-w-max flex-row items-center justify-between bg-slate-200 px-3 py-3 md:min-w-max">
                 {/* S.No + Checkbox */}
                 <div className="flex w-20 min-w-20 items-center justify-start gap-2">
                   <p className="w-10 text-sm font-semibold text-zinc-900">
@@ -220,7 +220,7 @@ const MachineEntry = () => {
                 </div>
 
                 {/* Action Header */}
-                <div className="w-24 min-w-24 px-2 md:w-28 md:min-w-28">
+                <div className="flex w-24 min-w-24 flex-col items-start px-2 md:w-28 md:min-w-28">
                   <p className="text-sm font-semibold text-zinc-900">Action</p>
                 </div>
               </header>
@@ -287,7 +287,7 @@ const MachineEntry = () => {
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="flex w-24 min-w-24 flex-row items-center px-2 md:w-28 md:min-w-28">
+                    <div className="flex w-24 min-w-24 flex-row items-center gap-2 px-2 md:w-28 md:min-w-28">
                       <ButtonSm
                         className="aspect-square scale-90 border border-blue-500 bg-blue-500/10"
                         onClick={(e) => {
