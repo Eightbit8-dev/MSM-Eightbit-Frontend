@@ -153,7 +153,7 @@ const ServiceRequestFormPage: React.FC<Props> = ({
     });
 
     if (!entryId) {
-      toast.error("QR missing machineEntryId");
+      toast.error(" missing machineEntryId");
       return;
     }
 
