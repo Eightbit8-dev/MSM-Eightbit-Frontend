@@ -76,31 +76,18 @@ const ServiceRequestPage = () => {
         {isLoading ? (
           <EmployeeTableSkeleton />
         ) : (
-          <div className="flex flex-col items-start justify-start gap-2 overflow-clip rounded-[12px] bg-white/80 p-4">
-            <div className="flex w-full items-center justify-between">
+          <div className="flex flex-col items-start justify-start gap-2 overflow-clip rounded-[12px] bg-white/80 py-3 md:p-4">
+            <div className="flex w-full items-center justify-between px-3 md:px-0">
               <section className="result-length flex w-full flex-row items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
                   <div className="flex h-[10px] w-[10px] rounded-full bg-blue-500"></div>
-                  <h2 className="text-md font-semibold text-zinc-800">
+                  <h2 className="text-md min-w-max font-semibold text-zinc-800">
                     Showing {paginatedData.length} results of{" "}
                     {data?.totalRecords || 0}
                   </h2>
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <div
-                    className={`selectin-container flex flex-row gap-2 rounded-md border-1 border-blue-500 bg-blue-500/10 px-3 py-2 ${selectedIds.length === 0 ? "opacity-0" : ""}`}
-                  >
-                    <h3 className="text-md font-medium text-blue-500">
-                      Selected {selectedIds.length}
-                    </h3>
-                    <img
-                      className="cursor-pointer transition-all duration-200 hover:scale-125 hover:scale-3d"
-                      onClick={() => setSelectedIds([])}
-                      src="/icons/chip-x-icon.svg"
-                      alt="x"
-                    />
-                  </div>
                   <PaginationControls
                     totalPages={totalPages}
                     currentPage={currentPage}
@@ -110,7 +97,7 @@ const ServiceRequestPage = () => {
               </section>
             </div>
 
-            <div className="tables flex min-h-[300px] w-full flex-col overflow-x-auto rounded-[9px] bg-white shadow-sm md:overflow-x-auto">
+            <div className="tables flex min-h-[300px] w-full flex-col overflow-x-auto bg-white shadow-sm md:overflow-x-auto md:rounded-[9px]">
               {/* Header */}
               <header className="header flex min-w-max flex-row items-center justify-between bg-slate-200 px-3 py-3 md:min-w-max">
                 {/* S.No + Checkbox */}
@@ -153,7 +140,7 @@ const ServiceRequestPage = () => {
                 <div className="w-20 min-w-20 px-2 md:w-24 md:min-w-24">
                   <p className="text-sm font-semibold text-zinc-900">Assign</p>
                 </div>
-                <div className="w-20 min-w-20 px-2 md:w-24 md:min-w-24">
+                <div className="w-20 min-w-24 px-2 md:w-24 md:min-w-24">
                   <p className="text-sm font-semibold text-zinc-900">Status</p>
                 </div>
 
@@ -225,7 +212,7 @@ const ServiceRequestPage = () => {
                         state="outline"
                       />
                     </div>
-                    <div className="w-20 min-w-20 px-2 pt-1 md:w-24 md:min-w-24">
+                    <div className="w-20 min-w-24 px-2 md:w-24 md:min-w-24">
                       <span
                         className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${
                           item.status === "Completed" ||
@@ -268,7 +255,7 @@ const ServiceRequestPage = () => {
               )}
             </div>
 
-            <footer className="flex w-full flex-row items-center justify-between">
+            <footer className="flex w-full flex-row items-center justify-between px-3 md:px-0">
               <DropdownSelect
                 title=""
                 direction="up"
