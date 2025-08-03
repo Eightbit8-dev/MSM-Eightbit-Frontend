@@ -6,12 +6,12 @@ import DialogBox from "@/components/common/DialogBox";
 import { AnimatePresence } from "motion/react";
 import type { FormState } from "@/types/appTypes";
 import DropdownSelect from "@/components/common/DropDown";
-import { useBreakpoints } from "@/hooks/useBreakPoints";
 import type { ServiceRequest } from "@/types/transactionTypes";
 import { useState } from "react";
 import { useFetchServiceRequests } from "@/queries/TranscationQueries/ServiceRequestQuery";
 import ServiceRequestFormPage from "./ServiceForm";
 import { DeleteServiceRequestDialogBox } from "./ServiceRequestDelete.Dialog";
+import { AssignEngineerDialogBox } from "./AssignEnginnerDialog";
 
 const ServiceRequestPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -19,12 +19,11 @@ const ServiceRequestPage = () => {
   const [selectedRequest, setSelectedRequest] = useState<ServiceRequest | null>(
     null,
   );
-  const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [formState, setFormState] = useState<FormState>("create");
 
-  const { isSm } = useBreakpoints();
+  // const { isSm } = useBreakpoints();
 
   const { data, isLoading } = useFetchServiceRequests(
     currentPage,
@@ -40,6 +39,7 @@ const ServiceRequestPage = () => {
     requestDate: new Date().toISOString().split("T")[0],
     complaintDetails: "",
     clientName: "",
+    engineerName: "Not assigned",
     machineType: "",
     brand: "",
     modelNumber: "",
@@ -137,7 +137,7 @@ const ServiceRequestPage = () => {
                     Complaint
                   </p>
                 </div>
-                <div className="w-20 min-w-20 px-2 md:w-24 md:min-w-24">
+                <div className="w-24 min-w-24 px-2 pt-1 md:w-28 md:min-w-28">
                   <p className="text-sm font-semibold text-zinc-900">Assign</p>
                 </div>
                 <div className="w-20 min-w-24 px-2 md:w-24 md:min-w-24">
@@ -145,7 +145,7 @@ const ServiceRequestPage = () => {
                 </div>
 
                 {/* Action Header */}
-                <div className="flex w-16 min-w-16 items-center justify-start gap-2 pt-1">
+                <div className="flex w-12 min-w-12 items-center justify-start gap-2 pt-1">
                   <p className="text-sm font-semibold text-zinc-900">Action</p>
                 </div>
               </header>
@@ -200,21 +200,27 @@ const ServiceRequestPage = () => {
                         {item.complaintDetails}
                       </p>
                     </div>
-                    <div className="w-20 min-w-20 justify-start md:w-24 md:min-w-24">
+                    <div className="w-24 min-w-24 px-2 pt-1 md:w-28 md:min-w-28">
                       <ButtonSm
                         className="min-w-full scale-90 border-1 border-blue-500 bg-blue-500/10"
                         onClick={(e) => {
                           e.stopPropagation();
+                          setFormState("edit");
+                          setIsFormOpen(true);
                           setSelectedRequest(item);
                         }}
-                        text="Assign"
-                        imgUrl="/icons/add-user-icon.svg"
+                        text={item.engineerName || "Assign"}
+                        imgUrl={
+                          item.engineerName
+                            ? "/icons/edit-icon.svg"
+                            : "/icons/add-user-icon.svg"
+                        }
                         state="outline"
                       />
                     </div>
                     <div className="w-20 min-w-24 px-2 md:w-24 md:min-w-24">
                       <span
-                        className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${
+                        className={`inline-flex min-w-full items-center justify-center rounded-full px-2 py-1 text-xs font-medium ${
                           item.status === "Completed" ||
                           item.status === "COMPLETED"
                             ? "bg-green-100 text-green-800"
@@ -228,17 +234,7 @@ const ServiceRequestPage = () => {
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="flex w-16 min-w-16 items-center justify-start gap-2 pt-1">
-                      {/* <ButtonSm
-                        className="scale-90 border-1 border-blue-500 bg-blue-500/10"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedRequest(item);
-                        }}
-                        text="Assign"
-                        imgUrl="/icons/add-user-icon.svg"
-                        state="outline"
-                      /> */}
+                    <div className="flex w-12 min-w-12 items-center justify-start gap-2 pt-1">
                       <ButtonSm
                         onClick={(e) => {
                           e.stopPropagation();
@@ -280,7 +276,7 @@ const ServiceRequestPage = () => {
       <AnimatePresence>
         {isDeleteDialogOpen && selectedRequest && (
           <DialogBox
-            setToggleDialogueBox={setIsFormOpen}
+            setToggleDialogueBox={setIsDeleteDialogOpen}
             className="p-3 lg:min-w-[400px]"
           >
             <DeleteServiceRequestDialogBox
@@ -295,7 +291,7 @@ const ServiceRequestPage = () => {
       </AnimatePresence>
 
       <AnimatePresence>
-        {isFormOpen && selectedRequest && (
+        {isFormOpen && selectedRequest && formState === "create" && (
           <DialogBox
             setToggleDialogueBox={setIsFormOpen}
             className="lg:min-w-[800px]"
@@ -304,6 +300,17 @@ const ServiceRequestPage = () => {
               mode={formState}
               requestFromParent={selectedRequest}
               setFormVisible={setIsFormOpen}
+            />
+          </DialogBox>
+        )}
+        {isFormOpen && selectedRequest && formState === "edit" && (
+          <DialogBox
+            setToggleDialogueBox={setIsFormOpen}
+            className="lg:min-w-[350px]"
+          >
+            <AssignEngineerDialogBox
+              setIsAssignDialogOpen={setIsFormOpen}
+              serviceRequestData={selectedRequest}
             />
           </DialogBox>
         )}

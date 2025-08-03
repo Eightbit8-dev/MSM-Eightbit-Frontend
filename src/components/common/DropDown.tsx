@@ -32,6 +32,38 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
   const [wasSubmitted, setWasSubmitted] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  // Add CSS for webkit scrollbars
+  useEffect(() => {
+    const style = document.createElement("style");
+    style.textContent = `
+      .dropdown-scrollbar::-webkit-scrollbar {
+        width: 8px;
+        position: absolute;
+        right: 0;
+      }
+      .dropdown-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .dropdown-scrollbar::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
+      }
+      .dropdown-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+      }
+      .dropdown-scrollbar::-webkit-scrollbar-button {
+        display: none;
+      }
+      .dropdown-scrollbar::-webkit-scrollbar-corner {
+        background: transparent;
+      }
+    `;
+    document.head.appendChild(style);
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -97,7 +129,7 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
 
   return (
     <div
-      className={`relative ${className} disabled:cursor-not-allowed`}
+      className={`relative ${className} select-none disabled:cursor-not-allowed`}
       ref={dropdownRef}
     >
       {title && (
@@ -115,7 +147,7 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
         value={selected.id === 0 ? "" : selected.id}
         onChange={() => {}}
         disabled={disabled}
-        className="hidden disabled:cursor-not-allowed"
+        className="hidden select-none disabled:cursor-not-allowed"
         tabIndex={-1}
       />
 
@@ -143,7 +175,11 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
 
       {isOpen && (
         <div
-          className={`absolute z-10 max-h-[200px] w-full overflow-hidden overflow-y-scroll rounded-xl border border-slate-200 bg-white shadow-sm ${getDirectionClass()}`}
+          className={`dropdown-scrollbar absolute z-99 max-h-[200px] w-full overflow-y-auto rounded-xl border border-slate-200 bg-white shadow-sm ${getDirectionClass()}`}
+          style={{
+            scrollbarWidth: "thin",
+            scrollbarColor: "#cbd5e1 transparent",
+          }}
         >
           {options.map((option) => (
             <button

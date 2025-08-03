@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
 import Input, { DateInput } from "@/components/common/Input";
-import DropdownSelect, { type DropdownOption } from "@/components/common/DropDown";
+import DropdownSelect, {
+  type DropdownOption,
+} from "@/components/common/DropDown";
 import ButtonSm from "@/components/common/Buttons";
 import { toast } from "react-toastify";
 import {
   useFetchMachineDropdownOptions,
   useFetchMachineOptions,
 } from "@/queries/TranscationQueries/MachineQuery";
-import {
-  useCreateServiceRequest,
-  useEditServiceRequest,
-} from "@/queries/TranscationQueries/ServiceRequestQuery";
+import { useCreateServiceRequest } from "@/queries/TranscationQueries/ServiceRequestQuery";
 import { useFetchProblemOptions } from "@/queries/masterQueries/Problem-types";
 import { useFetchClientOptions } from "@/queries/masterQueries/ClientQuery";
 import {
@@ -38,11 +37,12 @@ const ServiceRequestFormPage: React.FC<Props> = ({
   const isCreate = mode === "create";
 
   const [machineEntryId, setMachineEntryId] = useState<number | null>(null);
-  const [complaintDetailsId, setComplaintDetailsId] = useState<number | null>(null);
+  const [complaintDetailsId, setComplaintDetailsId] = useState<number | null>(
+    null,
+  );
   const [showQRDialog, setShowQRDialog] = useState(false);
 
   const { mutateAsync: createServiceRequest } = useCreateServiceRequest();
-  const { mutateAsync: editServiceRequest } = useEditServiceRequest();
 
   const { data: clientOptions = [] } = useFetchClientOptions();
   const { data: complaintOptions = [] } = useFetchProblemOptions();
@@ -55,11 +55,16 @@ const ServiceRequestFormPage: React.FC<Props> = ({
   });
 
   const defaultOption: DropdownOption = { id: 0, label: "Select" };
-  const [selectedType, setSelectedType] = useState<DropdownOption>(defaultOption);
-  const [selectedBrand, setSelectedBrand] = useState<DropdownOption>(defaultOption);
-  const [selectedModel, setSelectedModel] = useState<DropdownOption>(defaultOption);
-  const [selectedSerial, setSelectedSerial] = useState<DropdownOption>(defaultOption);
-  const [selectedClient, setSelectedClient] = useState<DropdownOption>(defaultOption);
+  const [selectedType, setSelectedType] =
+    useState<DropdownOption>(defaultOption);
+  const [selectedBrand, setSelectedBrand] =
+    useState<DropdownOption>(defaultOption);
+  const [selectedModel, setSelectedModel] =
+    useState<DropdownOption>(defaultOption);
+  const [selectedSerial, setSelectedSerial] =
+    useState<DropdownOption>(defaultOption);
+  const [selectedClient, setSelectedClient] =
+    useState<DropdownOption>(defaultOption);
 
   const { data: brandOptions = [] } = useFetchMachineDropdownOptions({
     level: "brands",
@@ -99,7 +104,7 @@ const ServiceRequestFormPage: React.FC<Props> = ({
       setMachineEntryId(requestFromParent.id || null);
 
       const foundComplaint = complaintOptions.find(
-        (opt) => opt.label === requestFromParent.complaintDetails
+        (opt) => opt.label === requestFromParent.complaintDetails,
       );
       if (foundComplaint) {
         setSelectedComplaint(foundComplaint);
@@ -139,7 +144,7 @@ const ServiceRequestFormPage: React.FC<Props> = ({
     const clientName = parsed.clientName;
 
     const matchedClient = clientOptions.find(
-      (client) => client.label.toLowerCase() === clientName?.toLowerCase()
+      (client) => client.label.toLowerCase() === clientName?.toLowerCase(),
     );
 
     setSelectedClient({
@@ -197,11 +202,9 @@ const ServiceRequestFormPage: React.FC<Props> = ({
 
     try {
       if (isEdit) {
-        await editServiceRequest({ id: request.id, ...payload });
-        toast.success("Service Request updated successfully!");
+        return;
       } else {
         await createServiceRequest(payload);
-        toast.success("Service Request created successfully!");
       }
       setFormVisible(false);
     } catch {
@@ -274,6 +277,7 @@ const ServiceRequestFormPage: React.FC<Props> = ({
           />
           <DropdownSelect
             title="Brand"
+            className={`${selectedType?.id === 0 ? "pointer-events-none opacity-50" : ""}`}
             options={brandOptions}
             selected={selectedBrand}
             onChange={(val) => {
@@ -287,6 +291,7 @@ const ServiceRequestFormPage: React.FC<Props> = ({
             title="Model"
             options={modelOptions}
             selected={selectedModel}
+            className={`${selectedBrand?.id === 0 ? "pointer-events-none opacity-50" : ""}`}
             onChange={(val) => {
               setSelectedModel(val);
               setSelectedSerial(defaultOption);
@@ -295,6 +300,7 @@ const ServiceRequestFormPage: React.FC<Props> = ({
           />
           <DropdownSelect
             title="Serial Number"
+            className={`${selectedModel?.id === 0 ? "pointer-events-none opacity-50" : ""}`}
             options={serialOptions}
             selected={selectedSerial}
             onChange={(val) => {

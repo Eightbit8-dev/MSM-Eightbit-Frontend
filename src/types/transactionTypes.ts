@@ -4,13 +4,14 @@ export interface MachineDetails {
   serialNumber: string;
   referenceNumber: string;
   installationDate: string;
-  installedBy: string;
+  installedByEngineerName: string;
   machinePhotos: string[];
   clientName: string;
   machineType: string;
   brand: string;
   modelNumber: string;
   productId: number;
+  remarks: string;
 }
 
 export interface MachineResponse {
@@ -35,6 +36,7 @@ export interface ServiceRequest {
   requestDate: string;
   complaintDetails: string;
   otherComplaintDetails?: string;
+  engineerName: string;
   clientName: string;
   machineType: string;
   brand: string;
@@ -53,10 +55,12 @@ export interface ServiceRequestResponse {
 export interface ServiceRequestPayload {
   referenceNumber: string;
   requestDate: string;
-  complaintDetailsId?: number;
-  otherComplaintDetails?: string;
   clientId: number;
   machineEntryId: number;
+  complaintDetailsId?: number;
+  otherComplaintDetails?: string;
+  serviceEngineerId?: number;
+  remarks?: string;
 }
 
 // --- service entry ----
@@ -75,10 +79,10 @@ export interface ServiceEntryRequest {
   complaintSparePhotoUrl: string;
   spareParts: sparePart[];
 
-  //unique in reposne 
-  clientName:string;
-  engineerName:string;
-  complaintDetails:string;
+  //unique in reposne
+  clientName: string;
+  engineerName: string;
+  complaintDetails: string;
 }
 
 export interface ServiceEntryResponse {

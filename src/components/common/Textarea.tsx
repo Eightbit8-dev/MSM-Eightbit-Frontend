@@ -28,7 +28,7 @@ const TextArea: React.FC<TextAreaProps> = ({
   required = false,
 }) => {
   const [count, setCount] = React.useState<string>(
-    (inputValue ?? "").length.toString()
+    (inputValue ?? "").length.toString(),
   );
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -42,7 +42,7 @@ const TextArea: React.FC<TextAreaProps> = ({
 
   return (
     <div className={`relative w-full min-w-[180px] self-stretch ${className}`}>
-      <div className="flex min-w-full flex-row items-center justify-between">
+      <div className="flex max-h-full min-w-full flex-row items-center justify-between">
         <h3 className="mb-0.5 w-full justify-start text-xs leading-loose font-semibold text-slate-700">
           {title}
         </h3>
@@ -52,9 +52,9 @@ const TextArea: React.FC<TextAreaProps> = ({
       </div>
 
       <div
-        className={`input-container flex flex-row items-center justify-center gap-0 overflow-clip rounded-xl border-2 bg-white transition-all ${
+        className={`input-container flex max-h-full flex-row items-center justify-center gap-0 overflow-clip rounded-xl border-2 bg-white transition-all ${
           disabled
-            ? "cursor-not-allowed opacity-60 bg-slate-200 border-slate-300"
+            ? "cursor-not-allowed border-slate-300 bg-slate-200 opacity-60"
             : "cursor-text border-slate-300 focus-within:border-slate-500"
         }`}
       >
@@ -74,7 +74,7 @@ const TextArea: React.FC<TextAreaProps> = ({
           value={inputValue}
           maxLength={maxLength}
           minLength={minLength}
-          className={`min-h-max w-full resize-none px-4 py-[14px] text-start text-sm font-medium text-slate-600 autofill:text-black focus:outline-none ${
+          className={`max-h-full min-h-max w-full resize-none px-4 py-[14px] text-start text-sm font-medium text-slate-600 autofill:text-black focus:outline-none ${
             disabled ? "bg-white-200 cursor-not-allowed" : "cursor-text"
           }`}
           rows={4}

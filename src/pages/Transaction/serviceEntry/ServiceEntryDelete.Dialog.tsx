@@ -46,7 +46,7 @@ export const DeleteEntryDialogBox = ({
 
       <p className="text-md font-medium text-zinc-700">
         Are you sure you want to delete the service entry for{" "}
-        <strong>{Entry.clientName}</strong>? This action is irreversible.
+        <strong>{Entry.refNumber}</strong>? This action is irreversible.
       </p>
 
       <section className="mt-1 grid w-full grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-3">

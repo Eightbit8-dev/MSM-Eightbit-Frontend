@@ -67,12 +67,13 @@ const MachineEntry = () => {
     installationDate: convertToFrontendDate(
       new Date().toISOString().split("T")[0],
     ),
-    installedBy: "",
+    installedByEngineerName: "",
+    remarks: "",
     machinePhotos: [],
     clientName: "",
     machineType: "",
     brand: "",
-    productId:0,
+    productId: 0,
     modelNumber: "",
   };
 
@@ -185,14 +186,13 @@ const MachineEntry = () => {
                   <div className="flex w-full flex-row gap-2">
                     {[
                       "Reference No",
-                       "Client",
+                      "Client",
                       "Machine Type",
                       "Brand",
                       "Model",
                       "Machine S No",
                       "Installation Date",
                       "Installed By",
-                     
                     ].map((label, index) => (
                       <p
                         key={index}
@@ -242,8 +242,7 @@ const MachineEntry = () => {
                           item.modelNumber,
                           item.serialNumber,
                           item.installationDate,
-                          item.installedBy,
-                          
+                          item.installedByEngineerName,
                         ].map((val, idx) => (
                           <p
                             key={idx}

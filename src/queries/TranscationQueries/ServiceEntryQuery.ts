@@ -2,22 +2,41 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import axios from "axios";
 import Cookies from "js-cookie";
-import type { ServiceEntryRequest , ServiceEntryResponse} from "@/types/transactionTypes";
+import type {
+  ServiceEntryRequest,
+  ServiceEntryResponse,
+} from "@/types/transactionTypes";
 import axiosInstance from "@/utils/axios";
 import { useNavigate } from "react-router-dom";
 import { apiRoutes } from "@/routes/apiRoutes";
+import { convertToBackendDate } from "@/utils/commonUtils";
 
 export const useCreateServiceEntry = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const createEntry = async (payload: ServiceEntryRequest) => {
+    //issue-1
+    const cleanedPayload = {
+      refNumber: payload.refNumber,
+      serviceDate: convertToBackendDate(payload.serviceDate),
+      maintenanceType: payload.maintenanceType,
+      maintenanceSubType: payload.maintenanceSubType,
+      serviceRequestId: payload.serviceRequestId,
+      vendorId: payload.vendorId,
+      engineerId: payload.engineerId,
+      engineerDiagnostics: payload.engineerDiagnostics,
+      serviceStatus: payload.serviceStatus,
+      remarks: payload.remarks || "-",
+      complaintSparePhotoUrl: "http://example.com/sparephoto.jpg",
+      spareParts: payload.spareParts,
+    };
     const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized");
 
     const res = await axiosInstance.post(
-      "https://msm-eightbit.onrender.com/api/transaction/service-entry",
-      payload,
+      apiRoutes.serviceEntry,
+      cleanedPayload,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -51,7 +70,6 @@ export const useCreateServiceEntry = () => {
     },
   });
 };
-
 
 export const useFetchEntry = (page: number, limit: number) => {
   const fetchAllEntry = async (): Promise<ServiceEntryResponse> => {
@@ -104,14 +122,11 @@ export const useDeleteEntry = () => {
     const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
-    const res = await axiosInstance.delete(
-      `${apiRoutes.serviceEntry}/${id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+    const res = await axiosInstance.delete(`${apiRoutes.serviceEntry}/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
       },
-    );
+    });
 
     if (res.status !== 204) {
       throw new Error(res.data?.message || "Failed to delete service Entry");

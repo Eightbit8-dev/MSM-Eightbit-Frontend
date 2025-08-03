@@ -17,10 +17,13 @@ import { useFetchClientOptions } from "@/queries/masterQueries/ClientQuery";
 import {
   convertToBackendDate,
   convertToFrontendDate,
+  getMaxDateFromToday,
 } from "@/utils/commonUtils";
 import type { MachineDetails } from "@/types/transactionTypes";
 
 import MultiFileUpload from "@/components/common/FileUploadBox";
+import { useFetchServiceEngineerOptions } from "@/queries/masterQueries/ServiceEngineersQuery";
+import Textarea from "@/components/common/Textarea";
 
 type Mode = "create" | "edit" | "display";
 
@@ -42,12 +45,17 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
   const { mutate: createMachine } = useCreateMachine();
   const { data: clientOptions = [] } = useFetchClientOptions();
   const { data: typeOptions = [] } = useFetchProductsType();
+  const { data: engineerOptions = [] } = useFetchServiceEngineerOptions();
 
   const [machine, setMachine] = useState<MachineDetails>(machineFromParent);
 
   const [selectedClient, setSelectedClient] = useState<DropdownOption>({
     id: 0,
     label: "Select Client",
+  });
+  const [selectEngineer, setSelectedEngineer] = useState<DropdownOption>({
+    id: 0,
+    label: "Select Engineer",
   });
   const [selectedType, setSelectedType] = useState<DropdownOption>({
     id: 0,
@@ -73,15 +81,12 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
     brand: selectedBrand.label,
   });
 
-
-const generateRefNo = () => {
-  const now = new Date();
-  const datePart = `${now.getFullYear().toString().slice(-1)}${now.getMonth() + 1}${now.getDate()}`; // e.g., "581" for Aug 1, 2025
-  const randomPart = Math.floor(10 + Math.random() * 90); // 2-digit random number
-  return `R-${datePart}${randomPart}`; // e.g., "R58147"
-};
-
-
+  const generateRefNo = () => {
+    const now = new Date();
+    const datePart = `${now.getFullYear().toString().slice(-1)}${now.getMonth() + 1}${now.getDate()}`; // e.g., "581" for Aug 1, 2025
+    const randomPart = Math.floor(10 + Math.random() * 90); // 2-digit random number
+    return `R-${datePart}${randomPart}`; // e.g., "R58147"
+  };
 
   useEffect(() => {
     if (mode === "create") {
@@ -160,21 +165,17 @@ const generateRefNo = () => {
     }
 
     const payload = {
+      ...machine,
       referenceNumber: machine.referenceNumber,
       serialNumber: machine.serialNumber,
-      installedBy: machine.installedBy,
+      installedById: selectEngineer.id,
       installationDate: machine.installationDate,
       clientId: selectedClient.id,
       productId: selectedModel.id,
     };
 
-    const onSuccess = () => {
-      toast.success(`Machine ${isEdit ? "updated" : "created"} successfully!`);
-      setFormVisible(false);
-    };
-
-    if (isEdit) editMachine(payload, { onSuccess });
-    else createMachine(payload, { onSuccess });
+    if (isEdit) editMachine(payload);
+    else createMachine(payload);
   };
 
   if ((isEdit || isView) && !machineFromParent) {
@@ -268,11 +269,13 @@ const generateRefNo = () => {
             required
             disabled={isView}
           />
-          <Input
+          <DropdownSelect
             title="Installed By"
-            placeholder="Eg: John Doe"
-            inputValue={machine.installedBy}
-            onChange={(val) => updateField("installedBy", val)}
+            options={engineerOptions}
+            selected={selectEngineer}
+            onChange={(val) => {
+              setSelectedEngineer(val);
+            }}
             disabled={isView}
           />
           <DateInput
@@ -285,11 +288,18 @@ const generateRefNo = () => {
               )
             }
             required
-            maxDate={new Date().toISOString().split("T")[0]}
+            maxDate={getMaxDateFromToday(0)}
             disabled={isView}
           />
         </div>
-
+        <Textarea
+          title="Remarks"
+          className="max-h-[50px]"
+          placeholder="Enter Remarks"
+          inputValue={machine.remarks}
+          onChange={(val) => updateField("remarks", val)}
+          disabled={isView}
+        />
         <MultiFileUpload />
 
         <div className="col-span-full mt-4 flex justify-end gap-4 md:gap-6">

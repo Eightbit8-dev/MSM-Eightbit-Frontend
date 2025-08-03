@@ -15,7 +15,8 @@ const ServiceEntryPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
-  const [selectedEntry, setSelectedEntry] = useState<ServiceEntryRequest | null>(null);
+  const [selectedEntry, setSelectedEntry] =
+    useState<ServiceEntryRequest | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const { data, isLoading } = useFetchEntry(currentPage, itemsPerPage);
@@ -72,39 +73,55 @@ const ServiceEntryPage = () => {
               </section>
             </div>
 
-            <div className="tables flex min-h-[300px] w-full flex-col overflow-x-auto rounded-[9px] bg-white shadow-sm">
+            <div className="tables flex min-h-[300px] w-full flex-col overflow-x-auto bg-white shadow-sm md:overflow-x-auto md:rounded-[9px]">
               {/* Header */}
-              <header className="header flex min-w-max flex-row items-center bg-slate-200 px-3 py-3">
-                <div className="flex w-[70px] min-w-[70px] items-center justify-start gap-2">
-                  <p className="selft-center w-[40px] text-sm font-semibold text-zinc-900">
+              <header className="header flex min-w-max flex-row items-center justify-between bg-slate-200 px-3 py-3 md:min-w-max">
+                {/* S.No */}
+                <div className="flex w-16 min-w-16 items-center justify-start gap-2">
+                  <p className="w-full text-sm font-semibold text-zinc-900">
                     S.No
                   </p>
                 </div>
 
-                <div className="flex w-full flex-row gap-2">
-                  {[
-                    "Ref No",
-                    "Service Date",
-                    "Client",
-                    "Maintenance Type",
-                    "Engineer Name",
-                    "Diagnostics",
-                    "Status",
-                  ].map((label, index) => (
-                    <p
-                      key={index}
-                      className="min-w-[70px] flex-1 self-center text-sm font-semibold break-words text-zinc-900"
-                    >
-                      {label}
-                    </p>
-                  ))}
-                  <p className="min-w-[80px] text-sm font-semibold text-zinc-900">
-                    Action
+                {/* Column Headers with responsive widths */}
+                <div className="w-20 min-w-20 px-2 md:w-24 md:min-w-24">
+                  <p className="text-sm font-semibold text-zinc-900">Ref No</p>
+                </div>
+                <div className="w-24 min-w-24 px-2 md:w-28 md:min-w-28">
+                  <p className="text-sm font-semibold text-zinc-900">
+                    Service Date
                   </p>
+                </div>
+                <div className="w-32 min-w-32 px-2 md:w-40 md:min-w-40">
+                  <p className="text-sm font-semibold text-zinc-900">Client</p>
+                </div>
+                <div className="w-32 min-w-32 px-2 md:w-36 md:min-w-36">
+                  <p className="over text-sm font-semibold text-zinc-900">
+                    Maintenance Type
+                  </p>
+                </div>
+                <div className="w-24 min-w-24 px-2 md:w-28 md:min-w-28">
+                  <p className="text-sm font-semibold text-zinc-900">
+                    Engineer Name
+                  </p>
+                </div>
+
+                <div className="w-34 min-w-34 px-2 md:w-40 md:min-w-40">
+                  <p className="text-sm font-semibold text-zinc-900">
+                    Diagnostics
+                  </p>
+                </div>
+                <div className="w-20 min-w-24 px-2 md:w-24 md:min-w-24">
+                  <p className="text-sm font-semibold text-zinc-900">Status</p>
+                </div>
+
+                {/* Action Header */}
+                <div className="flex w-12 min-w-12 items-center justify-start gap-2 pt-1">
+                  <p className="text-sm font-semibold text-zinc-900">Action</p>
                 </div>
               </header>
 
-              {/* Table Rows */}
+              {/* No data message */}
               {paginatedData.length === 0 ? (
                 <h2 className="text-md my-auto text-center font-medium text-zinc-600">
                   No Entries Found
@@ -113,44 +130,70 @@ const ServiceEntryPage = () => {
                 paginatedData.map((item, index) => (
                   <div
                     key={item.id}
-                    className="flex min-w-full flex-row items-start gap-2 border-t px-3 py-2 text-sm text-zinc-700 hover:bg-slate-50"
+                    className="flex min-w-max flex-row items-center justify-between border-t px-3 py-2 text-sm text-zinc-700 hover:bg-slate-50 md:min-w-max"
                   >
-                    <div className="flex w-[70px] min-w-[70px] items-center justify-start gap-2 pt-1">
-                      <p className="w-[40px]">
+                    {/* S.No */}
+                    <div className="flex w-16 min-w-16 items-center justify-start gap-2 pt-1">
+                      <p className="w-full">
                         {(currentPage - 1) * itemsPerPage + index + 1}
                       </p>
                     </div>
 
-                    <div className="flex w-full flex-row gap-2">
-                      {[
-                        item.refNumber,
-                        item.serviceDate,
-                        item.clientName,
-                        item.maintenanceType,
-                        item.engineerName,
-                        item.engineerDiagnostics,
-                        item.serviceStatus,
-                      ].map((val, idx) => (
-                        <p
-                          key={idx}
-                          className="min-w-[70px] flex-1 pt-1 break-words"
-                        >
-                          {val}
-                        </p>
-                      ))}
+                    {/* Data Columns with responsive widths */}
+                    <div className="w-20 min-w-20 px-2 pt-1 md:w-24 md:min-w-24">
+                      <p className="leading-5 break-words">{item.refNumber}</p>
+                    </div>
+                    <div className="w-24 min-w-24 px-2 pt-1 md:w-28 md:min-w-28">
+                      <p className="leading-5 break-words">
+                        {item.serviceDate}
+                      </p>
+                    </div>
+                    <div className="w-32 min-w-32 px-2 pt-1 md:w-40 md:min-w-40">
+                      <p className="leading-5 break-words">{item.clientName}</p>
+                    </div>
+                    <div className="w-32 min-w-32 px-2 md:w-36 md:min-w-36">
+                      <p className="leading-5 break-words">
+                        {item.maintenanceType}
+                      </p>
+                    </div>
+                    <div className="w-24 min-w-24 px-2 pt-1 md:w-28 md:min-w-28">
+                      <p className="leading-5 break-words">
+                        {item.engineerName}
+                      </p>
+                    </div>
 
-                      <div className="flex min-w-[80px] items-center justify-start gap-2 pt-1">
-                        <ButtonSm
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setSelectedEntry(item);
-                            setIsDeleteDialogOpen(true);
-                          }}
-                          className="aspect-square scale-90 border-1 border-red-500 bg-red-100 text-red-500 hover:bg-red-100 active:bg-red-100"
-                          state="default"
-                          imgUrl="/icons/delete-icon.svg"
-                        />
-                      </div>
+                    <div className="w-34 min-w-34 px-2 md:w-40 md:min-w-40">
+                      <p className="leading-5 break-words">
+                        {item.engineerDiagnostics}
+                      </p>
+                    </div>
+                    <div className="w-20 min-w-24 px-2 md:w-24 md:min-w-24">
+                      <span
+                        className={`inline-flex min-w-full items-center justify-center rounded-full px-2 py-1 text-xs font-medium ${
+                          item.serviceStatus === "Completed" ||
+                          item.serviceStatus === "COMPLETED"
+                            ? "bg-green-100 text-green-800"
+                            : item.serviceStatus === "NOT COMPLETED"
+                              ? "bg-red-100 text-red-800"
+                              : "bg-yellow-100 text-yellow-800"
+                        }`}
+                      >
+                        {item.serviceStatus}
+                      </span>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex w-12 min-w-12 items-center justify-start gap-2 pt-1">
+                      <ButtonSm
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedEntry(item);
+                          setIsDeleteDialogOpen(true);
+                        }}
+                        className="aspect-square scale-90 border-1 border-red-500 bg-red-100 text-red-500 hover:bg-red-100 active:bg-red-100"
+                        state="default"
+                        imgUrl="/icons/delete-icon.svg"
+                      />
                     </div>
                   </div>
                 ))

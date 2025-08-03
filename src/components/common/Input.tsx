@@ -258,6 +258,7 @@ interface DateInputProps {
   placeholder?: string;
   required?: boolean;
   disabled?: boolean;
+  minDate?: string;
   maxDate?: string;
   className?: string;
 }
@@ -271,6 +272,7 @@ export const DateInput: React.FC<DateInputProps> = ({
   placeholder = "Select date",
   required = false,
   disabled = false,
+  minDate,
   maxDate,
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -294,6 +296,7 @@ export const DateInput: React.FC<DateInputProps> = ({
           readOnly={disabled}
           type="date"
           name={name}
+          min={minDate}
           max={maxDate}
           placeholder={placeholder}
           onChange={handleChange}

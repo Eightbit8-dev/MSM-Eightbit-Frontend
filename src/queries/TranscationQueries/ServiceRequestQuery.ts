@@ -120,17 +120,65 @@ export const useCreateServiceRequest = () => {
 export const useEditServiceRequest = () => {
   const queryClient = useQueryClient();
 
-  const editServiceRequest = async (
-    updatedRequest: ServiceRequestPayload & { id: number },
-  ) => {
+  const editServiceRequest = async ({
+    updatedRequest,
+    id,
+  }: {
+    updatedRequest: ServiceRequestPayload;
+    id: number;
+  }) => {
     const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized");
 
-    const { id, ...payload } = updatedRequest;
-
     const res = await axiosInstance.put(
       `${apiRoutes.serviceRequest}/${id}`,
-      payload,
+      updatedRequest,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    if (res.status !== 200) {
+      throw new Error(res.data?.message || "Failed to update Service Request");
+    }
+
+    return res.data;
+  };
+
+  return useMutation({
+    mutationFn: editServiceRequest,
+    onSuccess: () => {
+      toast.success("Service Request updated successfully");
+      queryClient.invalidateQueries({ queryKey: ["serviceRequest"] });
+    },
+    onError: (error) => {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data?.message || "Update failed");
+      } else {
+        toast.error("Something went wrong while updating the request");
+      }
+    },
+  });
+};
+
+export const usePatchServiceRequest = () => {
+  const queryClient = useQueryClient();
+
+  const editServiceRequest = async ({
+    engineerId,
+    id,
+  }: {
+    engineerId: number;
+    id: number;
+  }) => {
+    const token = Cookies.get("token");
+    if (!token) throw new Error("Unauthorized");
+
+    const res = await axiosInstance.patch(
+      `${apiRoutes.serviceRequest}/${id}`,
+      { engineerId },
       {
         headers: {
           Authorization: `Bearer ${token}`,

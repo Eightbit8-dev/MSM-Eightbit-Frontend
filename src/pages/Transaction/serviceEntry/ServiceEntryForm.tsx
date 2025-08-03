@@ -16,6 +16,7 @@ import { useCreateServiceEntry } from "@/queries/TranscationQueries/ServiceEntry
 import {
   convertToBackendDate,
   generateReferenceNumber,
+  getMaxDateFromToday,
 } from "@/utils/commonUtils";
 import { useFetchVendorOptions } from "@/queries/masterQueries/VendorQuery";
 import {
@@ -29,11 +30,6 @@ import RequestEntrySkeleton from "./ServiceEntryFormSkeleton";
 
 const RequestEntry = () => {
   //Scroped to this only as we dont use it anywhere else
-  const getMaxDate = () => {
-    const today = new Date();
-    today.setDate(today.getDate() - 2); // Go back 2 days
-    return today.toISOString().split("T")[0]; // Format to 'YYYY-MM-DD'
-  };
 
   /**
    * We fetch the serviceRequest made by the clien(users) and use it to build this form which is serviceEntryForm this is used by technicians
@@ -51,11 +47,10 @@ const RequestEntry = () => {
     remarks: "",
     complaintSparePhotoUrl: "",
     spareParts: [],
-    clientName:"",
-    complaintDetails:"",
-    engineerName:"",
-    id:0
-    
+    clientName: "",
+    complaintDetails: "",
+    engineerName: "",
+    id: 0,
   };
 
   const { id } = useParams();
@@ -189,7 +184,7 @@ const RequestEntry = () => {
   if (error || !serviceRequestData) return <p>Something went wrong</p>;
   return (
     <div className="mb-16 w-full rounded-lg bg-white p-6 shadow-md md:mb-0">
-      <h2 className="mb-4 text-xl font-semibold">Request Entry</h2>
+      <h2 className="mb-4 text-xl font-semibold">Service Entry</h2>
       <form
         onSubmit={handleSubmit}
         className="grid grid-cols-1 items-start gap-4 md:grid-cols-2"
@@ -211,7 +206,8 @@ const RequestEntry = () => {
           onChange={(val) => {
             setFormData({ ...formData, serviceDate: val });
           }}
-          maxDate={getMaxDate()}
+          minDate={getMaxDateFromToday(0)} //yesterday is not selectable
+          maxDate={getMaxDateFromToday(2)} // Go forward 2 days
           //inniku naliku nalaniku
           required
         />
@@ -321,8 +317,21 @@ const RequestEntry = () => {
           selected={{ id: 404, label: serviceRequestData.brand }}
           onChange={() => {}}
         />
-
-        <TextArea
+        <DropdownSelect
+          title="ComplaintType"
+          options={[]}
+          disabled={true}
+          selected={{ id: 404, label: serviceRequestData.complaintDetails }}
+          onChange={() => {}}
+        />
+        <Input
+          title="Remarks"
+          name="RequestEntryRemarks"
+          placeholder="Eg : Completed within the scheduled time frame."
+          inputValue={formData.remarks}
+          onChange={(val) => setFormData({ ...formData, remarks: val })}
+        />
+        <Input
           required
           title="Engineer Diagnostics"
           name="engineerDiagnostics"
@@ -332,6 +341,22 @@ const RequestEntry = () => {
             setFormData({ ...formData, engineerDiagnostics: val })
           }
           placeholder="Enter diagnosis"
+        />
+        <DropdownSelect
+          required
+          title="Service Status"
+          direction="up"
+          disabled={formState === "display"}
+          options={statusOptions}
+          selected={
+            statusOptions.find((m) => m.label === formData.serviceStatus) ?? {
+              id: 0,
+              label: "Pending",
+            }
+          }
+          onChange={(val) =>
+            setFormData({ ...formData, serviceStatus: val.label })
+          }
         />
 
         <MultiFileUpload />
@@ -407,29 +432,7 @@ const RequestEntry = () => {
             </div>
           )}
         </div>
-        <DropdownSelect
-          required
-          title="Service Status"
-          direction="up"
-          disabled={formState === "display"}
-          options={statusOptions}
-          selected={
-            statusOptions.find((m) => m.label === formData.serviceStatus) ?? {
-              id: 0,
-              label: "Pending",
-            }
-          }
-          onChange={(val) =>
-            setFormData({ ...formData, serviceStatus: val.label })
-          }
-        />
-        <Input
-          title="Remarks"
-          name="RequestEntryRemarks"
-          placeholder="Eg : Completed within the scheduled time frame."
-          inputValue={formData.remarks}
-          onChange={(val) => setFormData({ ...formData, remarks: val })}
-        />
+
         <div className="col-span-1 mt-4 flex justify-end md:col-span-2">
           <ButtonSm
             isPending={isCreateServiceEntryPending}
