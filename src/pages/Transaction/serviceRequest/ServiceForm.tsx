@@ -1,12 +1,9 @@
-import React, { use, useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Input, { DateInput } from "@/components/common/Input";
-import DropdownSelect, {
-  type DropdownOption,
-} from "@/components/common/DropDown";
+import DropdownSelect, { type DropdownOption } from "@/components/common/DropDown";
 import ButtonSm from "@/components/common/Buttons";
 import { toast } from "react-toastify";
 import {
-  useFetchMachineById,
   useFetchMachineDropdownOptions,
   useFetchMachineOptions,
 } from "@/queries/TranscationQueries/MachineQuery";
@@ -20,12 +17,8 @@ import {
   convertToFrontendDate,
   convertToBackendDate,
 } from "@/utils/commonUtils";
-import {
-  Html5Qrcode,
-  Html5QrcodeScanner,
-  Html5QrcodeScanType,
-} from "html5-qrcode";
 import type { ServiceRequest } from "@/types/transactionTypes";
+import QrScannerDialog from "./QrScannerDialog";
 
 type Mode = "create" | "edit" | "display";
 
@@ -45,13 +38,8 @@ const ServiceRequestFormPage: React.FC<Props> = ({
   const isCreate = mode === "create";
 
   const [machineEntryId, setMachineEntryId] = useState<number | null>(null);
-  const [clientId, setClientId] = useState<number | null>(null);
-  const [complaintDetailsId, setComplaintDetailsId] = useState<number | null>(
-    null,
-  );
+  const [complaintDetailsId, setComplaintDetailsId] = useState<number | null>(null);
   const [showQRDialog, setShowQRDialog] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const scannerRef = useRef<Html5QrcodeScanner | null>(null);
 
   const { mutateAsync: createServiceRequest } = useCreateServiceRequest();
   const { mutateAsync: editServiceRequest } = useEditServiceRequest();
@@ -67,17 +55,11 @@ const ServiceRequestFormPage: React.FC<Props> = ({
   });
 
   const defaultOption: DropdownOption = { id: 0, label: "Select" };
-  const [selectedType, setSelectedType] =
-    useState<DropdownOption>(defaultOption);
-  const [selectedBrand, setSelectedBrand] =
-    useState<DropdownOption>(defaultOption);
-  const [selectedModel, setSelectedModel] =
-    useState<DropdownOption>(defaultOption);
-  const [selectedSerial, setSelectedSerial] =
-    useState<DropdownOption>(defaultOption);
-
-  const [selectedClient, setSelectedClient] =
-    useState<DropdownOption>(defaultOption);
+  const [selectedType, setSelectedType] = useState<DropdownOption>(defaultOption);
+  const [selectedBrand, setSelectedBrand] = useState<DropdownOption>(defaultOption);
+  const [selectedModel, setSelectedModel] = useState<DropdownOption>(defaultOption);
+  const [selectedSerial, setSelectedSerial] = useState<DropdownOption>(defaultOption);
+  const [selectedClient, setSelectedClient] = useState<DropdownOption>(defaultOption);
 
   const { data: brandOptions = [] } = useFetchMachineDropdownOptions({
     level: "brands",
@@ -99,8 +81,8 @@ const ServiceRequestFormPage: React.FC<Props> = ({
 
   useEffect(() => {
     if (isCreate) {
-      const randomPart = Math.floor(10000 + Math.random() * 90000); // 5-digit random number
-      const generatedRef = `SR-${randomPart}`; // e.g., "SR48392"
+      const randomPart = Math.floor(10000 + Math.random() * 90000);
+      const generatedRef = `SR-${randomPart}`;
       const today = new Date().toLocaleDateString("en-GB").split("/").join("-");
 
       setRequest((prev) => ({
@@ -117,7 +99,7 @@ const ServiceRequestFormPage: React.FC<Props> = ({
       setMachineEntryId(requestFromParent.id || null);
 
       const foundComplaint = complaintOptions.find(
-        (opt) => opt.label === requestFromParent.complaintDetails,
+        (opt) => opt.label === requestFromParent.complaintDetails
       );
       if (foundComplaint) {
         setSelectedComplaint(foundComplaint);
@@ -139,7 +121,6 @@ const ServiceRequestFormPage: React.FC<Props> = ({
       INSTALLED: "installationDate",
     };
 
-    // Match all key-value like pairs (e.g., KEY: value, KEY= value, KEY #: value)
     const regex = /([A-Z_ #]+)[\s:=]+([^:\n\r]+)/gi;
     let match;
     while ((match = regex.exec(data)) !== null) {
@@ -156,15 +137,15 @@ const ServiceRequestFormPage: React.FC<Props> = ({
     const parsed = parseQRData(data);
     const entryId = parsed.machineEntryId;
     const clientName = parsed.clientName;
-    const clieendId = clientOptions.find(
-      (client) => client.label === clientName,
+
+    const matchedClient = clientOptions.find(
+      (client) => client.label.toLowerCase() === clientName?.toLowerCase()
     );
 
-    setMachineEntryId(Number(entryId));
-    setSelectedBrand({ id: 404, label: parsed.brand || "" });
-    setSelectedModel({ id: 404, label: parsed.modelNumber || "" });
-    setSelectedType({ id: 404, label: parsed.machineType || "" });
-    setSelectedSerial({ id: 404, label: parsed.serialNumber || "" });
+    setSelectedClient({
+      id: matchedClient?.id || 0,
+      label: clientName || "",
+    });
 
     if (!entryId) {
       toast.error("QR missing machineEntryId");
@@ -172,6 +153,11 @@ const ServiceRequestFormPage: React.FC<Props> = ({
     }
 
     setMachineEntryId(Number(entryId));
+    setSelectedBrand({ id: 404, label: parsed.brand || "" });
+    setSelectedModel({ id: 404, label: parsed.modelNumber || "" });
+    setSelectedType({ id: 404, label: parsed.machineType || "" });
+    setSelectedSerial({ id: 404, label: parsed.serialNumber || "" });
+
     setRequest((prev) => ({
       ...prev,
       clientName: parsed.clientName || prev.clientName,
@@ -180,63 +166,12 @@ const ServiceRequestFormPage: React.FC<Props> = ({
       modelNumber: parsed.modelNumber || prev.modelNumber,
     }));
 
-    const matchedClient = clientOptions.find(
-      (client) => client.label.toLowerCase() === clientName?.toLowerCase(),
-    );
-    if (matchedClient) setClientId(matchedClient.id);
-    else toast.warn(`Client '${clientName}' not found`);
-
     setShowQRDialog(false);
-  };
-
-  const handleQRImageUpload = async (
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const html5QrCode = new Html5Qrcode("qr-reader-img");
-    try {
-      const result = await html5QrCode.scanFile(file, true);
-      handleQRProcess(result);
-    } catch {
-      toast.error("Failed to scan image QR");
-    }
   };
 
   const updateField = (key: keyof ServiceRequest, value: string) => {
     setRequest((prev) => ({ ...prev, [key]: value }));
   };
-
-  useEffect(() => {
-    if (!showQRDialog) return;
-
-    scannerRef.current = new Html5QrcodeScanner(
-      "qr-reader-live",
-      {
-        fps: 10,
-        qrbox: { width: 250, height: 250 },
-        aspectRatio: 1.0,
-        rememberLastUsedCamera: true,
-        supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA],
-      },
-      false,
-    );
-
-    scannerRef.current.render(
-      (text) => {
-        handleQRProcess(text);
-        scannerRef.current?.clear().catch(() => {});
-        scannerRef.current = null;
-      },
-      (err) => console.warn("Live scan error", err),
-    );
-
-    return () => {
-      scannerRef.current?.clear().catch(() => {});
-      scannerRef.current = null;
-    };
-  }, [showQRDialog]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -290,26 +225,11 @@ const ServiceRequestFormPage: React.FC<Props> = ({
               className="mb-4 w-fit border-blue-400 text-white"
               onClick={() => setShowQRDialog(true)}
             />
-            {showQRDialog && (
-              <div className="bg-opacity-40 bg fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
-                <div className="w-[95%] max-w-md rounded-lg bg-white p-4 shadow-xl">
-                  <div className="mb-4 flex items-center justify-between">
-                    <h2 className="text-lg font-semibold text-slate-700">
-                      Scan QR
-                    </h2>
-                    <button onClick={() => setShowQRDialog(false)}>✖</button>
-                  </div>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleQRImageUpload}
-                    className="mb-4 block w-full rounded border p-1"
-                  />
-                  <div id="qr-reader-live" className="rounded-md border p-2" />
-                  <div id="qr-reader-img" className="hidden" />
-                </div>
-              </div>
-            )}
+            <QrScannerDialog
+              open={showQRDialog}
+              onClose={() => setShowQRDialog(false)}
+              onScan={handleQRProcess}
+            />
           </>
         )}
       </div>
@@ -337,9 +257,7 @@ const ServiceRequestFormPage: React.FC<Props> = ({
             direction="down"
             options={clientOptions}
             selected={selectedClient}
-            onChange={(val) => {
-              setSelectedClient(val);
-            }}
+            onChange={(val) => setSelectedClient(val)}
             disabled={isView}
           />
           <DropdownSelect
@@ -396,13 +314,6 @@ const ServiceRequestFormPage: React.FC<Props> = ({
             }}
             disabled={isView}
           />
-          {/* <Input
-            title="Other Complaint (Optional)"
-            inputValue={request.otherComplaintDetails || ""}
-            placeholder="Enter details if not listed"
-            onChange={(val) => updateField("otherComplaintDetails", val)}
-            disabled={isView}
-          /> */}
         </div>
 
         <div className="mt-4 flex justify-end gap-4">
