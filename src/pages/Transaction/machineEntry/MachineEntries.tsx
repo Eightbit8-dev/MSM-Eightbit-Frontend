@@ -18,6 +18,7 @@ import type { FormState } from "@/types/appTypes";
 import { convertToFrontendDate } from "@/utils/commonUtils";
 import DropdownSelect from "@/components/common/DropDown";
 import { useBreakpoints } from "@/hooks/useBreakPoints";
+import MachineImportModal from "./MachineImportModal";
 
 const MachineEntry = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -29,6 +30,8 @@ const MachineEntry = () => {
   const [isDeleteDialogOpen, setIsDeleteMachineDialogOpen] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [formState, setFormState] = useState<FormState>("create");
+    const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+
 
   const { isSm } = useBreakpoints();
 
@@ -46,6 +49,10 @@ const MachineEntry = () => {
         ? prevSelected.filter((selectedId) => selectedId !== id)
         : [...prevSelected, id],
     );
+  };
+ const handleImportClick = () => {
+    console.log("Import button clicked, setting isImportModalOpen to true");
+    setIsImportModalOpen(true);
   };
 
   const allIdsOnPage = paginatedData.map((m) => m.id);
@@ -121,6 +128,7 @@ const MachineEntry = () => {
             type="button"
             iconPosition="right"
             imgUrl="/icons/ArrowDown.svg"
+            onClick={handleImportClick}
           />
         </div>
       </div>
@@ -368,6 +376,10 @@ const MachineEntry = () => {
           </DialogBox>
         )}
       </AnimatePresence>
+       <MachineImportModal
+        isOpen={isImportModalOpen}
+        onClose={() => setIsImportModalOpen(false)}
+      />
     </div>
   );
 };

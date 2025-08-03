@@ -380,3 +380,89 @@ export const useFetchMachineDropdownOptions = (
       (level !== "serials" || !!model),
   });
 };
+
+/**
+ * 📥 Import spares from Excel
+ */
+export const useImportMachines = () => {
+  const queryClient = useQueryClient();
+
+  const importMachines = async (file: File) => {
+    try {
+      const token = Cookies.get("token");
+      if (!token) throw new Error("Unauthorized to perform this action.");
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await axiosInstance.post(apiRoutes.machineEntry + "/import", formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      if (res.status !== 200) {
+        throw new Error(res.data?.message || "Failed to import spares");
+      }
+
+      return res.data;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        toast.error(
+          error.response?.data?.message || "Failed to import spares",
+        );
+      } else {
+        toast.error("Something went wrong while importing Products");
+      }
+      throw error;
+    }
+  };
+
+  return useMutation({
+    mutationFn: importMachines,
+    onSuccess: () => {
+      toast.success("Spares imported successfully");
+      queryClient.invalidateQueries({ queryKey: ["machine"] });
+    },
+  });
+};
+
+/**
+ * 📥 Download Sample Template
+ */
+export const useDownloadTemplate = () => {
+  const downloadTemplate = async (): Promise<Blob> => {
+    try {
+      const token = Cookies.get("token");
+      if (!token) throw new Error("Unauthorized to perform this action.");
+
+      const res = await axiosInstance.get(apiRoutes.machineEntry + "/template", {
+        headers: { Authorization: `Bearer ${token}` },
+        responseType: "blob", // Ensure the response is treated as a binary blob
+      });
+
+      if (res.status !== 200) {
+        throw new Error(res.data?.message || "Failed to download template");
+      }
+
+      return res.data;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        toast.error(
+          error.response?.data?.message || "Failed to download template",
+        );
+      } else {
+        toast.error("Something went wrong while downloading template");
+      }
+      throw error;
+    }
+  };
+
+  return useQuery({
+    queryKey: ["template"],
+    queryFn: downloadTemplate,
+    enabled: false, 
+    retry: 1,
+  });
+};
