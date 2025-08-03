@@ -7,6 +7,7 @@ import {
   useEditVendor,
 } from "../../../queries/masterQueries/VendorQuery";
 import type { VendorDetails } from "../../../types/masterApiTypes";
+import TextArea from "@/components/common/Textarea";
 
 const VendorEdit = ({
   vendorDetails,
@@ -20,11 +21,21 @@ const VendorEdit = ({
   setVendorData: React.Dispatch<React.SetStateAction<VendorDetails | null>>;
 }) => {
   const [vendorData, setVendorDataLocal] = useState<VendorDetails | null>(null);
-  const [newVendorData, setNewVendorData] = useState<VendorDetails | null>(null);
+  const [newVendorData, setNewVendorData] = useState<VendorDetails | null>(
+    null,
+  );
   const [title, setTitle] = useState("");
 
-  const { mutate: createVendor, isPending: isCreating, isSuccess: isCreateSuccess } = useCreateVendor();
-  const { mutate: editVendor, isPending: isEditing, isSuccess: isEditSuccess } = useEditVendor();
+  const {
+    mutate: createVendor,
+    isPending: isCreating,
+    isSuccess: isCreateSuccess,
+  } = useCreateVendor();
+  const {
+    mutate: editVendor,
+    isPending: isEditing,
+    isSuccess: isEditSuccess,
+  } = useEditVendor();
 
   const emptyVendor: VendorDetails = {
     id: 0,
@@ -33,12 +44,12 @@ const VendorEdit = ({
     contactNumber: "",
     emailAddress: "",
     addressLine1: "",
-    addressLine2:"",
-    city:"",
-    pinCode:0,
-    state:"",
+    addressLine2: "",
+    city: "",
+    pinCode: 0,
+    state: "",
     gstNumber: "",
-
+    remarks: "",
   };
 
   useEffect(() => {
@@ -103,7 +114,8 @@ const VendorEdit = ({
                 : `${title || "Vendor"} Configuration`}
             </h1>
             <section className="ml-auto flex flex-row items-center gap-3">
-              {(formState === "edit" || (formState === "create" && hasData)) && (
+              {(formState === "edit" ||
+                (formState === "create" && hasData)) && (
                 <ButtonSm
                   className="font-medium"
                   text="Cancel"
@@ -124,7 +136,8 @@ const VendorEdit = ({
               {formState === "create" && (
                 <ButtonSm
                   className="font-medium text-white"
-                  text={isCreating ? "Creating..." : "Create New"}
+                  text={"Create New"}
+                  isPending={isCreating}
                   state="default"
                   type="submit"
                   disabled={isCreating}
@@ -133,7 +146,8 @@ const VendorEdit = ({
               {formState === "edit" && (
                 <ButtonSm
                   className="font-medium text-white"
-                  text={isEditing ? "Saving..." : "Save Changes"}
+                  text={"Save Changes"}
+                  isPending={isEditing}
                   state="default"
                   type="submit"
                   disabled={isEditing}
@@ -143,7 +157,7 @@ const VendorEdit = ({
           </header>
 
           {/* Vendor Details */}
-          <section className="vendor-details-section grid md:grid-cols-2 grid-cols-1 flex w-full flex-col gap-2 overflow-clip px-3">
+          <section className="vendor-details-section flex grid w-full grid-cols-1 flex-col gap-2 overflow-clip px-3 md:grid-cols-2">
             <Input
               required
               disabled={formState === "display"}
@@ -174,6 +188,8 @@ const VendorEdit = ({
               required
               disabled={formState === "display"}
               title="Contact Number"
+              min={10}
+              max={10}
               type="str"
               inputValue={newVendorData.contactNumber}
               name="contactNumber"
@@ -196,35 +212,32 @@ const VendorEdit = ({
               }
             />
             <Input
-              required
               disabled={formState === "display"}
-              title="AddressLine1"
+              title="Address Line1"
               type="str"
               inputValue={newVendorData.addressLine1}
-              name="AddressLine1"
+              name="Address Line1"
               placeholder="Enter AddressLine1"
               maxLength={150}
               onChange={(value) =>
                 setNewVendorData({ ...newVendorData, addressLine1: value })
               }
             />
-                        <Input
-              required
+            <Input
               disabled={formState === "display"}
-              title="addressLine2"
+              title="Address Line2"
               type="str"
               inputValue={newVendorData.addressLine2}
-              name="addressLine2"
+              name="Address Line2"
               placeholder="Enter addressLine2"
               maxLength={150}
               onChange={(value) =>
                 setNewVendorData({ ...newVendorData, addressLine2: value })
               }
             />
-                        <Input
-              required
+            <Input
               disabled={formState === "display"}
-              title="city"
+              title="City"
               type="str"
               inputValue={newVendorData.city}
               name="city"
@@ -234,10 +247,9 @@ const VendorEdit = ({
                 setNewVendorData({ ...newVendorData, city: value })
               }
             />
-                                    <Input
-              required
+            <Input
               disabled={formState === "display"}
-              title="state"
+              title="State"
               type="str"
               inputValue={newVendorData.state}
               name="state"
@@ -247,25 +259,25 @@ const VendorEdit = ({
                 setNewVendorData({ ...newVendorData, state: value })
               }
             />
-<Input
-  required
-  disabled={formState === "display"}
-  title="PinCode"
-  type="str"
-  inputValue={newVendorData.pinCode === 0 ? "" : newVendorData.pinCode}
-  onChange={(value) =>
-    setNewVendorData({
-      ...newVendorData,
-      pinCode: Number(value) || 0,
-    })
-  }
-  name="PinCode"
-  placeholder="Enter PinCode"
-  maxLength={150}
-/>
+            <Input
+              disabled={formState === "display"}
+              title="PinCode"
+              type="str"
+              inputValue={
+                newVendorData.pinCode === 0 ? "" : newVendorData.pinCode
+              }
+              onChange={(value) =>
+                setNewVendorData({
+                  ...newVendorData,
+                  pinCode: Number(value) || 0,
+                })
+              }
+              name="PinCode"
+              placeholder="Enter PinCode"
+              maxLength={150}
+            />
 
             <Input
-              required
               disabled={formState === "display"}
               title="GST Number"
               type="str"
@@ -278,6 +290,18 @@ const VendorEdit = ({
               }
             />
           </section>
+          <div className="px-3">
+            <TextArea
+              title="Remarks"
+              name="Remarks"
+              placeholder="Remarks"
+              disabled={formState === "display"}
+              inputValue={newVendorData.remarks}
+              onChange={(value) =>
+                setNewVendorData({ ...newVendorData, remarks: value })
+              }
+            />
+          </div>
         </form>
       </div>
     </main>

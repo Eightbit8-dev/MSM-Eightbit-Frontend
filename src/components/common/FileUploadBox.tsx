@@ -11,6 +11,7 @@ interface ReadFileData {
 interface MultiFileUploadProps {
   allowedTypes?: string[];
   simulateFailure?: boolean;
+  title: string;
 }
 
 const MultiFileUpload: React.FC<MultiFileUploadProps> = ({
@@ -21,6 +22,7 @@ const MultiFileUpload: React.FC<MultiFileUploadProps> = ({
     "application/msword",
   ],
   simulateFailure = false,
+  title,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [files, setFiles] = useState<File[]>([]);
@@ -73,7 +75,7 @@ const MultiFileUpload: React.FC<MultiFileUploadProps> = ({
   };
 
   return (
-    <div className="grid w-full grid-cols-2 gap-6">
+    <div className="grid w-full grid-cols-2 gap-6 md:mt-3">
       {/* Left: Upload Area */}
       <div
         onDragOver={(e) => e.preventDefault()}
@@ -112,25 +114,23 @@ const MultiFileUpload: React.FC<MultiFileUploadProps> = ({
 
       {/* Right: Uploaded Files List */}
       <div className="w-full rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-        <h3 className="mb-3 text-base font-semibold text-slate-700">
-          Uploaded Files ( Max : 3 Photos )
-        </h3>
+        <h3 className="mb-3 text-base font-semibold text-slate-700">{title}</h3>
         {files.length === 0 ? (
           <p className="text-sm text-slate-400">No files uploaded yet.</p>
         ) : (
-          <ul className="flex flex-col gap-4">
+          <ul className="flex flex-row flex-wrap gap-4">
             {files.map((file) => {
               const result = fileResults.find((r) => r.fileName === file.name);
               return (
                 <li
                   key={file.name}
-                  className="flex items-center justify-between rounded-md border-1 border-slate-300/50 bg-white p-3 shadow-sm"
+                  className="flex w-fit items-center justify-start gap-2 rounded-md"
                 >
                   <div>
                     <p className="text-sm font-medium text-slate-700">
                       {file.name}
                     </p>
-                    <p
+                    {/* <p
                       className={`text-xs ${
                         result?.loadResult === "danger"
                           ? "text-red-500"
@@ -140,13 +140,14 @@ const MultiFileUpload: React.FC<MultiFileUploadProps> = ({
                       {result?.loadResult === "success"
                         ? "Uploaded successfully"
                         : result?.error || "Uploading..."}
-                    </p>
+                    </p> */}
                   </div>
+
                   <ButtonSm
-                    state="default"
-                    text="Remove"
-                    className="self-end bg-red-100 text-red-600 hover:bg-red-200 active:bg-red-300"
                     onClick={() => removeFile(file.name)}
+                    className="aspect-square h-10 w-10 scale-90 border-1 border-red-500 bg-red-100 p-3 text-red-500 hover:bg-red-100 active:bg-red-100"
+                    state="default"
+                    imgUrl="/icons/delete-icon.svg"
                   />
                 </li>
               );

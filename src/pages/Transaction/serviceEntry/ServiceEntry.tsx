@@ -2,73 +2,36 @@ import ButtonSm from "@/components/common/Buttons";
 import PageHeader from "@/components/masterPage.components/PageHeader";
 import PaginationControls from "../../../components/common/Pagination";
 import EmployeeTableSkeleton from "../../TableSkleton";
+import DropdownSelect from "@/components/common/DropDown";
 import DialogBox from "@/components/common/DialogBox";
 import { AnimatePresence } from "motion/react";
-import type { FormState } from "@/types/appTypes";
-import DropdownSelect from "@/components/common/DropDown";
-import type { ServiceRequest } from "@/types/transactionTypes";
-import { useState } from "react";
-import { useFetchServiceRequests } from "@/queries/TranscationQueries/ServiceRequestQuery";
-import ServiceRequestFormPage from "./ServiceForm";
-import { DeleteServiceRequestDialogBox } from "./ServiceRequestDelete.Dialog";
-import { AssignEngineerDialogBox } from "./AssignEnginnerDialog";
 
-const ServiceRequestPage = () => {
+import { useState } from "react";
+import { useFetchEntry } from "@/queries/TranscationQueries/ServiceEntryQuery";
+import { DeleteEntryDialogBox } from "./ServiceEntryDelete.Dialog"; // <- your dialog file
+import type { ServiceEntryRequest } from "@/types/transactionTypes";
+
+const ServiceEntryPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
-  const [selectedRequest, setSelectedRequest] = useState<ServiceRequest | null>(
-    null,
-  );
+
+  const [selectedEntry, setSelectedEntry] =
+    useState<ServiceEntryRequest | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [formState, setFormState] = useState<FormState>("create");
 
-  // const { isSm } = useBreakpoints();
-
-  const { data, isLoading } = useFetchServiceRequests(
-    currentPage,
-    itemsPerPage,
-  );
+  const { data, isLoading } = useFetchEntry(currentPage, itemsPerPage);
 
   const paginatedData = data?.data || [];
   const totalPages = data?.totalPages || 0;
-
-  const dummyRequestData: ServiceRequest = {
-    id: 0,
-    referenceNumber: "",
-    requestDate: new Date().toISOString().split("T")[0],
-    complaintDetails: "",
-    clientName: "",
-    engineerName: "Not assigned",
-    machineType: "",
-    brand: "",
-    modelNumber: "",
-    serialNumber: "",
-  };
 
   return (
     <div className="mb-32 flex flex-col gap-4">
       <div className="flex items-center justify-between rounded-lg bg-white p-3">
         <div className="flex flex-col">
-          <PageHeader title="Service Requests" />
+          <PageHeader title="Service Entry" />
           <p className="text-sm font-medium text-slate-500">
-            Manage your Service Requests
+            Manage your Service Entry
           </p>
-        </div>
-        <div className="flex flex-row items-center gap-2">
-          <ButtonSm
-            className="font-medium text-white"
-            text={"New Request"}
-            state="default"
-            type="button"
-            onClick={() => {
-              setSelectedRequest(dummyRequestData);
-              setFormState("create");
-              setIsFormOpen(true);
-            }}
-            iconPosition="right"
-            imgUrl="/icons/plus-icon.svg"
-          />
         </div>
       </div>
 
@@ -76,31 +39,29 @@ const ServiceRequestPage = () => {
         {isLoading ? (
           <EmployeeTableSkeleton />
         ) : (
-          <div className="flex flex-col items-start justify-start gap-2 overflow-clip rounded-[12px] bg-white/80 py-3 md:p-4">
-            <div className="flex w-full items-center justify-between px-3 md:px-0">
+          <div className="flex flex-col items-start justify-start gap-2 overflow-clip rounded-[12px] bg-white/80 md:p-4">
+            <div className="flex w-full items-center justify-between p-2 md:p-4">
               <section className="result-length flex w-full flex-row items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
                   <div className="flex h-[10px] w-[10px] rounded-full bg-blue-500"></div>
-                  <h2 className="text-md min-w-max font-semibold text-zinc-800">
+                  <h2 className="text-md font-semibold text-zinc-800">
                     Showing {paginatedData.length} results of{" "}
                     {data?.totalRecords || 0}
                   </h2>
                 </div>
 
-                <div className="flex items-center gap-2">
-                  <PaginationControls
-                    totalPages={totalPages}
-                    currentPage={currentPage}
-                    onPageChange={setCurrentPage}
-                  />
-                </div>
+                <PaginationControls
+                  totalPages={totalPages}
+                  currentPage={currentPage}
+                  onPageChange={setCurrentPage}
+                />
               </section>
             </div>
 
             <div className="tables flex min-h-[300px] w-full flex-col overflow-x-auto bg-white shadow-sm md:overflow-x-auto md:rounded-[9px]">
               {/* Header */}
               <header className="header flex min-w-max flex-row items-center justify-between bg-slate-200 px-3 py-3 md:min-w-max">
-                {/* S.No + Checkbox */}
+                {/* S.No */}
                 <div className="flex w-16 min-w-16 items-center justify-start gap-2">
                   <p className="w-full text-sm font-semibold text-zinc-900">
                     S.No
@@ -113,34 +74,29 @@ const ServiceRequestPage = () => {
                 </div>
                 <div className="w-24 min-w-24 px-2 md:w-28 md:min-w-28">
                   <p className="text-sm font-semibold text-zinc-900">
-                    Request Date
+                    Service Date
                   </p>
                 </div>
                 <div className="w-32 min-w-32 px-2 md:w-40 md:min-w-40">
                   <p className="text-sm font-semibold text-zinc-900">Client</p>
                 </div>
-                <div className="w-28 min-w-28 px-2 md:w-32 md:min-w-32">
-                  <p className="text-sm font-semibold text-zinc-900">
-                    Machine Type
+                <div className="w-32 min-w-32 px-2 md:w-36 md:min-w-36">
+                  <p className="over text-sm font-semibold text-zinc-900">
+                    Maintenance Type
                   </p>
                 </div>
-                <div className="w-16 min-w-16 px-2 md:w-20 md:min-w-20">
-                  <p className="text-sm font-semibold text-zinc-900">Brand</p>
-                </div>
-                <div className="w-20 min-w-20 px-2 md:w-24 md:min-w-24">
+                <div className="w-24 min-w-24 px-2 md:w-28 md:min-w-28">
                   <p className="text-sm font-semibold text-zinc-900">
-                    Model No
+                    Engineer Name
                   </p>
                 </div>
-                <div className="w-28 min-w-28 px-2 md:w-36 md:min-w-36">
+
+                <div className="w-30 min-w-30 px-2 md:w-37 md:min-w-37">
                   <p className="text-sm font-semibold text-zinc-900">
-                    Complaint
+                    Diagnostics
                   </p>
                 </div>
-                <div className="w-24 min-w-24 px-2 pt-1 md:w-28 md:min-w-28">
-                  <p className="text-sm font-semibold text-zinc-900">Assign</p>
-                </div>
-                <div className="w-20 min-w-24 px-2 md:w-24 md:min-w-24">
+                <div className="w-24 min-w-24 px-2 md:w-28 md:min-w-28">
                   <p className="text-sm font-semibold text-zinc-900">Status</p>
                 </div>
 
@@ -161,7 +117,7 @@ const ServiceRequestPage = () => {
                     key={item.id}
                     className="flex min-w-max flex-row items-center justify-between border-t px-3 py-2 text-sm text-zinc-700 hover:bg-slate-50 md:min-w-max"
                   >
-                    {/* S.No + Checkbox */}
+                    {/* S.No */}
                     <div className="flex w-16 min-w-16 items-center justify-start gap-2 pt-1">
                       <p className="w-full">
                         {(currentPage - 1) * itemsPerPage + index + 1}
@@ -170,66 +126,46 @@ const ServiceRequestPage = () => {
 
                     {/* Data Columns with responsive widths */}
                     <div className="w-20 min-w-20 px-2 pt-1 md:w-24 md:min-w-24">
-                      <p className="leading-5 break-words">
-                        {item.referenceNumber}
-                      </p>
+                      <p className="leading-5 break-words">{item.refNumber}</p>
                     </div>
                     <div className="w-24 min-w-24 px-2 pt-1 md:w-28 md:min-w-28">
                       <p className="leading-5 break-words">
-                        {item.requestDate}
+                        {item.serviceDate}
                       </p>
                     </div>
                     <div className="w-32 min-w-32 px-2 pt-1 md:w-40 md:min-w-40">
                       <p className="leading-5 break-words">{item.clientName}</p>
                     </div>
-                    <div className="w-28 min-w-28 px-2 pt-1 md:w-32 md:min-w-32">
+                    <div className="w-32 min-w-32 px-2 md:w-36 md:min-w-36">
                       <p className="leading-5 break-words">
-                        {item.machineType}
-                      </p>
-                    </div>
-                    <div className="w-16 min-w-16 px-2 pt-1 md:w-20 md:min-w-20">
-                      <p className="leading-5 break-words">{item.brand}</p>
-                    </div>
-                    <div className="w-20 min-w-20 px-2 md:w-24 md:min-w-24">
-                      <p className="leading-5 break-words">
-                        {item.modelNumber}
-                      </p>
-                    </div>
-                    <div className="w-28 min-w-28 px-2 md:w-36 md:min-w-36">
-                      <p className="leading-5 break-words">
-                        {item.complaintDetails}
+                        {item.maintenanceType}
                       </p>
                     </div>
                     <div className="w-24 min-w-24 px-2 pt-1 md:w-28 md:min-w-28">
-                      <ButtonSm
-                        className="min-w-full scale-90 border-1 border-blue-500 bg-blue-500/10"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setFormState("edit");
-                          setIsFormOpen(true);
-                          setSelectedRequest(item);
-                        }}
-                        text={item.engineerName || "Assign"}
-                        imgUrl={
-                          item.engineerName
-                            ? "/icons/edit-icon.svg"
-                            : "/icons/add-user-icon.svg"
-                        }
-                        state="outline"
-                      />
+                      <p className="leading-5 break-words">
+                        {item.engineerName}
+                      </p>
                     </div>
-                    <div className="w-20 min-w-24 px-2 md:w-24 md:min-w-24">
+
+                    <div className="w-30 min-w-30 px-2 md:w-37 md:min-w-37">
+                      <p className="leading-5 break-words">
+                        {item.engineerDiagnostics}
+                      </p>
+                    </div>
+                    <div className="w-24 min-w-24 px-2 md:w-28 md:min-w-28">
                       <span
                         className={`inline-flex min-w-full items-center justify-center rounded-full px-2 py-1 text-xs font-medium ${
-                          item.status === "Completed" ||
-                          item.status === "COMPLETED"
+                          item.serviceStatus === "Completed" ||
+                          item.serviceStatus === "COMPLETED"
                             ? "bg-green-100 text-green-800"
-                            : item.status === "NOT COMPLETED"
+                            : item.serviceStatus === "NOT_COMPLETED"
                               ? "bg-red-100 text-red-800"
                               : "bg-yellow-100 text-yellow-800"
                         }`}
                       >
-                        {item.status}
+                        {item.serviceStatus === "COMPLETED"
+                          ? "COMPLETED"
+                          : "PENDING"}
                       </span>
                     </div>
 
@@ -238,7 +174,7 @@ const ServiceRequestPage = () => {
                       <ButtonSm
                         onClick={(e) => {
                           e.stopPropagation();
-                          setSelectedRequest(item);
+                          setSelectedEntry(item);
                           setIsDeleteDialogOpen(true);
                         }}
                         className="aspect-square scale-90 border-1 border-red-500 bg-red-100 text-red-500 hover:bg-red-100 active:bg-red-100"
@@ -251,7 +187,7 @@ const ServiceRequestPage = () => {
               )}
             </div>
 
-            <footer className="flex w-full flex-row items-center justify-between px-3 md:px-0">
+            <footer className="flex w-full flex-row items-center justify-between p-2 md:px-0">
               <DropdownSelect
                 title=""
                 direction="up"
@@ -274,43 +210,14 @@ const ServiceRequestPage = () => {
       </div>
 
       <AnimatePresence>
-        {isDeleteDialogOpen && selectedRequest && (
-          <DialogBox
-            setToggleDialogueBox={setIsDeleteDialogOpen}
-            className="p-3 lg:min-w-[400px]"
-          >
-            <DeleteServiceRequestDialogBox
-              request={selectedRequest}
-              setIsDeleteDialogOpen={setIsDeleteDialogOpen}
+        {isDeleteDialogOpen && selectedEntry && (
+          <DialogBox setToggleDialogueBox={setIsDeleteDialogOpen}>
+            <DeleteEntryDialogBox
+              Entry={selectedEntry}
+              setIsDeleteMachineDialogOpen={setIsDeleteDialogOpen}
               onDeleted={() => {
-                setSelectedRequest(null);
+                setSelectedEntry(null);
               }}
-            />
-          </DialogBox>
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>
-        {isFormOpen && selectedRequest && formState === "create" && (
-          <DialogBox
-            setToggleDialogueBox={setIsFormOpen}
-            className="lg:min-w-[800px]"
-          >
-            <ServiceRequestFormPage
-              mode={formState}
-              requestFromParent={selectedRequest}
-              setFormVisible={setIsFormOpen}
-            />
-          </DialogBox>
-        )}
-        {isFormOpen && selectedRequest && formState === "edit" && (
-          <DialogBox
-            setToggleDialogueBox={setIsFormOpen}
-            className="lg:min-w-[350px]"
-          >
-            <AssignEngineerDialogBox
-              setIsAssignDialogOpen={setIsFormOpen}
-              serviceRequestData={selectedRequest}
             />
           </DialogBox>
         )}
@@ -319,4 +226,4 @@ const ServiceRequestPage = () => {
   );
 };
 
-export default ServiceRequestPage;
+export default ServiceEntryPage;

@@ -7,6 +7,7 @@ interface ButtonSmProps {
   text?: string;
   disabled?: boolean;
   imgUrl?: string;
+  isPending?: boolean;
   iconPosition?: "left" | "right"; // ✅ New prop
   type?: "button" | "submit" | "reset";
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
@@ -20,6 +21,7 @@ const ButtonSm: React.FC<ButtonSmProps> = ({
   disabled = false,
   className = "",
   imgUrl,
+  isPending = false,
   iconPosition = "left", // default position
 }) => {
   return (
@@ -42,6 +44,7 @@ const ButtonSm: React.FC<ButtonSmProps> = ({
       {imgUrl && iconPosition === "right" && (
         <img src={imgUrl} alt="" className="min-h-4 min-w-4" />
       )}
+      {isPending && <Spinner size="sm" className="text-white" />}
     </button>
   );
 };
@@ -79,3 +82,57 @@ export const ButtonLg: React.FC<ButtonLgProps> = ({
 };
 
 export default ButtonSm;
+
+interface SpinnerProps {
+  size?: "sm" | "md" | "lg";
+  className?: string;
+}
+
+const Spinner: React.FC<SpinnerProps> = ({ size = "md", className = "" }) => {
+  const sizeClasses = {
+    sm: "w-4 h-4",
+    md: "w-5 h-5",
+    lg: "w-6 h-6",
+  };
+
+  return (
+    <div className={`${sizeClasses[size]} ${className}`}>
+      <svg
+        className="animate-spin"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <circle
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeDasharray="31.416"
+          strokeDashoffset="31.416"
+          className="opacity-25"
+        />
+        <circle
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeDasharray="31.416"
+          strokeDashoffset="23.562"
+          className="opacity-75"
+        >
+          <animate
+            attributeName="stroke-dashoffset"
+            dur="2s"
+            values="31.416;0;31.416"
+            repeatCount="indefinite"
+          />
+        </circle>
+      </svg>
+    </div>
+  );
+};

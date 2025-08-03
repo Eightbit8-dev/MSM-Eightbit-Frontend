@@ -1,30 +1,33 @@
 import ButtonSm from "../../../components/common/Buttons";
 import { useDeleteServiceEngineer } from "../../../queries/masterQueries/ServiceEngineersQuery";
-import type { ServiceEngineerResponse, ServiceEngineerDetails } from "../../../types/masterApiTypes";
-import type { FormState } from "../../../types/appTypes";
+import type { ServiceEngineerDetails } from "../../../types/masterApiTypes";
 
 export const DeleteServiceEngineerDialogBox = ({
   setIsDeleteServiceEngineerDialogOpen,
   serviceEngineer,
   onDeleted,
 }: {
-  setIsDeleteServiceEngineerDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsDeleteServiceEngineerDialogOpen: React.Dispatch<
+    React.SetStateAction<boolean>
+  >;
   serviceEngineer: ServiceEngineerDetails;
   onDeleted?: () => void;
 }) => {
-  const { mutate: deleteServiceEngineer, isPending: isDeleteServiceEngineerLoading } =
-    useDeleteServiceEngineer();
+  const {
+    mutate: deleteServiceEngineer,
+    isPending: isDeleteServiceEngineerLoading,
+  } = useDeleteServiceEngineer();
 
-    const handleDelete = () => {
-      deleteServiceEngineer(serviceEngineer, {
-        onSuccess: () => {
-          setIsDeleteServiceEngineerDialogOpen(false);
-          if (onDeleted) {
-            onDeleted();
-          }
-        },
-      });
-    };
+  const handleDelete = () => {
+    deleteServiceEngineer(serviceEngineer, {
+      onSuccess: () => {
+        setIsDeleteServiceEngineerDialogOpen(false);
+        if (onDeleted) {
+          onDeleted();
+        }
+      },
+    });
+  };
 
   return (
     <div className="flex w-full flex-col gap-4">
@@ -39,7 +42,9 @@ export const DeleteServiceEngineerDialogBox = ({
       </header>
 
       <p className="text-md font-medium text-zinc-700">
-        Are you sure you want to delete the service engineer <strong>{serviceEngineer?.engineerName}</strong>? This action is irreversible.
+        Are you sure you want to delete the service engineer{" "}
+        <strong>{serviceEngineer?.engineerName}</strong>? This action is
+        irreversible.
       </p>
 
       <section className="mt-1 grid w-full grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-3">
@@ -53,7 +58,8 @@ export const DeleteServiceEngineerDialogBox = ({
           className="items-center justify-center bg-red-500 text-center text-white hover:bg-red-700 active:bg-red-500"
           state="default"
           onClick={handleDelete}
-          text={isDeleteServiceEngineerLoading ? "Deleting..." : "Delete"}
+          isPending={isDeleteServiceEngineerLoading}
+          text={"Delete"}
         />
       </section>
     </div>

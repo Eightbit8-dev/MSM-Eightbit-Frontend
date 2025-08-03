@@ -1,39 +1,55 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import MainLayout from "./components/layout/MainLayout";
-
-// Routes
-import { appRoutes } from "./routes/appRoutes";
-import { Spinner } from "./components/layout/Spinner";
 import ProtectedRoute from "./components/layout/ProtectedRoute";
+import { Spinner } from "./components/layout/Spinner";
+import { appRoutes } from "./routes/appRoutes";
 import { ErrorPageContent } from "./pages/ErrorPage";
-import UsersPage from "./pages/UsersPage";
-import Report from "./pages/Report";
-import TransactionPage from "./pages/Transaction/TransactionPage";
-import MachineEntry from "./pages/Transaction/machineEntry/MachineEntries";
-import QRScanner from "./pages/QR/ScanQr";
-import ProblemPage from "./pages/MasterPages/Problem/ProblemPage";
-import ServiceEngineerPage from "./pages/MasterPages/ServiceEngineers/ServiceEngineersPage";
-import ServiceEntry from "./pages/Transaction/serviceRequest/ServiceRequest";
-import ServiceRequest from "./pages/Transaction/serviceRequest/ServiceRequest";
 
-// ------------------Main Pages ---------------------------
+// 🌐 Global Pages
+const SignInPage = lazy(() => import("./pages/SignInPage"));
 const DashBoardPage = lazy(() => import("./pages/DashBoardPage"));
 
-const SignInPage = lazy(() => import("./pages/SignInPage"));
+// 🧾 Report Pages
+const Report = lazy(() => import("./pages/Report"));
 
-// ---------------Master Pages----------------------------
+// 👥 User Management
+const UsersPage = lazy(() => import("./pages/UsersPage"));
+
+// 🔐 Master Pages
 const MasterPage = lazy(() => import("./pages/MasterPages/MasterPage"));
-const ResignationPage = lazy(
+const ClientsPage = lazy(() => import("./pages/MasterPages/Client/ClientPage"));
+const ProductsPage = lazy(
   () => import("./pages/MasterPages/Product/ProductPage"),
 );
-const DesignationsPage = lazy(
-  () => import("./pages/MasterPages/Client/ClientPage"),
-);
 const VendorsPage = lazy(() => import("./pages/MasterPages/Vendor/VendorPage"));
-const DepartmentsPage = lazy(
-  () => import("./pages/MasterPages/Spares/SparesPage"),
+const SparesPage = lazy(() => import("./pages/MasterPages/Spares/SparesPage"));
+const ProblemPage = lazy(
+  () => import("./pages/MasterPages/Problem/ProblemPage"),
 );
+const ServiceEngineerPage = lazy(
+  () => import("./pages/MasterPages/ServiceEngineers/ServiceEngineersPage"),
+);
+
+// 🔁 Transaction Pages
+const TransactionPage = lazy(
+  () => import("./pages/Transaction/TransactionPage"),
+);
+const MachineEntry = lazy(
+  () => import("./pages/Transaction/machineEntry/MachineEntries"),
+);
+const ServiceRequest = lazy(
+  () => import("./pages/Transaction/serviceRequest/ServiceRequest"),
+);
+const ServiceEntryPage = lazy(
+  () => import("./pages/Transaction/serviceEntry/ServiceEntry"),
+);
+const RequestEntry = lazy(
+  () => import("./pages/Transaction/serviceEntry/ServiceEntryForm"),
+);
+
+// 📷 QR Pages
+const QRScanner = lazy(() => import("./pages/QR/ScanQr"));
 
 const App = () => {
   return (
@@ -45,14 +61,14 @@ const App = () => {
       }
     >
       <Routes>
-        {/* Auth route */}
+        {/*-------------------------------- 🌐 Auth Routes */}
         <Route path={appRoutes.signInPage} element={<SignInPage />} />
-
-        {/* Other Routes */}
         <Route
           path="/"
           element={<Navigate to={appRoutes.dashboardPage} replace />}
         />
+
+        {/*-------------------------------- ❌ Catch-all 404 Route */}
         <Route
           path="*"
           element={
@@ -63,62 +79,46 @@ const App = () => {
           }
         />
 
-        {/* Main Layout Routes */}
-        {/* These are all authenticated routes */}
+        {/*-------------------------------- 🛡️ Protected Authenticated Routes */}
         <Route element={<ProtectedRoute />}>
           <Route element={<MainLayout />}>
+            {/*-------------------------------- 📊 Dashboard */}
             <Route path={appRoutes.dashboardPage} element={<DashBoardPage />} />
+            <Route path={appRoutes.dashboard} element={<DashBoardPage />} />
+
+            {/*-------------------------------- 🧾 Reports */}
             <Route
               path={appRoutes.reportRoutes.reportPage}
               element={<Report />}
             />
 
+            {/*-------------------------------- 👥 Users */}
             <Route
               path={appRoutes.userRoutes.userPage}
               element={<UsersPage />}
             />
-            {/* Master Page and its nested components */}
+
+            {/*-------------------------------- 🧱 Master Config Pages */}
             <Route
               path={appRoutes.masterRoutes.masterPage}
               element={<MasterPage />}
             />
-            {/* Vendors pages */}
+            <Route
+              path={appRoutes.masterRoutes.children.clients}
+              element={<ClientsPage />}
+            />
+            <Route
+              path={appRoutes.masterRoutes.children.products}
+              element={<ProductsPage />}
+            />
             <Route
               path={appRoutes.masterRoutes.children.vendors}
               element={<VendorsPage />}
             />
-            {/* Clients pages */}
-            <Route
-              path={appRoutes.masterRoutes.children.clients}
-              element={<DesignationsPage />}
-            />
-            <Route
-              path={appRoutes.masterRoutes.children.products}
-              element={<ResignationPage />}
-            />
-
             <Route
               path={appRoutes.masterRoutes.children.machineSpares}
-              element={<DepartmentsPage />}
+              element={<SparesPage />}
             />
-            <Route
-              path={appRoutes.transactionRoutes.transcationPage}
-              element={<TransactionPage />}
-            />
-            <Route
-              path={appRoutes.transactionRoutes.children.machineEntry}
-              element={<MachineEntry />}
-            />
-
-            <Route
-              path={appRoutes.transactionRoutes.children.serviceEntry}
-              element={<ServiceEntry />}
-            />
-            <Route
-              path={appRoutes.transactionRoutes.children.serviceRequest}
-              element={<ServiceRequest />}
-            />
-            <Route path={appRoutes.scanPage} element={<QRScanner />} />
             <Route
               path={appRoutes.masterRoutes.children.problemDetails}
               element={<ProblemPage />}
@@ -127,6 +127,31 @@ const App = () => {
               path={appRoutes.masterRoutes.children.users}
               element={<ServiceEngineerPage />}
             />
+
+            {/*-------------------------------- 🔁 Transaction Pages */}
+            <Route
+              path={appRoutes.transactionRoutes.transcationPage}
+              element={<TransactionPage />}
+            />
+            <Route
+              path={appRoutes.transactionRoutes.children.machineEntry}
+              element={<MachineEntry />}
+            />
+            <Route
+              path={appRoutes.transactionRoutes.children.serviceRequest}
+              element={<ServiceRequest />}
+            />
+            <Route
+              path={appRoutes.transactionRoutes.children.serviceEntry}
+              element={<ServiceEntryPage />}
+            />
+            <Route
+              path={appRoutes.transactionRoutes.children.serviceEntryEdit}
+              element={<RequestEntry />}
+            />
+
+            {/*-------------------------------- 📷 QR Scanner */}
+            <Route path={appRoutes.scanPage} element={<QRScanner />} />
           </Route>
         </Route>
       </Routes>

@@ -69,8 +69,9 @@ export const DeleteServiceRequestDialogBox = ({
         <ButtonSm
           className="items-center justify-center bg-red-500 text-center text-white hover:bg-red-700 active:bg-red-500"
           state="default"
-          text={isDeleting ? "Deleting..." : "Delete"}
+          text={"Delete"}
           type="submit"
+          isPending={isDeleting}
           disabled={isDeleting}
         />
       </section>

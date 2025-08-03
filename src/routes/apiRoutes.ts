@@ -15,6 +15,7 @@ export const apiRoutes = {
   machineEntry: "/api/admin/machine",
   machineQr: "/api/admin/machine/bulk-qr-pdf",
   serviceRequest: "/api/transaction/service-request",
+  serviceEntry: "/api/transaction/service-entry",
 
   // ------------------ old remove this later ------------------
   designations: "/api/admin/designation",

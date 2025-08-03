@@ -35,18 +35,18 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
   const showRightEllipsis = currentPage < totalPages - 1;
 
   return (
-    <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 ">
+    <div className="flex min-w-max scale-90 flex-wrap items-center justify-center gap-2 sm:gap-3 md:scale-95 lg:scale-100">
       {/* Previous */}
       <button
         onClick={() => onPageChange(Math.max(currentPage - 1, 1))}
         disabled={currentPage === 1}
-        className={`rounded-full px-2 cursor-pointer py-2 shadow-sm transition ${
+        className={`cursor-pointer rounded-full px-2 py-2 shadow-sm transition ${
           currentPage === 1
             ? "cursor-not-allowed text-gray-400"
             : "text-slate-800 hover:bg-gray-200"
         }`}
       >
-        <img src="/icons/back.png" alt="Previous" className="w-4 h-4" />
+        <img src="/icons/back.png" alt="Previous" className="h-4 w-4" />
       </button>
 
       {/* Left Ellipsis */}
@@ -54,11 +54,11 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
         <>
           <button
             onClick={() => onPageChange(1)}
-            className="hidden xs:block rounded px-3 py-1 text-sm text-gray-700 hover:bg-gray-200"
+            className="xs:block hidden rounded px-3 py-1 text-sm text-gray-700 hover:bg-gray-200"
           >
             1
           </button>
-          <span className="hidden xs:inline px-1 text-gray-500">...</span>
+          <span className="xs:inline hidden px-1 text-gray-500">...</span>
         </>
       )}
 
@@ -80,10 +80,10 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
       {/* Right Ellipsis */}
       {showRightEllipsis && (
         <>
-          <span className="hidden xs:inline px-1 text-gray-500">...</span>
+          <span className="xs:inline hidden px-1 text-gray-500">...</span>
           <button
             onClick={() => onPageChange(totalPages)}
-            className="hidden xs:block rounded px-3 py-1 text-sm text-gray-700 hover:bg-gray-200"
+            className="xs:block hidden rounded px-3 py-1 text-sm text-gray-700 hover:bg-gray-200"
           >
             {totalPages}
           </button>
@@ -94,13 +94,13 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
       <button
         onClick={() => onPageChange(Math.min(currentPage + 1, totalPages))}
         disabled={currentPage === totalPages}
-        className={`rounded-full px-2 py-2 cursor-pointer shadow-sm transition ${
+        className={`cursor-pointer rounded-full px-2 py-2 shadow-sm transition ${
           currentPage === totalPages
             ? "cursor-not-allowed text-gray-400"
             : "text-slate-800 hover:bg-gray-200"
         }`}
       >
-        <img src="/icons/next.png" alt="Next" className="w-4 h-4" />
+        <img src="/icons/next.png" alt="Next" className="h-4 w-4" />
       </button>
     </div>
   );

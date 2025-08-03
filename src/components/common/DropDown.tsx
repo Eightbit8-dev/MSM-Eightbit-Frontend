@@ -32,6 +32,38 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
   const [wasSubmitted, setWasSubmitted] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  // Add CSS for webkit scrollbars
+  useEffect(() => {
+    const style = document.createElement("style");
+    style.textContent = `
+      .dropdown-scrollbar::-webkit-scrollbar {
+        width: 8px;
+        position: absolute;
+        right: 0;
+      }
+      .dropdown-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .dropdown-scrollbar::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
+      }
+      .dropdown-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+      }
+      .dropdown-scrollbar::-webkit-scrollbar-button {
+        display: none;
+      }
+      .dropdown-scrollbar::-webkit-scrollbar-corner {
+        background: transparent;
+      }
+    `;
+    document.head.appendChild(style);
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -47,13 +79,19 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
 
   // 🔥 Listen to form submission attempt to shake only on submit
   useEffect(() => {
-    const inputId = `dropdown-hidden-${title}`;
+    // Fixed: Removed extra space in template literal
+    const inputId = `dropdown-hidden-${title?.replace(/\s/g, "")}`;
     const input = document.getElementById(inputId);
 
     const handleInvalid = (event: Event) => {
-      event.preventDefault(); // prevent default browser tooltip
+      event.preventDefault();
       setWasSubmitted(true);
       setShake(true);
+      // Scroll to the actual visible dropdown container instead of hidden input
+      dropdownRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
       setTimeout(() => setShake(false), 400);
     };
 
@@ -87,10 +125,13 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
     }
   };
 
-  const isInvalid = required && selected.id === 0 && wasSubmitted;
+  const isInvalid = required && (selected?.id ?? 0) === 0 && wasSubmitted;
 
   return (
-    <div className={`relative ${className}`} ref={dropdownRef}>
+    <div
+      className={`relative ${className} select-none disabled:cursor-not-allowed`}
+      ref={dropdownRef}
+    >
       {title && (
         <h3 className="mb-0.5 w-full justify-start text-xs leading-loose font-semibold text-slate-700">
           {title}
@@ -98,34 +139,32 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
         </h3>
       )}
 
-      {/* Hidden input triggers native validation */}
+      {/* Fixed: Removed extra space in id template literal */}
       <input
-        id={`dropdown-hidden-${title}`}
+        id={`dropdown-hidden-${title?.replace(/\s/g, "")}`}
         type="text"
         required={required}
         value={selected.id === 0 ? "" : selected.id}
         onChange={() => {}}
         disabled={disabled}
-        className="hidden"
+        className="hidden select-none disabled:cursor-not-allowed"
         tabIndex={-1}
       />
 
       <motion.div
+        style={{ cursor: disabled ? "not-allowed" : "pointer" }}
         onClick={toggleDropdown}
         animate={shake ? { x: [-5, 5, -5, 5, 0] } : {}}
         transition={{ duration: 0.4 }}
-        className={`input-container flex cursor-pointer flex-row items-center justify-between rounded-xl border-2 bg-white px-3 py-3 transition-all ${
-          isInvalid
-            ? "border-red-500"
-            : isOpen
-              ? "border-slate-500"
-              : "border-slate-300"
-        } ${disabled ? "pointer-events-none" : ""}`}
+        className={`input-container flex items-center justify-between rounded-xl border-2 bg-white px-3 py-3 transition-all ${
+          disabled
+            ? "pointer-events-none cursor-not-allowed opacity-60"
+            : "cursor-pointer"
+        } ${isInvalid ? "border-red-500" : isOpen ? "border-slate-500" : "border-slate-300"}`}
       >
-<span className="text-sm font-medium text-slate-600 whitespace-nowrap overflow-hidden text-ellipsis">
-  {selected.label}
-</span>
-
+        <span className="overflow-hidden text-sm font-medium text-ellipsis whitespace-nowrap text-slate-600">
+          {selected.label}
+        </span>
 
         <img
           src="/icons/dropdown.svg"
@@ -136,7 +175,11 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
 
       {isOpen && (
         <div
-          className={`absolute z-10 max-h-[200px] w-full overflow-hidden overflow-y-scroll rounded-xl border border-slate-200 bg-white shadow-lg ${getDirectionClass()}`}
+          className={`dropdown-scrollbar absolute z-99 max-h-[200px] w-full overflow-y-auto rounded-xl border border-slate-200 bg-white shadow-sm ${getDirectionClass()}`}
+          style={{
+            scrollbarWidth: "thin",
+            scrollbarColor: "#cbd5e1 transparent",
+          }}
         >
           {options.map((option) => (
             <button
@@ -149,13 +192,6 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
               }`}
             >
               <span className="text-sm">{option.label}</span>
-              {/* {selected.label === option.label && (
-                <img
-                  src="/icons/tick-icon-dark.svg"
-                  alt="Selected"
-                  className="h-4 w-4"
-                />
-              )} */}
             </button>
           ))}
         </div>

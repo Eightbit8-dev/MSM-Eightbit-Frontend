@@ -7,6 +7,7 @@ import {
   useCreateClient,
   useEditClient,
 } from "../../../queries/masterQueries/ClientQuery";
+import TextArea from "@/components/common/Textarea";
 
 const ClientEdit = ({
   clientDetails,
@@ -21,11 +22,7 @@ const ClientEdit = ({
 }) => {
   const [clientData, setClientData] = useState<ClientDetails | null>(null);
 
-  const {
-    mutate: createClient,
-    isPending,
-    isSuccess,
-  } = useCreateClient();
+  const { mutate: createClient, isPending, isSuccess } = useCreateClient();
 
   const {
     mutate: updateClient,
@@ -45,6 +42,7 @@ const ClientEdit = ({
     pinCode: 0,
     state: "",
     gstNumber: "",
+    remarks: "",
   };
 
   const disableButton =
@@ -140,7 +138,8 @@ const ClientEdit = ({
               {formState === "create" && (
                 <ButtonSm
                   className="font-medium text-white"
-                  text={isPending ? "Creating..." : "Create New"}
+                  text={"Create New"}
+                  isPending={isPending}
                   state="default"
                   type="submit"
                   disabled={isPending}
@@ -149,8 +148,9 @@ const ClientEdit = ({
 
               {formState === "edit" && (
                 <ButtonSm
-                  className="font-medium text-white disabled:opacity-50"
-                  text={isUpdatePending ? "Updating..." : "Save Changes"}
+                  className="font-medium text-white disabled:opacity-60"
+                  text={"Save Changes"}
+                  isPending={isUpdatePending}
                   state="default"
                   type="button"
                   disabled={disableButton || isUpdatePending}
@@ -165,7 +165,7 @@ const ClientEdit = ({
           </header>
 
           {/* Form Fields */}
-          <section className="flex grid grid-cols-2 w-full flex-col gap-2 overflow-clip px-3">
+          <section className="flex w-full flex-col gap-2 overflow-clip px-3 md:grid md:grid-cols-2">
             <Input
               required
               disabled={formState === "display"}
@@ -206,6 +206,7 @@ const ClientEdit = ({
               }
             />
             <Input
+              required
               disabled={formState === "display"}
               title="Email"
               inputValue={clientData.email}
@@ -220,7 +221,8 @@ const ClientEdit = ({
               title="Address Line 1"
               inputValue={clientData.addressLine1}
               name="addressLine1"
-              placeholder="Enter address line 1"
+              maxLength={100}
+              placeholder="Enter Address line 1"
               onChange={(value) =>
                 setClientData({ ...clientData, addressLine1: value })
               }
@@ -230,7 +232,8 @@ const ClientEdit = ({
               title="Address Line 2"
               inputValue={clientData.addressLine2}
               name="addressLine2"
-              placeholder="Enter address line 2"
+              placeholder="Enter Address line 2"
+              maxLength={100}
               onChange={(value) =>
                 setClientData({ ...clientData, addressLine2: value })
               }
@@ -279,6 +282,18 @@ const ClientEdit = ({
               }
             />
           </section>
+          <div className="px-3">
+            <TextArea
+              title="Remarks"
+              name="Remarks"
+              placeholder="Remarks"
+              disabled={formState === "display"}
+              inputValue={clientData.remarks}
+              onChange={(value) =>
+                setClientData({ ...clientData, remarks: value })
+              }
+            />
+          </div>
         </form>
       </div>
     </main>

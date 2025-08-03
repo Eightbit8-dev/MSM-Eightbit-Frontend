@@ -22,11 +22,7 @@ const ProductEdit = ({
 }) => {
   const [productData, setProductData] = useState<ProductDetails | null>(null);
 
-  const {
-    mutate: createProduct,
-    isPending,
-    isSuccess,
-  } = useCreateProduct();
+  const { mutate: createProduct, isPending, isSuccess } = useCreateProduct();
 
   const {
     mutate: updateProduct,
@@ -48,6 +44,7 @@ const ProductEdit = ({
         brand: "",
         modelNumber: "",
         description: "",
+        remarks: "",
       });
     } else if (productDetails) {
       setProductData(productDetails);
@@ -62,6 +59,7 @@ const ProductEdit = ({
         brand: "",
         modelNumber: "",
         description: "",
+        remarks: "",
       };
       setFormState("create");
       setProduct(resetData);
@@ -80,6 +78,7 @@ const ProductEdit = ({
       brand: "",
       modelNumber: "",
       description: "",
+      remarks: "",
     };
     setProduct(resetData);
     setProductData(resetData);
@@ -145,6 +144,7 @@ const ProductEdit = ({
                   className="font-medium text-white"
                   text={isPending ? "Creating..." : "Create New"}
                   state="default"
+                  isPending={isPending}
                   type="submit"
                   disabled={isPending}
                 />
@@ -156,6 +156,7 @@ const ProductEdit = ({
                   text={isUpdatePending ? "Updating..." : "Save Changes"}
                   state="default"
                   type="button"
+                  isPending={isUpdatePending}
                   disabled={disableButton || isUpdatePending}
                   onClick={() => {
                     if (productData) {
@@ -220,6 +221,18 @@ const ProductEdit = ({
               }
             />
           </section>
+          <div className="px-3">
+            <TextArea
+              title="Remarks"
+              name="Remarks"
+              placeholder="Remarks"
+              disabled={formState === "display"}
+              inputValue={productData.remarks}
+              onChange={(value) =>
+                setProductData({ ...productData, remarks: value })
+              }
+            />
+          </div>
         </form>
       </div>
     </main>

@@ -109,7 +109,7 @@ const Input = <T extends string | number>({
         {title} {required && <span className="text-red-500"> *</span>}
       </h3>
       <div
-        className={`input-container flex cursor-text flex-row items-center justify-center gap-0 overflow-clip rounded-xl ${viewMode ? "" : "border-2 border-slate-300 bg-white transition-all focus-within:border-slate-500"} `}
+        className={`input-container flex cursor-text flex-row items-center justify-center gap-0 overflow-clip rounded-xl ${viewMode ? "" : "border-2 border-slate-300 bg-white transition-all focus-within:border-slate-500"} ${disabled ? "cursor-not-allowed opacity-60" : ""}`}
       >
         {prefixText && (
           <div className="flex h-full items-center justify-start bg-slate-100 px-3 py-2 text-sm leading-loose font-medium text-slate-700">
@@ -258,6 +258,7 @@ interface DateInputProps {
   placeholder?: string;
   required?: boolean;
   disabled?: boolean;
+  minDate?: string;
   maxDate?: string;
   className?: string;
 }
@@ -271,6 +272,7 @@ export const DateInput: React.FC<DateInputProps> = ({
   placeholder = "Select date",
   required = false,
   disabled = false,
+  minDate,
   maxDate,
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -278,7 +280,7 @@ export const DateInput: React.FC<DateInputProps> = ({
   };
 
   return (
-    <div className={`relative w-full min-w-[180px]  self-stretch ${className}`}>
+    <div className={`relative w-full min-w-[180px] self-stretch ${className}`}>
       <h3 className="mb-0.5 w-full justify-start text-xs leading-loose font-semibold text-slate-700">
         {title} {required && <span className="text-red-500"> *</span>}
       </h3>
@@ -294,6 +296,7 @@ export const DateInput: React.FC<DateInputProps> = ({
           readOnly={disabled}
           type="date"
           name={name}
+          min={minDate}
           max={maxDate}
           placeholder={placeholder}
           onChange={handleChange}
@@ -309,7 +312,6 @@ export const DateInput: React.FC<DateInputProps> = ({
     </div>
   );
 };
-
 
 import { useState, useEffect, useRef } from "react";
 
@@ -359,9 +361,13 @@ export const AutoSuggestInput: React.FC<AutoSuggestInputProps> = ({
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "ArrowDown") {
-      setSelectedIndex((prev) => (prev < suggestions.length - 1 ? prev + 1 : 0));
+      setSelectedIndex((prev) =>
+        prev < suggestions.length - 1 ? prev + 1 : 0,
+      );
     } else if (e.key === "ArrowUp") {
-      setSelectedIndex((prev) => (prev > 0 ? prev - 1 : suggestions.length - 1));
+      setSelectedIndex((prev) =>
+        prev > 0 ? prev - 1 : suggestions.length - 1,
+      );
     } else if (e.key === "Enter" && selectedIndex >= 0) {
       handleSelect(suggestions[selectedIndex]);
     } else if (e.key === "Escape") {
@@ -385,7 +391,9 @@ export const AutoSuggestInput: React.FC<AutoSuggestInputProps> = ({
 
       <div
         className={`input-container group flex flex-row items-center justify-between overflow-clip rounded-xl border-2 bg-white transition-all ${
-          disabled ? "cursor-default bg-slate-200" : "cursor-text border-slate-300 focus-within:border-slate-500"
+          disabled
+            ? "cursor-default bg-slate-200"
+            : "cursor-text border-slate-300 focus-within:border-slate-500"
         }`}
       >
         <input
@@ -412,12 +420,12 @@ export const AutoSuggestInput: React.FC<AutoSuggestInputProps> = ({
             <li
               key={item.id}
               onClick={() => handleSelect(item)}
-              className={`flex items-center gap-3 px-3 py-2 cursor-pointer ${
+              className={`flex cursor-pointer items-center gap-3 px-3 py-2 ${
                 index === selectedIndex ? "bg-purple-200" : "hover:bg-gray-100"
               }`}
             >
               <div>
-                <div className="font-medium text-sm">{item.title}</div>
+                <div className="text-sm font-medium">{item.title}</div>
               </div>
             </li>
           ))}
