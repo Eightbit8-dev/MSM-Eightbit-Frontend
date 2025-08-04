@@ -64,6 +64,7 @@ export interface SpareDetails {
   id: number;
   spareName: string;
   partNumber: string;
+  description: string;
   remarks:string;
 }
 

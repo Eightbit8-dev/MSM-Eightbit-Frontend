@@ -49,6 +49,7 @@ const SpareEdit = ({
     spareName: "",
     partNumber: "",
     remarks: "",
+    description:""
   };
 
   useEffect(() => {
@@ -205,6 +206,19 @@ const SpareEdit = ({
                 setNewSpareData({ ...newSpareData, partNumber: value });
               }}
             />
+                      <div className="px-3">
+            <TextArea
+              title="Description"
+              name="description"
+              placeholder="Description"
+              disabled={formState === "display"}
+              inputValue={newSpareData?.description ?? ""}
+              onChange={(value) => {
+                if (!newSpareData) return;
+                setNewSpareData({ ...newSpareData, description: value });
+              }}
+            />
+          </div>
           </section>
           {/* <div className="px-3">
             <TextArea
