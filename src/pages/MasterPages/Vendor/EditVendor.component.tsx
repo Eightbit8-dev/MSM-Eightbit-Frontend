@@ -80,7 +80,15 @@ const VendorEdit = ({
 
   const hasData =
     newVendorData?.vendorName ||
+    newVendorData?.contactPerson ||
+    newVendorData?.contactNumber ||
+    newVendorData?.emailAddress ||
     newVendorData?.addressLine1 ||
+    newVendorData?.addressLine2 ||
+    newVendorData?.gstNumber ||
+    newVendorData?.city ||
+    newVendorData?.state ||
+    newVendorData?.pinCode ||
     newVendorData?.gstNumber;
 
   if (!vendorData || !newVendorData) {

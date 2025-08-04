@@ -160,7 +160,7 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
           disabled
             ? "pointer-events-none cursor-not-allowed opacity-60"
             : "cursor-pointer"
-        } ${isInvalid ? "border-red-500" : isOpen ? "border-slate-500" : "border-slate-300"}`}
+        } ${isInvalid ? "border-red-500" : isOpen ? "scale-105 scale-3d border-slate-500 transition-all duration-200 ease-in-out" : "border-slate-300"}`}
       >
         <span className="overflow-hidden text-sm font-medium text-ellipsis whitespace-nowrap text-slate-600">
           {selected.label}

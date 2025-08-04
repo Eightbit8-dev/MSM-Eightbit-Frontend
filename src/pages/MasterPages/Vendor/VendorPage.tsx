@@ -18,6 +18,7 @@ import { useFetchVendorsPaginated } from "../../../queries/masterQueries/VendorQ
 import { appRoutes } from "../../../routes/appRoutes";
 import type { VendorDetails } from "../../../types/masterApiTypes";
 import type { FormState } from "../../../types/appTypes";
+import MasterSearchBar from "@/components/common/MasterSearchBar";
 
 const VendorsPage = () => {
   const navigate = useNavigate();
@@ -29,8 +30,11 @@ const VendorsPage = () => {
     }
   }, [navigate]);
 
-  const [isDeleteVendorDialogOpen, setIsDeleteVendorDialogOpen] = useState(false);
+  const [isDeleteVendorDialogOpen, setIsDeleteVendorDialogOpen] =
+    useState(false);
+  // store current value or selected value
   const [vendor, setVendor] = useState<VendorDetails | null>(null);
+  // state aka edit or create ertc
   const [formState, setFormState] = useState<FormState>("create");
 
   // Pagination state
@@ -38,21 +42,13 @@ const VendorsPage = () => {
   const [itemsPerPage, setItemsPerPage] = useState(5);
 
   // Fetch vendors with pagination
-  const {
-    data,
-    isLoading,
-    isError,
-    refetch,
-  } = useFetchVendorsPaginated(currentPage, itemsPerPage);
+  const { data, isLoading, isError, refetch } = useFetchVendorsPaginated(
+    currentPage,
+    itemsPerPage,
+  );
 
   const vendorList = data?.data || [];
   const totalPages = data?.totalPages || 0;
-  const totalRecords = data?.totalRecords || 0;
-
-  const handleVendorDeleted = () => {
-    setVendor(null);
-    setFormState("create");
-  };
 
   // Handle page out-of-bounds
   useEffect(() => {
@@ -60,6 +56,9 @@ const VendorsPage = () => {
       setCurrentPage((prev) => prev - 1);
     }
   }, [vendorList, isLoading]);
+
+  // ---- search function vars
+  const [searchValue, setSearchValue] = useState("");
 
   if (isLoading) return <MasterPagesSkeleton />;
   if (isError) return <ErrorComponent />;
@@ -80,46 +79,52 @@ const VendorsPage = () => {
           </DialogBox>
         )}
       </AnimatePresence>
-
       {/* Vendor List */}
-      <section className="table-container flex w-full flex-col gap-3 rounded-[12px] bg-white/80 p-4 shadow-sm md:w-[50%]">
-        <header className="flex flex-col md:flex-row items-center justify-between">
-          <div className="flex flex-start items-center gap-2 w-full">
-            <PageHeader title="Vendor Configuration" />
-          </div>
-                  <footer className="flex w-full flex-row items-center mt-3 md:justify-end gap-2 justify-between">
-                      <DropdownSelect
-            title=""
-            direction="down"
-            options={[5, 10, 15, 20].map((item) => ({
-              id: item,
-              label: `${item} Entries`,
-            }))}
-            selected={{
-              id: itemsPerPage,
-              label: `${itemsPerPage} Entries`,
-            }}
-            onChange={(e) => {
-              setItemsPerPage(e.id);
-              setCurrentPage(1);
-            }}
-          />
-          <PaginationControls
-            totalPages={totalPages}
-            currentPage={currentPage}
-            onPageChange={setCurrentPage}
-          />
-        </footer>
+      <section className="table-container flex w-full flex-col gap-3 rounded-[12px] bg-white/80 px-4 py-4 shadow-sm md:w-[50%]">
+        <header className="flex flex-col items-center justify-between md:flex-row">
+          <PageHeader title="Vendor Configuration" />
+
+          <footer className="flex w-full flex-row items-center justify-between gap-2 md:justify-end">
+            <MasterSearchBar
+              inputValue={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              onSearch={(value) => {
+                console.log("make an api call" + value);
+              }}
+            />
+            <DropdownSelect
+              title=""
+              direction="down"
+              options={[5, 10, 15, 20].map((item) => ({
+                id: item,
+                label: `${item} Entries`,
+              }))}
+              selected={{
+                id: itemsPerPage,
+                label: `${itemsPerPage} Entries`,
+              }}
+              onChange={(e) => {
+                setItemsPerPage(e.id);
+                setCurrentPage(1);
+              }}
+            />
+          </footer>
         </header>
 
-        <div className="tables flex w-full flex-col overflow-clip rounded-[9px]">
+        <div className="tables flex h-full w-full flex-col overflow-clip rounded-[9px]">
           <header className="header flex w-full flex-row items-center gap-2 bg-gray-200 px-3">
-            <p className="w-max min-w-[50px] md:min-w-[100px] px-2 py-4 text-start text-sm font-semibold text-zinc-900">
+            <p className="w-max min-w-[50px] px-2 py-4 text-start text-sm font-semibold text-zinc-900 md:min-w-[100px]">
               S.No
             </p>
-            <p className="w-full text-start text-sm font-semibold text-zinc-900">Name</p>
-            <p className="w-full text-start text-sm font-semibold text-zinc-900">Contact</p>
-            <p className="min-w-[120px] text-start text-sm font-semibold text-zinc-900">Action</p>
+            <p className="w-full text-start text-sm font-semibold text-zinc-900">
+              Name
+            </p>
+            <p className="w-full text-start text-sm font-semibold text-zinc-900">
+              Contact
+            </p>
+            <p className="min-w-[120px] text-start text-sm font-semibold text-zinc-900">
+              Action
+            </p>
           </header>
 
           {vendorList.length === 0 ? (
@@ -136,8 +141,8 @@ const VendorsPage = () => {
                     isSelected
                       ? "bg-gray-100 text-white"
                       : index % 2 === 0
-                      ? "bg-white"
-                      : "bg-slate-50"
+                        ? "bg-white"
+                        : "bg-slate-50"
                   } hover:bg-slate-100 active:bg-slate-200`}
                   onClick={(e) => {
                     e.stopPropagation();
@@ -146,11 +151,15 @@ const VendorsPage = () => {
                     setVendor(item);
                   }}
                 >
-                  <p className="w-max min-w-[50px] md:min-w-[100px] px-2 py-4 text-start text-sm font-medium">
+                  <p className="w-max min-w-[50px] px-2 py-4 text-start text-sm font-medium md:min-w-[100px]">
                     {(currentPage - 1) * itemsPerPage + index + 1}
                   </p>
-                  <p className="w-full text-start text-sm font-medium">{item.vendorName || ""}</p>
-                  <p className="w-full text-start text-sm font-medium">{item.contactPerson || ""}</p>
+                  <p className="w-full text-start text-sm font-medium">
+                    {item.vendorName || ""}
+                  </p>
+                  <p className="w-full text-start text-sm font-medium">
+                    {item.contactPerson || ""}
+                  </p>
 
                   <div className="flex min-w-[120px] flex-row gap-2 text-start text-sm font-medium">
                     <ButtonSm
@@ -185,11 +194,16 @@ const VendorsPage = () => {
         </div>
 
         {/* Pagination Footer */}
-
+        <footer className="flex w-full items-center justify-end">
+          <PaginationControls
+            totalPages={totalPages}
+            currentPage={currentPage}
+            onPageChange={setCurrentPage}
+          />
+        </footer>
       </section>
-
       {/* Vendor Form */}
-      <section className="table-container max-h-full mb-20 md:mb-0 w-full flex-col gap-3 rounded-[12px] bg-white/80 p-4 shadow-sm md:w-[50%]">
+      <section className="table-container mb-20 max-h-full w-full flex-col gap-3 rounded-[12px] bg-white/80 p-4 shadow-sm md:mb-0 md:w-[50%]">
         <VendorEdit
           vendorDetails={vendor}
           formState={formState}

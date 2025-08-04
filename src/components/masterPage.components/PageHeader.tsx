@@ -8,7 +8,7 @@ interface PageTitleAndDescriptionProps {
 const PageHeader: React.FC<PageTitleAndDescriptionProps> = ({ title }) => {
   const navigate = useNavigate();
   return (
-    <div className="flex flex-row items-center justify-start gap-2">
+    <div className="flex flex-row items-center justify-center gap-2 self-center">
       <button
         className="min-h-6 min-w-6 cursor-pointer items-center justify-start rounded-full bg-blue-500"
         onClick={() => navigate(-1)}
