@@ -85,14 +85,14 @@ const MachineEntry = () => {
   return (
     <div className="mb-32 flex flex-col gap-4">
       {/* Header */}
-      <div className="flex items-center justify-between rounded-lg bg-white p-3">
-        <div className="flex flex-col">
+      <div className="flex flex-col md:flex-row gap-2 items-center justify-between rounded-lg bg-white p-3">
+        <div className="flex w-full items-start flex-col">
           <PageHeader title="Machine Entry" />
           <p className="text-sm font-medium text-slate-500">
             Manage your Machine Entries
           </p>
         </div>
-        <div className="flex flex-row items-center gap-2">
+        <div className="flex flex-row items-end justify-end w-full gap-2">
           <ButtonSm
             disabled={selectedIds.length === 0 || isCreateQRPending}
             className={`${

@@ -248,17 +248,22 @@ const ClientEdit = ({
                 setClientData({ ...clientData, city: value })
               }
             />
-            <Input
-              disabled={formState === "display"}
-              title="Pin Code"
-              type="num"
-              inputValue={clientData.pinCode.toString()}
-              name="pinCode"
-              placeholder="Enter pin code"
-              onChange={(value) =>
-                setClientData({ ...clientData, pinCode: Number(value) })
-              }
-            />
+<Input
+  disabled={formState === "display"}
+  title="Pin Code"
+  type="str" // change from "num" to "str"
+  maxLength={6}
+  inputValue={clientData.pinCode === 0 ? "" : clientData.pinCode.toString()}
+  onChange={(value) =>
+    setClientData({
+      ...clientData,
+      pinCode: /^\d*$/.test(value) ? Number(value) : clientData.pinCode,
+    })
+  }
+  name="pinCode"
+  placeholder="Enter pin code"
+/>
+
             <Input
               disabled={formState === "display"}
               title="State"
@@ -282,7 +287,7 @@ const ClientEdit = ({
               }
             />
           </section>
-          <div className="px-3">
+          {/* <div className="px-3">
             <TextArea
               title="Remarks"
               name="Remarks"
@@ -293,7 +298,7 @@ const ClientEdit = ({
                 setClientData({ ...clientData, remarks: value })
               }
             />
-          </div>
+          </div> */}
         </form>
       </div>
     </main>

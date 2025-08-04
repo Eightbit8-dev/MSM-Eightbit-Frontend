@@ -194,7 +194,7 @@ const VendorEdit = ({
               inputValue={newVendorData.contactNumber}
               name="contactNumber"
               placeholder="Enter contact number"
-              maxLength={15}
+              maxLength={10}
               onChange={(value) =>
                 setNewVendorData({ ...newVendorData, contactNumber: value })
               }
@@ -274,7 +274,7 @@ const VendorEdit = ({
               }
               name="PinCode"
               placeholder="Enter PinCode"
-              maxLength={150}
+              maxLength={6}
             />
 
             <Input
@@ -290,7 +290,7 @@ const VendorEdit = ({
               }
             />
           </section>
-          <div className="px-3">
+          {/* <div className="px-3">
             <TextArea
               title="Remarks"
               name="Remarks"
@@ -301,7 +301,7 @@ const VendorEdit = ({
                 setNewVendorData({ ...newVendorData, remarks: value })
               }
             />
-          </div>
+          </div> */}
         </form>
       </div>
     </main>

@@ -238,7 +238,7 @@ const ProductEdit = ({
               }
             />
           </section>
-          <div className="px-3">
+          {/* <div className="px-3">
             <TextArea
               title="Remarks"
               name="Remarks"
@@ -249,7 +249,7 @@ const ProductEdit = ({
                 setProductData({ ...productData, remarks: value })
               }
             />
-          </div>
+          </div> */}
         </form>
       </div>
 
