@@ -2,14 +2,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import axios from "axios";
 import Cookies from "js-cookie";
-import type {
-  ServiceEntryRequest,
-  ServiceEntryResponse,
-} from "@/types/transactionTypes";
+import type { ServiceEntryResponse } from "@/types/transactionTypes";
 import axiosInstance from "@/utils/axios";
 import { useNavigate } from "react-router-dom";
 import { apiRoutes } from "@/routes/apiRoutes";
-import { convertToBackendDate } from "@/utils/commonUtils";
 
 export const useCreateServiceEntry = () => {
   const navigate = useNavigate();

@@ -58,21 +58,6 @@ const DashBoardPage: React.FC = () => {
 
   return (
     <div className="dashboard-page-container flex w-full flex-col px-6 py-4">
-      {/* Header */}
-      <section className="mb-6 flex items-center gap-2 text-lg font-medium">
-        <button className="back-button cursor-pointer rounded-full bg-slate-100 p-1 transition-all duration-150 ease-in-out hover:bg-slate-200 active:bg-blue-500">
-          <img
-            className="rotate-180 transform"
-            src="./icons/arrow-icon.svg"
-            alt="back"
-          />
-        </button>
-        <h3 className="text-zinc-800">
-          Service Requests{" "}
-          <span className="text-blue-500">({data?.totalRecords})</span>
-        </h3>
-      </section>
-
       {/* Dash Stats Boxes */}
       <section className="mb-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {stats.map((item, index) => (

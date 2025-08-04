@@ -176,7 +176,7 @@ const MachineEntry = () => {
             {/* Table Container */}
             <div className="tables flex min-h-[300px] w-full flex-col overflow-x-auto bg-white shadow-sm md:overflow-x-auto md:rounded-[9px]">
               {/* Header */}
-              <header className="header flex w-full min-w-max flex-row items-center justify-between bg-slate-200 px-3 py-3 md:min-w-max">
+              <header className="header flex min-w-max flex-row items-center justify-between bg-slate-200 px-3 py-3 md:min-w-max">
                 {/* S.No + Checkbox */}
                 <div className="flex w-20 min-w-20 items-center justify-start gap-2">
                   <p className="w-10 text-sm font-semibold text-zinc-900">
