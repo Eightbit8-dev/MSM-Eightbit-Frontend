@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Users,
   Wrench,
@@ -15,6 +15,7 @@ const stats = [
     borderColor: "border-amber-500",
     icon: Wrench,
     iconBg: "bg-amber-50",
+    navigateUrl: appRoutes.transactionRoutes.children.machineEntry,
   },
   {
     title: "Breakdown Machine",
@@ -23,6 +24,7 @@ const stats = [
     borderColor: "border-red-500",
     icon: AlertTriangle,
     iconBg: "bg-red-50",
+    navigateUrl: appRoutes.transactionRoutes.children.serviceRequest,
   },
   {
     title: "Service Machine",
@@ -31,6 +33,7 @@ const stats = [
     borderColor: "border-blue-500",
     icon: CheckCircle,
     iconBg: "bg-blue-50",
+    navigateUrl: appRoutes.transactionRoutes.children.serviceEntry,
   },
   {
     title: "Assigned Engineers",
@@ -39,6 +42,7 @@ const stats = [
     borderColor: "border-green-500",
     icon: UserCheck,
     iconBg: "bg-green-50",
+    navigateUrl: "",
   },
   {
     title: "Available Engineers",
@@ -47,6 +51,7 @@ const stats = [
     borderColor: "border-purple-500",
     icon: Users,
     iconBg: "bg-purple-50",
+    navigateUrl: "",
   },
   {
     title: "Pending Requests",
@@ -55,6 +60,7 @@ const stats = [
     borderColor: "border-gray-500",
     icon: AlertTriangle,
     iconBg: "bg-gray-50",
+    navigateUrl: "",
   },
 ];
 
@@ -101,7 +107,8 @@ const DashBoardPage = () => {
             return (
               <div
                 key={index}
-                className={`group relative flex transform flex-row items-center justify-between overflow-hidden rounded-2xl border-2 border-slate-300 bg-white p-6 transition-all duration-300 hover:scale-[1.02]`}
+                onClick={() => navigate(item.navigateUrl)}
+                className={`group relative flex transform cursor-pointer flex-row items-center justify-between overflow-hidden rounded-2xl border-2 border-slate-300 bg-white p-6 transition-all duration-300 hover:scale-[1.02] active:scale-105 active:scale-3d`}
               >
                 {/* Content */}
                 <div className="flex flex-col items-start justify-start gap-3">
@@ -147,7 +154,7 @@ const DashBoardPage = () => {
             {data?.data.map((request) => (
               <div
                 key={request.id}
-                className="rounded-2xl border border-slate-300 bg-white p-6 transition-all duration-300"
+                className="rounded-2xl border border-slate-300 bg-white p-3 transition-all duration-300"
               >
                 <div className="flex flex-col gap-2">
                   <div className="flex flex-row items-center justify-between">

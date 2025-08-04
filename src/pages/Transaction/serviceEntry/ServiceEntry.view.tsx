@@ -2,6 +2,8 @@ import Input, { DateInput } from "@/components/common/Input";
 import DropdownSelect from "@/components/common/DropDown";
 import type { ServiceEntryData } from "@/types/transactionTypes";
 import ButtonSm from "@/components/common/Buttons";
+import PageHeader from "@/components/masterPage.components/PageHeader";
+import { convertToFrontendDate } from "@/utils/commonUtils";
 
 interface ServiceEntryDisplayProps {
   data: ServiceEntryData;
@@ -23,6 +25,7 @@ const ServiceEntryDisplay: React.FC<ServiceEntryDisplayProps> = ({
     <div className="flex min-w-full flex-col overflow-scroll rounded-lg">
       <div className="flex w-full flex-row items-center justify-between">
         <h2 className="mb-4 text-xl font-semibold">Service Entry Details</h2>
+
         <ButtonSm
           className="items-center justify-center bg-blue-500 text-center text-white hover:bg-blue-700 active:bg-blue-500"
           state="default"
@@ -43,7 +46,7 @@ const ServiceEntryDisplay: React.FC<ServiceEntryDisplayProps> = ({
         <DateInput
           title="Service Date"
           disabled={true}
-          value={data.serviceDate}
+          value={convertToFrontendDate(data.serviceDate || "")}
           onChange={() => {}}
           required
         />

@@ -27,6 +27,7 @@ import MultiSelectDropdown from "@/components/common/MultiSelectDropDown";
 import { useFetchSparesOptions } from "@/queries/masterQueries/SpareQuery";
 import RequestEntrySkeleton from "./ServiceEntryFormSkeleton";
 import SparePartsManager from "./SparesImageUploader.component";
+import PageHeader from "@/components/masterPage.components/PageHeader";
 
 interface SparePartData {
   spareId: number;
@@ -237,8 +238,8 @@ const RequestEntry = () => {
   if (error || !serviceRequestData) return <p>Something went wrong</p>;
 
   return (
-    <div className="w-full rounded-lg bg-white p-6 shadow-md md:mb-0">
-      <h2 className="mb-4 text-xl font-semibold">Service Entry</h2>
+    <div className="flex w-full flex-col gap-3 rounded-lg bg-white p-6 shadow-md md:mb-0">
+      <PageHeader title="Service Entry Detail" />
       <form
         onSubmit={handleSubmit}
         className="grid grid-cols-1 items-start gap-4 md:grid-cols-2"
@@ -419,7 +420,7 @@ const RequestEntry = () => {
           inputValue={formData.remarks}
           onChange={(val) => setFormData({ ...formData, remarks: val })}
         />
-        <div className="col-span-1 mt-4 flex justify-end md:col-span-2">
+        <div className="col-span-1 flex justify-end md:col-span-2">
           <ButtonSm
             isPending={isCreateServiceEntryPending}
             type="submit"
