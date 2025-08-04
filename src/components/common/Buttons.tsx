@@ -1,3 +1,4 @@
+import { motion } from "motion/react";
 import React from "react";
 
 type ButtonState = "default" | "outline";
@@ -25,7 +26,10 @@ const ButtonSm: React.FC<ButtonSmProps> = ({
   iconPosition = "left", // default position
 }) => {
   return (
-    <button
+    <motion.button
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, delay: 0.2 }}
       type={type}
       disabled={disabled}
       className={`btn-sm flex cursor-pointer flex-row items-center gap-2 rounded-[9px] px-3 py-2 text-sm transition-all duration-200 ease-in-out select-none ${
@@ -45,7 +49,7 @@ const ButtonSm: React.FC<ButtonSmProps> = ({
         <img src={imgUrl} alt="" className="min-h-4 min-w-4" />
       )}
       {isPending && <Spinner size="sm" className="text-white" />}
-    </button>
+    </motion.button>
   );
 };
 

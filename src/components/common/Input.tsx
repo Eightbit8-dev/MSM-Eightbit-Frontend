@@ -1,3 +1,4 @@
+import { motion } from "motion/react";
 import React from "react";
 
 type InputType = "str" | "num";
@@ -102,7 +103,12 @@ const Input = <T extends string | number>({
   };
 
   return (
-    <div className="relative w-full min-w-[180px] self-stretch">
+    <motion.div
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, delay: 0.2 }}
+      className="relative w-full min-w-[180px] self-stretch"
+    >
       <h3
         className={`mb-0.5 w-full justify-start ${viewMode ? "text-base font-medium text-slate-600" : "text-xs leading-loose font-semibold text-slate-700"}`}
       >
@@ -134,7 +140,7 @@ const Input = <T extends string | number>({
           minLength={type === "str" ? minLength : undefined}
         />
       </div>
-    </div>
+    </motion.div>
   );
 };
 
@@ -219,7 +225,12 @@ export const TimeInput: React.FC<TimeInputProps> = ({
   };
 
   return (
-    <div className="relative w-full min-w-[180px] self-stretch">
+    <motion.div
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, delay: 0.2 }}
+      className="relative w-full min-w-[180px] self-stretch"
+    >
       <h3 className="mb-0.5 w-full justify-start text-xs leading-loose font-semibold text-slate-700">
         {title}
       </h3>
@@ -246,7 +257,7 @@ export const TimeInput: React.FC<TimeInputProps> = ({
           className="min-h-max w-full cursor-pointer px-3 py-3 text-start text-sm font-medium text-slate-600 autofill:text-black focus:outline-none"
         />
       </div>
-    </div>
+    </motion.div>
   );
 };
 
@@ -280,7 +291,12 @@ export const DateInput: React.FC<DateInputProps> = ({
   };
 
   return (
-    <div className={`relative w-full min-w-[180px] self-stretch ${className}`}>
+    <motion.div
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, delay: 0.2 }}
+      className={`relative w-full min-w-[180px] self-stretch ${className}`}
+    >
       <h3 className="mb-0.5 w-full justify-start text-xs leading-loose font-semibold text-slate-700">
         {title} {required && <span className="text-red-500"> *</span>}
       </h3>
@@ -309,7 +325,7 @@ export const DateInput: React.FC<DateInputProps> = ({
           className="min-h-max w-full cursor-pointer px-3 py-3 text-start text-sm font-medium text-slate-600 autofill:text-black focus:outline-none"
         />
       </div>
-    </div>
+    </motion.div>
   );
 };
 

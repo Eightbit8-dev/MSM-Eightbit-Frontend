@@ -128,7 +128,10 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
   const isInvalid = required && (selected?.id ?? 0) === 0 && wasSubmitted;
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, delay: 0.2 }}
       className={`relative ${className} select-none disabled:cursor-not-allowed`}
       ref={dropdownRef}
     >
@@ -196,7 +199,7 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
           ))}
         </div>
       )}
-    </div>
+    </motion.div>
   );
 };
 
