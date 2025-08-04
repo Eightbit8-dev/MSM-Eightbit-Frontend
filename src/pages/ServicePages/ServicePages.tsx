@@ -21,7 +21,7 @@ const ServicePages = () => {
     return <div className="p-4 text-red-500">Failed to load data.</div>;
   }
   return (
-    <div>
+    <div className="p-5 bg-white flex flex-col gap-3 shadow-md rounded-lg">
       {/* Service Requests Section */}
       <div className="flex w-full flex-row items-center justify-between">
         <div className="flex flex-col gap-0">
@@ -39,8 +39,8 @@ const ServicePages = () => {
           onPageChange={setPage}
         />
       </div>
-      <div className="flex flex-col gap-3">
-        <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-6">
           {data?.data.map((request) => (
             <div
               key={request.id}
@@ -77,21 +77,10 @@ const ServicePages = () => {
                   </div>
                   {/* Action Buttons */}
                   <footer className="flex h-min flex-col gap-3 md:flex-row">
-                    <ButtonSm
-                      className="h-min font-medium"
-                      text="View"
-                      state="outline"
-                      type="button"
-                      onClick={() =>
-                        navigate(
-                          appRoutes.transactionRoutes.children.serviceRequest,
-                        )
-                      }
-                    />
 
                     <ButtonSm
                       className="font-medium text-white"
-                      text={"Report"}
+                      text={"View"}
                       state="default"
                       type="submit"
                       onClick={() =>
