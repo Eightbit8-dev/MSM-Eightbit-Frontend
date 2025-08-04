@@ -113,6 +113,20 @@ const SideNav: React.FC = () => {
                 )
               }
             />
+
+            <NavigationButton
+              labelName="Service"
+              isActive={isRouteActive(
+                appRoutes.ServiceRoutes?.servicePage || "/Service",
+              )}
+              iconSrc="/icons/sideNavIcons/reports-icon.svg"
+              activeIconSrc="/icons/sideNavIcons/reports-icon-active.svg"
+              onClick={() =>
+                navigateToRoute(
+                  appRoutes.ServiceRoutes?.servicePage || "/Service",
+                )
+              }
+            />
             {/* --install pwa button */}
             {/* <InstallButton /> */}
           </div>

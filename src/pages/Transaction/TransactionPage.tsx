@@ -41,7 +41,7 @@ export const TransactionPage = () => {
   ];
   return (
     <div className="flex w-full max-w-[1590px] origin-top flex-col gap-8">
-      <div className="flex items-center justify-between">
+      {/* <div className="flex items-center justify-between">
         <div className="flex flex-col">
           <div>
             <p className="text-xl font-semibold text-slate-800">
@@ -54,7 +54,7 @@ export const TransactionPage = () => {
             </p>
           </div>
         </div>
-      </div>
+      </div> */}
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {configCards.map((card, index) => (
           <ConfigCard

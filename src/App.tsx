@@ -6,6 +6,7 @@ import { Spinner } from "./components/layout/Spinner";
 import { appRoutes } from "./routes/appRoutes";
 import { ErrorPageContent } from "./pages/ErrorPage";
 import ServiceEntryNew from "./pages/Transaction/serviceEntry/ServiceEntryNew";
+import ServicePages from "./pages/ServicePages/ServicePages";
 
 
 // 🌐 Global Pages
@@ -160,7 +161,11 @@ const App = () => {
             path={appRoutes.transactionRoutes.children.serviceEntryNew}
             element={<ServiceEntryNew/>}
             />
-
+            
+            <Route
+            path={appRoutes.ServiceRoutes.servicePage}
+            element={<ServicePages/>}
+            />
             {/*-------------------------------- 📷 QR Scanner */}
             <Route path={appRoutes.scanPage} element={<QRScanner />} />
           </Route>

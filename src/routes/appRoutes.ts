@@ -55,4 +55,12 @@ export const appRoutes = {
       // e.g., monthly: "/reports/monthly"
     },
   },
+
+    // -------- Reports Routes --------
+  ServiceRoutes: {
+    servicePage: "/services",
+    children: {
+      // e.g., monthly: "/reports/monthly"
+    },
+  },
 };

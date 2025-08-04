@@ -27,13 +27,22 @@ const stats = [
     navigateUrl: appRoutes.transactionRoutes.children.serviceRequest,
   },
   {
-    title: "Service Machine",
+    title: "Service complted ",
     value: "03",
     textColor: "text-blue-500",
     borderColor: "border-blue-500",
     icon: CheckCircle,
     iconBg: "bg-blue-50",
     navigateUrl: appRoutes.transactionRoutes.children.serviceEntry,
+  },
+    {
+    title: "service peding",
+    value: "03",
+    textColor: "text-gray-500",
+    borderColor: "border-gray-500",
+    icon: AlertTriangle,
+    iconBg: "bg-gray-50",
+    navigateUrl: "",
   },
   {
     title: "Assigned Engineers",
@@ -53,15 +62,7 @@ const stats = [
     iconBg: "bg-purple-50",
     navigateUrl: "",
   },
-  {
-    title: "Pending Requests",
-    value: "03",
-    textColor: "text-gray-500",
-    borderColor: "border-gray-500",
-    icon: AlertTriangle,
-    iconBg: "bg-gray-50",
-    navigateUrl: "",
-  },
+
 ];
 
 import { useNavigate } from "react-router-dom";
@@ -91,14 +92,14 @@ const DashBoardPage = () => {
     <div className="min-h-screen rounded-xl bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50 p-3 shadow-sm md:p-4 lg:p-6">
       <div className="flex flex-col gap-4">
         {/* Header */}
-        <div className="flex flex-col gap-0">
+        {/* <div className="flex flex-col gap-0">
           <h1 className="mb-2 text-xl leading-tight font-bold text-gray-900">
             Dashboard
           </h1>
           <p className="text-base leading-tight text-gray-600">
             Monitor your machine and engineer status
           </p>
-        </div>
+        </div> */}
 
         {/* Stats Grid */}
         <section className="mb-4 grid grid-cols-2 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
