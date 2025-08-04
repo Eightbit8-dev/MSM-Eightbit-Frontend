@@ -258,7 +258,7 @@ const ServiceEntryNew = () => {
     <div className="w-full rounded-lg bg-white p-6 shadow-md md:mb-0">
       <div className="flex items-center mb-2 justify-between ">
         <PageHeader
-        title="Service Entry"
+        title="New Service Entry"
         />
                     <ButtonSm
               type="button"
