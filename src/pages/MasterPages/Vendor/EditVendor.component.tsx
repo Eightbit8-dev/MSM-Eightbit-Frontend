@@ -188,9 +188,9 @@ const VendorEdit = ({
               required
               disabled={formState === "display"}
               title="Contact Number"
-              min={10}
-              max={10}
-              type="str"
+              min={0}
+              max={9999999999}
+              type="num"
               inputValue={newVendorData.contactNumber}
               name="contactNumber"
               placeholder="Enter contact number"
@@ -213,7 +213,7 @@ const VendorEdit = ({
             />
             <Input
               disabled={formState === "display"}
-              title="Address Line1"
+              title="Address Line 1"
               type="str"
               inputValue={newVendorData.addressLine1}
               name="Address Line1"
@@ -225,7 +225,7 @@ const VendorEdit = ({
             />
             <Input
               disabled={formState === "display"}
-              title="Address Line2"
+              title="Address Line 2"
               type="str"
               inputValue={newVendorData.addressLine2}
               name="Address Line2"

@@ -215,6 +215,7 @@ const ServiceEngineerEdit = ({
               disabled={formState === "display"}
               title="Mobile Number"
               type="num"
+              prefixText="+91"
               inputValue={
                 newServiceEngineerData.engineerMobile === 0
                   ? ""
@@ -222,7 +223,7 @@ const ServiceEngineerEdit = ({
               }
               name="engineerMobile"
               placeholder="Enter mobile number"
-              maxLength={200}
+              max={9999999999}
               onChange={(value) =>
                 setNewServiceEngineerData({
                   ...newServiceEngineerData,
