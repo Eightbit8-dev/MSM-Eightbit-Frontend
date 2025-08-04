@@ -12,8 +12,11 @@ import { DeleteEntryDialogBox } from "./ServiceEntryDelete.Dialog"; // <- your d
 import type { ServiceEntryData } from "@/types/transactionTypes";
 import ServiceEntryDisplay from "./ServiceEntry.view";
 import { generateReferenceNumber } from "@/utils/commonUtils";
+import { appRoutes } from "@/routes/appRoutes";
+import {  useNavigate } from "react-router-dom";
 
 const ServiceEntryPage = () => {
+  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
 
@@ -42,34 +45,7 @@ const ServiceEntryPage = () => {
           text={"New Entry"}
           state="default"
           type="button"
-          onClick={() => {
-            setIsViewFormOpen(true);
-            setSelectedEntry({
-              id: 0,
-              refNumber: generateReferenceNumber("SE"),
-              serviceDate: new Date().toISOString().split("T")[0], // today's date in YYYY-MM-DD
-              clientName: "Dummy Client Pvt Ltd",
-              maintenanceType: "Preventive",
-              maintenanceSubType: "Dummy Subtype",
-              serviceRequestRef: "SR-00000",
-              vendorName: "Dummy Vendor Ltd",
-              engineerName: "John Doe",
-              engineerMobile: "0000000000",
-              machineDetails: "SINGLE NEEDLE - BRAND - MODEL - SERIAL",
-              engineerDiagnostics: "No issues found in dummy check.",
-              serviceStatus: "COMPLETED",
-              remarks: "Dummy remarks for the test entry.",
-              spareParts: [
-                {
-                  spareName: "DUMMY PART",
-                  partNumber: "1234-ABCD",
-                  quantity: 1,
-                  sparePhotoUrl: null,
-                  complaintSparePhotoUrl: null,
-                },
-              ],
-            });
-          }}
+          onClick={() => {navigate(appRoutes.transactionRoutes.children.serviceEntryNew)}}
           iconPosition="right"
           imgUrl="/icons/plus-icon.svg"
         />
