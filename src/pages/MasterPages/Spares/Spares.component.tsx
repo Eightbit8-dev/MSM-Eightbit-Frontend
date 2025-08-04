@@ -49,7 +49,7 @@ const SpareEdit = ({
     spareName: "",
     partNumber: "",
     remarks: "",
-    description:""
+    description: "",
   };
 
   useEffect(() => {
@@ -206,7 +206,7 @@ const SpareEdit = ({
                 setNewSpareData({ ...newSpareData, partNumber: value });
               }}
             />
-                      <div className="px-3">
+
             <TextArea
               title="Description"
               name="description"
@@ -218,7 +218,6 @@ const SpareEdit = ({
                 setNewSpareData({ ...newSpareData, description: value });
               }}
             />
-          </div>
           </section>
           {/* <div className="px-3">
             <TextArea
