@@ -27,7 +27,7 @@ const ServiceEntryPage = () => {
 
   const paginatedData = data?.data || [];
   const totalPages = data?.totalPages || 0;
-  const navigate = useNavigate();
+
   return (
     <div className="mb-32 flex flex-col gap-4">
       <div className="flex items-center justify-between rounded-lg bg-white p-3">

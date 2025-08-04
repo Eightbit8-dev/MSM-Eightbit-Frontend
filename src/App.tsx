@@ -5,7 +5,7 @@ import ProtectedRoute from "./components/layout/ProtectedRoute";
 import { Spinner } from "./components/layout/Spinner";
 import { appRoutes } from "./routes/appRoutes";
 import { ErrorPageContent } from "./pages/ErrorPage";
-import ServiceEntryDisplay from "./pages/Transaction/serviceEntry/ServiceEntry.view";
+
 
 // 🌐 Global Pages
 const SignInPage = lazy(() => import("./pages/SignInPage"));

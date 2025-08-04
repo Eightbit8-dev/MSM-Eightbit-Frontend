@@ -7,13 +7,13 @@ import {
   useEditVendor,
 } from "../../../queries/masterQueries/VendorQuery";
 import type { VendorDetails } from "../../../types/masterApiTypes";
-import TextArea from "@/components/common/Textarea";
+
 
 const VendorEdit = ({
   vendorDetails,
   formState,
   setFormState,
-  setVendorData,
+
 }: {
   vendorDetails: VendorDetails | null;
   formState: FormState;
