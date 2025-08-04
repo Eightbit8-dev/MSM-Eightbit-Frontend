@@ -11,9 +11,8 @@ import { useFetchEntry } from "@/queries/TranscationQueries/ServiceEntryQuery";
 import { DeleteEntryDialogBox } from "./ServiceEntryDelete.Dialog"; // <- your dialog file
 import type { ServiceEntryData } from "@/types/transactionTypes";
 import ServiceEntryDisplay from "./ServiceEntry.view";
-import { generateReferenceNumber } from "@/utils/commonUtils";
 import { appRoutes } from "@/routes/appRoutes";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const ServiceEntryPage = () => {
   const navigate = useNavigate();
@@ -45,7 +44,9 @@ const ServiceEntryPage = () => {
           text={"New Entry"}
           state="default"
           type="button"
-          onClick={() => {navigate(appRoutes.transactionRoutes.children.serviceEntryNew)}}
+          onClick={() => {
+            navigate(appRoutes.transactionRoutes.children.serviceEntryNew);
+          }}
           iconPosition="right"
           imgUrl="/icons/plus-icon.svg"
         />
