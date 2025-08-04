@@ -252,7 +252,7 @@ const ServiceEngineerEdit = ({
               required
             />
           </section>
-          <div className="px-3">
+          {/* <div className="px-3">
             <TextArea
               title="Remarks"
               name="Remarks"
@@ -266,7 +266,7 @@ const ServiceEngineerEdit = ({
                 })
               }
             />
-          </div>
+          </div> */}
         </form>
       </div>
     </main>

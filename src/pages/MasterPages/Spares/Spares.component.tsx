@@ -206,7 +206,7 @@ const SpareEdit = ({
               }}
             />
           </section>
-          <div className="px-3">
+          {/* <div className="px-3">
             <TextArea
               title="Remarks"
               name="Remarks"
@@ -218,7 +218,7 @@ const SpareEdit = ({
                 setNewSpareData({ ...newSpareData, remarks: value });
               }}
             />
-          </div>
+          </div> */}
         </form>
       </motion.div>
       <SpareImportModal
