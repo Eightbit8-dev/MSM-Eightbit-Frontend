@@ -44,6 +44,8 @@ import {
   useFetchProductsType,
   useFetchProductDropdownOptions,
 } from "@/queries/masterQueries/ProductQuery";
+import { useFetchProblemOptions } from "@/queries/masterQueries/Problem-types";
+import PageHeader from "@/components/masterPage.components/PageHeader";
 
 const ServiceEntryNew = () => {
   const getCurrentDate = () => {
@@ -63,6 +65,7 @@ const ServiceEntryNew = () => {
     serviceStatus: "",
     remarks: "",
     complaintSparePhotoUrl: "",
+    // complaintDetailsId: 0,
     spareParts: [],
   };
 
@@ -97,6 +100,7 @@ const ServiceEntryNew = () => {
   const [selectedSerial, setSelectedSerial] =
     useState<DropdownOption>(defaultOption);
 
+
   // Machine dropdown options from API
   const { data: typeOptions = [] } = useFetchProductsType();
   const { data: brandOptions = [] } = useFetchProductDropdownOptions({
@@ -114,6 +118,10 @@ const ServiceEntryNew = () => {
     brand: selectedBrand?.label || "",
     model: selectedModel?.label || "",
   });
+
+
+  const { data: complaint = [], isLoading: isComplaintLoading } =
+    useFetchProblemOptions();
 
   const { data: engineerOptions = [], isLoading: isEngineerOptionsLoading } =
     useFetchServiceEngineerOptions();
@@ -192,6 +200,9 @@ const ServiceEntryNew = () => {
     );
     formDataToSend.append("vendorId", formData.vendorId.toString());
     formDataToSend.append("engineerId", formData.engineerId.toString());
+    if (selectedComplaint && selectedComplaint.id !== 0) {
+      formDataToSend.append("complaintDetailsId", selectedComplaint.id.toString());
+    }
     formDataToSend.append("engineerDiagnostics", formData.engineerDiagnostics);
     formDataToSend.append("serviceStatus", formData.serviceStatus);
     formDataToSend.append("remarks", formData.remarks);
@@ -238,13 +249,25 @@ const ServiceEntryNew = () => {
     isEngineerOptionsLoading ||
     isVendorLoading ||
     isSparesLoading ||
-    isClientOptionsLoading
+    isClientOptionsLoading ||
+    isComplaintLoading
   )
     return <RequestEntrySkeleton />;
 
   return (
     <div className="w-full rounded-lg bg-white p-6 shadow-md md:mb-0">
-      <h2 className="mb-4 text-xl font-semibold">Service Entry</h2>
+      <div className="flex items-center mb-2 justify-between ">
+        <PageHeader
+        title="Service Entry"
+        />
+                    <ButtonSm
+              type="button"
+              text="Scan QR"
+              state="default"
+              className="mb-4 w-fit border-blue-400 text-white"
+              onClick={() =>{} }
+            />
+      </div>
       <form
         onSubmit={handleSubmit}
         className="grid grid-cols-1 items-start gap-4 md:grid-cols-2"
@@ -252,6 +275,7 @@ const ServiceEntryNew = () => {
         <Input
           title="Reference No"
           name="referenceNo"
+          disabled
           inputValue={formData.refNumber}
           onChange={(val) => {
             setFormData({ ...formData, refNumber: val });
@@ -300,6 +324,8 @@ const ServiceEntryNew = () => {
             }
           />
 
+
+
           {formData.maintenanceType === "Non-Warranty" && (
             <DropdownSelect
               required={formData.maintenanceType === "Non-Warranty"}
@@ -318,14 +344,19 @@ const ServiceEntryNew = () => {
           )}
         </div>
 
-        {/* <DropdownSelect
-            title="Client"
-            direction="down"
-            options={clientOptions}
-            selected={selectedClient}
-            onChange={(val) => setSelectedClient(val)}
-            disabled={isView}
-          /> */}
+        <DropdownSelect
+          title="Complaint"
+          options={complaint}
+          selected={selectedComplaint}
+          onChange={(val) => {
+            setSelectedComplaint(val);
+            setFormData(prev => ({
+              ...prev,
+              complaintDetailsId: val.id
+            }));
+          }}
+          required
+        />
 
         <DropdownSelect
           required
@@ -453,6 +484,7 @@ const ServiceEntryNew = () => {
             setFormData({ ...formData, serviceStatus: val.label })
           }
         />
+
 
         <Input
           title="Remarks"
