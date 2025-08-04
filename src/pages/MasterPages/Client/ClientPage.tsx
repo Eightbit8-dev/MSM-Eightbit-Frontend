@@ -48,7 +48,7 @@ const ClientPage = () => {
 
   const clientList = data?.data || [];
   const totalPages = data?.totalPages || 0;
-  const totalRecords = data?.totalRecords || 0;
+
 
   const handleClientDeleted = () => {
     setClient({

@@ -8,12 +8,10 @@ import {
 } from "../../../queries/masterQueries/VendorQuery";
 import type { VendorDetails } from "../../../types/masterApiTypes";
 
-
 const VendorEdit = ({
   vendorDetails,
   formState,
   setFormState,
-
 }: {
   vendorDetails: VendorDetails | null;
   formState: FormState;
@@ -189,6 +187,7 @@ const VendorEdit = ({
               disabled={formState === "display"}
               title="Contact Number"
               min={0}
+              prefixText="+91"
               max={9999999999}
               type="num"
               inputValue={newVendorData.contactNumber}

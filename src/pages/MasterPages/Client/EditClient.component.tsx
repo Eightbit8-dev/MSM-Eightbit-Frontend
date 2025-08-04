@@ -7,7 +7,6 @@ import {
   useCreateClient,
   useEditClient,
 } from "../../../queries/masterQueries/ClientQuery";
-import TextArea from "@/components/common/Textarea";
 
 const ClientEdit = ({
   clientDetails,
@@ -196,11 +195,12 @@ const ClientEdit = ({
               required
               disabled={formState === "display"}
               title="Contact Number"
-              type="str"
+              type="num"
+              prefixText="+91"
               inputValue={clientData.contactNumber}
               name="contactNumber"
               placeholder="Enter contact number"
-              maxLength={10}
+              maxLength={9999999999}
               onChange={(value) =>
                 setClientData({ ...clientData, contactNumber: value })
               }
@@ -248,21 +248,25 @@ const ClientEdit = ({
                 setClientData({ ...clientData, city: value })
               }
             />
-<Input
-  disabled={formState === "display"}
-  title="Pin Code"
-  type="str" // change from "num" to "str"
-  maxLength={6}
-  inputValue={clientData.pinCode === 0 ? "" : clientData.pinCode.toString()}
-  onChange={(value) =>
-    setClientData({
-      ...clientData,
-      pinCode: /^\d*$/.test(value) ? Number(value) : clientData.pinCode,
-    })
-  }
-  name="pinCode"
-  placeholder="Enter pin code"
-/>
+            <Input
+              disabled={formState === "display"}
+              title="Pin Code"
+              type="str" // change from "num" to "str"
+              maxLength={6}
+              inputValue={
+                clientData.pinCode === 0 ? "" : clientData.pinCode.toString()
+              }
+              onChange={(value) =>
+                setClientData({
+                  ...clientData,
+                  pinCode: /^\d*$/.test(value)
+                    ? Number(value)
+                    : clientData.pinCode,
+                })
+              }
+              name="pinCode"
+              placeholder="Enter pin code"
+            />
 
             <Input
               disabled={formState === "display"}
