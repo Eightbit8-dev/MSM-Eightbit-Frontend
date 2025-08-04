@@ -7,13 +7,13 @@ import {
   useEditVendor,
 } from "../../../queries/masterQueries/VendorQuery";
 import type { VendorDetails } from "../../../types/masterApiTypes";
-import TextArea from "@/components/common/Textarea";
+
 
 const VendorEdit = ({
   vendorDetails,
   formState,
   setFormState,
-  setVendorData,
+
 }: {
   vendorDetails: VendorDetails | null;
   formState: FormState;
@@ -188,13 +188,13 @@ const VendorEdit = ({
               required
               disabled={formState === "display"}
               title="Contact Number"
-              min={10}
-              max={10}
-              type="str"
+              min={0}
+              max={9999999999}
+              type="num"
               inputValue={newVendorData.contactNumber}
               name="contactNumber"
               placeholder="Enter contact number"
-              maxLength={15}
+              maxLength={10}
               onChange={(value) =>
                 setNewVendorData({ ...newVendorData, contactNumber: value })
               }
@@ -213,7 +213,7 @@ const VendorEdit = ({
             />
             <Input
               disabled={formState === "display"}
-              title="Address Line1"
+              title="Address Line 1"
               type="str"
               inputValue={newVendorData.addressLine1}
               name="Address Line1"
@@ -225,7 +225,7 @@ const VendorEdit = ({
             />
             <Input
               disabled={formState === "display"}
-              title="Address Line2"
+              title="Address Line 2"
               type="str"
               inputValue={newVendorData.addressLine2}
               name="Address Line2"
@@ -274,7 +274,7 @@ const VendorEdit = ({
               }
               name="PinCode"
               placeholder="Enter PinCode"
-              maxLength={150}
+              maxLength={6}
             />
 
             <Input
@@ -290,7 +290,7 @@ const VendorEdit = ({
               }
             />
           </section>
-          <div className="px-3">
+          {/* <div className="px-3">
             <TextArea
               title="Remarks"
               name="Remarks"
@@ -301,7 +301,7 @@ const VendorEdit = ({
                 setNewVendorData({ ...newVendorData, remarks: value })
               }
             />
-          </div>
+          </div> */}
         </form>
       </div>
     </main>

@@ -10,23 +10,30 @@ import {
   useEditSpare,
 } from "../../../queries/masterQueries/SpareQuery";
 import TextArea from "@/components/common/Textarea";
+import SpareImportModal from "./SpareImportModal"; // Adjust the import path based on your structure
 
 const containerVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
 };
 
+interface SpareEditProps {
+  spareDetails: SpareDetails | null;
+  formState: FormState;
+  setFormState: React.Dispatch<React.SetStateAction<FormState>>;
+  setSelectedSpare: React.Dispatch<React.SetStateAction<SpareDetails | null>>;
+  isImportModalOpen: boolean;
+  setIsImportModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 const SpareEdit = ({
   spareDetails,
   formState,
   setFormState,
   setSelectedSpare,
-}: {
-  spareDetails: SpareDetails | null;
-  formState: FormState;
-  setFormState: React.Dispatch<React.SetStateAction<FormState>>;
-  setSelectedSpare: React.Dispatch<React.SetStateAction<SpareDetails | null>>;
-}) => {
+  isImportModalOpen,
+  setIsImportModalOpen,
+}: SpareEditProps) => {
   const [spareData, setSpareData] = useState<SpareDetails | null>(null);
   const [newSpareData, setNewSpareData] = useState<SpareDetails | null>(null);
 
@@ -95,6 +102,13 @@ const SpareEdit = ({
     }
   };
 
+  const handleImportClick = () => {
+    console.log("Import button clicked, setting isImportModalOpen to true");
+    setIsImportModalOpen(true);
+  };
+
+  console.log("SpareEdit render, isImportModalOpen:", isImportModalOpen); // Debug log
+
   return (
     <motion.main
       initial="hidden"
@@ -127,20 +141,31 @@ const SpareEdit = ({
               )}
 
               {formState === "create" && (
-                <ButtonSm
-                  type="submit"
-                  className="font-semibold text-white"
-                  state="default"
-                  text={"Create"}
-                  isPending={isPending}
-                  disabled={!isDirty}
-                />
+                <>
+                  <ButtonSm
+                    className="font-medium text-white opacity-100"
+                    text="Import"
+                    state="default"
+                    type="button"
+                    iconPosition="right"
+                    imgUrl="/icons/ArrowDown.svg"
+                    onClick={handleImportClick}
+                  />
+                  <ButtonSm
+                    type="submit"
+                    className="font-semibold text-white"
+                    state="default"
+                    text="Create"
+                    isPending={isPending}
+                    disabled={!isDirty}
+                  />
+                </>
               )}
 
               {formState === "edit" && (
                 <ButtonSm
                   className="font-medium text-white disabled:opacity-50"
-                  text={"Save Changes"}
+                  text="Save Changes"
                   isPending={isUpdatePending}
                   state="default"
                   type="submit"
@@ -181,7 +206,7 @@ const SpareEdit = ({
               }}
             />
           </section>
-          <div className="px-3">
+          {/* <div className="px-3">
             <TextArea
               title="Remarks"
               name="Remarks"
@@ -193,9 +218,13 @@ const SpareEdit = ({
                 setNewSpareData({ ...newSpareData, remarks: value });
               }}
             />
-          </div>
+          </div> */}
         </form>
       </motion.div>
+      <SpareImportModal
+        isOpen={isImportModalOpen}
+        onClose={() => setIsImportModalOpen(false)}
+      />
     </motion.main>
   );
 };

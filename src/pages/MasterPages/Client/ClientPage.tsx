@@ -18,7 +18,8 @@ import type { FormState } from "../../../types/appTypes";
 import type { ClientDetails } from "../../../types/masterApiTypes";
 
 const ClientPage = () => {
-  const [isDeleteClientDialogOpen, setIsDeleteClientDialogOpen] = useState(false);
+  const [isDeleteClientDialogOpen, setIsDeleteClientDialogOpen] =
+    useState(false);
 
   const [client, setClient] = useState<ClientDetails>({
     id: 0,
@@ -27,12 +28,12 @@ const ClientPage = () => {
     contactNumber: "",
     email: "",
     addressLine1: "",
-    addressLine2:"",
-    pinCode:0,
-    city:"",
-    state:"",
+    addressLine2: "",
+    pinCode: 0,
+    city: "",
+    state: "",
     gstNumber: "",
-    remarks:""
+    remarks: "",
   });
 
   const [formState, setFormState] = useState<FormState>("create");
@@ -40,12 +41,10 @@ const ClientPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
 
-  const {
-    data,
-    isLoading,
-    isError,
-    refetch,
-  } = useFetchClientsPaginated(currentPage, itemsPerPage);
+  const { data, isLoading, isError, refetch } = useFetchClientsPaginated(
+    currentPage,
+    itemsPerPage,
+  );
 
   const clientList = data?.data || [];
   const totalPages = data?.totalPages || 0;
@@ -53,18 +52,18 @@ const ClientPage = () => {
 
   const handleClientDeleted = () => {
     setClient({
-    id: 0,
-    clientName: "",
-    contactPerson: "",
-    contactNumber: "",
-    email: "",
-    addressLine1: "",
-    addressLine2:"",
-    pinCode:0,
-    city:"",
-    state:"",
-    gstNumber: "",
-    remarks:""
+      id: 0,
+      clientName: "",
+      contactPerson: "",
+      contactNumber: "",
+      email: "",
+      addressLine1: "",
+      addressLine2: "",
+      pinCode: 0,
+      city: "",
+      state: "",
+      gstNumber: "",
+      remarks: "",
     });
     setFormState("create");
     refetch();
@@ -95,41 +94,40 @@ const ClientPage = () => {
 
       {/* Left Table */}
       <section className="table-container flex w-full flex-col gap-3 rounded-[12px] bg-white/80 p-4 shadow-sm md:w-[50%]">
-        <header className="flex h-max flex-col md:flex-row items-center justify-between">
-<div className="flex flex-row w-full items-center gap-2 w-full">
+        <header className="flex h-max flex-col items-center justify-between md:flex-row">
+          <div className="flex w-full flex-row items-center gap-2">
             <PageHeader title="Client Configuration" />
-                     
-</div>
-          
-        {/* Pagination Footer */}
-        <footer className="mt-3 md:mt-0 flex w-full flex-row items-center md:justify-end gap-2 justify-between">
- <DropdownSelect
-            title=""
-            direction="down"
-            options={[5, 10, 15, 20].map((item) => ({
-              id: item,
-              label: `${item} Entries `,
-            }))}
-            selected={{
-              id: itemsPerPage,
-              label: `${itemsPerPage} Entries `,
-            }}
-            onChange={(e) => {
-              setItemsPerPage(e.id);
-              setCurrentPage(1);
-            }}
-          />  
-          <PaginationControls
-            totalPages={totalPages}
-            currentPage={currentPage}
-            onPageChange={setCurrentPage}
-          />
-        </footer>
+          </div>
+
+          {/* Pagination Footer */}
+          <footer className="mt-3 flex w-full flex-row items-center justify-between gap-2 md:mt-0 md:justify-end">
+            <DropdownSelect
+              title=""
+              direction="down"
+              options={[5, 10, 15, 20].map((item) => ({
+                id: item,
+                label: `${item} Entries `,
+              }))}
+              selected={{
+                id: itemsPerPage,
+                label: `${itemsPerPage} Entries `,
+              }}
+              onChange={(e) => {
+                setItemsPerPage(e.id);
+                setCurrentPage(1);
+              }}
+            />
+            <PaginationControls
+              totalPages={totalPages}
+              currentPage={currentPage}
+              onPageChange={setCurrentPage}
+            />
+          </footer>
         </header>
 
-        <div className="tables flex  w-full flex-col overflow-clip rounded-[9px]">
+        <div className="tables flex w-full flex-col overflow-clip rounded-[9px]">
           <header className="header flex w-full flex-row items-center gap-2 bg-gray-200 px-3">
-            <p className="w-max min-w-[50px] md:min-w-[100px] px-2 py-4 text-start text-sm font-semibold text-zinc-900">
+            <p className="w-max min-w-[50px] px-2 py-4 text-start text-sm font-semibold text-zinc-900 md:min-w-[100px]">
               S.No
             </p>
             <p className="w-full text-start text-sm font-semibold text-zinc-900">
@@ -157,8 +155,8 @@ const ClientPage = () => {
                     isSelected
                       ? "bg-blue-100 font-semibold text-blue-800"
                       : index % 2 === 0
-                      ? "bg-white"
-                      : "bg-slate-50"
+                        ? "bg-white"
+                        : "bg-slate-50"
                   } hover:bg-slate-100 active:bg-slate-200`}
                   onClick={(e) => {
                     e.stopPropagation();
@@ -167,11 +165,15 @@ const ClientPage = () => {
                     setClient({ ...item });
                   }}
                 >
-                  <p className="w-max min-w-[50px] md:min-w-[100px] px-2 py-4 text-start text-sm font-medium">
+                  <p className="w-max min-w-[50px] px-2 py-4 text-start text-sm font-medium md:min-w-[100px]">
                     {(currentPage - 1) * itemsPerPage + index + 1}
                   </p>
-                  <p className="w-full text-start text-sm font-medium">{item.clientName}</p>
-                  <p className="w-full text-start text-sm font-medium">{item.contactNumber}</p>
+                  <p className="w-full text-start text-sm font-medium">
+                    {item.clientName}
+                  </p>
+                  <p className="w-full text-start text-sm font-medium">
+                    {item.contactNumber}
+                  </p>
 
                   <div className="flex min-w-[120px] flex-row gap-2 text-start text-sm font-medium">
                     <ButtonSm
@@ -203,11 +205,10 @@ const ClientPage = () => {
             })
           )}
         </div>
-
       </section>
 
       {/* Right Form */}
-      <section className="table-container max-h-full mb-20 md:mb-0 w-full flex-col gap-3 rounded-[12px] bg-white/80 p-4 shadow-sm md:w-[50%]">
+      <section className="table-container mb-20 max-h-full w-full flex-col gap-3 rounded-[12px] bg-white/80 p-4 shadow-sm md:mb-0 md:w-[50%]">
         <ClientEdit
           clientDetails={client}
           formState={formState}

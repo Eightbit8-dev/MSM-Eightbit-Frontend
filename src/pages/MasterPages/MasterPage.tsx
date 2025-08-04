@@ -73,7 +73,7 @@ export const MasterPage = () => {
           </div>
         </div>
       </div>
-      <div className="mb-16 grid grid-cols-1 gap-6 md:grid-cols-2 lg:mb-0 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:mb-0 lg:grid-cols-3">
         {configCards.map((card, index) => (
           <ConfigCard
             key={index}

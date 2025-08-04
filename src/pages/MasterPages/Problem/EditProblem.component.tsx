@@ -172,7 +172,7 @@ const ProblemEdit = ({
               }
             />
           </section>
-          <div className="px-3">
+          {/* <div className="px-3">
             <TextArea
               title="Remarks"
               name="Remarks"
@@ -183,7 +183,7 @@ const ProblemEdit = ({
                 setNewProblemData({ ...newProblemData, remarks: value })
               }
             />
-          </div>
+          </div> */}
         </form>
       </div>
     </main>

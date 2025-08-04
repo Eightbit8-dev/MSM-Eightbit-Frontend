@@ -7,7 +7,6 @@ import {
   useCreateServiceEngineer,
   useEditServiceEngineer,
 } from "../../../queries/masterQueries/ServiceEngineersQuery";
-import TextArea from "../../../components/common/Textarea";
 import isEqual from "lodash.isequal";
 import DropdownSelect from "@/components/common/DropDown";
 import { useFetchClientOptions } from "@/queries/masterQueries/ClientQuery";
@@ -215,6 +214,7 @@ const ServiceEngineerEdit = ({
               disabled={formState === "display"}
               title="Mobile Number"
               type="num"
+              prefixText="+91"
               inputValue={
                 newServiceEngineerData.engineerMobile === 0
                   ? ""
@@ -222,7 +222,7 @@ const ServiceEngineerEdit = ({
               }
               name="engineerMobile"
               placeholder="Enter mobile number"
-              maxLength={200}
+              max={9999999999}
               onChange={(value) =>
                 setNewServiceEngineerData({
                   ...newServiceEngineerData,
@@ -252,7 +252,7 @@ const ServiceEngineerEdit = ({
               required
             />
           </section>
-          <div className="px-3">
+          {/* <div className="px-3">
             <TextArea
               title="Remarks"
               name="Remarks"
@@ -266,7 +266,7 @@ const ServiceEngineerEdit = ({
                 })
               }
             />
-          </div>
+          </div> */}
         </form>
       </div>
     </main>

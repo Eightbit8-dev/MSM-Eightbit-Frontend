@@ -42,7 +42,8 @@ const ServiceRequestFormPage: React.FC<Props> = ({
   );
   const [showQRDialog, setShowQRDialog] = useState(false);
 
-  const { mutateAsync: createServiceRequest } = useCreateServiceRequest();
+  const { mutateAsync: createServiceRequest, isPending } =
+    useCreateServiceRequest();
 
   const { data: clientOptions = [] } = useFetchClientOptions();
   const { data: complaintOptions = [] } = useFetchProblemOptions();
@@ -153,7 +154,7 @@ const ServiceRequestFormPage: React.FC<Props> = ({
     });
 
     if (!entryId) {
-      toast.error("QR missing machineEntryId");
+      toast.error(" missing machineEntryId");
       return;
     }
 
@@ -335,6 +336,7 @@ const ServiceRequestFormPage: React.FC<Props> = ({
               type="submit"
               state="default"
               text={isEdit ? "Save Changes" : "Create Request"}
+              isPending={isPending}
               className="bg-blue-500 text-white hover:bg-blue-700"
             />
           )}

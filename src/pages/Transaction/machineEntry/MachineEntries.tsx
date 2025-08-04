@@ -18,6 +18,7 @@ import type { FormState } from "@/types/appTypes";
 import { convertToFrontendDate } from "@/utils/commonUtils";
 import DropdownSelect from "@/components/common/DropDown";
 import { useBreakpoints } from "@/hooks/useBreakPoints";
+import MachineImportModal from "./MachineImportModal";
 
 const MachineEntry = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -29,6 +30,7 @@ const MachineEntry = () => {
   const [isDeleteDialogOpen, setIsDeleteMachineDialogOpen] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [formState, setFormState] = useState<FormState>("create");
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
 
   const { isSm } = useBreakpoints();
 
@@ -46,6 +48,9 @@ const MachineEntry = () => {
         ? prevSelected.filter((selectedId) => selectedId !== id)
         : [...prevSelected, id],
     );
+  };
+  const handleImportClick = () => {
+    setIsImportModalOpen(true);
   };
 
   const allIdsOnPage = paginatedData.map((m) => m.id);
@@ -80,14 +85,14 @@ const MachineEntry = () => {
   return (
     <div className="mb-32 flex flex-col gap-4">
       {/* Header */}
-      <div className="flex items-center justify-between rounded-lg bg-white p-3">
-        <div className="flex flex-col">
+      <div className="flex flex-col md:flex-row gap-2 items-center justify-between rounded-lg bg-white p-3">
+        <div className="flex w-full items-start flex-col">
           <PageHeader title="Machine Entry" />
           <p className="text-sm font-medium text-slate-500">
             Manage your Machine Entries
           </p>
         </div>
-        <div className="flex flex-row items-center gap-2">
+        <div className="flex flex-row items-end justify-end w-full gap-2">
           <ButtonSm
             disabled={selectedIds.length === 0 || isCreateQRPending}
             className={`${
@@ -121,6 +126,7 @@ const MachineEntry = () => {
             type="button"
             iconPosition="right"
             imgUrl="/icons/ArrowDown.svg"
+            onClick={handleImportClick}
           />
         </div>
       </div>
@@ -170,7 +176,7 @@ const MachineEntry = () => {
             {/* Table Container */}
             <div className="tables flex min-h-[300px] w-full flex-col overflow-x-auto bg-white shadow-sm md:overflow-x-auto md:rounded-[9px]">
               {/* Header */}
-              <header className="header flex w-full min-w-max flex-row items-center justify-between bg-slate-200 px-3 py-3 md:min-w-max">
+              <header className="header flex min-w-max flex-row items-center justify-between bg-slate-200 px-3 py-3 md:min-w-max">
                 {/* S.No + Checkbox */}
                 <div className="flex w-20 min-w-20 items-center justify-start gap-2">
                   <p className="w-10 text-sm font-semibold text-zinc-900">
@@ -368,6 +374,10 @@ const MachineEntry = () => {
           </DialogBox>
         )}
       </AnimatePresence>
+      <MachineImportModal
+        isOpen={isImportModalOpen}
+        onClose={() => setIsImportModalOpen(false)}
+      />
     </div>
   );
 };

@@ -19,6 +19,7 @@ const SparesPage = () => {
   const [isDeleteSpareDialogOpen, setIsDeleteSpareDialogOpen] = useState(false);
   const [selectedSpare, setSelectedSpare] = useState<SpareDetails | null>({} as SpareDetails);
   const [formState, setFormState] = useState<FormState>("create");
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false); // Added state for modal
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
@@ -59,34 +60,33 @@ const SparesPage = () => {
 
       <section className="table-container flex w-full flex-col gap-3 rounded-[12px] bg-white/80 p-4 shadow-sm md:w-[50%]">
         <header className="flex h-max flex-col md:flex-row items-center justify-between">
-        <div className="flex flex-row items-center gap-2 w-full">
+          <div className="flex flex-row items-center gap-2 w-full">
             <PageHeader title="Spare Configuration" />
-           
-        </div>
-                  {/* Pagination Controls */}
-        <footer className="mt-3  md:mt-0 flex w-full items-center md:justify-end gap-2 justify-between">
-           <DropdownSelect
-            title=""
-            direction="down"
-            options={[5, 10, 15, 20].map((item) => ({
-              id: item,
-              label: `${item} Entries`,
-            }))}
-            selected={{
-              id: itemsPerPage,
-              label: `${itemsPerPage} Entries`,
-            }}
-            onChange={(e) => {
-              setItemsPerPage(e.id);
-              setCurrentPage(1);
-            }}
-          />
-          <PaginationControls
-            totalPages={totalPages}
-            currentPage={currentPage}
-            onPageChange={setCurrentPage}
-          />
-        </footer>
+          </div>
+          {/* Pagination Controls */}
+          <footer className="mt-3 md:mt-0 flex w-full items-center md:justify-end gap-2 justify-between">
+            <DropdownSelect
+              title=""
+              direction="down"
+              options={[5, 10, 15, 20].map((item) => ({
+                id: item,
+                label: `${item} Entries`,
+              }))}
+              selected={{
+                id: itemsPerPage,
+                label: `${itemsPerPage} Entries`,
+              }}
+              onChange={(e) => {
+                setItemsPerPage(e.id);
+                setCurrentPage(1);
+              }}
+            />
+            <PaginationControls
+              totalPages={totalPages}
+              currentPage={currentPage}
+              onPageChange={setCurrentPage}
+            />
+          </footer>
         </header>
 
         <div className="tables flex w-full flex-col overflow-clip rounded-[9px]">
@@ -163,18 +163,17 @@ const SparesPage = () => {
             ))
           )}
         </div>
-
-
       </section>
 
       <section className="table-container mb-20 md:mb-0 max-h-full w-full flex-col gap-3 rounded-[12px] bg-white/80 p-4 shadow-sm md:w-[50%]">
-<SpareEdit
-  spareDetails={selectedSpare}
-  formState={formState}
-  setFormState={setFormState}
-  setSelectedSpare={setSelectedSpare} // ✅ pass this
-/>
-
+        <SpareEdit
+          spareDetails={selectedSpare}
+          formState={formState}
+          setFormState={setFormState}
+          setSelectedSpare={setSelectedSpare}
+          isImportModalOpen={isImportModalOpen} // Added missing prop
+          setIsImportModalOpen={setIsImportModalOpen} // Added missing prop
+        />
       </section>
     </main>
   );

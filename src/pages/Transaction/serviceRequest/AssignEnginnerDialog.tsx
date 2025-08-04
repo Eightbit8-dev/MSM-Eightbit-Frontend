@@ -8,7 +8,6 @@ import { useFetchServiceEngineerOptions } from "@/queries/masterQueries/ServiceE
 import type { ServiceRequest } from "@/types/transactionTypes";
 import { usePatchServiceRequest } from "@/queries/TranscationQueries/ServiceRequestQuery";
 
-
 export const AssignEngineerDialogBox = ({
   setIsAssignDialogOpen,
   serviceRequestData,
@@ -18,7 +17,7 @@ export const AssignEngineerDialogBox = ({
 }) => {
   const { data: engineerOptions = [] } = useFetchServiceEngineerOptions();
   const [selectedEngineer, setSelectedEngineer] = useState<DropdownOption>({
-    id: 404,
+    id: 0,
     label: "Select Service Engineer",
   });
 
@@ -62,7 +61,7 @@ export const AssignEngineerDialogBox = ({
         handleAssign();
       }}
     >
-      <header className="header flex w-full flex-row items-center justify-between text-lg font-medium text-indigo-600">
+      <header className="header flex w-full flex-row items-center justify-between text-lg font-medium text-blue-500">
         Assign Service Engineer
         <img
           onClick={() => setIsAssignDialogOpen(false)}
@@ -89,7 +88,7 @@ export const AssignEngineerDialogBox = ({
           onClick={() => setIsAssignDialogOpen(false)}
         />
         <ButtonSm
-          className="items-center justify-center bg-indigo-500 text-center text-white hover:bg-indigo-600 active:bg-indigo-700"
+          className="items-center justify-center bg-blue-500 text-center text-white hover:bg-blue-600 active:bg-blue-700"
           state="default"
           text={"Assign"}
           isPending={isAssigning}

@@ -8,6 +8,7 @@ import {
   useCreateProduct,
   useEditProduct,
 } from "../../../queries/masterQueries/ProductQuery";
+import ImportModal from "./ProductImportModal";
 
 const ProductEdit = ({
   productDetails,
@@ -21,6 +22,7 @@ const ProductEdit = ({
   setProduct: React.Dispatch<React.SetStateAction<ProductDetails>>;
 }) => {
   const [productData, setProductData] = useState<ProductDetails | null>(null);
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
 
   const { mutate: createProduct, isPending, isSuccess } = useCreateProduct();
 
@@ -84,6 +86,10 @@ const ProductEdit = ({
     setProductData(resetData);
   };
 
+  const handleImportClick = () => {
+    setIsImportModalOpen(true);
+  };
+
   if (!productData) {
     return (
       <p className="text-center text-sm text-gray-500">
@@ -140,14 +146,25 @@ const ProductEdit = ({
               )}
 
               {formState === "create" && (
-                <ButtonSm
-                  className="font-medium text-white"
-                  text={isPending ? "Creating..." : "Create New"}
-                  state="default"
-                  isPending={isPending}
-                  type="submit"
-                  disabled={isPending}
-                />
+                <>
+                  <ButtonSm
+                    className="font-medium text-white opacity-100"
+                    text="Import"
+                    state="default"
+                    type="button"
+                    iconPosition="right"
+                    imgUrl="/icons/ArrowDown.svg"
+                    onClick={handleImportClick}
+                  />
+                  <ButtonSm
+                    className="font-medium text-white"
+                    text={isPending ? "Creating..." : "Create New"}
+                    state="default"
+                    isPending={isPending}
+                    type="submit"
+                    disabled={isPending}
+                  />
+                </>
               )}
 
               {formState === "edit" && (
@@ -221,7 +238,7 @@ const ProductEdit = ({
               }
             />
           </section>
-          <div className="px-3">
+          {/* <div className="px-3">
             <TextArea
               title="Remarks"
               name="Remarks"
@@ -232,9 +249,14 @@ const ProductEdit = ({
                 setProductData({ ...productData, remarks: value })
               }
             />
-          </div>
+          </div> */}
         </form>
       </div>
+
+      <ImportModal
+        isOpen={isImportModalOpen}
+        onClose={() => setIsImportModalOpen(false)}
+      />
     </main>
   );
 };

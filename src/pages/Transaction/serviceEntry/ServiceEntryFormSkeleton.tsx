@@ -1,10 +1,9 @@
-
 import Skeleton from "react-loading-skeleton";
-import 'react-loading-skeleton/dist/skeleton.css';
+import "react-loading-skeleton/dist/skeleton.css";
 
 const RequestEntrySkeleton = () => {
   return (
-    <div className="mb-16 w-full rounded-lg bg-white p-6 shadow-md md:mb-0">
+    <div className="w-full rounded-lg bg-white p-6 shadow-md md:mb-0">
       <h2 className="mb-4 text-xl font-semibold">
         <Skeleton width={180} height={24} />
       </h2>
@@ -17,10 +16,13 @@ const RequestEntrySkeleton = () => {
         ))}
 
         {/* Quantity spares block */}
-        <div className="col-span-1 md:col-span-2 flex flex-col gap-2 mt-4">
+        <div className="col-span-1 mt-4 flex flex-col gap-2 md:col-span-2">
           <Skeleton width={140} height={16} />
           {Array.from({ length: 2 }).map((_, i) => (
-            <div key={i} className="flex items-center justify-between rounded-lg bg-slate-50 p-2">
+            <div
+              key={i}
+              className="flex items-center justify-between rounded-lg bg-slate-50 p-2"
+            >
               <Skeleton width={100} height={12} />
               <div className="flex flex-row items-center gap-2">
                 <Skeleton width={24} height={24} circle />

@@ -40,7 +40,7 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
       <button
         onClick={() => onPageChange(Math.max(currentPage - 1, 1))}
         disabled={currentPage === 1}
-        className={`cursor-pointer rounded-full px-2 py-2 shadow-sm transition ${
+        className={`cursor-pointer rounded-full bg-white px-2 py-2 shadow-sm transition ${
           currentPage === 1
             ? "cursor-not-allowed text-gray-400"
             : "text-slate-800 hover:bg-gray-200"
@@ -94,7 +94,7 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
       <button
         onClick={() => onPageChange(Math.min(currentPage + 1, totalPages))}
         disabled={currentPage === totalPages}
-        className={`cursor-pointer rounded-full px-2 py-2 shadow-sm transition ${
+        className={`cursor-pointer rounded-full bg-white px-2 py-2 shadow-sm transition ${
           currentPage === totalPages
             ? "cursor-not-allowed text-gray-400"
             : "text-slate-800 hover:bg-gray-200"

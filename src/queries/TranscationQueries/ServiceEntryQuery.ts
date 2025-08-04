@@ -2,48 +2,24 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import axios from "axios";
 import Cookies from "js-cookie";
-import type {
-  ServiceEntryRequest,
-  ServiceEntryResponse,
-} from "@/types/transactionTypes";
+import type { ServiceEntryResponse } from "@/types/transactionTypes";
 import axiosInstance from "@/utils/axios";
 import { useNavigate } from "react-router-dom";
 import { apiRoutes } from "@/routes/apiRoutes";
-import { convertToBackendDate } from "@/utils/commonUtils";
 
 export const useCreateServiceEntry = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const createEntry = async (payload: ServiceEntryRequest) => {
-    //issue-1
-    const cleanedPayload = {
-      refNumber: payload.refNumber,
-      serviceDate: convertToBackendDate(payload.serviceDate),
-      maintenanceType: payload.maintenanceType,
-      maintenanceSubType: payload.maintenanceSubType,
-      serviceRequestId: payload.serviceRequestId,
-      vendorId: payload.vendorId,
-      engineerId: payload.engineerId,
-      engineerDiagnostics: payload.engineerDiagnostics,
-      serviceStatus:
-        payload.serviceStatus === "Completed" ? "COMPLETED" : "NOT_COMPLETED",
-      remarks: payload.remarks || "-",
-      complaintSparePhotoUrl: "http://example.com/sparephoto.jpg",
-      spareParts: payload.spareParts,
-    };
+  const createEntry = async (formData: FormData) => {
     const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized");
 
-    const res = await axiosInstance.post(
-      apiRoutes.serviceEntry,
-      cleanedPayload,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+    const res = await axiosInstance.post(apiRoutes.serviceEntry, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
       },
-    );
+    });
 
     if (res.status !== 201 && res.status !== 200) {
       throw new Error(res.data?.message || "Failed to create Service Entry");
@@ -58,7 +34,7 @@ export const useCreateServiceEntry = () => {
       navigate(-1);
       toast.success("Service Entry created successfully");
       queryClient.invalidateQueries({ queryKey: ["serviceEntry"] });
-      queryClient.invalidateQueries({ queryKey: ["serviceRequest"] }); //temporarary as we use same table in both page
+      queryClient.invalidateQueries({ queryKey: ["serviceRequest"] });
     },
     onError: (error) => {
       if (axios.isAxiosError(error)) {

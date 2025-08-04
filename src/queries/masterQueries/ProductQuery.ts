@@ -49,7 +49,7 @@ export const useFetchProducts = () => {
 };
 
 /**
- * 🔍 Fetch  Product Type
+ * 🔍 Fetch Product Type
  */
 export const useFetchProductsType = () => {
   const fetchOptions = async (): Promise<DropdownOption[]> => {
@@ -147,7 +147,7 @@ export const useFetchAllDetailsOptions = () => {
 
     return res.data.data.map((client: ProductDetails) => ({
       id: client.id,
-      label: `${client.modelNumber} ,${client.machineType}, ${client.brand}  `,
+      label: `${client.modelNumber}, ${client.machineType}, ${client.brand}`,
     }));
   };
 
@@ -159,8 +159,7 @@ export const useFetchAllDetailsOptions = () => {
   });
 };
 
-//paginated response
-
+// Paginated response
 export const useFetchProductsPaginated = (page: number, limit: number) => {
   const fetchAllProducts = async (): Promise<ProductResponse> => {
     try {
@@ -340,6 +339,91 @@ export const useDeleteProduct = () => {
   });
 };
 
+/**
+ * 📥 Import Products from Excel
+ */
+export const useImportProduct = () => {
+  const queryClient = useQueryClient();
+
+  const importProduct = async (file: File) => {
+    try {
+      const token = Cookies.get("token");
+      if (!token) throw new Error("Unauthorized to perform this action.");
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await axiosInstance.post(apiRoutes.products + "/import", formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      if (res.status !== 200) {
+        throw new Error(res.data?.message || "Failed to import Products");
+      }
+
+      return res.data;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        toast.error(
+          error.response?.data?.message || "Failed to import Products",
+        );
+      } else {
+        toast.error("Something went wrong while importing Products");
+      }
+      throw error;
+    }
+  };
+
+  return useMutation({
+    mutationFn: importProduct,
+    onSuccess: () => {
+      toast.success("Products imported successfully");
+      queryClient.invalidateQueries({ queryKey: ["Products"] });
+    },
+  });
+};
+
+/**
+ * 📥 Download Sample Template
+ */
+export const useDownloadTemplate = () => {
+  const downloadTemplate = async (): Promise<Blob> => {
+    try {
+      const token = Cookies.get("token");
+      if (!token) throw new Error("Unauthorized to perform this action.");
+
+      const res = await axiosInstance.get(apiRoutes.products + "/template", {
+        headers: { Authorization: `Bearer ${token}` },
+        responseType: "blob", // Ensure the response is treated as a binary blob
+      });
+
+      if (res.status !== 200) {
+        throw new Error(res.data?.message || "Failed to download template");
+      }
+
+      return res.data;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        toast.error(
+          error.response?.data?.message || "Failed to download template",
+        );
+      } else {
+        toast.error("Something went wrong while downloading template");
+      }
+      throw error;
+    }
+  };
+
+  return useQuery({
+    queryKey: ["template"],
+    queryFn: downloadTemplate,
+    enabled: false, // Disabled by default, will be triggered manually
+    retry: 1,
+  });
+};
 type ProductDropdownParams = {
   level: "brands" | "models";
   type: string;
@@ -374,8 +458,8 @@ const getProductDropdownOptions = async ({
   if (level === "models") {
     return (rawData as { productId: string; modelNumber: number }[]).map(
       (item) => ({
-        id: Number(item.productId), // Ensure it's number
-        label: item.modelNumber.toString(), // Convert model number to string if needed
+        id: Number(item.productId),
+        label: item.modelNumber.toString(),
       }),
     );
   } else {

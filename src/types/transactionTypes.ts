@@ -64,10 +64,16 @@ export interface ServiceRequestPayload {
 }
 
 // --- service entry ----
-export interface ServiceEntryRequest {
-  id?: number; // remove this later
+export interface SparePartPayload {
+  spareId: number;
+  quantity: number;
+  complaintSparePhotoUrl?: string; // For string URLs (e.g., after file upload)
+  sparePhotoUrl?: string;
+}
+
+export interface ServiceEntryPayload {
   refNumber: string;
-  serviceDate: string;
+  serviceDate: string; // Format: DD-MM-YYYY
   maintenanceType: string;
   maintenanceSubType: string;
   serviceRequestId: number;
@@ -77,23 +83,37 @@ export interface ServiceEntryRequest {
   serviceStatus: string;
   remarks: string;
   complaintSparePhotoUrl: string;
-  spareParts: sparePart[];
+  spareParts: SparePartPayload[];
+}
+export interface SparePartData {
+  spareName: string;
+  partNumber: string;
+  quantity: number;
+  complaintSparePhotoUrl?: string | null;
+  sparePhotoUrl?: string | null;
+}
 
-  //unique in reposne
+export interface ServiceEntryData {
+  id: number;
+  refNumber: string;
+  serviceDate: string;
   clientName: string;
+  maintenanceType: string;
+  maintenanceSubType: string;
+  serviceRequestRef: string;
+  vendorName: string;
   engineerName: string;
-  complaintDetails: string;
+  engineerMobile: string;
+  machineDetails: string;
+  engineerDiagnostics: string;
+  serviceStatus: string;
+  remarks: string;
+  spareParts: SparePartData[];
 }
 
 export interface ServiceEntryResponse {
-  data: ServiceEntryRequest[];
+  data: ServiceEntryData[];
   page: number;
   totalPages: number;
   totalRecords: number;
-}
-
-export interface sparePart {
-  spareId: number;
-  quantity: number;
-  sparePhotoUrl: string;
 }

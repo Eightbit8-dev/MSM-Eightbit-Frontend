@@ -224,12 +224,16 @@ const ServiceRequestPage = () => {
                           item.status === "Completed" ||
                           item.status === "COMPLETED"
                             ? "bg-green-100 text-green-800"
-                            : item.status === "NOT COMPLETED"
+                            : item.status === "NOT_COMPLETED"
                               ? "bg-red-100 text-red-800"
                               : "bg-yellow-100 text-yellow-800"
                         }`}
                       >
-                        {item.status}
+                        {item.status === "COMPLETED"
+                          ? "Completed"
+                          : item.status === "NOT_COMPLETED"
+                            ? "Unfinsished"
+                            : "Pending"}
                       </span>
                     </div>
 

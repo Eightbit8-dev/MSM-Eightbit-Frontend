@@ -6,6 +6,7 @@ import { Spinner } from "./components/layout/Spinner";
 import { appRoutes } from "./routes/appRoutes";
 import { ErrorPageContent } from "./pages/ErrorPage";
 
+
 // 🌐 Global Pages
 const SignInPage = lazy(() => import("./pages/SignInPage"));
 const DashBoardPage = lazy(() => import("./pages/DashBoardPage"));
@@ -146,9 +147,13 @@ const App = () => {
               element={<ServiceEntryPage />}
             />
             <Route
-              path={appRoutes.transactionRoutes.children.serviceEntryEdit}
+              path={appRoutes.transactionRoutes.children.serviceEntryCreate}
               element={<RequestEntry />}
             />
+            {/* <Route
+              path={appRoutes.transactionRoutes.children.serviceEntryView}
+              element={<ServiceEntryDisplay />}
+            /> */}
 
             {/*-------------------------------- 📷 QR Scanner */}
             <Route path={appRoutes.scanPage} element={<QRScanner />} />
