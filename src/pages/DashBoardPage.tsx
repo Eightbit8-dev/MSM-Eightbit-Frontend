@@ -199,7 +199,7 @@ const DashBoardPage = () => {
                         type="submit"
                         onClick={() =>
                           navigate(
-                            `/transactions/service-entry/${request.id}?mode=create`,
+                            `/transactions/service-entry/create/${request.id}?mode=create`,
                           )
                         }
                       />
