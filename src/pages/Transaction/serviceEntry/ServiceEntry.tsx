@@ -9,21 +9,25 @@ import { AnimatePresence } from "motion/react";
 import { useState } from "react";
 import { useFetchEntry } from "@/queries/TranscationQueries/ServiceEntryQuery";
 import { DeleteEntryDialogBox } from "./ServiceEntryDelete.Dialog"; // <- your dialog file
-import type { ServiceEntryRequest } from "@/types/transactionTypes";
+import type { ServiceEntryData } from "@/types/transactionTypes";
+import { useNavigate } from "react-router-dom";
+import ServiceEntryDisplay from "./ServiceEntry.view";
 
 const ServiceEntryPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
 
-  const [selectedEntry, setSelectedEntry] =
-    useState<ServiceEntryRequest | null>(null);
+  const [selectedEntry, setSelectedEntry] = useState<ServiceEntryData | null>(
+    null,
+  );
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isViewFormOpen, setIsViewFormOpen] = useState(false);
 
   const { data, isLoading } = useFetchEntry(currentPage, itemsPerPage);
 
   const paginatedData = data?.data || [];
   const totalPages = data?.totalPages || 0;
-
+  const navigate = useNavigate();
   return (
     <div className="mb-32 flex flex-col gap-4">
       <div className="flex items-center justify-between rounded-lg bg-white p-3">
@@ -103,7 +107,7 @@ const ServiceEntryPage = () => {
                 </div>
 
                 {/* Action Header */}
-                <div className="flex w-12 min-w-12 items-center justify-start gap-2 pt-1">
+                <div className="flex w-24 min-w-24 items-center justify-start gap-2 pt-1">
                   <p className="text-sm font-semibold text-slate-900">Action</p>
                 </div>
               </header>
@@ -168,13 +172,23 @@ const ServiceEntryPage = () => {
                         {item.serviceStatus === "COMPLETED"
                           ? "Completed"
                           : item.serviceStatus === "NOT_COMPLETED"
-                            ? "Unfinsished"
+                            ? "Not Completed"
                             : "Pending"}
                       </span>
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="flex w-12 min-w-12 items-center justify-start gap-2 pt-1">
+                    <div className="flex w-24 min-w-24 items-center justify-start gap-2 pt-1">
+                      <ButtonSm
+                        className="aspect-square scale-90 border border-blue-500 bg-blue-500/10"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedEntry(item);
+                          setIsViewFormOpen(true);
+                        }}
+                        state="outline"
+                        imgUrl="/icons/eye-icon-blue.svg"
+                      />
                       <ButtonSm
                         onClick={(e) => {
                           e.stopPropagation();
@@ -222,6 +236,17 @@ const ServiceEntryPage = () => {
               onDeleted={() => {
                 setSelectedEntry(null);
               }}
+            />
+          </DialogBox>
+        )}
+        {isViewFormOpen && selectedEntry && (
+          <DialogBox
+            className="min-w-[800px]"
+            setToggleDialogueBox={setIsDeleteDialogOpen}
+          >
+            <ServiceEntryDisplay
+              data={selectedEntry}
+              setIsDialogOpen={setIsViewFormOpen}
             />
           </DialogBox>
         )}

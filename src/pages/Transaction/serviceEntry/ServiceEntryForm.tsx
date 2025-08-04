@@ -9,7 +9,7 @@ import { useFetchServiceRequestById } from "@/queries/TranscationQueries/Service
 import { useParams, useSearchParams } from "react-router-dom";
 import type { FormState } from "@/types/appTypes";
 import { toast } from "react-toastify";
-import type { ServiceEntryRequest } from "@/types/transactionTypes";
+import type { ServiceEntryPayload } from "@/types/transactionTypes";
 import { useFetchServiceEngineerOptions } from "@/queries/masterQueries/ServiceEngineersQuery";
 import { useCreateServiceEntry } from "@/queries/TranscationQueries/ServiceEntryQuery";
 import {
@@ -36,7 +36,7 @@ interface SparePartData {
 }
 
 const RequestEntry = () => {
-  const emptyData: ServiceEntryRequest = {
+  const emptyData: ServiceEntryPayload = {
     refNumber: "",
     serviceDate: "",
     maintenanceType: "",
@@ -49,10 +49,6 @@ const RequestEntry = () => {
     remarks: "",
     complaintSparePhotoUrl: "",
     spareParts: [],
-    clientName: "",
-    complaintDetails: "",
-    engineerName: "",
-    id: 0,
   };
 
   const { id } = useParams();
@@ -61,7 +57,7 @@ const RequestEntry = () => {
   // ---------- states ----------
   const modeParam = searchParams.get("mode") as FormState;
   const [formState, setFormState] = useState<FormState>("display");
-  const [formData, setFormData] = useState<ServiceEntryRequest>(emptyData);
+  const [formData, setFormData] = useState<ServiceEntryPayload>(emptyData);
   const [sparePartsData, setSparePartsData] = useState<SparePartData[]>([]);
   const [selectedSpares, setSelectedSpares] = useState<DropdownOption[]>([]);
   const [spareQuantities, setSpareQuantities] = useState<{
@@ -241,7 +237,7 @@ const RequestEntry = () => {
   if (error || !serviceRequestData) return <p>Something went wrong</p>;
 
   return (
-    <div className="mb-16 w-full rounded-lg bg-white p-6 shadow-md md:mb-0">
+    <div className="w-full rounded-lg bg-white p-6 shadow-md md:mb-0">
       <h2 className="mb-4 text-xl font-semibold">Service Entry</h2>
       <form
         onSubmit={handleSubmit}

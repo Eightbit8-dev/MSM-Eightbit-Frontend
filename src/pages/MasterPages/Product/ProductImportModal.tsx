@@ -36,7 +36,8 @@ const ProductImportModal = ({ isOpen, onClose }: ImportModalProps) => {
     try {
       await refetch(); // Trigger the query to fetch the template
       if (data) {
-        const contentDisposition = "attachment; filename=productMaster-template.xlsx"; // Match backend header
+        const contentDisposition =
+          "attachment; filename=productMaster-template.xlsx"; // Match backend header
         let filename = "productMaster-template.xlsx";
         if (contentDisposition) {
           const filenameMatch = contentDisposition.match(/filename="(.+)"/);
@@ -61,51 +62,55 @@ const ProductImportModal = ({ isOpen, onClose }: ImportModalProps) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50">
-      <div className="absolute inset-0 backdrop-filter backdrop-blur-sm bg-black/30"></div>
-      <div className="relative z-50 bg-white shadow-2xl rounded-2xl p-6 w-[500px] max-w-[90%] transform transition-all duration-300 hover:shadow-3xl border border-gray-200">
-        <h2 className="text-xl font-bold text-gray-800 mb-5 border-b pb-2">Upload Staff Data</h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div className="absolute inset-0 bg-black/30 backdrop-blur-sm backdrop-filter"></div>
+      <div className="hover:shadow-3xl relative z-50 w-[500px] max-w-[90%] transform rounded-2xl border border-gray-200 bg-white p-6 shadow-2xl transition-all duration-300">
+        <h2 className="mb-5 border-b pb-2 text-xl font-bold text-gray-800">
+          Upload Product Data
+        </h2>
         <div className="flex flex-col gap-6">
           <div className="flex items-center gap-4">
             <input
               type="file"
               onChange={handleFileChange}
-              className="border border-gray-300 cursor-pointer rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+              className="w-full cursor-pointer rounded-lg border border-gray-300 p-2 transition focus:ring-2 focus:ring-blue-400 focus:outline-none"
               accept=".xlsx, .xls"
             />
             <button
-              className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-5 py-2 rounded-lg hover:from-blue-600 hover:to-blue-700 active:from-blue-700 active:to-blue-800 transition duration-200 cursor-pointer disabled:opacity-50"
+              className="cursor-pointer rounded-lg bg-gradient-to-r from-blue-500 to-blue-600 px-5 py-2 text-white transition duration-200 hover:from-blue-600 hover:to-blue-700 active:from-blue-700 active:to-blue-800 disabled:opacity-50"
               onClick={handleImportSubmit}
               disabled={!selectedFile || isPending}
             >
               {isPending ? "Importing..." : "Import"}
             </button>
           </div>
-          <p className="text-sm text-gray-600">{selectedFile ? selectedFile.name : "No file chosen"}</p>
+          <p className="text-sm text-gray-600">
+            {selectedFile ? selectedFile.name : "No file chosen"}
+          </p>
           <div>
-            <h3 className="text-md font-semibold text-blue-600 mb-2">Notes:</h3>
-            <ol className="list-decimal list-inside text-sm text-gray-700 space-y-1">
-              <li>Don't change heading.</li> 
-              <li>Mandatory master fields: MAchineType, Brand, ModelNumber</li>
+            <h3 className="text-md mb-2 font-semibold text-blue-600">Notes:</h3>
+            <ol className="list-inside list-decimal space-y-1 text-sm text-gray-700">
+              <li>Don't change heading.</li>
+              <li>Mandatory master fields: MachineType, Brand, ModelNumber</li>
               <li>Date Format Must Be DD.MM.YYYY</li>
             </ol>
           </div>
           <div className="flex justify-between gap-3">
             <button
-              className="bg-gradient-to-r from-blue-500 to-blue-600 text-white  px-4 py-2 rounded-lg  transition cursor-pointer duration-200"
+              className="cursor-pointer rounded-lg bg-gradient-to-r from-blue-500 to-blue-600 px-4 py-2 text-white transition duration-200"
               onClick={handleDownloadSampleTemplate}
             >
               Sample Template
             </button>
             <button
-              className="bg-gradient-to-r from-blue-500 to-blue-600 text-white  px-4 py-2 rounded-lg transition cursor-pointer duration-200"
+              className="cursor-pointer rounded-lg bg-gradient-to-r from-blue-500 to-blue-600 px-4 py-2 text-white transition duration-200"
               onClick={() => console.log("Download Data")}
             >
               Download Data
             </button>
           </div>
           <button
-            className="mt-4 bg-gray-100 text-gray-800 px-6 py-2 rounded-lg hover:bg-gray-200 transition cursor-pointer duration-200 w-full"
+            className="mt-4 w-full cursor-pointer rounded-lg bg-gray-100 px-6 py-2 text-gray-800 transition duration-200 hover:bg-gray-200"
             onClick={onClose}
           >
             Close

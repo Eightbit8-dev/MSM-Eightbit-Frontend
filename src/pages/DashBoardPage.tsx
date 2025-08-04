@@ -82,7 +82,7 @@ const DashBoardPage = () => {
   }
 
   return (
-    <div className="mb-16 min-h-screen rounded-xl bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50 p-3 shadow-sm md:p-4 lg:p-6">
+    <div className="min-h-screen rounded-xl bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50 p-3 shadow-sm md:p-4 lg:p-6">
       <div className="flex flex-col gap-4">
         {/* Header */}
         <div className="flex flex-col gap-0">
@@ -101,7 +101,7 @@ const DashBoardPage = () => {
             return (
               <div
                 key={index}
-                className={`group relative flex transform cursor-pointer flex-row items-center justify-between overflow-hidden rounded-2xl border-2 border-slate-300 bg-white p-6 transition-all duration-300 hover:scale-[1.02]`}
+                className={`group relative flex transform flex-row items-center justify-between overflow-hidden rounded-2xl border-2 border-slate-300 bg-white p-6 transition-all duration-300 hover:scale-[1.02]`}
               >
                 {/* Content */}
                 <div className="flex flex-col items-start justify-start gap-3">
