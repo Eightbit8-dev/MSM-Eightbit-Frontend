@@ -36,6 +36,7 @@ export const appRoutes = {
       serviceEntryView: "/transactions/service-entry/view/:id",
       machineEdit: "/transactions/machine-edit/:id",
       machineCreate: "/transactions/machine-create",
+      serviceEntryNew: "/transactions/service-entry/new",
     },
   },
 

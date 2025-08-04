@@ -5,6 +5,7 @@ import ProtectedRoute from "./components/layout/ProtectedRoute";
 import { Spinner } from "./components/layout/Spinner";
 import { appRoutes } from "./routes/appRoutes";
 import { ErrorPageContent } from "./pages/ErrorPage";
+import ServiceEntryNew from "./pages/Transaction/serviceEntry/ServiceEntryNew";
 
 
 // 🌐 Global Pages
@@ -154,6 +155,11 @@ const App = () => {
               path={appRoutes.transactionRoutes.children.serviceEntryView}
               element={<ServiceEntryDisplay />}
             /> */}
+
+            <Route 
+            path={appRoutes.transactionRoutes.children.serviceEntryNew}
+            element={<ServiceEntryNew/>}
+            />
 
             {/*-------------------------------- 📷 QR Scanner */}
             <Route path={appRoutes.scanPage} element={<QRScanner />} />
