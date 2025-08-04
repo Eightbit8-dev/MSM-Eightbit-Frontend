@@ -252,7 +252,6 @@ const RequestEntry = () => {
             setFormData({ ...formData, refNumber: val });
           }}
         />
-
         <DateInput
           title="Service Date"
           disabled={formState === "display"}
@@ -264,7 +263,6 @@ const RequestEntry = () => {
           maxDate={getMaxDateFromToday(2)}
           required
         />
-
         <DropdownSelect
           title="Client Name"
           disabled
@@ -273,7 +271,6 @@ const RequestEntry = () => {
           onChange={() => {}}
           required
         />
-
         <div className="flex w-full flex-col gap-3 md:flex-row">
           <DropdownSelect
             required
@@ -312,7 +309,13 @@ const RequestEntry = () => {
             />
           )}
         </div>
-
+        <DropdownSelect
+          title="ComplaintType"
+          options={[]}
+          disabled={true}
+          selected={{ id: 404, label: serviceRequestData.complaintDetails }}
+          onChange={() => {}}
+        />
         <DropdownSelect
           required
           title="Vendor Name"
@@ -325,7 +328,6 @@ const RequestEntry = () => {
           }
           onChange={(val) => setFormData({ ...formData, vendorId: val.id })}
         />
-
         <DropdownSelect
           required
           title="Engineer Name"
@@ -339,7 +341,6 @@ const RequestEntry = () => {
           }
           onChange={(val) => setFormData({ ...formData, engineerId: val.id })}
         />
-
         <DropdownSelect
           title="Machine Brand"
           options={[]}
@@ -347,7 +348,6 @@ const RequestEntry = () => {
           selected={{ id: 404, label: serviceRequestData.brand }}
           onChange={() => {}}
         />
-
         <DropdownSelect
           title="Machine Type"
           options={[]}
@@ -355,7 +355,6 @@ const RequestEntry = () => {
           selected={{ id: 404, label: serviceRequestData.machineType }}
           onChange={() => {}}
         />
-
         <DropdownSelect
           title="Machine Model"
           options={[]}
@@ -363,7 +362,6 @@ const RequestEntry = () => {
           selected={{ id: 404, label: serviceRequestData.modelNumber }}
           onChange={() => {}}
         />
-
         <DropdownSelect
           title="Machine Serial Number"
           disabled
@@ -371,23 +369,6 @@ const RequestEntry = () => {
           selected={{ id: 404, label: serviceRequestData.serialNumber }}
           onChange={() => {}}
         />
-
-        <DropdownSelect
-          title="ComplaintType"
-          options={[]}
-          disabled={true}
-          selected={{ id: 404, label: serviceRequestData.complaintDetails }}
-          onChange={() => {}}
-        />
-
-        <Input
-          title="Remarks"
-          name="RequestEntryRemarks"
-          placeholder="Eg : Completed within the scheduled time frame."
-          inputValue={formData.remarks}
-          onChange={(val) => setFormData({ ...formData, remarks: val })}
-        />
-
         <Input
           required
           title="Engineer Diagnostics"
@@ -399,7 +380,22 @@ const RequestEntry = () => {
           }
           placeholder="Enter diagnosis"
         />
-
+        <MultiSelectDropdown
+          title="Spares"
+          options={sparesOptions}
+          selectedOptions={selectedSpares}
+          onChange={handleSparesChange}
+          placeholder="Select spares to add"
+          required={true}
+        />
+        <SparePartsManager
+          selectedSpares={selectedSpares}
+          spareQuantities={spareQuantities}
+          updateSpareQuantity={updateSpareQuantity}
+          onSpareDataChange={setSparePartsData}
+          latestSpareId={latestSpareId}
+          latestSpareRef={latestSpareRef}
+        />
         <DropdownSelect
           required
           title="Service Status"
@@ -416,25 +412,13 @@ const RequestEntry = () => {
             setFormData({ ...formData, serviceStatus: val.label })
           }
         />
-
-        <MultiSelectDropdown
-          title="Spares"
-          options={sparesOptions}
-          selectedOptions={selectedSpares}
-          onChange={handleSparesChange}
-          placeholder="Select spares to add"
-          required={true}
+        <Input
+          title="Remarks"
+          name="RequestEntryRemarks"
+          placeholder="Eg : Completed within the scheduled time frame."
+          inputValue={formData.remarks}
+          onChange={(val) => setFormData({ ...formData, remarks: val })}
         />
-
-        <SparePartsManager
-          selectedSpares={selectedSpares}
-          spareQuantities={spareQuantities}
-          updateSpareQuantity={updateSpareQuantity}
-          onSpareDataChange={setSparePartsData}
-          latestSpareId={latestSpareId}
-          latestSpareRef={latestSpareRef}
-        />
-
         <div className="col-span-1 mt-4 flex justify-end md:col-span-2">
           <ButtonSm
             isPending={isCreateServiceEntryPending}

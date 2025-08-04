@@ -10,8 +10,8 @@ import { useState } from "react";
 import { useFetchEntry } from "@/queries/TranscationQueries/ServiceEntryQuery";
 import { DeleteEntryDialogBox } from "./ServiceEntryDelete.Dialog"; // <- your dialog file
 import type { ServiceEntryData } from "@/types/transactionTypes";
-import { useNavigate } from "react-router-dom";
 import ServiceEntryDisplay from "./ServiceEntry.view";
+import { generateReferenceNumber } from "@/utils/commonUtils";
 
 const ServiceEntryPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -32,11 +32,47 @@ const ServiceEntryPage = () => {
     <div className="mb-32 flex flex-col gap-4">
       <div className="flex items-center justify-between rounded-lg bg-white p-3">
         <div className="flex flex-col">
-          <PageHeader title="Service Entry" />
+          <PageHeader title={"Service Entry"} />
           <p className="text-sm font-medium text-slate-500">
             Manage your Service Entry
           </p>
         </div>
+        <ButtonSm
+          className="font-medium text-white"
+          text={"New Entry"}
+          state="default"
+          type="button"
+          onClick={() => {
+            setIsViewFormOpen(true);
+            setSelectedEntry({
+              id: 0,
+              refNumber: generateReferenceNumber("SE"),
+              serviceDate: new Date().toISOString().split("T")[0], // today's date in YYYY-MM-DD
+              clientName: "Dummy Client Pvt Ltd",
+              maintenanceType: "Preventive",
+              maintenanceSubType: "Dummy Subtype",
+              serviceRequestRef: "SR-00000",
+              vendorName: "Dummy Vendor Ltd",
+              engineerName: "John Doe",
+              engineerMobile: "0000000000",
+              machineDetails: "SINGLE NEEDLE - BRAND - MODEL - SERIAL",
+              engineerDiagnostics: "No issues found in dummy check.",
+              serviceStatus: "COMPLETED",
+              remarks: "Dummy remarks for the test entry.",
+              spareParts: [
+                {
+                  spareName: "DUMMY PART",
+                  partNumber: "1234-ABCD",
+                  quantity: 1,
+                  sparePhotoUrl: null,
+                  complaintSparePhotoUrl: null,
+                },
+              ],
+            });
+          }}
+          iconPosition="right"
+          imgUrl="/icons/plus-icon.svg"
+        />
       </div>
 
       <div>

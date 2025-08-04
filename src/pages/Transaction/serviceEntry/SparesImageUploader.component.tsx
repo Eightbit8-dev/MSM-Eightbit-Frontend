@@ -240,7 +240,7 @@ const SparePartsManager: React.FC<SparePartsManagerProps> = ({
 
       {/* Tab Content */}
       {activeTab === "quantities" && (
-        <div className="grid grid-cols-1 gap-3">
+        <div className="my-2 grid grid-cols-1 gap-3">
           {selectedSpares.map((spare) => (
             <div
               key={spare.id}
