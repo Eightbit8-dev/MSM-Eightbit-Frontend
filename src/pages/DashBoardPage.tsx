@@ -26,7 +26,7 @@ const stats = [
     navigateUrl: appRoutes.transactionRoutes.children.serviceRequest,
   },
   {
-    title: "Service complted ",
+    title: "Service completed ",
     value: "03",
     textColor: "text-blue-500",
     borderColor: "border-blue-500",
@@ -35,7 +35,7 @@ const stats = [
     navigateUrl: appRoutes.transactionRoutes.children.serviceEntry,
   },
   {
-    title: "service peding",
+    title: "Service pending",
     value: "03",
     textColor: "text-gray-500",
     borderColor: "border-gray-500",
@@ -70,8 +70,8 @@ const DashBoardPage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen rounded-xl bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50 p-3 shadow-sm md:p-4 lg:p-6">
-      <div className="flex flex-col gap-4">
+    <div className="mx-auto max-w-[1390px] self-center rounded-[24px] bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50 p-4 shadow-sm">
+      <div className="flex flex-col gap-2">
         {/* Header */}
         {/* <div className="flex flex-col gap-0">
           <h1 className="mb-2 text-xl leading-tight font-bold text-gray-900">
@@ -83,7 +83,7 @@ const DashBoardPage = () => {
         </div> */}
 
         {/* Stats Grid */}
-        <section className="mb-4 grid grid-cols-2 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
+        <section className="grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
           {stats.map((item, index) => {
             const IconComponent = item.icon;
             return (

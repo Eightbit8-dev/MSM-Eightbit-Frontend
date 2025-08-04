@@ -1,10 +1,9 @@
-import { DashboardSkeleton } from "@/components/common/skeletons";
+import { ServiceRequestSkeleton } from "@/components/common/skeletons";
 import PaginationControls from "@/components/common/Pagination";
 import ButtonSm from "@/components/common/Buttons";
 import { useState } from "react";
 import { useFetchServiceRequests } from "@/queries/TranscationQueries/ServiceRequestQuery";
 import { useNavigate } from "react-router-dom";
-import { appRoutes } from "@/routes/appRoutes";
 
 const ServicePages = () => {
   const [page, setPage] = useState(1);
@@ -14,14 +13,14 @@ const ServicePages = () => {
   const { data, isLoading, isError } = useFetchServiceRequests(page, limit);
 
   if (isLoading) {
-    return <DashboardSkeleton />;
+    return <ServiceRequestSkeleton />;
   }
 
   if (isError) {
     return <div className="p-4 text-red-500">Failed to load data.</div>;
   }
   return (
-    <div className="p-5 bg-white flex flex-col gap-3 shadow-md rounded-lg">
+    <div className="flex flex-col gap-3 rounded-lg bg-white p-5 shadow-md">
       {/* Service Requests Section */}
       <div className="flex w-full flex-row items-center justify-between">
         <div className="flex flex-col gap-0">
@@ -77,7 +76,6 @@ const ServicePages = () => {
                   </div>
                   {/* Action Buttons */}
                   <footer className="flex h-min flex-col gap-3 md:flex-row">
-
                     <ButtonSm
                       className="font-medium text-white"
                       text={"View"}
