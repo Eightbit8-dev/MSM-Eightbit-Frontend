@@ -46,6 +46,7 @@ import {
 } from "@/queries/masterQueries/ProductQuery";
 import { useFetchProblemOptions } from "@/queries/masterQueries/Problem-types";
 import PageHeader from "@/components/masterPage.components/PageHeader";
+import QrScannerDialog from "../serviceRequest/QrScannerDialog";
 
 const ServiceEntryNew = () => {
   const getCurrentDate = () => {
@@ -81,6 +82,7 @@ const ServiceEntryNew = () => {
     [key: number]: number;
   }>({});
 
+  const [showQRDialog, setShowQRDialog] = useState(false);
   const defaultOption: DropdownOption = { id: 0, label: "Select" };
   // Machine dropdown states
   const [selectedClient, setSelectedClient] = useState<DropdownOption>({
@@ -146,6 +148,64 @@ const ServiceEntryNew = () => {
       setFormState(modeParam);
     }
   }, [modeParam]);
+
+  const parseQRData = (data: string): Record<string, string> => {
+    const result: Record<string, string> = {};
+    const keyMap: Record<string, string> = {
+      MACHINE_ENTRY_ID: "machineEntryId",
+      "SERIAL #": "serialNumber",
+      "REF #": "referenceNumber",
+      CLIENT: "clientName",
+      TYPE: "machineType",
+      BRAND: "brand",
+      MODEL: "modelNumber",
+      INSTALLED: "installationDate",
+    };
+
+    const regex = /([A-Z_ #]+)[\s:=]+([^:\n\r]+)/gi;
+    let match;
+    while ((match = regex.exec(data)) !== null) {
+      const rawKey = match[1].trim().toUpperCase();
+      const value = match[2].trim();
+      const normalizedKey = keyMap[rawKey] ?? rawKey.toLowerCase();
+      result[normalizedKey] = value;
+    }
+
+    return result;
+  };
+
+  const handleQRScan = (data: string) => {
+    const parsed = parseQRData(data);
+    const entryId = parsed.machineEntryId;
+    const clientName = parsed.clientName;
+
+    const matchedClient = clientOptions.find(
+      (client) => client.label.toLowerCase() === clientName?.toLowerCase(),
+    );
+
+    setSelectedClient({
+      id: matchedClient?.id || 0,
+      label: clientName || "",
+    });
+
+    if (!entryId) {
+      toast.error("Missing machineEntryId");
+      return;
+    }
+
+    setSelectedType({ id: 404, label: parsed.machineType || "" });
+    setSelectedBrand({ id: 404, label: parsed.brand || "" });
+    setSelectedModel({ id: 404, label: parsed.modelNumber || "" });
+    setSelectedSerial({ id: 404, label: parsed.serialNumber || "" });
+
+    setFormData(prev => ({
+      ...prev,
+      clientId: matchedClient?.id || 0,
+      machineEntryId: Number(entryId)
+    }));
+
+    setShowQRDialog(false);
+  };
 
   // Update spare quantities
   const updateSpareQuantity = (spareId: number, quantity: number) => {
@@ -256,18 +316,23 @@ const ServiceEntryNew = () => {
 
   return (
     <div className="w-full rounded-lg bg-white p-6 shadow-md md:mb-0">
-      <div className="flex items-center mb-2 justify-between ">
-        <PageHeader
-        title="New Service Entry"
+      <div className="flex items-center mb-2 justify-between">
+        <PageHeader title="New Service Entry" />
+        <ButtonSm
+          type="button"
+          text="Scan QR"
+          state="default"
+          className="mb-4 w-fit border-blue-400 text-white"
+          onClick={() => {setShowQRDialog(true),console.log("clciked")}}
         />
-                    <ButtonSm
-              type="button"
-              text="Scan QR"
-              state="default"
-              className="mb-4 w-fit border-blue-400 text-white"
-              onClick={() =>{} }
-            />
       </div>
+
+      <QrScannerDialog
+        open={showQRDialog}
+        onClose={() => setShowQRDialog(false)}
+        onScan={handleQRScan}
+      />
+
       <form
         onSubmit={handleSubmit}
         className="grid grid-cols-1 items-start gap-4 md:grid-cols-2"
