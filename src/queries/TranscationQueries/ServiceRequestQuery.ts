@@ -16,21 +16,24 @@ import type {
 export const useFetchServiceRequests = (
   page: number,
   limit: number,
-  selectedStatus: string | null = null
+  selectedStatus: string | null = null,
 ) => {
   const fetchAllRequests = async (): Promise<ServiceRequestResponse> => {
     const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized");
 
     const statusMap: Record<string, string> = {
-      "Completed": "COMPLETED",
-      "Pending": "PENDING",
+      Completed: "COMPLETED",
+      Pending: "PENDING",
       "Not Completed": "NOT_COMPLETED",
     };
 
-    const statusParam = selectedStatus && statusMap[selectedStatus] ? statusMap[selectedStatus] : undefined;
+    const statusParam =
+      selectedStatus && statusMap[selectedStatus]
+        ? statusMap[selectedStatus]
+        : undefined;
 
-    const res = await axiosInstance.get(apiRoutes.serviceRequest, {
+    const res = await axiosInstance.get(apiRoutes.serviceRequest + "/filter", {
       params: {
         page: page - 1,
         limit,
