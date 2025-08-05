@@ -64,8 +64,8 @@ const SideNav: React.FC = () => {
               activeIconSrc="/icons/sideNavIcons/dashboard-icon-active.svg"
               onClick={() => navigateToRoute(appRoutes.dashboardPage)}
               isVisible={
-                role === "SERVICE" ||
-                import.meta.env.VITE_MODE === "development"
+                role === "SERVICE" || role === "ADMIN"
+                // import.meta.env.VITE_MODE === "development"
               }
             />
 
@@ -75,7 +75,7 @@ const SideNav: React.FC = () => {
               iconSrc="/icons/sideNavIcons/master-icon.svg"
               activeIconSrc="/icons/sideNavIcons/master-icon-active.svg"
               onClick={() => navigateToRoute(appRoutes.masterRoutes.masterPage)}
-              isVisible={import.meta.env.VITE_MODE === "development"}
+              isVisible={role === "ADMIN"}
             />
 
             <NavigationButton
@@ -88,7 +88,7 @@ const SideNav: React.FC = () => {
               onClick={() =>
                 navigateToRoute(appRoutes.transactionRoutes.transcationPage)
               }
-              isVisible={import.meta.env.VITE_MODE === "development"}
+              isVisible={role === "ADMIN"}
             />
 
             <NavigationButton
@@ -101,9 +101,25 @@ const SideNav: React.FC = () => {
               onClick={() =>
                 navigateToRoute(appRoutes.userRoutes?.userPage || "/users")
               }
-              isVisible={import.meta.env.VITE_MODE === "development"}
+              isVisible={role === "ADMIN"}
             />
 
+       <NavigationButton
+              labelName="Service"
+              isActive={isRouteActive(
+                appRoutes.ServiceRoutes?.servicePage || "/Service",
+              )}
+              iconSrc="/icons/sideNavIcons/service-icon.svg"
+              activeIconSrc="/icons/sideNavIcons/service-icon-active.svg"
+              onClick={() =>
+                navigateToRoute(
+                  appRoutes.ServiceRoutes?.servicePage || "/Service",
+                )
+              }
+              isVisible={
+ role === "SERVICE" || role === "ADMIN"
+              }
+            />
             <NavigationButton
               labelName="Reports"
               isActive={isRouteActive(
@@ -117,28 +133,11 @@ const SideNav: React.FC = () => {
                 )
               }
               isVisible={
-                role === "SERVICE" ||
-                import.meta.env.VITE_MODE === "development"
+ role === "SERVICE" || role === "ADMIN"
               }
             />
 
-            <NavigationButton
-              labelName="Service"
-              isActive={isRouteActive(
-                appRoutes.ServiceRoutes?.servicePage || "/Service",
-              )}
-              iconSrc="/icons/sideNavIcons/reports-icon.svg"
-              activeIconSrc="/icons/sideNavIcons/reports-icon-active.svg"
-              onClick={() =>
-                navigateToRoute(
-                  appRoutes.ServiceRoutes?.servicePage || "/Service",
-                )
-              }
-              isVisible={
-                role === "SERVICE" ||
-                import.meta.env.VITE_MODE === "development"
-              }
-            />
+     
             {/* --install pwa button */}
             {/* <InstallButton /> */}
           </div>

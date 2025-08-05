@@ -16,22 +16,25 @@ import type {
 export const useFetchServiceRequests = (
   page: number,
   limit: number,
-  selectedStatus?: string,
+  selectedStatus: string | null = null
 ) => {
   const fetchAllRequests = async (): Promise<ServiceRequestResponse> => {
     const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized");
 
-    let selectedStat = "";
-    if (selectedStatus === "Completed") selectedStat = "COMPLETED";
-    if (selectedStatus === "Pending") selectedStat = "PENDING";
-    if (selectedStatus === "Not Completed") selectedStat = "NOT_COMPLETED";
+    const statusMap: Record<string, string> = {
+      "Completed": "COMPLETED",
+      "Pending": "PENDING",
+      "Not Completed": "NOT_COMPLETED",
+    };
+
+    const statusParam = selectedStatus && statusMap[selectedStatus] ? statusMap[selectedStatus] : undefined;
 
     const res = await axiosInstance.get(apiRoutes.serviceRequest, {
       params: {
         page: page - 1,
         limit,
-        status: selectedStat,
+        status: statusParam,
       },
       headers: {
         Authorization: `Bearer ${token}`,
