@@ -14,6 +14,7 @@ import type { FormState } from "../../../types/appTypes";
 import type { SpareDetails } from "../../../types/masterApiTypes";
 import { useFetchSparesPaginated } from "../../../queries/masterQueries/SpareQuery";
 import SpareEdit from "./Spares.component";
+import MasterSearchBar from "@/components/common/MasterSearchBar";
 
 const SparesPage = () => {
   const [isDeleteSpareDialogOpen, setIsDeleteSpareDialogOpen] = useState(false);
@@ -23,7 +24,7 @@ const SparesPage = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
-
+  const[searchValue,setSearchValue] = useState("")
   const {
     data,
     isLoading: isSparesLoading,
@@ -65,6 +66,13 @@ const SparesPage = () => {
           </div>
           {/* Pagination Controls */}
           <footer className="mt-3 md:mt-0 flex w-full items-center md:justify-end gap-2 justify-between">
+                                      <MasterSearchBar
+              inputValue={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              onSearch={(value) => {
+                console.log("make an api call" + value);
+              }}
+            />
             <DropdownSelect
               title=""
               direction="down"
@@ -81,11 +89,7 @@ const SparesPage = () => {
                 setCurrentPage(1);
               }}
             />
-            <PaginationControls
-              totalPages={totalPages}
-              currentPage={currentPage}
-              onPageChange={setCurrentPage}
-            />
+
           </footer>
         </header>
 
@@ -162,6 +166,13 @@ const SparesPage = () => {
               </div>
             ))
           )}
+        </div>
+        <div className="flex mt-auto justify-end">
+                      <PaginationControls
+              totalPages={totalPages}
+              currentPage={currentPage}
+              onPageChange={setCurrentPage}
+            />
         </div>
       </section>
 

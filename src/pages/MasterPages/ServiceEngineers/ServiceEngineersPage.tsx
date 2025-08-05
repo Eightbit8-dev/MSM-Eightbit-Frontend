@@ -19,6 +19,7 @@ import { appRoutes } from "../../../routes/appRoutes";
 import type { FormState } from "../../../types/appTypes";
 import type { ServiceEngineerDetails } from "../../../types/masterApiTypes";
 import ServiceEngineerEdit from "./EditEngineers.component";
+import MasterSearchBar from "@/components/common/MasterSearchBar";
 
 const ServiceEngineerPage = () => {
   const navigate = useNavigate();
@@ -36,7 +37,7 @@ const ServiceEngineerPage = () => {
   const [serviceEngineer, setServiceEngineer] =
     useState<ServiceEngineerDetails | null>(null);
   const [formState, setFormState] = useState<FormState>("create");
-
+const [searchValue,setSearchValue] = useState("")
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
 
@@ -68,6 +69,14 @@ const ServiceEngineerPage = () => {
             </div>
             {/* Footer with Pagination */}
             <footer className="mt-3 flex w-full flex-row items-center justify-between gap-2 md:mt-0 md:justify-end">
+                          <MasterSearchBar
+              inputValue={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              onSearch={(value) => {
+                console.log("make an api call" + value);
+              }}
+            />
+              
               <DropdownSelect
                 title=""
                 direction="down"
@@ -84,11 +93,7 @@ const ServiceEngineerPage = () => {
                   setCurrentPage(1);
                 }}
               />
-              <PaginationControls
-                totalPages={totalPages}
-                currentPage={currentPage}
-                onPageChange={setCurrentPage}
-              />
+
             </footer>
           </header>
 
@@ -174,6 +179,12 @@ const ServiceEngineerPage = () => {
               })
             )}
           </div>
+          <div className="flex justify-end mt-auto items-end">
+                        <PaginationControls
+                totalPages={totalPages}
+                currentPage={currentPage}
+                onPageChange={setCurrentPage}
+              /></div>
         </section>
 
         {/* Edit/Create Section */}

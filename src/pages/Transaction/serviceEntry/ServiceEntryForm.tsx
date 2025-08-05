@@ -277,7 +277,6 @@ const RequestEntry = () => {
             required
             className="w-full"
             title="Maintenance Type"
-            disabled={formState === "display"}
             options={maintenanceOptions}
             selected={
               maintenanceOptions.find(
@@ -289,15 +288,13 @@ const RequestEntry = () => {
             }
           />
 
+
+
           {formData.maintenanceType === "Non-Warranty" && (
             <DropdownSelect
               required={formData.maintenanceType === "Non-Warranty"}
               title="Non-warranty Type"
               className="w-full"
-              disabled={
-                formData.maintenanceType !== "Non-Warranty" ||
-                formState === "display"
-              }
               options={maintenanceSubtTypeOptions}
               selected={
                 maintenanceSubtTypeOptions.find(
@@ -307,6 +304,26 @@ const RequestEntry = () => {
               onChange={(val) =>
                 setFormData({ ...formData, maintenanceSubType: val.label })
               }
+            />
+          )}
+          {formData.maintenanceType === "General" && (
+            <Input
+              required
+              disabled
+              className="w-full"
+              title="Scope"
+              inputValue="Thugil Scope"
+              onChange={() => {}}
+            />
+          )}
+          {formData.maintenanceType === "Breakdown" && (
+            <Input
+              required
+              disabled
+              className="w-full"
+              title="Scope"
+              inputValue="Client Scope"
+              onChange={() => {}}
             />
           )}
         </div>

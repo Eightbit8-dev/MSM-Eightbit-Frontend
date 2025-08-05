@@ -188,7 +188,10 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
 
   return (
     <div className="flex min-w-full flex-col gap-0 rounded-2xl bg-white">
-      <h1 className="mb-6 text-2xl font-semibold capitalize">{mode} Machine</h1>
+      <h1 className="mb-6 text-2xl font-semibold capitalize">
+        {mode === "create" ? " New" : "Edit"} Machine Entry
+      </h1>
+
       <form
         onSubmit={handleSubmit}
         className="flex flex-col gap-3 md:gap-4 lg:gap-4"
@@ -311,7 +314,7 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
           <ButtonSm
             type="button"
             state="outline"
-            className="border-[1.5px] border-slate-300"
+            className="border-[1.5px] min-w-[70px] flex justify-center border-slate-300"
             onClick={() => setFormVisible(false)}
             text="view"
           />
@@ -320,7 +323,7 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
               type="submit"
               state="default"
               text={isEdit ? "Save Changes" : "Save"}
-              className="bg-blue-500 text-white hover:bg-blue-700"
+              className="bg-blue-500 min-w-[70px] flex justify-center text-white hover:bg-blue-700"
             />
           )}
         </div>

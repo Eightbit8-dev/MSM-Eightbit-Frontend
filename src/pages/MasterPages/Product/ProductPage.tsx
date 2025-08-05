@@ -14,10 +14,11 @@ import PaginationControls from "../../../components/common/Pagination";
 
 import type { FormState } from "../../../types/appTypes";
 import type { ProductDetails } from "../../../types/masterApiTypes";
+import MasterSearchBar from "@/components/common/MasterSearchBar";
 
 const ProductsPage = () => {
   const [isDeleteProductDialogOpen, setIsDeleteProductDialogOpen] = useState(false);
-
+  const [searchValue, setSearchValue] = useState("");
   const [product, setProduct] = useState<ProductDetails>({
     id: 0,
     machineType: "",
@@ -87,7 +88,15 @@ const ProductsPage = () => {
           </div>
                   {/* Pagination Controls */}
         <footer className="mt-3 md:mt-0 flex w-full flex-row md:justify-end gap-2 justify-between items-center">
- <DropdownSelect
+
+                      <MasterSearchBar
+                        inputValue={searchValue}
+                        onChange={(e) => setSearchValue(e.target.value)}
+                        onSearch={(value) => {
+                          console.log("make an api call" + value);
+                        }}
+                      />'
+                       <DropdownSelect
             title=""
             direction="down"
             options={[5, 10, 15, 20].map((item) => ({
@@ -103,12 +112,8 @@ const ProductsPage = () => {
               setItemsPerPage(e.id);
               setCurrentPage(1);
             }}
-          />
-          <PaginationControls
-            totalPages={totalPages}
-            currentPage={currentPage}
-            onPageChange={setCurrentPage}
-          />
+          />'
+
         </footer>
         </header>
 
@@ -192,7 +197,13 @@ const ProductsPage = () => {
             })
           )}
         </div>
-
+          <div className="flex mt-auto justify-end">
+                      <PaginationControls
+            totalPages={totalPages}
+            currentPage={currentPage}
+            onPageChange={setCurrentPage}
+          />
+          </div>
 
       </section>
 

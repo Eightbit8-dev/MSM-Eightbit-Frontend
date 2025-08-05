@@ -25,7 +25,7 @@ export const TransactionPage = () => {
     {
       img: "/icons/Master/Clients.svg",
       title: "Service Request",
-      desc: "Manage your customer database for orders, deliveries, and support tracking.",
+      desc: "Manage and track service requests, client information, and support history efficiently.",
       btnText: "Configure",
       onAction: () =>
         navigate(appRoutes.transactionRoutes.children.serviceRequest),

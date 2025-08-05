@@ -113,19 +113,11 @@ const DashBoardPage = () => {
             );
           })}
         </section>
-
-        {/* Quick Actions and System Status */}
-      </div>
-    </div>
-  );
-};
-
-export default DashBoardPage;
 <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
   {/* Quick Actions */}
   <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
     <h2 className="mb-4 text-xl font-semibold text-gray-900">Quick Actions</h2>
-    <div className="space-y-3">
+    <div className="flex flex-col gap-2">
       <button className="flex w-full items-center justify-between rounded-xl border border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 p-4 transition-all duration-300 hover:from-blue-100 hover:to-indigo-100">
         <span className="font-medium text-blue-700">
           Add New Service Request
@@ -166,4 +158,12 @@ export default DashBoardPage;
       </div>
     </div>
   </div>
-</div>;
+</div>
+        {/* Quick Actions and System Status */}
+      </div>
+    </div>
+  );
+};
+
+export default DashBoardPage;
+

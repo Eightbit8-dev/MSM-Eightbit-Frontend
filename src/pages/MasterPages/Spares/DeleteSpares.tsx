@@ -26,6 +26,7 @@ export const DeleteSpareDialogBox = ({
     spareName: "",
     remarks: "",
     partNumber: "",
+    description:"",
     id: 0,
   };
 

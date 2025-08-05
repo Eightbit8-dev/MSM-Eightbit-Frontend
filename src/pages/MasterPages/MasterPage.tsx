@@ -24,7 +24,7 @@ export const MasterPage = () => {
     {
       img: "/icons/Master/Clients.svg",
       title: "Clients",
-      desc: "Manage your customer database for orders, deliveries, and support tracking.",
+      desc: "Manage client entries and access their information quickly and efficiently.",
       btnText: "Configure",
       onAction: () => navigate(appRoutes.masterRoutes.children.clients),
     },

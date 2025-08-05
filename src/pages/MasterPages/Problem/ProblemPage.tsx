@@ -18,6 +18,7 @@ import { appRoutes } from "../../../routes/appRoutes";
 
 import type { FormState } from "../../../types/appTypes";
 import type { ProblemDetails } from "../../../types/masterApiTypes";
+import MasterSearchBar from "@/components/common/MasterSearchBar";
 
 const ProblemPage = () => {
   const navigate = useNavigate();
@@ -35,7 +36,7 @@ const ProblemPage = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
-
+  const [searchValue,setSearchValue] = useState("")
   const { data, isLoading, isError } = useFetchProblem(
     currentPage,
     itemsPerPage,
@@ -62,6 +63,13 @@ const ProblemPage = () => {
               <PageHeader title="Problem Configuration" />
             </div>
             <footer className="mt-3 flex w-full flex-row items-center justify-between gap-2 md:mt-0 md:justify-end">
+                                                    <MasterSearchBar
+              inputValue={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              onSearch={(value) => {
+                console.log("make an api call" + value);
+              }}
+            />
               <DropdownSelect
                 title=""
                 direction="down"
@@ -78,11 +86,7 @@ const ProblemPage = () => {
                   setCurrentPage(1); // Reset to page 1 when changing itemsPerPage
                 }}
               />
-              <PaginationControls
-                totalPages={totalPages}
-                currentPage={currentPage}
-                onPageChange={(page) => setCurrentPage(page)}
-              />
+             
             </footer>
           </header>
 
@@ -165,6 +169,13 @@ const ProblemPage = () => {
                 );
               })
             )}
+          </div>
+          <div className="flex justify-end mt-auto">
+             <PaginationControls
+                totalPages={totalPages}
+                currentPage={currentPage}
+                onPageChange={(page) => setCurrentPage(page)}
+              />
           </div>
         </section>
 
