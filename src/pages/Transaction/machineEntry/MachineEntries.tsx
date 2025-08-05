@@ -48,7 +48,7 @@ const MachineEntry = () => {
   // Search and filter states
   const [showFilters, setShowFilters] = useState(false);
   const [searchValue, setSearchValue] = useState("");
-  const [activeFilter, setActiveFilter] = useState<string>("");
+  const [activeFilter, setActiveFilter] = useState<string>("client-name");
 
   const [searchParams, setSearchParams] = useState<MachineEntrySearchParam>({
     status: "ACTIVE",

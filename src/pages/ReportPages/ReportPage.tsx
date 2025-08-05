@@ -46,7 +46,7 @@ const ReportsDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50 p-6 rounded-lg">
       <div className="">
         {/* Header */}
         <div className="mb-8">

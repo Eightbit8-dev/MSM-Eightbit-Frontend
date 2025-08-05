@@ -9,3 +9,13 @@ export interface ApiResponse {
   message: string;
   data: ProductDetails ;
 }
+
+export interface DashboardStats {
+  totalMachines: number;
+  breakdownMachines: number;
+  serviceCompleted: number;
+  servicePending: number;
+  assignedEngineers: number;
+  availableEngineers: number;
+  message: string;
+};
