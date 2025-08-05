@@ -7,11 +7,12 @@ import { AnimatePresence } from "motion/react";
 import type { FormState } from "@/types/appTypes";
 import DropdownSelect from "@/components/common/DropDown";
 import type { ServiceRequest } from "@/types/transactionTypes";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFetchServiceRequests } from "@/queries/TranscationQueries/ServiceRequestQuery";
 import ServiceRequestFormPage from "./ServiceForm";
 import { DeleteServiceRequestDialogBox } from "./ServiceRequestDelete.Dialog";
 import { AssignEngineerDialogBox } from "./AssignEnginnerDialog";
+import SlidingFilters from "@/components/common/SlidingFilters";
 
 const ServiceRequestPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -25,10 +26,18 @@ const ServiceRequestPage = () => {
 
   // const { isSm } = useBreakpoints();
 
-  const { data, isLoading } = useFetchServiceRequests(
+  const [selectedFilter, setSelectedFilter] = useState("");
+  const { data, isLoading, refetch } = useFetchServiceRequests(
     currentPage,
     itemsPerPage,
+    selectedFilter,
   );
+
+  useEffect(() => {
+    if (selectedFilter) {
+      refetch();
+    }
+  }, [selectedFilter]);
 
   const paginatedData = data?.data || [];
   const totalPages = data?.totalPages || 0;
@@ -92,6 +101,13 @@ const ServiceRequestPage = () => {
                     totalPages={totalPages}
                     currentPage={currentPage}
                     onPageChange={setCurrentPage}
+                  />
+                  <SlidingFilters
+                    filters={["Completed", "Not Completed", "Pending"]}
+                    selectedFilter={selectedFilter}
+                    onFilterChange={(val) => {
+                      setSelectedFilter(val);
+                    }}
                   />
                 </div>
               </section>

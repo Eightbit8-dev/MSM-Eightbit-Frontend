@@ -138,7 +138,7 @@ const SearchBarWithFilter: React.FC<SearchBarProps> = ({
         <div className="h-8 w-px bg-slate-200" />
 
         {/* Filter Selection */}
-        <div className="flex items-center px-1 py-1">
+        <div className="flex items-center px-2 py-1">
           <div
             ref={containerRef}
             className="relative flex rounded-lg bg-slate-100"
@@ -183,7 +183,7 @@ const SearchBarWithFilter: React.FC<SearchBarProps> = ({
       </motion.div>
 
       {/* Search suggestions or results indicator */}
-      <div className="relative flex min-w-full">
+      <div className="relative hidden min-w-full">
         <AnimatePresence>
           {isFocused && value && (
             <motion.div

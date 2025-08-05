@@ -8,7 +8,7 @@ import PaginationControls from "../../../components/common/Pagination";
 import EmployeeTableSkeleton from "../../TableSkleton";
 import { DeleteMachineDialogBox } from "./MachineEntryDelete.Dialog";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import type { MachineDetails } from "@/types/transactionTypes";
 import MachineFormPage from "./MachineForm";
 import DialogBox from "@/components/common/DialogBox";
@@ -20,7 +20,6 @@ import DropdownSelect from "@/components/common/DropDown";
 import { useBreakpoints } from "@/hooks/useBreakPoints";
 import MachineImportModal from "./MachineImportModal";
 import SearchBarWithFilter from "@/components/common/SearchBarWIthFilters";
-import { DateInput } from "@/components/common/Input";
 
 export interface MachineEntrySearchParam {
   status: string;
@@ -48,46 +47,20 @@ const MachineEntry = () => {
   // Search and filter states
   const [showFilters, setShowFilters] = useState(false);
   const [searchValue, setSearchValue] = useState("");
-  const [activeFilter, setActiveFilter] = useState<string>("");
+  const [activeFilter, setActiveFilter] = useState<string>("client-name");
 
-  const [searchParams, setSearchParams] = useState<MachineEntrySearchParam>({
-    status: "ACTIVE",
-    requestDateFrom: "01-01-2023",
-    requestDateTo: "31-12-2023",
-    clientName: "",
-    machineType: "",
-    brand: "",
-  });
-
-  // Update search params when search value or filter changes
-  useEffect(() => {
-    const newParams = { ...searchParams };
-
-    // Reset all search fields first
-    newParams.clientName = "";
-    newParams.machineType = "";
-    newParams.brand = "";
-
-    // Set search value based on active filter
-    if (activeFilter === "client-name") {
-      newParams.clientName = searchValue;
-    } else if (activeFilter === "machine-type") {
-      newParams.machineType = searchValue;
-    } else if (activeFilter === "brand") {
-      newParams.brand = searchValue;
-    }
-
-    setSearchParams(newParams);
-    setCurrentPage(1); // Reset to first page when search changes
-  }, [searchValue, activeFilter]);
-
-  const { data, isLoading } = useFetchMachine(
+  const { data, isLoading, refetch } = useFetchMachine(
     currentPage,
     itemsPerPage,
-    // searchValue,
-    // searchParams,
-    searchParams.clientName
+    activeFilter === "client-name" ? searchValue : undefined,
+    activeFilter === "machine-type" ? searchValue : undefined,
+    activeFilter === "brand" ? searchValue : undefined,
   );
+
+  const handleFilterChange = (filter: string) => {
+    setActiveFilter(filter);
+    setSearchValue(""); // Reset search when filter changes (optional)
+  };
 
   const { mutate: generateQR, isPending: isCreateQRPending } =
     useCreateMachineQR();
@@ -116,50 +89,6 @@ const MachineEntry = () => {
         ? prev.filter((id) => !allIdsOnPage.includes(id))
         : [...new Set([...prev, ...allIdsOnPage])],
     );
-  };
-
-  const handleFilterChange = (filter: string) => {
-    setActiveFilter(filter);
-  };
-
-  const handleApplyFilters = () => {
-    // Trigger a refetch with current params
-    setCurrentPage(1);
-  };
-
-  const handleClearFilters = () => {
-    setSearchParams({
-      status: "ACTIVE",
-      requestDateFrom: "01-01-2023",
-      requestDateTo: "31-12-2023",
-      clientName: "",
-      machineType: "",
-      brand: "",
-    });
-    setSearchValue("");
-    setActiveFilter("");
-    setCurrentPage(1);
-  };
-
-  const handleStatusChange = (option: { id: number; label: string }) => {
-    setSearchParams((prev) => ({
-      ...prev,
-      status: option.label.toUpperCase(),
-    }));
-  };
-
-  const handleStartDateChange = (value: string) => {
-    setSearchParams((prev) => ({
-      ...prev,
-      requestDateFrom: value,
-    }));
-  };
-
-  const handleEndDateChange = (value: string) => {
-    setSearchParams((prev) => ({
-      ...prev,
-      requestDateTo: value,
-    }));
   };
 
   const dummyMachineData: MachineDetails = {
@@ -236,81 +165,15 @@ const MachineEntry = () => {
           onFilterChange={handleFilterChange}
           onSearch={setSearchValue}
           value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
+          onChange={(e) => {
+            setSearchValue(e.target.value);
+            refetch();
+            console.log(e.target.value);
+            console.log(activeFilter);
+          }}
         />
 
-        {/* Filters Section */}
-        {/* <div className="filters-section flex w-full scale-100 transform flex-col rounded-[12px] bg-white p-4 opacity-100 shadow-sm transition-all duration-300 ease-in-out">
-          <div className="relative flex items-center justify-between gap-3">
-            <span className="font-medium text-gray-700">Sort & filter </span>
-            <div className="flex gap-3">
-              <ButtonSm
-                state="default"
-                className="text-white"
-                text="Apply filters"
-                onClick={handleApplyFilters}
-              />
-              <ButtonSm
-                state="default"
-                onClick={handleClearFilters}
-                className="bg-red-100 text-red-500 outline-1 outline-red-500 hover:bg-red-100 hover:text-red-500 active:bg-red-100 active:text-red-500"
-                text="Clear filters"
-              />
-            </div>
-          </div>
-          <div className="my-3 flex flex-col">
-            <div className="flex w-full flex-wrap gap-4">
-              <div className="w-full sm:w-[48%] lg:w-[32%]">
-                <DropdownSelect
-                  title="Status"
-                  options={[
-                    { id: 0, label: "Select status" },
-                    { id: 1, label: "Active" },
-                    { id: 2, label: "Inactive" },
-                  ]}
-                  selected={{
-                    id:
-                      searchParams.status === "ACTIVE"
-                        ? 1
-                        : searchParams.status === "INACTIVE"
-                          ? 2
-                          : 0,
-                    label:
-                      searchParams.status === "ACTIVE"
-                        ? "Active"
-                        : searchParams.status === "INACTIVE"
-                          ? "Inactive"
-                          : "Select status",
-                  }}
-                  onChange={handleStatusChange}
-                />
-              </div>
-
-              <div className="w-full sm:w-[48%] lg:w-[32%]">
-                <DateInput
-                  title="Start date"
-                  value={searchParams.requestDateFrom}
-                  onChange={handleStartDateChange}
-                  placeholder="DD-MM-YYYY"
-                />
-              </div>
-              <div className="w-full sm:w-[48%] lg:w-[32%]">
-                <DateInput
-                  title="End date"
-                  value={searchParams.requestDateTo}
-                  onChange={handleEndDateChange}
-                  placeholder="DD-MM-YYYY"
-                />
-              </div>
-            </div>
-          </div>
-          <button
-            className={`absolute right-[50%] -bottom-0 z-10 flex w-fit translate-x-1/2 cursor-pointer rounded-[5px] border border-gray-300 bg-white p-2 transition-transform duration-300 ${showFilters ? "rotate-180" : "rotate-0"}`}
-            onClick={() => setShowFilters(!showFilters)}
-          >
-            <img src="/icons/arrowup.png" alt="toggle-filters" />
-          </button>
-        </div> */}
+        {/* filter we wll add it later */}
       </header>
 
       {/* Table */}

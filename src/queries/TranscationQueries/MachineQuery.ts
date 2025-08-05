@@ -71,7 +71,11 @@ export const useCreateMachineQR = () => {
   });
 };
 
-export const useFetchMachineBrand = (page: number, limit: number, brand?: string) => {
+export const useFetchMachineBrand = (
+  page: number,
+  limit: number,
+  brand?: string,
+) => {
   const fetchAllMachine = async (): Promise<MachineResponse> => {
     try {
       const token = Cookies.get("token");
@@ -115,18 +119,40 @@ export const useFetchMachineBrand = (page: number, limit: number, brand?: string
     retry: 1,
   });
 };
-export const useFetchMachine = (page: number, limit: number, clientName?: string, machineType?: string, brand?: string) => {
+
+// main
+export const useFetchMachine = (
+  page: number,
+  limit: number,
+  clientName?: string,
+  machineType?: string,
+  brand?: string,
+) => {
   const fetchAllMachine = async (): Promise<MachineResponse> => {
     try {
       const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
-      const res = await axiosInstance.get(apiRoutes.machineEntrySearch, {
-        params: {
-          clientName,
-          pages: page - 1,
-          limit,
-        },
+      let url = apiRoutes.machineEntry; // Default fallback
+      const params: Record<string, any> = {
+        pages: page - 1,
+        limit,
+      };
+
+      // Dynamically change route and params
+      if (clientName) {
+        url = `${apiRoutes.machineEntry}/search/client-name`;
+        params.clientName = clientName;
+      } else if (brand) {
+        url = `${apiRoutes.machineEntry}/search/brand`;
+        params.brand = brand;
+      } else if (machineType) {
+        url = `${apiRoutes.machineEntry}/search/machine-type`;
+        params.machineEntry = machineType;
+      }
+
+      const res = await axiosInstance.get(url, {
+        params,
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -153,7 +179,7 @@ export const useFetchMachine = (page: number, limit: number, clientName?: string
   };
 
   return useQuery({
-    queryKey: ["machine", page, limit, clientName],
+    queryKey: ["machine", page, limit, clientName, machineType, brand],
     queryFn: fetchAllMachine,
     staleTime: 10 * 60,
     retry: 1,
@@ -168,8 +194,6 @@ interface MachineEntrySearchParam {
   machineType: string;
   brand: string;
 }
-
-
 
 export const useFetchMachinePaginated = (
   page: number,
@@ -201,7 +225,7 @@ export const useFetchMachinePaginated = (
           pages: page - 1, // Note: API uses 'pages' instead of 'page'
           limit,
         };
-        
+
         const res = await axiosInstance.get(apiUrl, {
           params: requestParams,
           headers: {
@@ -219,15 +243,14 @@ export const useFetchMachinePaginated = (
           totalPages: res.data.totalPages || 0,
           totalRecords: res.data.totalRecords || 0,
         };
-      } 
-      else if (hasMachineType) {
+      } else if (hasMachineType) {
         apiUrl = `${apiRoutes.machineEntry}/search/machine-type`;
         requestParams = {
           machineType: searchParams.machineType.trim(),
           pages: page - 1,
           limit,
         };
-        
+
         const res = await axiosInstance.get(apiUrl, {
           params: requestParams,
           headers: {
@@ -245,15 +268,14 @@ export const useFetchMachinePaginated = (
           totalPages: res.data.totalPages || 0,
           totalRecords: res.data.totalRecords || 0,
         };
-      } 
-      else if (hasBrand) {
+      } else if (hasBrand) {
         apiUrl = `${apiRoutes.machineEntry}/search/brand`;
         requestParams = {
           brand: searchParams.brand.trim(),
           pages: page - 1,
           limit,
         };
-        
+
         const res = await axiosInstance.get(apiUrl, {
           params: requestParams,
           headers: {
@@ -271,8 +293,7 @@ export const useFetchMachinePaginated = (
           totalPages: res.data.totalPages || 0,
           totalRecords: res.data.totalRecords || 0,
         };
-      } 
-      else {
+      } else {
         // Use main endpoint with status and date filters
         const requestBody = {
           status: searchParams.status,
@@ -301,14 +322,15 @@ export const useFetchMachinePaginated = (
       }
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        const errorMessage = error.response?.data?.message || "Failed to fetch machines";
+        const errorMessage =
+          error.response?.data?.message || "Failed to fetch machines";
         toast.error(errorMessage);
         console.error("API Error:", error.response?.data);
       } else {
         toast.error("Something went wrong while fetching machines");
         console.error("Unexpected error:", error);
       }
-      
+
       // Return empty data instead of throwing to prevent component crashes
       return {
         data: [],

@@ -13,15 +13,25 @@ import type {
 /**
  * 🔍 Fetch all Service Requests
  */
-export const useFetchServiceRequests = (page: number, limit: number) => {
+export const useFetchServiceRequests = (
+  page: number,
+  limit: number,
+  selectedStatus?: string,
+) => {
   const fetchAllRequests = async (): Promise<ServiceRequestResponse> => {
     const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized");
+
+    let selectedStat = "";
+    if (selectedStatus === "Completed") selectedStat = "COMPLETED";
+    if (selectedStatus === "Pending") selectedStat = "PENDING";
+    if (selectedStatus === "Not Completed") selectedStat = "NOT_COMPLETED";
 
     const res = await axiosInstance.get(apiRoutes.serviceRequest, {
       params: {
         page: page - 1,
         limit,
+        status: selectedStat,
       },
       headers: {
         Authorization: `Bearer ${token}`,
@@ -41,7 +51,7 @@ export const useFetchServiceRequests = (page: number, limit: number) => {
   };
 
   return useQuery({
-    queryKey: ["serviceRequest", page, limit],
+    queryKey: ["serviceRequest", page, limit, selectedStatus],
     queryFn: fetchAllRequests,
     staleTime: 0,
     retry: 1,
