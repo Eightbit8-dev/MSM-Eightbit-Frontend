@@ -35,7 +35,7 @@ export const useFetchProblem = (page: number, limit: number,problemType?: string
       const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
-      const res = await axiosInstance.get(apiRoutes.problemDetails, {
+      const res = await axiosInstance.get(apiRoutes.problemDetailsSearch, {
         params: {
           page: page - 1,
           limit,
@@ -80,7 +80,7 @@ export const useFetchProblemOptions = () => {
       const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
-      const res = await axiosInstance.get(apiRoutes.problemDetails, {
+      const res = await axiosInstance.get(apiRoutes.problemDetailsSearch, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

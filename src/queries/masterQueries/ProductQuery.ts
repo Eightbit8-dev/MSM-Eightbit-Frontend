@@ -19,7 +19,7 @@ export const useFetchProducts = () => {
       const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
-      const res = await axiosInstance.get(apiRoutes.products, {
+      const res = await axiosInstance.get(apiRoutes.productsSearch, {
         headers: { Authorization: `Bearer ${token}` },
         params: {
           machineType: "",
@@ -59,7 +59,7 @@ export const useFetchProductsType = () => {
     const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
-    const res = await axiosInstance.get(apiRoutes.products, {
+    const res = await axiosInstance.get(apiRoutes.productsSearch, {
       headers: { Authorization: `Bearer ${token}` },
               params: {
           machineType: "",
@@ -89,7 +89,7 @@ export const useFetchBrandsOptions = () => {
     const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
-    const res = await axiosInstance.get(apiRoutes.products, {
+    const res = await axiosInstance.get(apiRoutes.productsSearch, {
       headers: { Authorization: `Bearer ${token}` },
               params: {
           machineType: "",
@@ -119,7 +119,7 @@ export const useFetchModelsOptions = () => {
     const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
-    const res = await axiosInstance.get(apiRoutes.products, {
+    const res = await axiosInstance.get(apiRoutes.productsSearch, {
       headers: { Authorization: `Bearer ${token}` },
               params: {
           machineType: "",
@@ -149,7 +149,7 @@ export const useFetchAllDetailsOptions = () => {
     const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
-    const res = await axiosInstance.get(apiRoutes.products, {
+    const res = await axiosInstance.get(apiRoutes.productsSearch, {
       headers: { Authorization: `Bearer ${token}` },
               params: {
           machineType: "",
@@ -181,7 +181,7 @@ export const useFetchProductsPaginated = (page: number, limit: number , machineT
       const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
-      const res = await axiosInstance.get(apiRoutes.products, {
+      const res = await axiosInstance.get(apiRoutes.productsSearch, {
         headers: { Authorization: `Bearer ${token}` },
         params: { page: page - 1, limit, machineType},
       });

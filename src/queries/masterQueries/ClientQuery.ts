@@ -29,7 +29,7 @@ export const useFetchClients = () => {
       const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
-      const res = await axiosInstance.get(apiRoutes.clients, {
+      const res = await axiosInstance.get(apiRoutes.clientsSearch, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -68,7 +68,7 @@ export const useFetchClientsPaginated = (page: number, limit: number,  clientNam
       const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
-      const res = await axiosInstance.get(apiRoutes.clients, {
+      const res = await axiosInstance.get(apiRoutes.clientsSearch, {
         params: {
           page: page - 1,
           limit,
@@ -115,7 +115,7 @@ export const useFetchClientOptions = () => {
     const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
-    const res = await axiosInstance.get(apiRoutes.clients, {
+    const res = await axiosInstance.get(apiRoutes.clientsSearch, {
       headers: { Authorization: `Bearer ${token}` },
                 params: {
           clientName: "",

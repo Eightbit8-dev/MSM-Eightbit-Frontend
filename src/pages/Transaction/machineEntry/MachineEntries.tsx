@@ -86,6 +86,7 @@ const MachineEntry = () => {
     itemsPerPage,
     // searchValue,
     // searchParams,
+    searchParams.clientName
   );
 
   const { mutate: generateQR, isPending: isCreateQRPending } =

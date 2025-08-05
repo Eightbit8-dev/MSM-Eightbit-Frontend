@@ -35,7 +35,7 @@ export const useFetchServiceEngineers = (page: number, limit: number, engineerNa
       const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
-      const res = await axiosInstance.get(apiRoutes.users, {
+      const res = await axiosInstance.get(apiRoutes.usersSearch, {
         params: {
           page: page - 1,
           limit,
@@ -80,7 +80,7 @@ export const useFetchServiceEngineerOptions = () => {
       const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
-      const res = await axiosInstance.get(apiRoutes.users, {
+      const res = await axiosInstance.get(apiRoutes.usersSearch, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

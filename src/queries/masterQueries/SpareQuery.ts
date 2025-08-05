@@ -21,7 +21,7 @@ export const useFetchSpares = () => {
       const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
-      const res = await axiosInstance.get(apiRoutes.machineSpares, {
+      const res = await axiosInstance.get(apiRoutes.machineSparesSearch, {
         headers: { Authorization: `Bearer ${token}` },
         params: {
           spareName: "",
@@ -57,7 +57,7 @@ export const useFetchSparesOptions = () => {
       const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
-      const res = await axiosInstance.get(apiRoutes.machineSpares, {
+      const res = await axiosInstance.get(apiRoutes.machineSparesSearch, {
         headers: { Authorization: `Bearer ${token}` },
         params: {
           spareName: "",

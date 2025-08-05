@@ -28,7 +28,7 @@ export const useFetchVendors = () => {
       const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
-      const res = await axiosInstance.get(apiRoutes.vendors, {
+      const res = await axiosInstance.get(apiRoutes.vendorsSearch, {
         //All api routes are inside this file
         headers: {
           Authorization: `Bearer ${token}`,
@@ -67,7 +67,7 @@ export const useFetchVendorOptions = () => {
       const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
-      const res = await axiosInstance.get(apiRoutes.vendors, {
+      const res = await axiosInstance.get(apiRoutes.vendorsSearch, {
         headers: { Authorization: `Bearer ${token}` },
         params: {
           vendorName: "",
@@ -110,7 +110,7 @@ export const useFetchVendorsPaginated = (
       const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
-      const res = await axiosInstance.get(apiRoutes.vendors, {
+      const res = await axiosInstance.get(apiRoutes.vendorsSearch, {
         params: {
           vendorName: vendorName,
           page: page - 1,

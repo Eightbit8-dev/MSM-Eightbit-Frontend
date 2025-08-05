@@ -41,7 +41,7 @@ const stats = [
     borderColor: "border-gray-500",
     icon: AlertTriangle,
     iconBg: "bg-gray-50",
-    navigateUrl: "",
+    navigateUrl: appRoutes.transactionRoutes.children.serviceRequest,
   },
   {
     title: "Assigned Engineers",

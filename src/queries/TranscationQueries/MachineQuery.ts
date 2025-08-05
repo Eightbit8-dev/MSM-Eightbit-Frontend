@@ -72,7 +72,7 @@ export const useCreateMachineQR = () => {
 };
 
 
-export const useFetchMachine = (page: number, limit: number) => {
+export const useFetchMachine = (page: number, limit: number, clientName?: string) => {
   const fetchAllMachine = async (): Promise<MachineResponse> => {
     try {
       const token = Cookies.get("token");
@@ -80,7 +80,8 @@ export const useFetchMachine = (page: number, limit: number) => {
 
       const res = await axiosInstance.get(apiRoutes.machineEntry, {
         params: {
-          page: page - 1,
+          clientName,
+          pages: page - 1,
           limit,
         },
         headers: {
@@ -109,9 +110,9 @@ export const useFetchMachine = (page: number, limit: number) => {
   };
 
   return useQuery({
-    queryKey: ["machine", page, limit],
+    queryKey: ["machine", page, limit, clientName],
     queryFn: fetchAllMachine,
-    staleTime: 0,
+    staleTime: 10 * 60,
     retry: 1,
   });
 };
