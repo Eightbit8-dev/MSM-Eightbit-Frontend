@@ -19,6 +19,7 @@ export const apiRoutes = {
 
   // ------------------ Transaction API Routes ------------------
   machineEntry: "/api/admin/machine",
+  machineEntryBrandSearch: "/api/admin/machine/search/brand",
   machineEntrySearch: "/api/admin/machine/search/client-name",
   machineQr: "/api/admin/machine/bulk-qr-pdf",
   serviceRequest: "/api/transaction/service-request",

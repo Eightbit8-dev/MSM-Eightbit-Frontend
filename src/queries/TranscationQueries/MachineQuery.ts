@@ -71,14 +71,57 @@ export const useCreateMachineQR = () => {
   });
 };
 
-
-export const useFetchMachine = (page: number, limit: number, clientName?: string) => {
+export const useFetchMachineBrand = (page: number, limit: number, brand?: string) => {
   const fetchAllMachine = async (): Promise<MachineResponse> => {
     try {
       const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
-      const res = await axiosInstance.get(apiRoutes.machineEntry, {
+      const res = await axiosInstance.get(apiRoutes.machineEntrySearch, {
+        params: {
+          brand,
+          page: page - 1,
+          limit,
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.status !== 200) {
+        throw new Error(res.data?.message || "Failed to fetch machine");
+      }
+
+      return {
+        data: res.data.data,
+        page: res.data.page,
+        totalPages: res.data.totalPages,
+        totalRecords: res.data.totalRecords,
+      };
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data?.message || "Failed to fetch machine");
+      } else {
+        toast.error("Something went wrong while fetching machine");
+      }
+      throw new Error("Machine fetch failed");
+    }
+  };
+
+  return useQuery({
+    queryKey: ["machine", page, limit, brand],
+    queryFn: fetchAllMachine,
+    staleTime: 10 * 60,
+    retry: 1,
+  });
+};
+export const useFetchMachine = (page: number, limit: number, clientName?: string, machineType?: string, brand?: string) => {
+  const fetchAllMachine = async (): Promise<MachineResponse> => {
+    try {
+      const token = Cookies.get("token");
+      if (!token) throw new Error("Unauthorized to perform this action.");
+
+      const res = await axiosInstance.get(apiRoutes.machineEntrySearch, {
         params: {
           clientName,
           pages: page - 1,
