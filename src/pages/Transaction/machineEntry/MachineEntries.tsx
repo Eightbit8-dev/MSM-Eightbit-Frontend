@@ -89,51 +89,54 @@ const MachineEntry = () => {
   return (
     <div className="mb-32 flex flex-col gap-4">
       {/* Header */}
-      <div className="flex flex-col items-center justify-between gap-2 rounded-lg bg-white p-3 md:flex-row">
-        <div className="flex w-full flex-col items-start">
-          <PageHeader title="Machine Entry" />
-          <p className="text-sm font-medium text-slate-500">
-            Manage your Machine Entries
-          </p>
+      <header className="flex flex-col items-center justify-between gap-4 rounded-lg bg-white/80 p-3">
+        <div className="flex w-full flex-row items-center justify-between">
+          <div className="flex w-full flex-col items-start">
+            <PageHeader title="Machine Entry" />
+            <p className="text-sm font-medium text-slate-500">
+              Manage your Machine Entries
+            </p>
+          </div>
+          <div className="flex w-full flex-row items-end justify-end gap-2">
+            <ButtonSm
+              disabled={selectedIds.length === 0 || isCreateQRPending}
+              className={`${
+                selectedIds.length > 0 ? "text-white" : "disabled:opacity-60"
+              } min-h-full self-stretch font-medium`}
+              text={"Generate QR"}
+              isPending={isCreateQRPending}
+              state={selectedIds.length > 0 ? "default" : "outline"}
+              type="button"
+              onClick={() => {
+                generateQR(selectedIds);
+              }}
+            />
+            <ButtonSm
+              className="font-medium text-white"
+              text={"New Entry"}
+              state="default"
+              type="button"
+              onClick={() => {
+                setSelectedMachine(dummyMachineData);
+                setFormState("create");
+                setIsFormOpen(true);
+              }}
+              iconPosition="right"
+              imgUrl="/icons/plus-icon.svg"
+            />
+            <ButtonSm
+              className="font-medium text-white opacity-100"
+              text={isSm ? "" : "Import"}
+              state="default"
+              type="button"
+              iconPosition="right"
+              imgUrl="/icons/ArrowDown.svg"
+              onClick={handleImportClick}
+            />
+          </div>
         </div>
-        <div className="flex w-full flex-row items-end justify-end gap-2">
-          <ButtonSm
-            disabled={selectedIds.length === 0 || isCreateQRPending}
-            className={`${
-              selectedIds.length > 0 ? "text-white" : "disabled:opacity-60"
-            } min-h-full self-stretch font-medium`}
-            text={"Generate QR"}
-            isPending={isCreateQRPending}
-            state={selectedIds.length > 0 ? "default" : "outline"}
-            type="button"
-            onClick={() => {
-              generateQR(selectedIds);
-            }}
-          />
-          <ButtonSm
-            className="font-medium text-white"
-            text={"New Entry"}
-            state="default"
-            type="button"
-            onClick={() => {
-              setSelectedMachine(dummyMachineData);
-              setFormState("create");
-              setIsFormOpen(true);
-            }}
-            iconPosition="right"
-            imgUrl="/icons/plus-icon.svg"
-          />
-          <ButtonSm
-            className="font-medium text-white opacity-100"
-            text={isSm ? "" : "Import"}
-            state="default"
-            type="button"
-            iconPosition="right"
-            imgUrl="/icons/ArrowDown.svg"
-            onClick={handleImportClick}
-          />
-        </div>
-      </div>
+        <SearchBarWithFilter />
+      </header>
 
       {/* Table */}
       <div>
@@ -143,39 +146,6 @@ const MachineEntry = () => {
           >
             <img src="/icons/arrowup.png" alt="toggle-filters" />
           </button>
-
-          <div className="flex items-center justify-between">
-            <section className="flex flex-col items-start justify-start">
-              <PageHeader title="Employees" />
-              <p className="w-max text-base font-medium text-slate-500">
-                Manage your employees details
-              </p>
-            </section>
-
-            <section className="flex w-full flex-row items-center justify-end gap-4">
-              <ButtonSm
-                onClick={(e) => {
-                  e.stopPropagation();
-                }}
-                state="default"
-                text="Add Employee"
-                className="text-md border border-slate-300 bg-white py-3 text-black shadow-inner transition duration-200 hover:bg-gray-100 hover:shadow-inner"
-                imgUrl="/icons/shapes.svg"
-                iconPosition="right"
-              />
-
-              <ButtonSm
-                state="default"
-                text="Import"
-                className="text-md border border-slate-300 bg-white py-3 text-black shadow-inner transition duration-200 hover:bg-gray-100 hover:shadow-inner"
-                imgUrl="/icons/Shape.svg"
-                iconPosition="right"
-              />
-            </section>
-          </div>
-          <div className="w-full">
-            <SearchBarWithFilter />
-          </div>
 
           <div className="filters-section w-full scale-100 transform space-y-4 rounded-[12px] bg-white p-4 opacity-100 shadow-sm transition-all duration-300 ease-in-out">
             <div className="flex items-center justify-between gap-3">
@@ -194,7 +164,7 @@ const MachineEntry = () => {
                 />
               </div>
             </div>
-            (
+
             <div className="flex w-full flex-wrap gap-4">
               {[
                 "Branch",

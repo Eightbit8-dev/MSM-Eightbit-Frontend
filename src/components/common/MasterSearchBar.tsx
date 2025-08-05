@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
 import { Search } from "lucide-react";
 import { useDebounce } from "@/utils/useDebounce";
@@ -9,6 +9,7 @@ interface MasterSearchBarProps {
   onSearch: (query: string) => void;
   placeholder?: string;
   debounceDelay?: number;
+  onClear?: () => void;
 }
 
 const MasterSearchBar: React.FC<MasterSearchBarProps> = ({
@@ -17,6 +18,7 @@ const MasterSearchBar: React.FC<MasterSearchBarProps> = ({
   onSearch,
   placeholder = "Search services",
   debounceDelay = 400,
+  onClear,
 }) => {
   const [isFocused, setIsFocused] = React.useState(false);
   const debouncedInput = useDebounce(inputValue, debounceDelay);
@@ -78,6 +80,34 @@ const MasterSearchBar: React.FC<MasterSearchBarProps> = ({
           onBlur={() => setIsFocused(false)}
           className="w-full rounded-xl py-3 pr-4 pl-10 text-sm font-medium text-slate-700 transition-all duration-200 select-text focus:border-transparent focus:ring-1 focus:ring-slate-500 focus:outline-none"
         />
+
+        {/* Clear button */}
+        <AnimatePresence>
+          {inputValue && (
+            <motion.button
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => onClear}
+              className="absolute top-1/2 right-3 -translate-y-1/2 rounded-full p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+            >
+              <svg
+                className="h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </motion.button>
+          )}
+        </AnimatePresence>
       </motion.div>
     </motion.div>
   );

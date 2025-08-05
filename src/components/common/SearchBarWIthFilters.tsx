@@ -30,9 +30,9 @@ const SearchBarWithFilter: React.FC<SearchBarProps> = ({
           duration: 0.3,
           ease: [0.4, 0.0, 0.2, 1], // Custom cubic-bezier for smooth animation
         }}
-        className={`group relative flex items-center overflow-hidden rounded-xl border-2 bg-white shadow-sm transition-all duration-300 ease-out ${
+        className={`group relative flex items-center overflow-hidden rounded-xl border-2 bg-white transition-all duration-300 ease-out ${
           isFocused
-            ? "border-blue-400 shadow-lg ring-4 shadow-blue-100/50 ring-blue-100/30"
+            ? "border-slate-500 shadow-lg ring-4 shadow-blue-100/50 ring-blue-100/30"
             : "border-slate-200 hover:border-slate-300 hover:shadow-md"
         }`}
       >
@@ -122,7 +122,7 @@ const SearchBarWithFilter: React.FC<SearchBarProps> = ({
             {/* Filter buttons */}
             {filters.map((filter, index) => (
               <motion.button
-                key={filter}
+                key={index}
                 onClick={() => setSelectedFilter(filter)}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
