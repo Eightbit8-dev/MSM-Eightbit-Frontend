@@ -52,7 +52,10 @@ export const appRoutes = {
   reportRoutes: {
     reportPage: "/reports",
     children: {
-      // e.g., monthly: "/reports/monthly"
+      customerWise: "/reports/customer",
+      machineModelWise: "/reports/machine-model",
+      technicianWise: "/reports/technician",
+      sparesWise: "/reports/spares",
     },
   },
 
@@ -60,7 +63,8 @@ export const appRoutes = {
   ServiceRoutes: {
     servicePage: "/services",
     children: {
-      // e.g., monthly: "/reports/monthly"
+      // e.g., monthly: "/r
+      // eports/monthly"
     },
   },
 };
