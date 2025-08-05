@@ -27,7 +27,7 @@ export const useFetchServiceRequests = (
     if (selectedStatus === "Pending") selectedStat = "PENDING";
     if (selectedStatus === "Not Completed") selectedStat = "NOT_COMPLETED";
 
-    const res = await axiosInstance.get(apiRoutes.serviceRequest, {
+    const res = await axiosInstance.get(apiRoutes.serviceRequest + "/filter", {
       params: {
         page: page - 1,
         limit,
