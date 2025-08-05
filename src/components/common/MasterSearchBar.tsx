@@ -16,7 +16,7 @@ const MasterSearchBar: React.FC<MasterSearchBarProps> = ({
   inputValue,
   onChange,
   onSearch,
-  placeholder = "Search services",
+  placeholder = "Search",
   debounceDelay = 400,
   onClear,
 }) => {

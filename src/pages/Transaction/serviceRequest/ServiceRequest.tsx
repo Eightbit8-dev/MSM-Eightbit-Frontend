@@ -101,17 +101,31 @@ const ServiceRequestPage = () => {
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <PaginationControls
-                    totalPages={totalPages}
-                    currentPage={currentPage}
-                    onPageChange={setCurrentPage}
-                  />
-                  <SlidingFilters
+                  {/* <SlidingFilters
                     filters={["Completed", "Not Completed", "Pending"]}
                     selectedFilter={selectedFilter}
                     onFilterChange={(val) => {
                       setSelectedFilter(val);
                     }}
+                  /> */}
+                  <DropdownSelect
+                    className="min-w-[200px]"
+                    options={[
+                      { id: 0, label: "All" },
+                      { id: 1, label: "Completed" },
+                      { id: 2, label: "Not Completed" },
+                      { id: 3, label: "Pending" },
+                    ]}
+                    selected={{
+                      id: 0,
+                      label: selectedFilter || "All",
+                    }}
+                    onChange={(val) => setSelectedFilter(val.label)}
+                  />
+                  <PaginationControls
+                    totalPages={totalPages}
+                    currentPage={currentPage}
+                    onPageChange={setCurrentPage}
                   />
                 </div>
               </section>
