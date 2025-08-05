@@ -169,6 +169,8 @@ const VendorsPage = () => {
           <footer className="flex w-full flex-row items-center justify-between gap-2 md:justify-end">
             <MasterSearchBar
               inputValue={searchValue}
+              placeholder="search"
+              onClear={()=>setSearchValue("")}
               onChange={(e) => {
                 setSearchValue(e.target.value);
                 refetch();

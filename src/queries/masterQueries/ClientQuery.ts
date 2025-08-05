@@ -33,6 +33,9 @@ export const useFetchClients = () => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+          params: {
+          clientName: "",
+        },
       });
 
       if (res.status !== 200) {
@@ -59,7 +62,7 @@ export const useFetchClients = () => {
 };
 
 //paginated clients
-export const useFetchClientsPaginated = (page: number, limit: number) => {
+export const useFetchClientsPaginated = (page: number, limit: number,  clientName?: string,) => {
   const fetchAllClients = async (): Promise<ClientResponse> => {
     try {
       const token = Cookies.get("token");
@@ -69,6 +72,7 @@ export const useFetchClientsPaginated = (page: number, limit: number) => {
         params: {
           page: page - 1,
           limit,
+         clientName
         },
         headers: {
           Authorization: `Bearer ${token}`,
@@ -96,9 +100,9 @@ export const useFetchClientsPaginated = (page: number, limit: number) => {
   };
 
   return useQuery({
-    queryKey: ["clients", page, limit],
+    queryKey: ["clients", page, limit,clientName],
     queryFn: fetchAllClients,
-    staleTime: 0,
+    staleTime: 60*10,
     retry: 1,
   });
 };
@@ -113,6 +117,9 @@ export const useFetchClientOptions = () => {
 
     const res = await axiosInstance.get(apiRoutes.clients, {
       headers: { Authorization: `Bearer ${token}` },
+                params: {
+          clientName: "",
+        },
     });
 
     if (res.status !== 200) {
