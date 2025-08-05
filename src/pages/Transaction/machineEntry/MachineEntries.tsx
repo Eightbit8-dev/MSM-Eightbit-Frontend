@@ -1,6 +1,6 @@
 import {
   useCreateMachineQR,
-  useFetchMachinePaginated,
+  useFetchMachine,
 } from "../../../queries/TranscationQueries/MachineQuery";
 import ButtonSm from "@/components/common/Buttons";
 import PageHeader from "@/components/masterPage.components/PageHeader";
@@ -81,11 +81,11 @@ const MachineEntry = () => {
     setCurrentPage(1); // Reset to first page when search changes
   }, [searchValue, activeFilter]);
 
-  const { data, isLoading } = useFetchMachinePaginated(
+  const { data, isLoading } = useFetchMachine(
     currentPage,
     itemsPerPage,
-    searchValue,
-    searchParams,
+    // searchValue,
+    // searchParams,
   );
 
   const { mutate: generateQR, isPending: isCreateQRPending } =
@@ -239,7 +239,7 @@ const MachineEntry = () => {
         />
 
         {/* Filters Section */}
-        <div className="filters-section flex w-full scale-100 transform flex-col rounded-[12px] bg-white p-4 opacity-100 shadow-sm transition-all duration-300 ease-in-out">
+        {/* <div className="filters-section flex w-full scale-100 transform flex-col rounded-[12px] bg-white p-4 opacity-100 shadow-sm transition-all duration-300 ease-in-out">
           <div className="relative flex items-center justify-between gap-3">
             <span className="font-medium text-gray-700">Sort & filter </span>
             <div className="flex gap-3">
@@ -309,7 +309,7 @@ const MachineEntry = () => {
           >
             <img src="/icons/arrowup.png" alt="toggle-filters" />
           </button>
-        </div>
+        </div> */}
       </header>
 
       {/* Table */}

@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 import { apiRoutes } from "../../routes/apiRoutes";
 import Cookies from "js-cookie";
 import type { DropdownOption } from "@/components/common/DropDown";
-import type { MachineEntrySearchParam } from "@/pages/Transaction/machineEntry/MachineEntries";
+// import type { MachineEntrySearchParam } from "../../pages/Transaction/machineEntry/MachineEntries";
 
 /**
  * -------------------------------------------
@@ -71,6 +71,51 @@ export const useCreateMachineQR = () => {
   });
 };
 
+
+export const useFetchMachine = (page: number, limit: number) => {
+  const fetchAllMachine = async (): Promise<MachineResponse> => {
+    try {
+      const token = Cookies.get("token");
+      if (!token) throw new Error("Unauthorized to perform this action.");
+
+      const res = await axiosInstance.get(apiRoutes.machineEntry, {
+        params: {
+          page: page - 1,
+          limit,
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.status !== 200) {
+        throw new Error(res.data?.message || "Failed to fetch machine");
+      }
+
+      return {
+        data: res.data.data,
+        page: res.data.page,
+        totalPages: res.data.totalPages,
+        totalRecords: res.data.totalRecords,
+      };
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data?.message || "Failed to fetch machine");
+      } else {
+        toast.error("Something went wrong while fetching machine");
+      }
+      throw new Error("Machine fetch failed");
+    }
+  };
+
+  return useQuery({
+    queryKey: ["machine", page, limit],
+    queryFn: fetchAllMachine,
+    staleTime: 0,
+    retry: 1,
+  });
+};
+
 interface MachineEntrySearchParam {
   status: string;
   requestDateFrom: string;
@@ -79,6 +124,8 @@ interface MachineEntrySearchParam {
   machineType: string;
   brand: string;
 }
+
+
 
 export const useFetchMachinePaginated = (
   page: number,
@@ -97,29 +144,92 @@ export const useFetchMachinePaginated = (
         limit,
       };
 
-      // Determine which search endpoint to use based on active filter
+      // Check which search parameter is active
       const hasClientName = searchParams.clientName.trim() !== "";
       const hasMachineType = searchParams.machineType.trim() !== "";
       const hasBrand = searchParams.brand.trim() !== "";
 
-      // If we have search parameters, use the appropriate search endpoint
+      // Use search endpoints when we have specific search terms
       if (hasClientName) {
         apiUrl = `${apiRoutes.machineEntry}/search/client-name`;
-        requestParams.clientName = searchParams.clientName;
-        requestParams.pages = page - 1; // Note: API uses 'pages' instead of 'page'
-      } else if (hasMachineType) {
-        apiUrl = `${apiRoutes.machineEntry}/search/machine-type`;
-        requestParams.machineType = searchParams.machineType;
-        requestParams.pages = page - 1;
-      } else if (hasBrand) {
-        apiUrl = `${apiRoutes.machineEntry}/search/brand`;
-        requestParams.brand = searchParams.brand;
-        requestParams.pages = page - 1;
-      }
+        requestParams = {
+          clientName: searchParams.clientName.trim(),
+          pages: page - 1, // Note: API uses 'pages' instead of 'page'
+          limit,
+        };
+        
+        const res = await axiosInstance.get(apiUrl, {
+          params: requestParams,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-      // For the main endpoint or when using filters, add status and date filters
-      if (!hasClientName && !hasMachineType && !hasBrand) {
-        // Use main endpoint with filters
+        if (res.status !== 200) {
+          throw new Error(res.data?.message || "Failed to fetch machines");
+        }
+
+        return {
+          data: res.data.data || [],
+          page: res.data.page || 0,
+          totalPages: res.data.totalPages || 0,
+          totalRecords: res.data.totalRecords || 0,
+        };
+      } 
+      else if (hasMachineType) {
+        apiUrl = `${apiRoutes.machineEntry}/search/machine-type`;
+        requestParams = {
+          machineType: searchParams.machineType.trim(),
+          pages: page - 1,
+          limit,
+        };
+        
+        const res = await axiosInstance.get(apiUrl, {
+          params: requestParams,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (res.status !== 200) {
+          throw new Error(res.data?.message || "Failed to fetch machines");
+        }
+
+        return {
+          data: res.data.data || [],
+          page: res.data.page || 0,
+          totalPages: res.data.totalPages || 0,
+          totalRecords: res.data.totalRecords || 0,
+        };
+      } 
+      else if (hasBrand) {
+        apiUrl = `${apiRoutes.machineEntry}/search/brand`;
+        requestParams = {
+          brand: searchParams.brand.trim(),
+          pages: page - 1,
+          limit,
+        };
+        
+        const res = await axiosInstance.get(apiUrl, {
+          params: requestParams,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (res.status !== 200) {
+          throw new Error(res.data?.message || "Failed to fetch machines");
+        }
+
+        return {
+          data: res.data.data || [],
+          page: res.data.page || 0,
+          totalPages: res.data.totalPages || 0,
+          totalRecords: res.data.totalRecords || 0,
+        };
+      } 
+      else {
+        // Use main endpoint with status and date filters
         const requestBody = {
           status: searchParams.status,
           requestDateFrom: searchParams.requestDateFrom,
@@ -135,26 +245,7 @@ export const useFetchMachinePaginated = (
         });
 
         if (res.status !== 200) {
-          throw new Error(res.data?.message || "Failed to fetch machine");
-        }
-
-        return {
-          data: res.data.data || [],
-          page: res.data.page || 0,
-          totalPages: res.data.totalPages || 0,
-          totalRecords: res.data.totalRecords || 0,
-        };
-      } else {
-        // Use search endpoints (GET requests)
-        const res = await axiosInstance.get(apiUrl, {
-          params: requestParams,
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (res.status !== 200) {
-          throw new Error(res.data?.message || "Failed to fetch machine");
+          throw new Error(res.data?.message || "Failed to fetch machines");
         }
 
         return {
@@ -166,17 +257,27 @@ export const useFetchMachinePaginated = (
       }
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        toast.error(error.response?.data?.message || "Failed to fetch machine");
+        const errorMessage = error.response?.data?.message || "Failed to fetch machines";
+        toast.error(errorMessage);
+        console.error("API Error:", error.response?.data);
       } else {
-        toast.error("Something went wrong while fetching machine");
+        toast.error("Something went wrong while fetching machines");
+        console.error("Unexpected error:", error);
       }
-      throw new Error("Machine fetch failed");
+      
+      // Return empty data instead of throwing to prevent component crashes
+      return {
+        data: [],
+        page: 0,
+        totalPages: 0,
+        totalRecords: 0,
+      };
     }
   };
 
   return useQuery({
     queryKey: [
-      "machine",
+      "machine-paginated",
       page,
       limit,
       searchQuery,
@@ -188,8 +289,9 @@ export const useFetchMachinePaginated = (
       searchParams.brand,
     ],
     queryFn: fetchAllMachine,
-    staleTime: 0,
+    staleTime: 30000, // 30 seconds
     retry: 1,
+    refetchOnWindowFocus: false,
   });
 };
 

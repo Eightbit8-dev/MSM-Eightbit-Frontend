@@ -115,7 +115,7 @@ const DashBoardPage = () => {
         </section>
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           {/* Quick Actions */}
-          <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+          {/* <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
             <h2 className="mb-4 text-xl font-semibold text-gray-900">
               Quick Actions
             </h2>
@@ -135,10 +135,10 @@ const DashBoardPage = () => {
                 <UserCheck className="h-5 w-5 text-green-500" />
               </button>
             </div>
-          </div>
+          </div> */}
 
           {/* System Status */}
-          <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+          {/* <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
             <h2 className="mb-4 text-xl font-semibold text-gray-900">
               System Status
             </h2>
@@ -163,7 +163,7 @@ const DashBoardPage = () => {
                 </span>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
         {/* Quick Actions and System Status */}
       </div>

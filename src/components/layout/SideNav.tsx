@@ -122,7 +122,7 @@ const SideNav: React.FC = () => {
               }
             />
 
-            <NavigationButton
+            {/* <NavigationButton
               labelName="Service"
               isActive={isRouteActive(
                 appRoutes.ServiceRoutes?.servicePage || "/Service",
@@ -138,7 +138,7 @@ const SideNav: React.FC = () => {
                 role === "SERVICE" ||
                 import.meta.env.VITE_MODE === "development"
               }
-            />
+            /> */}
             {/* --install pwa button */}
             {/* <InstallButton /> */}
           </div>

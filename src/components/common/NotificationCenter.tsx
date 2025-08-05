@@ -72,7 +72,7 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="absolute right-0 z-50 mt-2 w-80 rounded-lg border border-gray-200 bg-white shadow-lg"
+            className="absolute right-0 z-100 mt-2 w-80 rounded-lg border border-gray-200 bg-white shadow-lg"
           >
             <div className="p-4">
               <h3 className="mb-3 font-semibold text-gray-800">
