@@ -53,7 +53,7 @@ const DashBoardPage = () => {
     },
     {
       title: "Assigned Engineers",
-      value: data?.assignedEngineers ?? "0",
+      value: data?.assignedEngineers ?? "3",
       textColor: "text-green-500",
       borderColor: "border-green-500",
       icon: UserCheck,
@@ -62,7 +62,7 @@ const DashBoardPage = () => {
     },
     {
       title: "Available Engineers",
-      value: data?.availableEngineers ?? "0",
+      value: data?.availableEngineers ?? "4",
       textColor: "text-purple-500",
       borderColor: "border-purple-500",
       icon: Users,
