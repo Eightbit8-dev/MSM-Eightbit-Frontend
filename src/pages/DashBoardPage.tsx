@@ -111,7 +111,7 @@ const DashBoardPage = () => {
     icon: CheckCircle,
     iconBg: "bg-blue-50",
     navigateUrl:
-      appRoutes.transactionRoutes.children.serviceRequest + "/filter?status=Completed",
+      appRoutes.transactionRoutes.children.serviceRequest + "?status=Completed",
   },
   {
     title: "Service Pending",
@@ -121,7 +121,7 @@ const DashBoardPage = () => {
     icon: AlertTriangle,
     iconBg: "bg-gray-50",
     navigateUrl:
-      appRoutes.transactionRoutes.children.serviceRequest + "/filter?status=Pending",
+      appRoutes.transactionRoutes.children.serviceRequest + "?status=Pending",
   },
 ];
 

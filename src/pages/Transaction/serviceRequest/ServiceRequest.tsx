@@ -29,7 +29,11 @@ const ServiceRequestPage = () => {
   //
   const [searchParams] = useSearchParams();
   const statusFromURL = searchParams.get("status") || "";
-  const [selectedFilter, setSelectedFilter] = useState(statusFromURL);
+  const [selectedFilter, setSelectedFilter] = useState("");
+
+  useEffect(() => {
+    setSelectedFilter(statusFromURL);
+  }, [statusFromURL]);
 
   const { data, isLoading, refetch } = useFetchServiceRequests(
     currentPage,
