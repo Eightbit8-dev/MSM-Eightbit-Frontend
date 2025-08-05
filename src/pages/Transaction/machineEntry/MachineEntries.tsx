@@ -1,6 +1,6 @@
 import {
   useCreateMachineQR,
-  useFetchMachine,
+  useFetchMachinePaginated,
 } from "../../../queries/TranscationQueries/MachineQuery";
 import ButtonSm from "@/components/common/Buttons";
 import PageHeader from "@/components/masterPage.components/PageHeader";
@@ -8,7 +8,7 @@ import PaginationControls from "../../../components/common/Pagination";
 import EmployeeTableSkeleton from "../../TableSkleton";
 import { DeleteMachineDialogBox } from "./MachineEntryDelete.Dialog";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { MachineDetails } from "@/types/transactionTypes";
 import MachineFormPage from "./MachineForm";
 import DialogBox from "@/components/common/DialogBox";
@@ -19,9 +19,17 @@ import { convertToFrontendDate } from "@/utils/commonUtils";
 import DropdownSelect from "@/components/common/DropDown";
 import { useBreakpoints } from "@/hooks/useBreakPoints";
 import MachineImportModal from "./MachineImportModal";
-import Input, { DateInput } from "@/components/common/Input";
-import MasterSearchBar from "@/components/common/MasterSearchBar";
 import SearchBarWithFilter from "@/components/common/SearchBarWIthFilters";
+import { DateInput } from "@/components/common/Input";
+
+export interface MachineEntrySearchParam {
+  status: string;
+  requestDateFrom: string;
+  requestDateTo: string;
+  clientName: string;
+  machineType: string;
+  brand: string;
+}
 
 const MachineEntry = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -37,7 +45,48 @@ const MachineEntry = () => {
 
   const { isSm } = useBreakpoints();
 
-  const { data, isLoading } = useFetchMachine(currentPage, itemsPerPage);
+  // Search and filter states
+  const [showFilters, setShowFilters] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+  const [activeFilter, setActiveFilter] = useState<string>("");
+
+  const [searchParams, setSearchParams] = useState<MachineEntrySearchParam>({
+    status: "ACTIVE",
+    requestDateFrom: "01-01-2023",
+    requestDateTo: "31-12-2023",
+    clientName: "",
+    machineType: "",
+    brand: "",
+  });
+
+  // Update search params when search value or filter changes
+  useEffect(() => {
+    const newParams = { ...searchParams };
+
+    // Reset all search fields first
+    newParams.clientName = "";
+    newParams.machineType = "";
+    newParams.brand = "";
+
+    // Set search value based on active filter
+    if (activeFilter === "client-name") {
+      newParams.clientName = searchValue;
+    } else if (activeFilter === "machine-type") {
+      newParams.machineType = searchValue;
+    } else if (activeFilter === "brand") {
+      newParams.brand = searchValue;
+    }
+
+    setSearchParams(newParams);
+    setCurrentPage(1); // Reset to first page when search changes
+  }, [searchValue, activeFilter]);
+
+  const { data, isLoading } = useFetchMachinePaginated(
+    currentPage,
+    itemsPerPage,
+    searchValue,
+    searchParams,
+  );
 
   const { mutate: generateQR, isPending: isCreateQRPending } =
     useCreateMachineQR();
@@ -52,6 +101,7 @@ const MachineEntry = () => {
         : [...prevSelected, id],
     );
   };
+
   const handleImportClick = () => {
     setIsImportModalOpen(true);
   };
@@ -67,7 +117,50 @@ const MachineEntry = () => {
     );
   };
 
-  const [showFilters, setShowFilters] = useState(false);
+  const handleFilterChange = (filter: string) => {
+    setActiveFilter(filter);
+  };
+
+  const handleApplyFilters = () => {
+    // Trigger a refetch with current params
+    setCurrentPage(1);
+  };
+
+  const handleClearFilters = () => {
+    setSearchParams({
+      status: "ACTIVE",
+      requestDateFrom: "01-01-2023",
+      requestDateTo: "31-12-2023",
+      clientName: "",
+      machineType: "",
+      brand: "",
+    });
+    setSearchValue("");
+    setActiveFilter("");
+    setCurrentPage(1);
+  };
+
+  const handleStatusChange = (option: { id: number; label: string }) => {
+    setSearchParams((prev) => ({
+      ...prev,
+      status: option.label.toUpperCase(),
+    }));
+  };
+
+  const handleStartDateChange = (value: string) => {
+    setSearchParams((prev) => ({
+      ...prev,
+      requestDateFrom: value,
+    }));
+  };
+
+  const handleEndDateChange = (value: string) => {
+    setSearchParams((prev) => ({
+      ...prev,
+      requestDateTo: value,
+    }));
+  };
+
   const dummyMachineData: MachineDetails = {
     id: 0,
     slNo: "",
@@ -135,128 +228,92 @@ const MachineEntry = () => {
             />
           </div>
         </div>
-        <SearchBarWithFilter />
-      </header>
 
-      {/* Table */}
-      <div>
-        <div className="relative flex flex-col gap-6 rounded-[12px] bg-[#ffff]/90 p-4">
-          <button
-            className={`absolute right-[50%] -bottom-3 z-10 flex w-fit translate-x-1/2 cursor-pointer rounded-[5px] border border-gray-300 bg-white p-2 transition-transform duration-300 ${showFilters ? "rotate-180" : "rotate-0"}`}
-          >
-            <img src="/icons/arrowup.png" alt="toggle-filters" />
-          </button>
+        {/* Search Bar */}
+        <SearchBarWithFilter
+          filters={["client-name", "brand", "machine-type"]}
+          onFilterChange={handleFilterChange}
+          onSearch={setSearchValue}
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+        />
 
-          <div className="filters-section w-full scale-100 transform space-y-4 rounded-[12px] bg-white p-4 opacity-100 shadow-sm transition-all duration-300 ease-in-out">
-            <div className="flex items-center justify-between gap-3">
-              <span className="font-medium text-gray-700">Sort & filter </span>
-              <div className="flex gap-3">
-                <ButtonSm
-                  state="default"
-                  className="text-white"
-                  text="Apply filters"
-                />
-                <ButtonSm
-                  state="default"
-                  onClick={() => {}}
-                  className="bg-red-100 text-red-500 outline-1 outline-red-500 hover:bg-red-100 hover:text-red-500 active:bg-red-100 active:text-red-500"
-                  text="Clear filters"
-                />
-              </div>
+        {/* Filters Section */}
+        <div className="filters-section flex w-full scale-100 transform flex-col rounded-[12px] bg-white p-4 opacity-100 shadow-sm transition-all duration-300 ease-in-out">
+          <div className="relative flex items-center justify-between gap-3">
+            <span className="font-medium text-gray-700">Sort & filter </span>
+            <div className="flex gap-3">
+              <ButtonSm
+                state="default"
+                className="text-white"
+                text="Apply filters"
+                onClick={handleApplyFilters}
+              />
+              <ButtonSm
+                state="default"
+                onClick={handleClearFilters}
+                className="bg-red-100 text-red-500 outline-1 outline-red-500 hover:bg-red-100 hover:text-red-500 active:bg-red-100 active:text-red-500"
+                text="Clear filters"
+              />
             </div>
-
+          </div>
+          <div className="my-3 flex flex-col">
             <div className="flex w-full flex-wrap gap-4">
-              {[
-                "Branch",
-                "Department",
-                "Designation",
-                "Staff",
-                "Employee Type",
-                "Gender",
-                "Blood Group",
-              ].map((label, idx) => (
-                <div key={idx} className="w-full sm:w-[48%] lg:w-[32%]">
-                  <DropdownSelect
-                    title={label}
-                    options={[]}
-                    selected={{
-                      id: 0,
-                      label: `Select ${label.toLowerCase()}`,
-                    }}
-                    onChange={() => {}}
-                  />
-                </div>
-              ))}
               <div className="w-full sm:w-[48%] lg:w-[32%]">
                 <DropdownSelect
                   title="Status"
                   options={[
-                    { id: 0, label: "All" },
-                    { id: 1, label: "Probation" },
-                    { id: 2, label: "Confirmed" },
-                    { id: 3, label: "Wait for Document" },
+                    { id: 0, label: "Select status" },
+                    { id: 1, label: "Active" },
+                    { id: 2, label: "Inactive" },
                   ]}
-                  selected={{ id: 0, label: "Select status" }}
-                  onChange={() => {}}
+                  selected={{
+                    id:
+                      searchParams.status === "ACTIVE"
+                        ? 1
+                        : searchParams.status === "INACTIVE"
+                          ? 2
+                          : 0,
+                    label:
+                      searchParams.status === "ACTIVE"
+                        ? "Active"
+                        : searchParams.status === "INACTIVE"
+                          ? "Inactive"
+                          : "Select status",
+                  }}
+                  onChange={handleStatusChange}
                 />
               </div>
-              <div className="w-full sm:w-[48%] lg:w-[32%]">
-                <Input<number>
-                  title="Biometric ID"
-                  inputValue={0}
-                  onChange={() => {}}
-                  type="num"
-                />
-              </div>
-              <div className="w-full sm:w-[48%] lg:w-[32%]">
-                <Input<number>
-                  title="Mobile"
-                  inputValue={0}
-                  onChange={() => {}}
-                  type="num"
-                  prefixText="+91"
-                  max={9999999999}
-                />
-              </div>
-              <div className="w-full sm:w-[48%] lg:w-[32%]">
-                <DropdownSelect
-                  title="Face Data"
-                  options={[
-                    { id: 0, label: "All" },
-                    { id: 1, label: "yes" },
-                    { id: 2, label: "no" },
-                  ]}
-                  selected={{ id: 0, label: "Select status" }}
-                  onChange={() => {}}
-                />
-              </div>
-              <div className="w-full sm:w-[48%] lg:w-[32%]">
-                <Input<string>
-                  title="Reference"
-                  inputValue=""
-                  onChange={() => {}}
-                  type="str"
-                />
-              </div>
+
               <div className="w-full sm:w-[48%] lg:w-[32%]">
                 <DateInput
-                  title="Date of Birth"
-                  value=""
-                  onChange={() => {}}
+                  title="Start date"
+                  value={searchParams.requestDateFrom}
+                  onChange={handleStartDateChange}
                   placeholder="DD-MM-YYYY"
                 />
               </div>
               <div className="w-full sm:w-[48%] lg:w-[32%]">
                 <DateInput
-                  title="Date of Birth"
-                  value=""
-                  onChange={() => {}}
+                  title="End date"
+                  value={searchParams.requestDateTo}
+                  onChange={handleEndDateChange}
                   placeholder="DD-MM-YYYY"
                 />
               </div>
             </div>
           </div>
+          <button
+            className={`absolute right-[50%] -bottom-0 z-10 flex w-fit translate-x-1/2 cursor-pointer rounded-[5px] border border-gray-300 bg-white p-2 transition-transform duration-300 ${showFilters ? "rotate-180" : "rotate-0"}`}
+            onClick={() => setShowFilters(!showFilters)}
+          >
+            <img src="/icons/arrowup.png" alt="toggle-filters" />
+          </button>
         </div>
+      </header>
+
+      {/* Table */}
+      <div>
         {isLoading ? (
           <EmployeeTableSkeleton />
         ) : (

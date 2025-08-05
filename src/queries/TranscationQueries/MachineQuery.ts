@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import { apiRoutes } from "../../routes/apiRoutes";
 import Cookies from "js-cookie";
 import type { DropdownOption } from "@/components/common/DropDown";
+import type { MachineEntrySearchParam } from "@/pages/Transaction/machineEntry/MachineEntries";
 
 /**
  * -------------------------------------------
@@ -70,32 +71,99 @@ export const useCreateMachineQR = () => {
   });
 };
 
-export const useFetchMachine = (page: number, limit: number) => {
+interface MachineEntrySearchParam {
+  status: string;
+  requestDateFrom: string;
+  requestDateTo: string;
+  clientName: string;
+  machineType: string;
+  brand: string;
+}
+
+export const useFetchMachinePaginated = (
+  page: number,
+  limit: number,
+  searchQuery: string,
+  searchParams: MachineEntrySearchParam,
+) => {
   const fetchAllMachine = async (): Promise<MachineResponse> => {
     try {
       const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
-      const res = await axiosInstance.get(apiRoutes.machineEntry, {
-        params: {
-          page: page - 1,
-          limit,
-        },
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      let apiUrl = apiRoutes.machineEntry;
+      let requestParams: any = {
+        page: page - 1,
+        limit,
+      };
 
-      if (res.status !== 200) {
-        throw new Error(res.data?.message || "Failed to fetch machine");
+      // Determine which search endpoint to use based on active filter
+      const hasClientName = searchParams.clientName.trim() !== "";
+      const hasMachineType = searchParams.machineType.trim() !== "";
+      const hasBrand = searchParams.brand.trim() !== "";
+
+      // If we have search parameters, use the appropriate search endpoint
+      if (hasClientName) {
+        apiUrl = `${apiRoutes.machineEntry}/search/client-name`;
+        requestParams.clientName = searchParams.clientName;
+        requestParams.pages = page - 1; // Note: API uses 'pages' instead of 'page'
+      } else if (hasMachineType) {
+        apiUrl = `${apiRoutes.machineEntry}/search/machine-type`;
+        requestParams.machineType = searchParams.machineType;
+        requestParams.pages = page - 1;
+      } else if (hasBrand) {
+        apiUrl = `${apiRoutes.machineEntry}/search/brand`;
+        requestParams.brand = searchParams.brand;
+        requestParams.pages = page - 1;
       }
 
-      return {
-        data: res.data.data,
-        page: res.data.page,
-        totalPages: res.data.totalPages,
-        totalRecords: res.data.totalRecords,
-      };
+      // For the main endpoint or when using filters, add status and date filters
+      if (!hasClientName && !hasMachineType && !hasBrand) {
+        // Use main endpoint with filters
+        const requestBody = {
+          status: searchParams.status,
+          requestDateFrom: searchParams.requestDateFrom,
+          requestDateTo: searchParams.requestDateTo,
+        };
+
+        const res = await axiosInstance.post(apiUrl, requestBody, {
+          params: requestParams,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (res.status !== 200) {
+          throw new Error(res.data?.message || "Failed to fetch machine");
+        }
+
+        return {
+          data: res.data.data || [],
+          page: res.data.page || 0,
+          totalPages: res.data.totalPages || 0,
+          totalRecords: res.data.totalRecords || 0,
+        };
+      } else {
+        // Use search endpoints (GET requests)
+        const res = await axiosInstance.get(apiUrl, {
+          params: requestParams,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (res.status !== 200) {
+          throw new Error(res.data?.message || "Failed to fetch machine");
+        }
+
+        return {
+          data: res.data.data || [],
+          page: res.data.page || 0,
+          totalPages: res.data.totalPages || 0,
+          totalRecords: res.data.totalRecords || 0,
+        };
+      }
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         toast.error(error.response?.data?.message || "Failed to fetch machine");
@@ -107,7 +175,18 @@ export const useFetchMachine = (page: number, limit: number) => {
   };
 
   return useQuery({
-    queryKey: ["machine", page, limit],
+    queryKey: [
+      "machine",
+      page,
+      limit,
+      searchQuery,
+      searchParams.status,
+      searchParams.requestDateFrom,
+      searchParams.requestDateTo,
+      searchParams.clientName,
+      searchParams.machineType,
+      searchParams.brand,
+    ],
     queryFn: fetchAllMachine,
     staleTime: 0,
     retry: 1,
@@ -395,12 +474,16 @@ export const useImportMachines = () => {
       const formData = new FormData();
       formData.append("file", file);
 
-      const res = await axiosInstance.post(apiRoutes.machineEntry + "/import", formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
+      const res = await axiosInstance.post(
+        apiRoutes.machineEntry + "/import",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
         },
-      });
+      );
 
       if (res.status !== 200) {
         throw new Error(res.data?.message || "Failed to import spares");
@@ -409,9 +492,7 @@ export const useImportMachines = () => {
       return res.data;
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        toast.error(
-          error.response?.data?.message || "Failed to import spares",
-        );
+        toast.error(error.response?.data?.message || "Failed to import spares");
       } else {
         toast.error("Something went wrong while importing Products");
       }
@@ -437,10 +518,13 @@ export const useDownloadTemplate = () => {
       const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
-      const res = await axiosInstance.get(apiRoutes.machineEntry + "/template", {
-        headers: { Authorization: `Bearer ${token}` },
-        responseType: "blob", // Ensure the response is treated as a binary blob
-      });
+      const res = await axiosInstance.get(
+        apiRoutes.machineEntry + "/template",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          responseType: "blob", // Ensure the response is treated as a binary blob
+        },
+      );
 
       if (res.status !== 200) {
         throw new Error(res.data?.message || "Failed to download template");
@@ -462,7 +546,7 @@ export const useDownloadTemplate = () => {
   return useQuery({
     queryKey: ["template"],
     queryFn: downloadTemplate,
-    enabled: false, 
+    enabled: false,
     retry: 1,
   });
 };
