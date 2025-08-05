@@ -13,6 +13,7 @@ import ServiceRequestFormPage from "./ServiceForm";
 import { DeleteServiceRequestDialogBox } from "./ServiceRequestDelete.Dialog";
 import { AssignEngineerDialogBox } from "./AssignEnginnerDialog";
 import SlidingFilters from "@/components/common/SlidingFilters";
+import { useSearchParams } from "react-router-dom";
 
 const ServiceRequestPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -24,9 +25,12 @@ const ServiceRequestPage = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [formState, setFormState] = useState<FormState>("create");
 
-  // const { isSm } = useBreakpoints();
+  // const { isSm } = useBreakpoints()
+  //
+  const [searchParams] = useSearchParams();
+  const statusFromURL = searchParams.get("status") || "";
+  const [selectedFilter, setSelectedFilter] = useState(statusFromURL);
 
-  const [selectedFilter, setSelectedFilter] = useState("");
   const { data, isLoading, refetch } = useFetchServiceRequests(
     currentPage,
     itemsPerPage,

@@ -31,7 +31,9 @@ const DashBoardPage = () => {
       borderColor: "border-red-500",
       icon: AlertTriangle,
       iconBg: "bg-red-50",
-      navigateUrl: appRoutes.transactionRoutes.children.serviceRequest,
+      navigateUrl:
+        appRoutes.transactionRoutes.children.serviceRequest +
+        "?status=Not Completed",
     },
     {
       title: "Service Completed",
@@ -40,7 +42,8 @@ const DashBoardPage = () => {
       borderColor: "border-blue-500",
       icon: CheckCircle,
       iconBg: "bg-blue-50",
-      navigateUrl: appRoutes.transactionRoutes.children.serviceEntry,
+      navigateUrl:
+        appRoutes.transactionRoutes.children.serviceEntry + "?status=Completed",
     },
     {
       title: "Service Pending",
@@ -49,7 +52,8 @@ const DashBoardPage = () => {
       borderColor: "border-gray-500",
       icon: AlertTriangle,
       iconBg: "bg-gray-50",
-      navigateUrl: appRoutes.transactionRoutes.children.serviceRequest,
+      navigateUrl:
+        appRoutes.transactionRoutes.children.serviceRequest + "?status=Pending",
     },
     {
       title: "Assigned Engineers",
