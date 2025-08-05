@@ -192,8 +192,8 @@ return (
   </section>
 )}
 
-
-      {/* This section is visible to all roles */}
+ {role === "SERVICE" && (
+    
       <section>
         <div className="flex flex-col gap-3 rounded-lg bg-white p-5 shadow-md">
           {/* Service Requests Section */}
@@ -280,6 +280,7 @@ return (
           </div>
         </div>
       </section>
+ )}
     </div>
   </div>
 );
