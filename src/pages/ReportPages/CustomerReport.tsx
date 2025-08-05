@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
+import { useFetchClientOptions } from "@/queries/masterQueries/ClientQuery";
+import { useFetchModelsOptions } from "../../queries/masterQueries/ProductQuery";
+import { useFetchServiceEngineerOptions } from "../../queries/masterQueries/ServiceEngineersQuery";
+import { useFetchProblemOptions } from "../../queries/masterQueries/Problem-types";
+import DropdownSelect from '@/components/common/DropDown';
+import { DateInput } from "../../components/common/Input"; // Adjust path based on your structure
 
-// Define the type for filter state
 interface Filters {
   clientName: string;
   model: string;
@@ -21,15 +26,18 @@ const CustomerReport: React.FC = () => {
     complaint: '',
     status: '',
     refDateFrom: '',
-    refDateTo: ''
+    refDateTo: '',
   });
+
+  const { data: brandOptions = [] } = useFetchModelsOptions();
+  const { data: serviceOptions = [] } = useFetchServiceEngineerOptions();
+  const { data: clientOptions = [] } = useFetchClientOptions();
+  const { data: problemOptions = [] } = useFetchProblemOptions();
 
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
-
- 
 
   return (
     <div className="container mx-auto p-6 bg-white min-h-screen">
@@ -39,112 +47,81 @@ const CustomerReport: React.FC = () => {
       <div className="p-6 bg-white rounded-xl shadow-md mb-8">
         <h2 className="text-xl font-semibold text-gray-700 mb-4">Filter Options</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <DropdownSelect
+            title="Client"
+            options={clientOptions}
+            selected={clientOptions.find((c) => c.label === filters.clientName) || { id: 0, label: "Select Client" }}
+            onChange={(val) => setFilters({ ...filters, clientName: val.label })}
+            required
+          />
+          <DropdownSelect
+            title="Model"
+            options={brandOptions}
+            selected={brandOptions.find((b) => b.label === filters.model) || { id: 0, label: "Select Model" }}
+            onChange={(val) => setFilters({ ...filters, model: val.label })}
+            required
+          />
+          <DateInput
+            title="Ref Date From"
+            value={filters.refDateFrom}
+            onChange={(val) => setFilters({ ...filters, refDateFrom: val })}
+            name="refDateFrom"
+          />
+          <DateInput
+            title="Ref Date To"
+            value={filters.refDateTo}
+            onChange={(val) => setFilters({ ...filters, refDateTo: val })}
+            name="refDateTo"
+          />
+          <DateInput
+            title="Service Date"
+            value={filters.serviceDate}
+            onChange={(val) => setFilters({ ...filters, serviceDate: val })}
+            name="serviceDate"
+          />
+          <DropdownSelect
+            title="Technician"
+            options={serviceOptions}
+            selected={serviceOptions.find((s) => s.label === filters.technician) || { id: 0, label: "Select Technician" }}
+            onChange={(val) => setFilters({ ...filters, technician: val.label })}
+            required
+          />
+          <DropdownSelect
+            title="Complaint"
+            options={problemOptions}
+            selected={problemOptions.find((p) => p.label === filters.complaint) || { id: 0, label: "Select Complaint" }}
+            onChange={(val) => setFilters({ ...filters, complaint: val.label })}
+            required
+          />
           <div>
-            <label className="block text-sm font-medium text-gray-600 mb-1.5">Client Name</label>
-            <input
-              type="text"
-              name="clientName"
-              placeholder="Enter client name"
-              value={filters.clientName}
-              onChange={handleFilterChange}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400 transition-all"
-            />
+            <DropdownSelect
+  title="Complaint"
+  options={[
+    { id: 1, label: "Completed" },
+    { id: 2, label: "Not Completed" },
+  ]}
+  selected={
+    [{ id: 1, label: "Completed" }, { id: 2, label: "Not Completed" }]
+      .find((p) => p.label === filters.complaint) || { id: 0, label: "Select Complaint" }
+  }
+  onChange={(val) => setFilters({ ...filters, complaint: val.label })}
+  required
+/>
+
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-600 mb-1.5">Model</label>
-            <input
-              type="text"
-              name="model"
-              placeholder="Enter model"
-              value={filters.model}
-              onChange={handleFilterChange}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400 transition-all"
-            />
-          </div>
-            <div>
-            <label className="block text-sm font-medium text-gray-600 mb-1.5">Ref Date From</label>
-            <input
-              type="date"
-              name="refDateFrom"
-              value={filters.refDateFrom}
-              onChange={handleFilterChange}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400 transition-all"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-600 mb-1.5">Ref Date To</label>
-            <input
-              type="date"
-              name="refDateTo"
-              value={filters.refDateTo}
-              onChange={handleFilterChange}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400 transition-all"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-600 mb-1.5">Service Date</label>
-            <input
-              type="date"
-              name="serviceDate"
-              value={filters.serviceDate}
-              onChange={handleFilterChange}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400 transition-all"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-600 mb-1.5">Technician</label>
-            <input
-              type="text"
-              name="technician"
-              placeholder="Enter technician"
-              value={filters.technician}
-              onChange={handleFilterChange}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400 transition-all"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-600 mb-1.5">Complaint</label>
-            <input
-              type="text"
-              name="complaint"
-              placeholder="Enter complaint"
-              value={filters.complaint}
-              onChange={handleFilterChange}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400 transition-all"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-600 mb-1.5">Status</label>
-            <select
-              name="status"
-              value={filters.status}
-              onChange={handleFilterChange}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-700"
-            >
-              <option value="Completed">Completed</option>
-              <option value="Pending">Pending</option>
-            </select>
-          </div>
-        
         </div>
       </div>
 
       {/* Action Buttons */}
       <div className="flex justify-center gap-4">
-        <button
-          className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition-all cursor-pointer duration-200"
-        >
+        <button className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition-all">
           Submit
         </button>
-        <button
-          className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 cursor-pointer  transition-all duration-200"
-        >
-        PDF
+        <button className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition-all">
+          PDF
         </button>
-        <button
-          className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 cursor-pointer  transition-all duration-200"
-        >
-       Excel
+        <button className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition-all">
+          Excel
         </button>
       </div>
     </div>

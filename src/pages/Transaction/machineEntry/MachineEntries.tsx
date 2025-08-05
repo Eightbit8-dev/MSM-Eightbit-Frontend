@@ -7,7 +7,6 @@ import PageHeader from "@/components/masterPage.components/PageHeader";
 import PaginationControls from "../../../components/common/Pagination";
 import EmployeeTableSkeleton from "../../TableSkleton";
 import { DeleteMachineDialogBox } from "./MachineEntryDelete.Dialog";
-
 import { useState } from "react";
 import type { MachineDetails } from "@/types/transactionTypes";
 import MachineFormPage from "./MachineForm";
