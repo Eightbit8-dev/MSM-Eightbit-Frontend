@@ -7,6 +7,10 @@ import { appRoutes } from "./routes/appRoutes";
 import { ErrorPageContent } from "./pages/ErrorPage";
 import ServiceEntryNew from "./pages/Transaction/serviceEntry/ServiceEntryNew";
 import ServicePages from "./pages/ServicePages/ServicePages";
+import CustomerReport from "./pages/ReportPages/CustomerReport";
+import MachineModelReports from "./pages/ReportPages/MachineModelReports";
+import SpareReports from "./pages/ReportPages/SpareReports";
+import TechnicianReport from "./pages/ReportPages/TechnicianReport";
 
 
 // 🌐 Global Pages
@@ -14,7 +18,7 @@ const SignInPage = lazy(() => import("./pages/SignInPage"));
 const DashBoardPage = lazy(() => import("./pages/DashBoardPage"));
 
 // 🧾 Report Pages
-const Report = lazy(() => import("./pages/Report"));
+const Report = lazy(() => import("./pages/ReportPages/ReportPage"));
 
 // 👥 User Management
 const UsersPage = lazy(() => import("./pages/UsersPage"));
@@ -165,6 +169,23 @@ const App = () => {
             <Route
             path={appRoutes.ServiceRoutes.servicePage}
             element={<ServicePages/>}
+            />
+
+            <Route 
+            path={appRoutes.reportRoutes.children.customerWise}
+            element={<CustomerReport/>}
+            />
+                        <Route 
+            path={appRoutes.reportRoutes.children.machineModelWise}
+            element={<MachineModelReports/>}
+            />
+                        <Route 
+            path={appRoutes.reportRoutes.children.sparesWise}
+            element={<SpareReports/>}
+            />
+                        <Route 
+            path={appRoutes.reportRoutes.children.technicianWise}
+            element={<TechnicianReport/>}
             />
             {/*-------------------------------- 📷 QR Scanner */}
             <Route path={appRoutes.scanPage} element={<QRScanner />} />
