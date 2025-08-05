@@ -33,6 +33,9 @@ export const useFetchVendors = () => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        params: {
+          vendorName: "",
+        },
       });
 
       if (res.status !== 200) {
@@ -42,9 +45,7 @@ export const useFetchVendors = () => {
       return res.data.data;
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        toast.error(
-          error.response?.data?.message || "Failed to fetch vendors",
-        );
+        toast.error(error.response?.data?.message || "Failed to fetch vendors");
       } else {
         toast.error("Something went wrong while fetching vendors");
       }
@@ -60,7 +61,6 @@ export const useFetchVendors = () => {
   });
 };
 
-
 export const useFetchVendorOptions = () => {
   const fetchVendor = async (): Promise<DropdownOption[]> => {
     try {
@@ -69,6 +69,9 @@ export const useFetchVendorOptions = () => {
 
       const res = await axiosInstance.get(apiRoutes.vendors, {
         headers: { Authorization: `Bearer ${token}` },
+        params: {
+          vendorName: "",
+        },
       });
 
       if (res.status !== 200) {
@@ -96,10 +99,12 @@ export const useFetchVendorOptions = () => {
   });
 };
 
-
-//paginated vendors 
-
-export const useFetchVendorsPaginated = (page: number, limit: number) => {
+//paginated vendors along with optional search function
+export const useFetchVendorsPaginated = (
+  page: number,
+  limit: number,
+  vendorName?: string,
+) => {
   const fetchAllVendors = async (): Promise<VendorResponse> => {
     try {
       const token = Cookies.get("token");
@@ -107,6 +112,7 @@ export const useFetchVendorsPaginated = (page: number, limit: number) => {
 
       const res = await axiosInstance.get(apiRoutes.vendors, {
         params: {
+          vendorName: vendorName,
           page: page - 1,
           limit,
         },
@@ -114,7 +120,7 @@ export const useFetchVendorsPaginated = (page: number, limit: number) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      
+
       if (res.status !== 200) {
         throw new Error(res.data?.message || "Failed to fetch vendors");
       }
@@ -136,9 +142,9 @@ export const useFetchVendorsPaginated = (page: number, limit: number) => {
   };
 
   return useQuery({
-    queryKey: ["vendors", page, limit],
+    queryKey: ["vendors", page, limit, vendorName],
     queryFn: fetchAllVendors,
-    staleTime: 0,
+    staleTime: 60 * 10,
     retry: 1,
   });
 };
@@ -153,7 +159,6 @@ export const useCreateVendor = () => {
     try {
       const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
-
 
       const res = await axiosInstance.post(apiRoutes.vendors, newVendor, {
         headers: {
@@ -195,7 +200,7 @@ export const useEditVendor = () => {
     const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized to perform this action.");
 
-    const { id: vendorId, ...payload } = updatedVendor;
+    const { ...payload } = updatedVendor;
 
     const res = await axiosInstance.put(
       `${apiRoutes.vendors}/${updatedVendor.id}`,

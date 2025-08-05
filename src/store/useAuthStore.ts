@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 interface AuthState {
-  userName: string | null;
+  username: string | null;
   role: string | null;
   setAuthData: (userName: string, role: string) => void;
   clearAuth: () => void;
@@ -11,10 +11,10 @@ interface AuthState {
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
-      userName: null,
+      username: null,
       role: null,
-      setAuthData: (userName, role) => set({ userName, role }),
-      clearAuth: () => set({ userName: null, role: null }),
+      setAuthData: (username, role) => set({ username, role }),
+      clearAuth: () => set({ username: null, role: null }),
     }),
     {
       name: "auth-storage", // key in localStorage

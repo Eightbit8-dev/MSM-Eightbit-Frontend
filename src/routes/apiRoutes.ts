@@ -2,7 +2,7 @@ export const apiRoutes = {
   signin: "/api/auth/login",
   signup: "/api/auth/register",
   // ------------------ Master API Routes ------------------
-  vendors: "/api/admin/vendors",
+  vendors: "/api/admin/vendors/search",
 
   // ------------------ Master API Routes ------------------
   clients: "/api/admin/clients",

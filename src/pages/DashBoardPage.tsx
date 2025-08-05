@@ -113,52 +113,58 @@ const DashBoardPage = () => {
             );
           })}
         </section>
-<div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-  {/* Quick Actions */}
-  <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-    <h2 className="mb-4 text-xl font-semibold text-gray-900">Quick Actions</h2>
-    <div className="flex flex-col gap-2">
-      <button className="flex w-full items-center justify-between rounded-xl border border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 p-4 transition-all duration-300 hover:from-blue-100 hover:to-indigo-100">
-        <span className="font-medium text-blue-700">
-          Add New Service Request
-        </span>
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500">
-          <span className="text-lg text-white">+</span>
-        </div>
-      </button>
-      <button className="flex w-full items-center justify-between rounded-xl border border-green-200 bg-gradient-to-r from-green-50 to-emerald-50 p-4 transition-all duration-300 hover:from-green-100 hover:to-emerald-100">
-        <span className="font-medium text-green-700">Assign Engineer</span>
-        <UserCheck className="h-5 w-5 text-green-500" />
-      </button>
-    </div>
-  </div>
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          {/* Quick Actions */}
+          <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+            <h2 className="mb-4 text-xl font-semibold text-gray-900">
+              Quick Actions
+            </h2>
+            <div className="flex flex-col gap-2">
+              <button className="flex w-full items-center justify-between rounded-xl border border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 p-4 transition-all duration-300 hover:from-blue-100 hover:to-indigo-100">
+                <span className="font-medium text-blue-700">
+                  Add New Service Request
+                </span>
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500">
+                  <span className="text-lg text-white">+</span>
+                </div>
+              </button>
+              <button className="flex w-full items-center justify-between rounded-xl border border-green-200 bg-gradient-to-r from-green-50 to-emerald-50 p-4 transition-all duration-300 hover:from-green-100 hover:to-emerald-100">
+                <span className="font-medium text-green-700">
+                  Assign Engineer
+                </span>
+                <UserCheck className="h-5 w-5 text-green-500" />
+              </button>
+            </div>
+          </div>
 
-  {/* System Status */}
-  <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-    <h2 className="mb-4 text-xl font-semibold text-gray-900">System Status</h2>
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <span className="text-gray-600">Overall Health</span>
-        <div className="flex items-center space-x-2">
-          <div className="h-3 w-3 animate-pulse rounded-full bg-green-400"></div>
-          <span className="font-medium text-green-600">Good</span>
+          {/* System Status */}
+          <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+            <h2 className="mb-4 text-xl font-semibold text-gray-900">
+              System Status
+            </h2>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-gray-600">Overall Health</span>
+                <div className="flex items-center space-x-2">
+                  <div className="h-3 w-3 animate-pulse rounded-full bg-green-400"></div>
+                  <span className="font-medium text-green-600">Good</span>
+                </div>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-gray-600">Active Alerts</span>
+                <span className="rounded-full bg-red-100 px-3 py-1 text-sm font-medium text-red-600">
+                  2
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-gray-600">Pending Tasks</span>
+                <span className="rounded-full bg-yellow-100 px-3 py-1 text-sm font-medium text-yellow-600">
+                  5
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-      <div className="flex items-center justify-between">
-        <span className="text-gray-600">Active Alerts</span>
-        <span className="rounded-full bg-red-100 px-3 py-1 text-sm font-medium text-red-600">
-          2
-        </span>
-      </div>
-      <div className="flex items-center justify-between">
-        <span className="text-gray-600">Pending Tasks</span>
-        <span className="rounded-full bg-yellow-100 px-3 py-1 text-sm font-medium text-yellow-600">
-          5
-        </span>
-      </div>
-    </div>
-  </div>
-</div>
         {/* Quick Actions and System Status */}
       </div>
     </div>
@@ -166,4 +172,3 @@ const DashBoardPage = () => {
 };
 
 export default DashBoardPage;
-

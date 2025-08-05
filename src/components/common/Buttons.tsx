@@ -32,7 +32,7 @@ const ButtonSm: React.FC<ButtonSmProps> = ({
       transition={{ duration: 0.3, delay: 0.2 }}
       type={type}
       disabled={disabled}
-      className={`btn-sm flex cursor-pointer flex-row items-center gap-2 rounded-[9px] px-3 py-2 text-sm transition-all duration-200 ease-in-out select-none ${
+      className={`btn-sm flex cursor-pointer flex-row items-center gap-2 rounded-[9px] px-3 py-2 text-sm select-none ${
         state === "default"
           ? "btn-primary bg-blue-500 hover:bg-blue-600 active:bg-blue-700"
           : `btn-outline text-gray-800 outline-1 outline-slate-300 hover:bg-gray-100 active:bg-gray-200`

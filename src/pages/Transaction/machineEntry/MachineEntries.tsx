@@ -19,6 +19,9 @@ import { convertToFrontendDate } from "@/utils/commonUtils";
 import DropdownSelect from "@/components/common/DropDown";
 import { useBreakpoints } from "@/hooks/useBreakPoints";
 import MachineImportModal from "./MachineImportModal";
+import Input, { DateInput } from "@/components/common/Input";
+import MasterSearchBar from "@/components/common/MasterSearchBar";
+import SearchBarWithFilter from "@/components/common/SearchBarWIthFilters";
 
 const MachineEntry = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -64,6 +67,7 @@ const MachineEntry = () => {
     );
   };
 
+  const [showFilters, setShowFilters] = useState(false);
   const dummyMachineData: MachineDetails = {
     id: 0,
     slNo: "",
@@ -85,14 +89,14 @@ const MachineEntry = () => {
   return (
     <div className="mb-32 flex flex-col gap-4">
       {/* Header */}
-      <div className="flex flex-col md:flex-row gap-2 items-center justify-between rounded-lg bg-white p-3">
-        <div className="flex w-full items-start flex-col">
+      <div className="flex flex-col items-center justify-between gap-2 rounded-lg bg-white p-3 md:flex-row">
+        <div className="flex w-full flex-col items-start">
           <PageHeader title="Machine Entry" />
           <p className="text-sm font-medium text-slate-500">
             Manage your Machine Entries
           </p>
         </div>
-        <div className="flex flex-row items-end justify-end w-full gap-2">
+        <div className="flex w-full flex-row items-end justify-end gap-2">
           <ButtonSm
             disabled={selectedIds.length === 0 || isCreateQRPending}
             className={`${
@@ -133,6 +137,156 @@ const MachineEntry = () => {
 
       {/* Table */}
       <div>
+        <div className="relative flex flex-col gap-6 rounded-[12px] bg-[#ffff]/90 p-4">
+          <button
+            className={`absolute right-[50%] -bottom-3 z-10 flex w-fit translate-x-1/2 cursor-pointer rounded-[5px] border border-gray-300 bg-white p-2 transition-transform duration-300 ${showFilters ? "rotate-180" : "rotate-0"}`}
+          >
+            <img src="/icons/arrowup.png" alt="toggle-filters" />
+          </button>
+
+          <div className="flex items-center justify-between">
+            <section className="flex flex-col items-start justify-start">
+              <PageHeader title="Employees" />
+              <p className="w-max text-base font-medium text-slate-500">
+                Manage your employees details
+              </p>
+            </section>
+
+            <section className="flex w-full flex-row items-center justify-end gap-4">
+              <ButtonSm
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+                state="default"
+                text="Add Employee"
+                className="text-md border border-slate-300 bg-white py-3 text-black shadow-inner transition duration-200 hover:bg-gray-100 hover:shadow-inner"
+                imgUrl="/icons/shapes.svg"
+                iconPosition="right"
+              />
+
+              <ButtonSm
+                state="default"
+                text="Import"
+                className="text-md border border-slate-300 bg-white py-3 text-black shadow-inner transition duration-200 hover:bg-gray-100 hover:shadow-inner"
+                imgUrl="/icons/Shape.svg"
+                iconPosition="right"
+              />
+            </section>
+          </div>
+          <div className="w-full">
+            <SearchBarWithFilter />
+          </div>
+
+          <div className="filters-section w-full scale-100 transform space-y-4 rounded-[12px] bg-white p-4 opacity-100 shadow-sm transition-all duration-300 ease-in-out">
+            <div className="flex items-center justify-between gap-3">
+              <span className="font-medium text-gray-700">Sort & filter </span>
+              <div className="flex gap-3">
+                <ButtonSm
+                  state="default"
+                  className="text-white"
+                  text="Apply filters"
+                />
+                <ButtonSm
+                  state="default"
+                  onClick={() => {}}
+                  className="bg-red-100 text-red-500 outline-1 outline-red-500 hover:bg-red-100 hover:text-red-500 active:bg-red-100 active:text-red-500"
+                  text="Clear filters"
+                />
+              </div>
+            </div>
+            (
+            <div className="flex w-full flex-wrap gap-4">
+              {[
+                "Branch",
+                "Department",
+                "Designation",
+                "Staff",
+                "Employee Type",
+                "Gender",
+                "Blood Group",
+              ].map((label, idx) => (
+                <div key={idx} className="w-full sm:w-[48%] lg:w-[32%]">
+                  <DropdownSelect
+                    title={label}
+                    options={[]}
+                    selected={{
+                      id: 0,
+                      label: `Select ${label.toLowerCase()}`,
+                    }}
+                    onChange={() => {}}
+                  />
+                </div>
+              ))}
+              <div className="w-full sm:w-[48%] lg:w-[32%]">
+                <DropdownSelect
+                  title="Status"
+                  options={[
+                    { id: 0, label: "All" },
+                    { id: 1, label: "Probation" },
+                    { id: 2, label: "Confirmed" },
+                    { id: 3, label: "Wait for Document" },
+                  ]}
+                  selected={{ id: 0, label: "Select status" }}
+                  onChange={() => {}}
+                />
+              </div>
+              <div className="w-full sm:w-[48%] lg:w-[32%]">
+                <Input<number>
+                  title="Biometric ID"
+                  inputValue={0}
+                  onChange={() => {}}
+                  type="num"
+                />
+              </div>
+              <div className="w-full sm:w-[48%] lg:w-[32%]">
+                <Input<number>
+                  title="Mobile"
+                  inputValue={0}
+                  onChange={() => {}}
+                  type="num"
+                  prefixText="+91"
+                  max={9999999999}
+                />
+              </div>
+              <div className="w-full sm:w-[48%] lg:w-[32%]">
+                <DropdownSelect
+                  title="Face Data"
+                  options={[
+                    { id: 0, label: "All" },
+                    { id: 1, label: "yes" },
+                    { id: 2, label: "no" },
+                  ]}
+                  selected={{ id: 0, label: "Select status" }}
+                  onChange={() => {}}
+                />
+              </div>
+              <div className="w-full sm:w-[48%] lg:w-[32%]">
+                <Input<string>
+                  title="Reference"
+                  inputValue=""
+                  onChange={() => {}}
+                  type="str"
+                />
+              </div>
+              <div className="w-full sm:w-[48%] lg:w-[32%]">
+                <DateInput
+                  title="Date of Birth"
+                  value=""
+                  onChange={() => {}}
+                  placeholder="DD-MM-YYYY"
+                />
+              </div>
+              <div className="w-full sm:w-[48%] lg:w-[32%]">
+                <DateInput
+                  title="Date of Birth"
+                  value=""
+                  onChange={() => {}}
+                  placeholder="DD-MM-YYYY"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
         {isLoading ? (
           <EmployeeTableSkeleton />
         ) : (

@@ -13,8 +13,8 @@ export const TopNav: React.FC = () => {
   };
   const formatted = date.toLocaleDateString("en-GB", options);
 
-  const { userName, role } = useAuthStore();
-  console.log(userName, role);
+  const { username } = useAuthStore();
+
   return (
     <motion.header
       initial={{ opacity: 0, y: -10 }}
@@ -31,7 +31,7 @@ export const TopNav: React.FC = () => {
             transition={{ delay: 0.1 }}
             className="text-lg font-semibold text-zinc-800"
           >
-            Welcome, {userName}
+            Welcome, {username}
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, x: -10 }}

@@ -1,24 +1,21 @@
-import React, { useState, useEffect } from "react";
 import { appRoutes } from "../../routes/appRoutes";
 import { motion } from "framer-motion"; // fixed: 'motion/react' is incorrect
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useAuthStore } from "@/store/useAuthStore";
 // import InstallButton from "@/hooks/InstallPwaButton";
 
 const SideNav: React.FC = () => {
-  const [activeRoute, setActiveRoute] = useState<string>("");
+  const location = useLocation();
   const navigate = useNavigate();
+  const { role } = useAuthStore();
 
-  useEffect(() => {
-    const currentPath = window.location.pathname;
-    setActiveRoute(currentPath);
-  }, []);
+  const activeRoute = location.pathname;
 
   const isRouteActive = (baseRoute: string) => {
-    return activeRoute.startsWith(baseRoute);
+    return activeRoute === baseRoute || activeRoute.startsWith(`${baseRoute}/`);
   };
 
   const navigateToRoute = (route: string) => {
-    setActiveRoute(route);
     navigate(route);
   };
 
@@ -66,6 +63,10 @@ const SideNav: React.FC = () => {
               iconSrc="/icons/sideNavIcons/dashboard-icon.svg"
               activeIconSrc="/icons/sideNavIcons/dashboard-icon-active.svg"
               onClick={() => navigateToRoute(appRoutes.dashboardPage)}
+              isVisible={
+                role === "SERVICE" ||
+                import.meta.env.VITE_MODE === "development"
+              }
             />
 
             <NavigationButton
@@ -74,6 +75,7 @@ const SideNav: React.FC = () => {
               iconSrc="/icons/sideNavIcons/master-icon.svg"
               activeIconSrc="/icons/sideNavIcons/master-icon-active.svg"
               onClick={() => navigateToRoute(appRoutes.masterRoutes.masterPage)}
+              isVisible={import.meta.env.VITE_MODE === "development"}
             />
 
             <NavigationButton
@@ -86,6 +88,7 @@ const SideNav: React.FC = () => {
               onClick={() =>
                 navigateToRoute(appRoutes.transactionRoutes.transcationPage)
               }
+              isVisible={import.meta.env.VITE_MODE === "development"}
             />
 
             <NavigationButton
@@ -98,6 +101,7 @@ const SideNav: React.FC = () => {
               onClick={() =>
                 navigateToRoute(appRoutes.userRoutes?.userPage || "/users")
               }
+              isVisible={import.meta.env.VITE_MODE === "development"}
             />
 
             <NavigationButton
@@ -112,6 +116,10 @@ const SideNav: React.FC = () => {
                   appRoutes.reportRoutes?.reportPage || "/reports",
                 )
               }
+              isVisible={
+                role === "SERVICE" ||
+                import.meta.env.VITE_MODE === "development"
+              }
             />
 
             <NavigationButton
@@ -125,6 +133,10 @@ const SideNav: React.FC = () => {
                 navigateToRoute(
                   appRoutes.ServiceRoutes?.servicePage || "/Service",
                 )
+              }
+              isVisible={
+                role === "SERVICE" ||
+                import.meta.env.VITE_MODE === "development"
               }
             />
             {/* --install pwa button */}
@@ -144,6 +156,7 @@ interface NavigationButtonProps {
   iconSrc: string;
   activeIconSrc?: string;
   onClick?: () => void;
+  isVisible: boolean;
 }
 
 const NavigationButton: React.FC<NavigationButtonProps> = ({
@@ -151,15 +164,17 @@ const NavigationButton: React.FC<NavigationButtonProps> = ({
   isActive,
   iconSrc,
   activeIconSrc,
+  isVisible,
   onClick,
 }) => {
   return (
     <div
+      style={{ display: isVisible ? "flex" : "none" }}
       className="Navigation-button-container flex scale-90 flex-col items-center justify-center"
       onClick={onClick}
     >
       <div
-        className={`Navigation-button-container ${isActive ? "bg-blue-500 p-3" : "bg-white p-1.5 hover:bg-slate-100"} cursor-pointer rounded-[10px] transition-all duration-300 ease-in-out select-none active:bg-blue-600`}
+        className={`Navigation-button-container ${isActive ? "bg-blue-500 p-3" : "bg-white p-1.5 hover:bg-slate-100"} cursor-pointer rounded-[10px] transition-all duration-50 ease-in-out select-none active:bg-blue-600`}
       >
         <img src={isActive ? activeIconSrc : iconSrc} alt={labelName} />
       </div>
