@@ -4,11 +4,13 @@ export const apiRoutes = {
   // ------------------ Master API Routes ------------------
   vendors: "/api/admin/vendors/search",
   clients: "/api/admin/clients/search",
+  products: "/api/admin/products/search",
+  users: "/api/admin/service-engineers/search",
+  machineSpares: "/api/admin/spares/search",
+  problemDetails: "/api/admin/problem-types/search",
   // ------------------ Master API Routes ------------------
-  products: "/api/admin/products",
-  users: "/api/admin/service-engineers",
-  machineSpares: "/api/admin/spares",
-  problemDetails: "/api/admin/problem-types",
+ 
+
 
   // ------------------ Transaction API Routes ------------------
   machineEntry: "/api/admin/machine",

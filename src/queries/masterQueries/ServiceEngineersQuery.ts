@@ -29,7 +29,7 @@ import type {ServiceEngineerResponse} from "../../types/masterApiTypes";
  */
 
 
-export const useFetchServiceEngineers = (page: number, limit: number) => {
+export const useFetchServiceEngineers = (page: number, limit: number, engineerName?: string) => {
   const fetchAllServiceEngineers = async (): Promise<ServiceEngineerResponse> => {
     try {
       const token = Cookies.get("token");
@@ -39,6 +39,7 @@ export const useFetchServiceEngineers = (page: number, limit: number) => {
         params: {
           page: page - 1,
           limit,
+          engineerName
         },
         headers: {
           Authorization: `Bearer ${token}`,
@@ -66,9 +67,9 @@ export const useFetchServiceEngineers = (page: number, limit: number) => {
   };
 
   return useQuery({
-    queryKey: ["serviceEngineers", page, limit],
+    queryKey: ["serviceEngineers", page, limit,engineerName],
     queryFn: fetchAllServiceEngineers,
-    staleTime: 0,
+    staleTime: 10*60,
     retry: 1,
   });
 };
@@ -83,6 +84,9 @@ export const useFetchServiceEngineerOptions = () => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        params: {
+          engineerName: "",
+        }
       });
 
       if (res.status !== 200) {

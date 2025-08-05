@@ -21,6 +21,9 @@ export const useFetchProducts = () => {
 
       const res = await axiosInstance.get(apiRoutes.products, {
         headers: { Authorization: `Bearer ${token}` },
+        params: {
+          machineType: "",
+        }
       });
 
       if (res.status !== 200) {
@@ -58,6 +61,9 @@ export const useFetchProductsType = () => {
 
     const res = await axiosInstance.get(apiRoutes.products, {
       headers: { Authorization: `Bearer ${token}` },
+              params: {
+          machineType: "",
+        }
     });
 
     if (res.status !== 200) {
@@ -85,6 +91,9 @@ export const useFetchBrandsOptions = () => {
 
     const res = await axiosInstance.get(apiRoutes.products, {
       headers: { Authorization: `Bearer ${token}` },
+              params: {
+          machineType: "",
+        }
     });
 
     if (res.status !== 200) {
@@ -112,6 +121,9 @@ export const useFetchModelsOptions = () => {
 
     const res = await axiosInstance.get(apiRoutes.products, {
       headers: { Authorization: `Bearer ${token}` },
+              params: {
+          machineType: "",
+        }
     });
 
     if (res.status !== 200) {
@@ -139,6 +151,9 @@ export const useFetchAllDetailsOptions = () => {
 
     const res = await axiosInstance.get(apiRoutes.products, {
       headers: { Authorization: `Bearer ${token}` },
+              params: {
+          machineType: "",
+        }
     });
 
     if (res.status !== 200) {
@@ -160,7 +175,7 @@ export const useFetchAllDetailsOptions = () => {
 };
 
 // Paginated response
-export const useFetchProductsPaginated = (page: number, limit: number) => {
+export const useFetchProductsPaginated = (page: number, limit: number , machineType?: string) => {
   const fetchAllProducts = async (): Promise<ProductResponse> => {
     try {
       const token = Cookies.get("token");
@@ -168,7 +183,7 @@ export const useFetchProductsPaginated = (page: number, limit: number) => {
 
       const res = await axiosInstance.get(apiRoutes.products, {
         headers: { Authorization: `Bearer ${token}` },
-        params: { page: page - 1, limit },
+        params: { page: page - 1, limit, machineType},
       });
 
       if (res.status !== 200) {
@@ -194,9 +209,9 @@ export const useFetchProductsPaginated = (page: number, limit: number) => {
   };
 
   return useQuery({
-    queryKey: ["Products", page, limit],
+    queryKey: ["Products", page, limit,machineType],
     queryFn: fetchAllProducts,
-    staleTime: 0,
+    staleTime: 10*60,
     retry: 1,
   });
 };

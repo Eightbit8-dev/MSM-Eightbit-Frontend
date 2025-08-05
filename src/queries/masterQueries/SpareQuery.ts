@@ -23,6 +23,9 @@ export const useFetchSpares = () => {
 
       const res = await axiosInstance.get(apiRoutes.machineSpares, {
         headers: { Authorization: `Bearer ${token}` },
+        params: {
+          spareName: "",
+        }
       });
 
       if (res.status !== 200) {
@@ -56,6 +59,9 @@ export const useFetchSparesOptions = () => {
 
       const res = await axiosInstance.get(apiRoutes.machineSpares, {
         headers: { Authorization: `Bearer ${token}` },
+        params: {
+          spareName: "",
+        }
       });
 
       if (res.status !== 200) {
@@ -84,7 +90,7 @@ export const useFetchSparesOptions = () => {
   });
 };
 
-export const useFetchSparesPaginated = (page: number, limit: number) => {
+export const useFetchSparesPaginated = (page: number, limit: number , spareName?: string) => {
   const fetchAllSpares = async (): Promise<SpareResponse> => {
     try {
       const token = Cookies.get("token");
@@ -94,6 +100,7 @@ export const useFetchSparesPaginated = (page: number, limit: number) => {
         params: {
           page: page - 1,
           limit,
+          spareName
         },
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -119,7 +126,7 @@ export const useFetchSparesPaginated = (page: number, limit: number) => {
   };
 
   return useQuery({
-    queryKey: ["spares", page, limit],
+    queryKey: ["spares", page, limit,spareName],
     queryFn: fetchAllSpares,
     staleTime: 1000 * 60 * 0,
     retry: 1,

@@ -29,7 +29,7 @@ import type {ProblemResponse} from "../../types/masterApiTypes";
  */
 
 
-export const useFetchProblem = (page: number, limit: number) => {
+export const useFetchProblem = (page: number, limit: number,problemType?: string) => {
   const fetchAllProblem = async (): Promise<ProblemResponse> => {
     try {
       const token = Cookies.get("token");
@@ -39,6 +39,7 @@ export const useFetchProblem = (page: number, limit: number) => {
         params: {
           page: page - 1,
           limit,
+          problemType
         },
         headers: {
           Authorization: `Bearer ${token}`,
@@ -66,9 +67,9 @@ export const useFetchProblem = (page: number, limit: number) => {
   };
 
   return useQuery({
-    queryKey: ["problem", page, limit],
+    queryKey: ["problem", page, limit,problemType],
     queryFn: fetchAllProblem,
-    staleTime: 0,
+    staleTime: 10*60,
     retry: 1,
   });
 };
@@ -83,6 +84,9 @@ export const useFetchProblemOptions = () => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        params: {
+          problemType: "",
+        }
       });
 
       if (res.status !== 200) {
