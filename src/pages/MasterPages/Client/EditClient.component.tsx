@@ -89,10 +89,18 @@ const ClientEdit = ({
     );
   }
 
-  const hasData =
-    clientData.clientName ||
-    clientData.contactPerson ||
-    clientData.contactNumber;
+const hasData =
+  !!clientData.clientName ||
+  !!clientData.contactPerson ||
+  !!clientData.contactNumber ||
+  !!clientData.email ||
+  !!clientData.addressLine1 ||
+  !!clientData.addressLine2 ||
+  !!clientData.city ||
+  !!clientData.pinCode ||
+  !!clientData.state ||
+  !!clientData.gstNumber;
+
 
   return (
     <main className="flex max-h-full w-full max-w-[870px] flex-col gap-2">

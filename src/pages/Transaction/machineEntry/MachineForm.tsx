@@ -307,19 +307,19 @@ const MachineFormPage: React.FC<MachineFormPageProps> = ({
         />
         <MultiFileUpload title="Photos of Machine ( Max : 3 Photos )" />
 
-        <div className="col-span-full mt-4 flex justify-end gap-4 md:gap-6">
+        <div className="col-span-full mt-4 flex justify-end gap-4 md:gap-4">
           <ButtonSm
             type="button"
             state="outline"
             className="border-[1.5px] border-slate-300"
             onClick={() => setFormVisible(false)}
-            text="Back"
+            text="view"
           />
           {!isView && (
             <ButtonSm
               type="submit"
               state="default"
-              text={isEdit ? "Save Changes" : "Create Machine"}
+              text={isEdit ? "Save Changes" : "Save"}
               className="bg-blue-500 text-white hover:bg-blue-700"
             />
           )}

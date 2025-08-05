@@ -407,6 +407,26 @@ const ServiceEntryNew = () => {
               }
             />
           )}
+          {formData.maintenanceType === "General" && (
+            <Input
+              required
+              disabled
+              className="w-full"
+              title="Scope"
+              inputValue="Thugil Scope"
+              onChange={() => {}}
+            />
+          )}
+          {formData.maintenanceType === "Breakdown" && (
+            <Input
+              required
+              disabled
+              className="w-full"
+              title="Scope"
+              inputValue="Client Scope"
+              onChange={() => {}}
+            />
+          )}
         </div>
 
         <DropdownSelect
