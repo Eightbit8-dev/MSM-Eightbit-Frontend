@@ -9,7 +9,7 @@ export const apiRoutes = {
   machineSparesSearch: "/api/admin/spares/search",
   problemDetailsSearch: "/api/admin/problem-types/search",
   // ------------------ Master API Routes ------------------
- 
+
   vendors: "/api/admin/vendors",
   clients: "/api/admin/clients",
   products: "/api/admin/products",
@@ -27,5 +27,10 @@ export const apiRoutes = {
 
   // ------------------ Dashboard API Routes ------------------
 
-  dashboard: "/api/admin/dashboard"
+  dashboard: "/api/admin/dashboard",
+  // ------------------ Reports Routes ------------------
+  customerWise: "/api/admin/reports/pdf",
+  machineModelWise: "/api/admin/reports/machine-model-wise",
+  technicianWise: "/api/admin/reports/technician-wise",
+  sparesWise: "/api/admin/reports/spares-wise",
 };

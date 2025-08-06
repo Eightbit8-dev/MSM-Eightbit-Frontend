@@ -12,7 +12,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useState } from "react";
 import { useFetchServiceRequests } from "@/queries/TranscationQueries/ServiceRequestQuery";
 import { useNavigate } from "react-router-dom";
-import { useFetchDashboardCounts } from "../queries/dashboard";
+import { useFetchDashboardCounts } from "../queries/dashboardQuery";
 import { appRoutes } from "@/routes/appRoutes";
 
 const DashBoardPage = () => {

@@ -1,4 +1,3 @@
-import DashBoardPage from "@/pages/DashBoardPage";
 import { apiRoutes } from "@/routes/apiRoutes";
 import type { DashboardStats } from "@/types/types";
 import axiosInstance from "@/utils/axios";
@@ -30,7 +29,9 @@ export const useFetchDashboardCounts = () => {
       return res.data;
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        toast.error(error.response?.data?.message || "Failed to fetch dashboardCounts");
+        toast.error(
+          error.response?.data?.message || "Failed to fetch dashboardCounts",
+        );
       } else {
         toast.error("Something went wrong while fetching dashboardCounts");
       }
