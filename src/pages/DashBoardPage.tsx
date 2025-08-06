@@ -10,7 +10,7 @@ import PaginationControls from "@/components/common/Pagination";
 import ButtonSm from "@/components/common/Buttons";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useState } from "react";
-import { useFetchServiceRequests } from "@/queries/TranscationQueries/ServiceRequestQuery";
+import { useFetchServiceRequestsForEngineers } from "@/queries/TranscationQueries/ServiceRequestQuery";
 import { useNavigate } from "react-router-dom";
 import { useFetchDashboardCounts } from "../queries/dashboardQuery";
 import { appRoutes } from "@/routes/appRoutes";
@@ -19,11 +19,12 @@ import { DateInput } from "@/components/common/Input";
 const DashBoardPage = () => {
   const navigate = useNavigate();
   const { data:count, isLoading :countLoading, isError:countError } = useFetchDashboardCounts();
-  const { role } = useAuthStore();
+  const { role ,engineer } = useAuthStore();
+  const [engId,setEngId] = useState(engineer);
    const [page, setPage] = useState(1);
     const limit = 10;
   
-    const { data, isLoading, isError } = useFetchServiceRequests(page, limit);
+    const { data , isLoading, isError } = useFetchServiceRequestsForEngineers(page, limit ,engId?.id);
   
     if (isLoading) {
       return <ServiceRequestSkeleton />;

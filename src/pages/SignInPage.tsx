@@ -28,7 +28,7 @@ const AuthPage = () => {
     if (!username.trim() || !password.trim()) {
       return toast.error("Username and password are required");
     }
-
+    
     mutate({ username, password });
   };
 
