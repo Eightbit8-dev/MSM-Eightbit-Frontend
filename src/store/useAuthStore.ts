@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-interface Engineer {
+export interface Engineer {
   id: number;
   name: string;
   mobile: string;
@@ -12,7 +12,7 @@ interface AuthState {
   username: string | null;
   role: string | null;
   engineer: Engineer | null;
-  
+
   setAuthData: (authResponse: {
     token: string;
     username: string;

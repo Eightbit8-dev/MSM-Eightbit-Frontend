@@ -34,7 +34,6 @@ export const useFetchServiceRequests = (
         : undefined;
 
     const res = await axiosInstance.get(apiRoutes.serviceRequest + "/filter", {
-  
       params: {
         page: page - 1,
         limit,
@@ -65,25 +64,18 @@ export const useFetchServiceRequests = (
   });
 };
 
-
-
 //............For engineers...........//
 
 export const useFetchServiceRequestsForEngineers = (
-  page: number,
-  limit: number,
-  serviceEngineerId: number | null = null
+  serviceEngineerId?: number,
 ) => {
-  const fetchAllRequests = async (): Promise<ServiceRequestResponse> => {
+  const fetchAllRequests = async (): Promise<ServiceRequest[]> => {
     const token = Cookies.get("token");
     if (!token) throw new Error("Unauthorized");
 
-    const res = await axiosInstance.get(apiRoutes.serviceRequest  ,{
-  
+    const res = await axiosInstance.get(apiRoutes.employeeServiceRequest, {
       params: {
-        page: page - 1,
-        limit,
-        serviceEngineerId
+        serviceEngineerId: serviceEngineerId,
       },
       headers: {
         Authorization: `Bearer ${token}`,
@@ -93,18 +85,14 @@ export const useFetchServiceRequestsForEngineers = (
     if (res.status !== 200) {
       throw new Error(res.data?.message || "Failed to fetch service requests");
     }
-
-    return {
-      data: res.data.data,
-      page: res.data.page,
-      totalPages: res.data.totalPages,
-      totalRecords: res.data.totalRecords,
-    };
+    console.log(res.data);
+    return res.data;
   };
 
   return useQuery({
-    queryKey: ["serviceRequest", page, limit, serviceEngineerId],
+    queryKey: ["serviceRequest", serviceEngineerId],
     queryFn: fetchAllRequests,
+    enabled: !!serviceEngineerId,
     staleTime: 0,
     retry: 1,
   });
@@ -130,6 +118,7 @@ export const useFetchServiceRequestById = (id: number) => {
   return useQuery({
     queryKey: ["serviceRequest", id],
     enabled: !!id,
+
     queryFn: fetchServiceRequestByID,
     staleTime: 0,
     retry: 1,

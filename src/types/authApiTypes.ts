@@ -1,3 +1,5 @@
+import type { Engineer } from "@/store/useAuthStore";
+
 // Authentication types
 export interface signInRequestType {
   username: string;
@@ -6,6 +8,7 @@ export interface signInRequestType {
 
 export interface SignInResponseType {
   token: string;
-  username:string;
-  role:string;
+  username: string;
+  role: string;
+  engineer: Engineer;
 }

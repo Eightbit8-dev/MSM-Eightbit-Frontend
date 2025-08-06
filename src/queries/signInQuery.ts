@@ -22,7 +22,7 @@ const signInRequest = async (
     if (response.status === 200) {
       Cookies.set("token", response.data.token, {
         expires: 1,
-        secure: import.meta.env.VITE_MODE  === "production",
+        secure: import.meta.env.VITE_MODE === "production",
         sameSite: "strict",
         path: "/",
       });
@@ -49,7 +49,12 @@ export const useSignInMutation = () => {
   return useMutation({
     mutationFn: signInRequest,
     onSuccess: (res) => {
-      useAuthStore.getState().setAuthData(res.username, res.role);
+      useAuthStore.getState().setAuthData({
+        token: res.token,
+        username: res.username,
+        role: res.role,
+        engineer: res.engineer,
+      });
     },
   });
 };
