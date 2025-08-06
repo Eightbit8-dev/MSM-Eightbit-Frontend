@@ -22,11 +22,9 @@ const DashBoardPage = () => {
     isLoading: countLoading,
     isError: countError,
   } = useFetchDashboardCounts();
-  const { role } = useAuthStore();
-  const [page, setPage] = useState(1);
-  const limit = 10;
+  const { role  , engineer} = useAuthStore();
 
-  const { data, isLoading, isError } = useFetchServiceRequests(page, limit);
+  const { data, isLoading, isError } = useFetchServiceRequestsForEngineers(engineer?.id);
 
   if (isLoading) {
     return <ServiceRequestSkeleton />;
@@ -54,7 +52,6 @@ const DashBoardPage = () => {
       icon: AlertTriangle,
       iconBg: "bg-red-50",
       navigateUrl: appRoutes.transactionRoutes.children.serviceRequest,
-      navigateUrl: appRoutes.transactionRoutes.children.serviceRequest,
     },
     {
       title: "Service Completed",
@@ -64,8 +61,6 @@ const DashBoardPage = () => {
       icon: CheckCircle,
       iconBg: "bg-blue-50",
       navigateUrl:
-        appRoutes.transactionRoutes.children.serviceRequest +
-        "?status=Completed",
         appRoutes.transactionRoutes.children.serviceRequest +
         "?status=Completed",
     },
