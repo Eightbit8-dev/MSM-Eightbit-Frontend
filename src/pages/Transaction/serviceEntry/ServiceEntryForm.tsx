@@ -29,6 +29,7 @@ import { useFetchSparesOptions } from "@/queries/masterQueries/SpareQuery";
 import RequestEntrySkeleton from "./ServiceEntryFormSkeleton";
 import SparePartsManager from "./SparesImageUploader.component";
 import PageHeader from "@/components/masterPage.components/PageHeader";
+import { useAuthStore } from "@/store/useAuthStore";
 
 interface SparePartData {
   spareId: number;
@@ -42,6 +43,7 @@ const getCurrentDate = () => {
 };
 
 const RequestEntry = () => {
+  const { engineer } = useAuthStore();
   const emptyData: ServiceEntryPayload = {
     refNumber: "",
     serviceDate: getCurrentDate(),
@@ -49,7 +51,7 @@ const RequestEntry = () => {
     maintenanceSubType: "",
     serviceRequestId: 0,
     vendorId: 0,
-    engineerId: 0,
+    engineerId: engineer?.id || 0,
     engineerDiagnostics: "",
     serviceStatus: "",
     remarks: "",
@@ -506,7 +508,7 @@ const RequestEntry = () => {
         <DropdownSelect
           required
           title="Engineer Name"
-          disabled={formState === "display"}
+          disabled
           options={engineerOptions}
           selected={
             engineerOptions.find((opt) => opt.id === formData.engineerId) || {
