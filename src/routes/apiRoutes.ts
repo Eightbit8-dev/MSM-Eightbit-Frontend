@@ -26,11 +26,12 @@ export const apiRoutes = {
   serviceEntry: "/api/transaction/service-entry",
 
   // ------------------ Dashboard API Routes ------------------
-
   dashboard: "/api/admin/dashboard",
   // ------------------ Reports Routes ------------------
   customerWise: "/api/admin/reports/client-wise/pdf",
   machineModelWise: "/api/admin/reports/machine-model-wise",
   technicianWise: "/api/admin/reports/technician-wise",
   sparesWise: "/api/admin/reports/spares-wise",
+  // ------------------ Service engineer alone allowed Routes ------------------
+  employeeServiceRequest: "/api/employee/service-request",
 };
