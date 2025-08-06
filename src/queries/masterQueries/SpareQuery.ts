@@ -96,7 +96,7 @@ export const useFetchSparesPaginated = (page: number, limit: number , spareName?
       const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
-      const res = await axiosInstance.get(apiRoutes.machineSpares, {
+      const res = await axiosInstance.get(apiRoutes.machineSparesSearch, {
         params: {
           page: page - 1,
           limit,

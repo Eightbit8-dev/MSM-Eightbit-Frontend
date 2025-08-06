@@ -50,8 +50,7 @@ const DashBoardPage = () => {
       icon: AlertTriangle,
       iconBg: "bg-red-50",
       navigateUrl:
-        appRoutes.transactionRoutes.children.serviceRequest +
-        "?status=Not Completed",
+        appRoutes.transactionRoutes.children.serviceRequest ,
     },
     {
       title: "Service Completed",
