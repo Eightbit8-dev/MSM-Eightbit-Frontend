@@ -102,7 +102,7 @@ const DashBoardPage = () => {
       borderColor: "border-indigo-500",
       icon: Wrench,
       iconBg: "bg-indigo-50",
-      navigateUrl: appRoutes.transactionRoutes.children.serviceRequest,
+      navigateUrl: "",
     },
     {
       title: "Service Completed",
@@ -111,9 +111,7 @@ const DashBoardPage = () => {
       borderColor: "border-blue-500",
       icon: CheckCircle,
       iconBg: "bg-blue-50",
-      navigateUrl:
-        appRoutes.transactionRoutes.children.serviceRequest +
-        "?status=Completed",
+      navigateUrl:"",
     },
     {
       title: "Service Pending",
@@ -122,8 +120,7 @@ const DashBoardPage = () => {
       borderColor: "border-gray-500",
       icon: AlertTriangle,
       iconBg: "bg-gray-50",
-      navigateUrl:
-        appRoutes.transactionRoutes.children.serviceRequest + "?status=Pending",
+      navigateUrl:"",
     },
   ];
 

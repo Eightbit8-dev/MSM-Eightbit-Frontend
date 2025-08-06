@@ -24,8 +24,12 @@ export const getMinDateFromToday = (days: number) => {
 export const generateReferenceNumber = (prefix: string) => {
   const now = new Date();
   const datePart = now.toISOString().split("T")[0].replace(/-/g, "");
-  return `${prefix}-${datePart}`;
+  
+  const randomPart = Math.floor(1000 + Math.random() * 9000); // Generates a 4-digit random number
+
+  return `${prefix}-${datePart}-${randomPart}`;
 };
+
 
 export const get18YearsAgo = () => {
   const today = new Date();
