@@ -12,7 +12,8 @@ const ReportsDashboard = () => {
     {
       id: "customer",
       title: "Customer Wise",
-      description: "Detailed reports organized by customer accounts",
+      description:
+        "Detailed reports organized by customer accounts and services",
       imgUrl: "/icons/Master/Clients.svg", // ✅ Replace with actual image paths
       route: appRoutes.reportRoutes.children.customerWise,
     },

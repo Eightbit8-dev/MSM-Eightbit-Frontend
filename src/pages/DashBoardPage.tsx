@@ -15,23 +15,28 @@ import { useNavigate } from "react-router-dom";
 import { useFetchDashboardCounts } from "../queries/dashboardQuery";
 import { appRoutes } from "@/routes/appRoutes";
 import { DateInput } from "@/components/common/Input";
+import { getTodayDate } from "@/utils/commonUtils";
 
 const DashBoardPage = () => {
   const navigate = useNavigate();
-  const { data:count, isLoading :countLoading, isError:countError } = useFetchDashboardCounts();
+  const {
+    data: count,
+    isLoading: countLoading,
+    isError: countError,
+  } = useFetchDashboardCounts();
   const { role } = useAuthStore();
-   const [page, setPage] = useState(1);
-    const limit = 10;
-  
-    const { data, isLoading, isError } = useFetchServiceRequests(page, limit);
-  
-    if (isLoading) {
-      return <ServiceRequestSkeleton />;
-    }
-  
-    if (isError) {
-      return <div className="p-4 text-red-500">Failed to load data.</div>;
-    }
+  const [page, setPage] = useState(1);
+  const limit = 10;
+
+  const { data, isLoading, isError } = useFetchServiceRequests(page, limit);
+
+  if (isLoading) {
+    return <ServiceRequestSkeleton />;
+  }
+
+  if (isError) {
+    return <div className="p-4 text-red-500">Failed to load data.</div>;
+  }
 
   const stats = [
     {
@@ -50,8 +55,7 @@ const DashBoardPage = () => {
       borderColor: "border-red-500",
       icon: AlertTriangle,
       iconBg: "bg-red-50",
-      navigateUrl:
-        appRoutes.transactionRoutes.children.serviceRequest ,
+      navigateUrl: appRoutes.transactionRoutes.children.serviceRequest,
     },
     {
       title: "Service Completed",
@@ -61,7 +65,8 @@ const DashBoardPage = () => {
       icon: CheckCircle,
       iconBg: "bg-blue-50",
       navigateUrl:
-        appRoutes.transactionRoutes.children.serviceRequest + "?status=Completed",
+        appRoutes.transactionRoutes.children.serviceRequest +
+        "?status=Completed",
     },
     {
       title: "Service Pending",
@@ -94,139 +99,140 @@ const DashBoardPage = () => {
   ];
 
   const serviceStats = [
-  {
-    title: "Total Service Calls",
-    value: count?.availableEngineers ?? "0",
-    textColor: "text-indigo-500",
-    borderColor: "border-indigo-500",
-    icon: Wrench,
-    iconBg: "bg-indigo-50",
-    navigateUrl: appRoutes.transactionRoutes.children.serviceRequest,
-  },
-  {
-    title: "Service Completed",
-    value: count?.serviceCompleted ?? "0",
-    textColor: "text-blue-500",
-    borderColor: "border-blue-500",
-    icon: CheckCircle,
-    iconBg: "bg-blue-50",
-    navigateUrl:
-      appRoutes.transactionRoutes.children.serviceRequest + "?status=Completed",
-  },
-  {
-    title: "Service Pending",
-    value: count?.servicePending ?? "0",
-    textColor: "text-gray-500",
-    borderColor: "border-gray-500",
-    icon: AlertTriangle,
-    iconBg: "bg-gray-50",
-    navigateUrl:
-      appRoutes.transactionRoutes.children.serviceRequest + "?status=Pending",
-  },
-];
+    {
+      title: "Total Service Calls",
+      value: count?.availableEngineers ?? "0",
+      textColor: "text-indigo-500",
+      borderColor: "border-indigo-500",
+      icon: Wrench,
+      iconBg: "bg-indigo-50",
+      navigateUrl: appRoutes.transactionRoutes.children.serviceRequest,
+    },
+    {
+      title: "Service Completed",
+      value: count?.serviceCompleted ?? "0",
+      textColor: "text-blue-500",
+      borderColor: "border-blue-500",
+      icon: CheckCircle,
+      iconBg: "bg-blue-50",
+      navigateUrl:
+        appRoutes.transactionRoutes.children.serviceRequest +
+        "?status=Completed",
+    },
+    {
+      title: "Service Pending",
+      value: count?.servicePending ?? "0",
+      textColor: "text-gray-500",
+      borderColor: "border-gray-500",
+      icon: AlertTriangle,
+      iconBg: "bg-gray-50",
+      navigateUrl:
+        appRoutes.transactionRoutes.children.serviceRequest + "?status=Pending",
+    },
+  ];
 
-
-
-return (
-  <div className="mx-auto max-w-[1390px] self-center rounded-[24px] bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50 p-4 shadow-sm">
-    <div className="flex flex-col gap-2">
-      {/* Show stats only if role is admin */}
-      {role === "ADMIN" && (
-        <section className="grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
-          {stats.map((item, index) => {
-            const IconComponent = item.icon;
-            return (
-              <div
-                key={index}
-                onClick={() => item.navigateUrl && navigate(item.navigateUrl)}
-                className={`group relative flex transform cursor-pointer flex-row items-center justify-between overflow-hidden rounded-2xl border-2 border-slate-300 bg-white p-6 transition-all duration-300 hover:scale-[1.02] active:scale-105`}
-              >
-                <div className="flex flex-col items-start justify-start gap-3">
-                  <h3 className="text-lg leading-tight font-medium text-gray-700">
-                    {item.title}
-                  </h3>
-                  <h4
-                    className={`text-xl font-medium ${item.textColor} transition-all duration-300 ease-in-out group-hover:scale-105`}
+  return (
+    <main className="mx-auto flex w-full max-w-[1390px] flex-col gap-4">
+      <div className="min-w-full self-center rounded-2xl bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50 p-4 shadow-sm">
+        <div className="flex flex-col gap-2">
+          {/* Show stats only if role is admin */}
+          {role === "ADMIN" && (
+            <section className="grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
+              {stats.map((item, index) => {
+                const IconComponent = item.icon;
+                return (
+                  <div
+                    key={index}
+                    onClick={() =>
+                      item.navigateUrl && navigate(item.navigateUrl)
+                    }
+                    className={`group relative flex transform cursor-pointer flex-row items-center justify-between overflow-hidden rounded-2xl border-2 border-slate-300 bg-white p-6 transition-all duration-300 hover:scale-[1.02] active:scale-105`}
                   >
-                    {countLoading ? "..." : item.value}
-                  </h4>
-                </div>
-                <div
-                  className={`hidden md:flex rounded-xl p-3 ${item.iconBg} ${item.borderColor} border-2 transition-transform duration-300 group-hover:scale-110`}
-                >
-                  <IconComponent className={`h-6 w-6 ${item.textColor}`} />
-                </div>
-              </div>
-            );
-          })}
-        </section>
-      )}
-      {role === "SERVICE" && (
-  <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-    {serviceStats.map((item, index) => {
-      const IconComponent = item.icon;
-      return (
-        <div
-          key={index}
-          onClick={() => item.navigateUrl && navigate(item.navigateUrl)}
-          className="group relative flex transform cursor-pointer flex-row items-center justify-between overflow-hidden rounded-2xl border-2 border-slate-300 bg-white p-6 transition-all duration-300 hover:scale-[1.02] active:scale-105"
-        >
-          <div className="flex flex-col items-start justify-start gap-3">
-            <h3 className="text-lg leading-tight font-medium text-gray-700">
-              {item.title}
-            </h3>
-            <h4
-              className={`text-xl font-medium ${item.textColor} transition-all duration-300 ease-in-out group-hover:scale-105`}
-            >
-              {countLoading ? "..." : item.value}
-            </h4>
-          </div>
-          <div
-            className={`hidden md:flex rounded-xl p-3 ${item.iconBg} ${item.borderColor} border-2 transition-transform duration-300 group-hover:scale-110`}
-          >
-            <IconComponent className={`h-6 w-6 ${item.textColor}`} />
-          </div>
+                    <div className="flex flex-col items-start justify-start gap-3">
+                      <h3 className="text-lg leading-tight font-medium text-gray-700">
+                        {item.title}
+                      </h3>
+                      <h4
+                        className={`text-xl font-medium ${item.textColor} transition-all duration-300 ease-in-out group-hover:scale-105`}
+                      >
+                        {countLoading ? "..." : item.value}
+                      </h4>
+                    </div>
+                    <div
+                      className={`hidden rounded-xl p-3 md:flex ${item.iconBg} ${item.borderColor} border-2 transition-transform duration-300 group-hover:scale-110`}
+                    >
+                      <IconComponent className={`h-6 w-6 ${item.textColor}`} />
+                    </div>
+                  </div>
+                );
+              })}
+            </section>
+          )}
+          {role === "SERVICE" && (
+            <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {serviceStats.map((item, index) => {
+                const IconComponent = item.icon;
+                return (
+                  <div
+                    key={index}
+                    onClick={() =>
+                      item.navigateUrl && navigate(item.navigateUrl)
+                    }
+                    className={`group relative flex transform cursor-pointer flex-row items-center justify-between overflow-hidden rounded-2xl border-2 border-slate-300 bg-white p-6 transition-all duration-300 hover:scale-[1.02] active:scale-105 ${index === 2 ? "col-span-2 sm:col-span-1" : "col-span-1"}`}
+                  >
+                    <div className="flex flex-col items-start justify-start gap-3">
+                      <h3 className="text-lg leading-tight font-medium text-gray-700">
+                        {item.title}
+                      </h3>
+                      <h4
+                        className={`text-xl font-medium ${item.textColor} transition-all duration-300 ease-in-out group-hover:scale-105`}
+                      >
+                        {countLoading ? "..." : item.value}
+                      </h4>
+                    </div>
+                    <div
+                      className={`${index !== 2 ? "hidden" : ""} rounded-xl p-3 md:flex ${item.iconBg} ${item.borderColor} border-2 transition-transform duration-300 group-hover:scale-110`}
+                    >
+                      <IconComponent className={`h-6 w-6 ${item.textColor}`} />
+                    </div>
+                  </div>
+                );
+              })}
+            </section>
+          )}
         </div>
-      );
-    })}
-  </section>
-)}
-
- {role === "SERVICE" && (
-    
-      <section>
-        
-        <div className="flex flex-col gap-3 rounded-lg bg-white p-5 shadow-md">
-       
+      </div>
+      {role === "SERVICE" && (
+        <div className="min-w-full self-center rounded-2xl bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50 p-4 shadow-sm">
           {/* Service Requests Section */}
-          <div className="flex w-full flex-row items-center justify-between">
-            <div className="flex flex-col w-fit  gap-0">
-              <h1 className="mb-2 w-fit  md:text-3xl text-xl font-bold text-gray-900">
+          <header className="flex w-full flex-row items-center justify-between">
+            <div className="flex w-fit flex-col gap-0">
+              <h1 className="w-max text-xl font-bold text-gray-900">
                 Service Requests
               </h1>
               <p className="leading-tight text-gray-600">
                 Total: {data?.totalRecords || 0} requests
               </p>
             </div>
-        
-                   <div className="flex items-center gap-3 w-full justify-end">
-                    <div className="max-w-[350px] flex justidy-end">
-                      <DateInput
-                      title=""
-                     value=""
-                      onChange={() => {}}
-                      name="serviceDate"
-                    />
-                </div>
-                    {/* Pagination */}
-            <PaginationControls
-              currentPage={page}
-              totalPages={data?.totalPages || 1}
-              onPageChange={setPage}
-            />
+
+            <div className="flex w-full items-center justify-end gap-3">
+              <div className="justidy-end flex max-w-[350px]">
+                <DateInput
+                  title=""
+                  value={getTodayDate()}
+                  onChange={() => {}}
+                  name="serviceDate"
+                />
               </div>
-          </div>
-          <div className="flex flex-col gap-6">
+              {/* Pagination */}
+              <PaginationControls
+                currentPage={page}
+                totalPages={data?.totalPages || 1}
+                onPageChange={setPage}
+              />
+            </div>
+          </header>
+          <div className="mt-4 flex flex-col gap-6">
             <div className="flex flex-col gap-6">
               {data?.data.map((request) => (
                 <div
@@ -292,12 +298,9 @@ return (
             </div>
           </div>
         </div>
-      </section>
- )}
-    </div>
-  </div>
-);
-
+      )}
+    </main>
+  );
 };
 
 export default DashBoardPage;

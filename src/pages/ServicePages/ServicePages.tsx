@@ -20,24 +20,24 @@ const ServicePages = () => {
     return <div className="p-4 text-red-500">Failed to load data.</div>;
   }
   return (
-    <div className="flex flex-col gap-3 rounded-lg bg-white p-5 shadow-md">
+    <div className="flex flex-col gap-6 rounded-lg bg-white p-5 shadow-md">
       {/* Service Requests Section */}
-      <div className="flex w-full flex-row items-center justify-between">
-        <div className="flex flex-col gap-0">
-          <h1 className="mb-2 text-3xl font-bold text-gray-900">
+      <header className="flex w-full flex-row items-center justify-between">
+        <header className="flex flex-col gap-0">
+          <h1 className="mb-2 w-max text-xl font-bold text-gray-900">
             Service Requests
           </h1>
           <p className="leading-tight text-gray-600">
             Total: {data?.totalRecords || 0} requests
           </p>
-        </div>
+        </header>
         {/* Pagination */}
         <PaginationControls
           currentPage={page}
           totalPages={data?.totalPages || 1}
           onPageChange={setPage}
         />
-      </div>
+      </header>
       <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-6">
           {data?.data.map((request) => (
@@ -64,10 +64,12 @@ const ServicePages = () => {
                         <span className="font-medium">Machine:</span>{" "}
                         {request.machineType}
                       </span>
+                      {"|"}
                       <span className="text-sm text-gray-600">
                         <span className="font-medium">Brand:</span>{" "}
                         {request.brand} {request.modelNumber}
                       </span>
+                      {"|"}
                       <span className="text-sm text-gray-600">
                         <span className="font-medium">Serial No:</span>{" "}
                         {request.brand} {request.serialNumber}
