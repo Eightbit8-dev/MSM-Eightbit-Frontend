@@ -135,7 +135,7 @@ const SparesPage = () => {
 
       {/* Table Section */}
       <section className="table-container flex w-full flex-col gap-3 rounded-[12px] bg-white/80 p-4 shadow-sm md:w-[50%]">
-        <header className="flex flex-col md:flex-row items-center justify-between">
+        <header className="flex flex-col md:flex-row  md:items-center items-start justify-between">
           <PageHeader title="Spare Configuration" />
 
           <footer className="mt-3 flex w-full flex-row items-center justify-between gap-2 md:mt-0 md:justify-end">

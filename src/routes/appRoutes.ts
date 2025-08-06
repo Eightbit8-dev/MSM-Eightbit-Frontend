@@ -44,7 +44,8 @@ export const appRoutes = {
   userRoutes: {
     userPage: "/users",
     children: {
-      // e.g., profile: "/users/profile"
+      createUser: "/users/create",
+      assignRole: "/users/assign-role",
     },
   },
 

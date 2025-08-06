@@ -21,7 +21,7 @@ const DashBoardPage = lazy(() => import("./pages/DashBoardPage"));
 const Report = lazy(() => import("./pages/ReportPages/ReportPage"));
 
 // 👥 User Management
-const UsersPage = lazy(() => import("./pages/UsersPage"));
+const UsersPage = lazy(() => import("./pages/Users/UsersPage"));
 
 // 🔐 Master Pages
 const MasterPage = lazy(() => import("./pages/MasterPages/MasterPage"));

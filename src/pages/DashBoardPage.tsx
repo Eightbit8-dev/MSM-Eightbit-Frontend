@@ -151,7 +151,7 @@ return (
                   </h4>
                 </div>
                 <div
-                  className={`rounded-xl p-3 ${item.iconBg} ${item.borderColor} border-2 transition-transform duration-300 group-hover:scale-110`}
+                  className={`hidden md:flex rounded-xl p-3 ${item.iconBg} ${item.borderColor} border-2 transition-transform duration-300 group-hover:scale-110`}
                 >
                   <IconComponent className={`h-6 w-6 ${item.textColor}`} />
                 </div>
@@ -181,7 +181,7 @@ return (
             </h4>
           </div>
           <div
-            className={`rounded-xl p-3 ${item.iconBg} ${item.borderColor} border-2 transition-transform duration-300 group-hover:scale-110`}
+            className={`hidden md:flex rounded-xl p-3 ${item.iconBg} ${item.borderColor} border-2 transition-transform duration-300 group-hover:scale-110`}
           >
             <IconComponent className={`h-6 w-6 ${item.textColor}`} />
           </div>

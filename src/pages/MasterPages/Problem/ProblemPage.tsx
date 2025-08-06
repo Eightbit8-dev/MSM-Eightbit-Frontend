@@ -140,7 +140,7 @@ const render = () => {
       <main className="flex w-full max-w-full flex-col gap-4 md:flex-row">
         {/* Table Section */}
         <section className="table-container flex w-full flex-col gap-3 rounded-[12px] bg-white/80 p-4 shadow-sm md:w-[50%]">
-          <header className="flex flex-col items-center justify-between md:flex-row">
+          <header className="flex flex-col  md:items-center items-start justify-between md:flex-row">
             <div className="flex w-full flex-row items-center gap-2">
               <PageHeader title="Problem Configuration" />
             </div>

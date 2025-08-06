@@ -155,7 +155,7 @@ const ProductsPage = () => {
 
       {/* Left Table Section */}
       <section className="table-container flex w-full flex-col gap-3 rounded-[12px] bg-white/80 p-4 shadow-sm md:w-[50%]">
-        <header className="flex flex-col md:flex-row items-center w-full justify-between">
+        <header className="flex flex-col md:flex-row md:items-center items-start w-full justify-between">
           <div className="w-full justify-start items-center gap-2">
             <PageHeader title="Product Configuration" />
           </div>
