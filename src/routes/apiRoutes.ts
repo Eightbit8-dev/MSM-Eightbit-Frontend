@@ -29,7 +29,7 @@ export const apiRoutes = {
 
   dashboard: "/api/admin/dashboard",
   // ------------------ Reports Routes ------------------
-  customerWise: "/api/admin/reports/pdf",
+  customerWise: "/api/admin/reports/client-wise/pdf",
   machineModelWise: "/api/admin/reports/machine-model-wise",
   technicianWise: "/api/admin/reports/technician-wise",
   sparesWise: "/api/admin/reports/spares-wise",

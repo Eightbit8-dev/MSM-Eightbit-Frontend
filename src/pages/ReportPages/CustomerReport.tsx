@@ -82,7 +82,9 @@ const CustomerReport: React.FC = () => {
       <form onSubmit={handleSubmit} className="">
         <div className="mb-6 rounded-xl bg-white p-6 shadow-sm">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold text-gray-700">Filter Options</h2>
+            <h2 className="text-xl font-semibold text-gray-700">
+              Filter Options
+            </h2>
             {/* Show "Clear All" only if any filter is active */}
             {hasActiveFilters && (
               <ButtonSm
@@ -159,9 +161,10 @@ const CustomerReport: React.FC = () => {
                 { id: 2, label: "Not Completed" },
               ]}
               selected={
-                [{ id: 1, label: "Completed" }, { id: 2, label: "Not Completed" }].find(
-                  (p) => p.label === filters.status
-                ) ||
+                [
+                  { id: 1, label: "Completed" },
+                  { id: 2, label: "Not Completed" },
+                ].find((p) => p.label === filters.status) ||
                 getDefaultOption("Select Status")
               }
               onChange={(val) => setFilters({ ...filters, status: val.label })}
@@ -171,7 +174,9 @@ const CustomerReport: React.FC = () => {
           {/* Show active filters as chips */}
           {hasActiveFilters && (
             <div className="mt-4 flex flex-wrap gap-2 border-t pt-4">
-              <span className="text-sm mt-1 font-medium text-gray-700">Active Filters:</span>
+              <span className="mt-1 text-sm font-medium text-gray-700">
+                Active Filters:
+              </span>
               {Object.entries(filters).map(([key, value]) => {
                 if (!value) return null;
                 const label = key
@@ -181,7 +186,7 @@ const CustomerReport: React.FC = () => {
                   <div
                     key={key}
                     onClick={() => handleClearFilter(key as keyof Filters)}
-                    className="flex items-center gap-1 cursor-pointer rounded-full bg-blue-100 px-3 py-1 text-sm text-blue-800"
+                    className="flex cursor-pointer items-center gap-1 rounded-full bg-blue-100 px-3 py-1 text-sm text-blue-800"
                   >
                     <span>
                       <strong>{label}:</strong> {value}

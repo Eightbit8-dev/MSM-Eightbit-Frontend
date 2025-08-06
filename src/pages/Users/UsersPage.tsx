@@ -24,7 +24,7 @@ export const UsersPage = () => {
 
   return (
     <div className="flex w-full max-w-[1590px] origin-top flex-col gap-8">
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {userConfigCards.map((card, index) => (
           <ConfigCard
             key={index}
