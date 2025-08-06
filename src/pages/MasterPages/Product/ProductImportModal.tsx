@@ -34,6 +34,7 @@ const ProductImportModal = ({ isOpen, onClose }: ImportModalProps) => {
 
   const handleDownloadSampleTemplate = async () => {
     try {
+      console.log("buttonclicked")
       await refetch(); // Trigger the query to fetch the template
       if (data) {
         const contentDisposition =
