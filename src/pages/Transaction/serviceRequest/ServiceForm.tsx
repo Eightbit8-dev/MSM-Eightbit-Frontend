@@ -214,7 +214,7 @@ const ServiceRequestFormPage: React.FC<Props> = ({
   };
 
   return (
-    <div className="flex max-h-screen min-w-full flex-col overflow-y-auto rounded-2xl bg-white p-4 py-30 md:overflow-visible md:py-0">
+    <div className="flex max-h-screen min-w-full flex-col  rounded-2xl bg-white p-4  md:overflow-visible md:py-0">
       <div className="flex items-center justify-between">
         <h1 className="mb-6 text-2xl font-semibold capitalize">
           New Service Request
@@ -238,7 +238,7 @@ const ServiceRequestFormPage: React.FC<Props> = ({
         )}
       </div>
 
-      <form onSubmit={handleSubmit} className="flex min-w-full flex-col gap-4">
+      <form onSubmit={handleSubmit} className="flex overflow-y-auto min-w-full flex-col gap-4">
         <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2">
           <Input
             title="Reference Number"
@@ -323,7 +323,7 @@ const ServiceRequestFormPage: React.FC<Props> = ({
           />
         </div>
 
-        <div className="mt-4 flex justify-end gap-4">
+        <div className="mt-4 mb-5 flex justify-end gap-4">
           <ButtonSm
             type="button"
             state="outline"

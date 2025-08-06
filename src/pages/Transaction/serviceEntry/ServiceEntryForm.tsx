@@ -4,12 +4,13 @@ import DropdownSelect, {
   type DropdownOption,
 } from "@/components/common/DropDown";
 import ButtonSm from "@/components/common/Buttons";
+import QrScannerDialog from "../serviceRequest/QrScannerDialog";
 
 import { useFetchServiceRequestById } from "@/queries/TranscationQueries/ServiceRequestQuery";
 import { useParams, useSearchParams } from "react-router-dom";
 import type { FormState } from "@/types/appTypes";
 import { toast } from "react-toastify";
-import type { ServiceEntryPayload } from "@/types/transactionTypes";
+import type { MachineDetails, ServiceEntryPayload } from "@/types/transactionTypes";
 import { useFetchServiceEngineerOptions } from "@/queries/masterQueries/ServiceEngineersQuery";
 import { useCreateServiceEntry } from "@/queries/TranscationQueries/ServiceEntryQuery";
 import {
@@ -28,6 +29,7 @@ import { useFetchSparesOptions } from "@/queries/masterQueries/SpareQuery";
 import RequestEntrySkeleton from "./ServiceEntryFormSkeleton";
 import SparePartsManager from "./SparesImageUploader.component";
 import PageHeader from "@/components/masterPage.components/PageHeader";
+
 
 interface SparePartData {
   spareId: number;
@@ -60,6 +62,9 @@ const RequestEntry = () => {
   const [formState, setFormState] = useState<FormState>("display");
   const [formData, setFormData] = useState<ServiceEntryPayload>(emptyData);
   const [sparePartsData, setSparePartsData] = useState<SparePartData[]>([]);
+  const [showQRDialog, setShowQRDialog] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
+  const [qrError, setQrError] = useState("");
   const [selectedSpares, setSelectedSpares] = useState<DropdownOption[]>([]);
   const [spareQuantities, setSpareQuantities] = useState<{
     [key: number]: number;
@@ -98,6 +103,114 @@ const RequestEntry = () => {
       toast.error("Invalid url");
     }
   }, [modeParam]);
+
+  interface MachineDetails {
+  clientName?: string;
+  machineType?: string;
+  serialNumber?: string;
+  brand?: string;
+  model?: string;
+  refNumber?: string;
+  machineEntryId?: string;
+  installedDate?: string;
+}
+
+  const handleQRScan = (data: string) => {
+  // console.log("Raw QR data:", data); // Debug log
+  
+  try {
+    let scannedData: MachineDetails = {};
+    
+    // Try to parse as JSON first
+    try {
+      scannedData = JSON.parse(data);
+      // console.log("Parsed as JSON:", scannedData);
+    } catch (parseError) {
+      // Parse the custom text format
+      // console.log("Parsing as custom text format");
+      
+      const lines = data.split('\n');
+      
+      for (const line of lines) {
+        const trimmedLine = line.trim();
+        if (!trimmedLine) continue;
+        
+        // Handle different line formats
+        if (trimmedLine.includes('Serial #:')) {
+          scannedData.serialNumber = trimmedLine.split('Serial #:')[1]?.trim();
+        } else if (trimmedLine.includes('Client:')) {
+          scannedData.clientName = trimmedLine.split('Client:')[1]?.trim();
+        } else if (trimmedLine.includes('Type:')) {
+          scannedData.machineType = trimmedLine.split('Type:')[1]?.trim();
+        } else if (trimmedLine.includes('Brand:')) {
+          scannedData.brand = trimmedLine.split('Brand:')[1]?.trim();
+        } 
+      }
+      
+      // console.log("Parsed QR data:", scannedData);
+    }
+    
+    // Check if required fields exist
+    if (!scannedData.clientName || !scannedData.machineType || !scannedData.serialNumber) {
+      const missing = [];
+      if (!scannedData.clientName) missing.push('Client Name');
+      if (!scannedData.machineType) missing.push('Machine Type');
+      if (!scannedData.serialNumber) missing.push('Serial Number');
+      
+      setQrError(`QR code missing required fields: ${missing.join(', ')}`);
+      setShowQRDialog(false);
+      return;
+    }
+    
+    // console.log("Service request data:", {
+    //   clientName: serviceRequestData?.clientName,
+    //   machineType: serviceRequestData?.machineType,
+    //   serialNumber: serviceRequestData?.serialNumber
+    // });
+    
+    // Verify if scanned data matches service request data (case-insensitive comparison)
+    const clientNameMatch = scannedData.clientName?.toLowerCase().trim() === serviceRequestData?.clientName?.toLowerCase().trim();
+    const machineTypeMatch = scannedData.machineType?.toLowerCase().trim() === serviceRequestData?.machineType?.toLowerCase().trim();
+    const serialNumberMatch = scannedData.serialNumber?.toLowerCase().trim() === serviceRequestData?.serialNumber?.toLowerCase().trim();
+    
+    // console.log("Comparison results:", {
+    //   clientNameMatch,
+    //   machineTypeMatch,
+    //   serialNumberMatch,
+    //   scannedClientName: scannedData.clientName,
+    //   expectedClientName: serviceRequestData?.clientName,
+    //   scannedMachineType: scannedData.machineType,
+    //   expectedMachineType: serviceRequestData?.machineType,
+    //   scannedSerialNumber: scannedData.serialNumber,
+    //   expectedSerialNumber: serviceRequestData?.serialNumber
+    // });
+    
+    if (clientNameMatch && machineTypeMatch && serialNumberMatch) {
+      setIsVerified(true);
+      setQrError("");
+      toast.success("QR code verified successfully!");
+    } else {
+      // Provide specific feedback about which fields don't match
+      const mismatches = [];
+      if (!clientNameMatch) mismatches.push(`Client Name (Expected: "${serviceRequestData?.clientName}", Got: "${scannedData.clientName}")`);
+      if (!machineTypeMatch) mismatches.push(`Machine Type (Expected: "${serviceRequestData?.machineType}", Got: "${scannedData.machineType}")`);
+      if (!serialNumberMatch) mismatches.push(`Serial Number (Expected: "${serviceRequestData?.serialNumber}", Got: "${scannedData.serialNumber}")`);
+      
+      setQrError(`QR code data does not match`);
+    }
+  } catch (error) {
+    console.error("Unexpected error in handleQRScan:", error);
+    setQrError("An unexpected error occurred while processing the QR code");
+  }
+  setShowQRDialog(false);
+};
+
+
+
+
+
+
+
 
   // Set initial form data when service request is loaded
   useEffect(() => {
@@ -215,7 +328,7 @@ const RequestEntry = () => {
     });
 
     // Debug: Log FormData contents (remove in production)
-    console.log("FormData contents:");
+    // console.log("FormData contents:");
     for (const pair of formDataToSend.entries()) {
       console.log(pair[0] + ": " + pair[1]);
     }
@@ -239,7 +352,34 @@ const RequestEntry = () => {
 
   return (
     <div className="flex w-full flex-col gap-3 rounded-lg bg-white p-6 shadow-md md:mb-0">
-      <PageHeader title="Service Entry Detail" />
+<div className="flex justify-between items-center">
+        <PageHeader title="Service Entry Detail" />
+      
+      {/* QR Scanner Section */}
+      <div className="mb-4 flex items-center gap-4">
+        <ButtonSm
+          text={isVerified ? "Verified ✓" : "Scan QR"}
+          state={isVerified ? "outline" : "default"}
+          className={isVerified ? "bg-green-100 text-green-600 border-green-600" : "text-white"}
+          onClick={() => {
+            if (!isVerified) {
+              setShowQRDialog(true);
+            }
+          }}
+          disabled={isVerified}
+        />
+        {qrError && (
+          <p className="text-sm text-red-500">{qrError}</p>
+        )}
+      </div>
+</div>
+      
+      <QrScannerDialog
+        open={showQRDialog}
+        onClose={() => setShowQRDialog(false)}
+        onScan={handleQRScan}
+      />
+
       <form
         onSubmit={handleSubmit}
         className="grid grid-cols-1 items-start gap-4 md:grid-cols-2"

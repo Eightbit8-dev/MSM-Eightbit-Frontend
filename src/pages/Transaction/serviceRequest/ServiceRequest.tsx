@@ -95,10 +95,10 @@ const ServiceRequestPage = () => {
         ) : (
           <div className="flex flex-col items-start justify-start gap-2 overflow-clip rounded-[12px] bg-white/80 py-3 md:p-4">
             <div className="flex w-full items-center justify-between px-3 md:px-0">
-              <section className="result-length flex w-full flex-row items-center justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  <div className="flex h-[10px] w-[10px] rounded-full bg-blue-500"></div>
-                  <h2 className="text-md min-w-max font-semibold text-zinc-800">
+              <section className="result-length flex w-full flex-col md:flex-row items-center justify-between gap-2">
+                <div className="flex items-center flex w-full ml-4 md:ml-0 justify-start gap-2">
+                  <div className="flex h-[10px] w-[10px]  rounded-full bg-blue-500"></div>
+                  <h2 className="text-md min-w-max  font-semibold text-zinc-800">
                     Showing {paginatedData.length} results of{" "}
                     {data?.totalRecords || 0}
                   </h2>

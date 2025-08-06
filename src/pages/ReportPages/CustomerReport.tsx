@@ -100,7 +100,7 @@ const CustomerReport: React.FC = () => {
             onChange={(val) => setFilters({ ...filters, model: val.label })}
           />
 
-          <DateInput
+          {/* <DateInput
             title="Ref Date From"
             value={filters.refDateFrom}
             onChange={(val) => setFilters({ ...filters, refDateFrom: val })}
@@ -112,7 +112,7 @@ const CustomerReport: React.FC = () => {
             value={filters.refDateTo}
             onChange={(val) => setFilters({ ...filters, refDateTo: val })}
             name="refDateTo"
-          />
+          /> */}
 
           <DateInput
             title="Service Date"
