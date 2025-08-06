@@ -42,13 +42,21 @@ const CustomerReport: React.FC = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    const form = e.nativeEvent as SubmitEvent;
+    const submitter = form.submitter as HTMLButtonElement;
+
+    const isViewOnly = submitter?.value === "view";
+
     generateReport({
-      clientName: filters.clientName || undefined,
-      model: filters.model || undefined,
-      serviceDate: filters.serviceDate || undefined,
-      technician: filters.technician || undefined,
-      complaint: filters.complaint || undefined,
-      status: filters.status || undefined,
+      params: {
+        clientName: filters.clientName || undefined,
+        model: filters.model || undefined,
+        serviceDate: filters.serviceDate || undefined,
+        technician: filters.technician || undefined,
+        complaint: filters.complaint || undefined,
+        status: filters.status || undefined,
+      },
+      isViewOnly,
     });
   };
 
@@ -162,9 +170,20 @@ const CustomerReport: React.FC = () => {
         <div className="mt-6 flex justify-end gap-4">
           <ButtonSm
             state="default"
-            isPending={isPending}
+            name="action"
+            value="view"
             type="submit"
             text="Generate Report"
+            disabled={isPending}
+            className="mt-auto flex cursor-pointer items-center gap-2 rounded-[12px] bg-[#3A74D3] px-3 py-3 text-base font-medium text-white transition-colors duration-200 hover:bg-[#2a5bb0] active:bg-[#2a5bb0]"
+          />
+          <ButtonSm
+            state="default"
+            name="action"
+            value="download"
+            disabled={isPending}
+            type="submit"
+            text="Download Report"
             className="mt-auto flex cursor-pointer items-center gap-2 rounded-[12px] bg-[#3A74D3] px-3 py-3 text-base font-medium text-white transition-colors duration-200 hover:bg-[#2a5bb0] active:bg-[#2a5bb0]"
           />
         </div>

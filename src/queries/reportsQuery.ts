@@ -17,26 +17,38 @@ interface ReportParams {
 export const useGenerateReportPDF = () => {
   const queryClient = useQueryClient();
 
-  const generatePDF = async (params: ReportParams) => {
+  const generatePDF = async ({
+    params,
+    isViewOnly,
+  }: {
+    params: ReportParams;
+    isViewOnly: boolean;
+  }) => {
     try {
       const token = Cookies.get("token");
       if (!token) throw new Error("Unauthorized to perform this action.");
 
       const res = await axiosInstance.get(apiRoutes.customerWise, {
-        params, // ⬅️ will include only non-undefined fields
+        params,
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        responseType: "blob", // important to download PDF
+        responseType: "blob",
       });
 
-      if (res.status !== 200) {
-        throw new Error(res.data?.message || "Failed to generate report");
-      }
+      const blob = new Blob([res.data], { type: "application/pdf" });
+      const url = window.URL.createObjectURL(blob);
 
-      const file = new Blob([res.data], { type: "application/pdf" });
-      const fileURL = URL.createObjectURL(file);
-      window.open(fileURL, "_blank"); // Open PDF in new tab
+      if (isViewOnly) {
+        window.open(url, "_blank");
+      } else {
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "ServiceReport.pdf");
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      }
 
       return true;
     } catch (error: unknown) {

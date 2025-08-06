@@ -4,11 +4,14 @@ import React from "react";
 type ButtonState = "default" | "outline";
 interface ButtonSmProps {
   className?: string;
+  name?: string;
+
   state: ButtonState;
   text?: string;
   disabled?: boolean;
   imgUrl?: string;
   isPending?: boolean;
+  value?: string;
   iconPosition?: "left" | "right"; // ✅ New prop
   type?: "button" | "submit" | "reset";
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
@@ -18,10 +21,12 @@ const ButtonSm: React.FC<ButtonSmProps> = ({
   state,
   text,
   onClick,
+  name,
   type = "button",
   disabled = false,
   className = "",
   imgUrl,
+  value,
   isPending = false,
   iconPosition = "left", // default position
 }) => {
@@ -38,6 +43,8 @@ const ButtonSm: React.FC<ButtonSmProps> = ({
           : `btn-outline text-gray-800 outline-1 outline-slate-300 hover:bg-gray-100 active:bg-gray-200`
       } ${className}`}
       onClick={onClick}
+      value={value}
+      name={name}
     >
       {/* Render icon on left (default) */}
       {imgUrl && iconPosition === "left" && (
