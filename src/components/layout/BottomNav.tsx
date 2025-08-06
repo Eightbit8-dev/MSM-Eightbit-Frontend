@@ -53,7 +53,7 @@ export const navItems: NavItem[] = [
     route: appRoutes.reportRoutes.reportPage || "/reports",
     icon: "/icons/sideNavIcons/reports-icon.svg",
     activeIcon: "/icons/sideNavIcons/reports-icon-active-icon.svg",
-    roles: ["ADMIN", "SERVICE"],
+    roles: ["ADMIN"],
   },
 ];
 

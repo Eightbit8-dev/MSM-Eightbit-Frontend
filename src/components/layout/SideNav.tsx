@@ -130,7 +130,7 @@ const SideNav: React.FC = () => {
                   appRoutes.reportRoutes?.reportPage || "/reports",
                 )
               }
-              isVisible={role === "SERVICE" || role === "ADMIN"}
+              isVisible={role === "ADMIN"}
             />
 
             {/* --install pwa button */}
