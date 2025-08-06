@@ -14,6 +14,7 @@ import { useFetchServiceRequests } from "@/queries/TranscationQueries/ServiceReq
 import { useNavigate } from "react-router-dom";
 import { useFetchDashboardCounts } from "../queries/dashboardQuery";
 import { appRoutes } from "@/routes/appRoutes";
+import { DateInput } from "@/components/common/Input";
 
 const DashBoardPage = () => {
   const navigate = useNavigate();
@@ -194,23 +195,36 @@ return (
  {role === "SERVICE" && (
     
       <section>
+        
         <div className="flex flex-col gap-3 rounded-lg bg-white p-5 shadow-md">
+       
           {/* Service Requests Section */}
           <div className="flex w-full flex-row items-center justify-between">
-            <div className="flex flex-col gap-0">
-              <h1 className="mb-2 text-3xl font-bold text-gray-900">
+            <div className="flex flex-col w-fit  gap-0">
+              <h1 className="mb-2 w-fit  md:text-3xl text-xl font-bold text-gray-900">
                 Service Requests
               </h1>
               <p className="leading-tight text-gray-600">
                 Total: {data?.totalRecords || 0} requests
               </p>
             </div>
-            {/* Pagination */}
+        
+                   <div className="flex items-center gap-3 w-full justify-end">
+                    <div className="max-w-[350px] flex justidy-end">
+                      <DateInput
+                      title=""
+                     value=""
+                      onChange={() => {}}
+                      name="serviceDate"
+                    />
+                </div>
+                    {/* Pagination */}
             <PaginationControls
               currentPage={page}
               totalPages={data?.totalPages || 1}
               onPageChange={setPage}
             />
+              </div>
           </div>
           <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-6">

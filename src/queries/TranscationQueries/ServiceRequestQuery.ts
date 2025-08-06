@@ -65,6 +65,51 @@ export const useFetchServiceRequests = (
   });
 };
 
+
+
+//............For engineers...........//
+
+export const useFetchServiceRequestsForEngineers = (
+  page: number,
+  limit: number,
+  serviceEngineerId: number | null = null
+) => {
+  const fetchAllRequests = async (): Promise<ServiceRequestResponse> => {
+    const token = Cookies.get("token");
+    if (!token) throw new Error("Unauthorized");
+
+    const res = await axiosInstance.get(apiRoutes.serviceRequest  ,{
+  
+      params: {
+        page: page - 1,
+        limit,
+        serviceEngineerId
+      },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (res.status !== 200) {
+      throw new Error(res.data?.message || "Failed to fetch service requests");
+    }
+
+    return {
+      data: res.data.data,
+      page: res.data.page,
+      totalPages: res.data.totalPages,
+      totalRecords: res.data.totalRecords,
+    };
+  };
+
+  return useQuery({
+    queryKey: ["serviceRequest", page, limit, serviceEngineerId],
+    queryFn: fetchAllRequests,
+    staleTime: 0,
+    retry: 1,
+  });
+};
+
 export const useFetchServiceRequestById = (id: number) => {
   const fetchServiceRequestByID = async (): Promise<ServiceRequest> => {
     const token = Cookies.get("token");

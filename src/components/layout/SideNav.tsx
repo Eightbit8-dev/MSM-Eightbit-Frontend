@@ -105,7 +105,7 @@ const SideNav: React.FC = () => {
             />
 
             <NavigationButton
-              labelName="Service"
+              labelName="Services"
               isActive={isRouteActive(
                 appRoutes.ServiceRoutes?.servicePage || "/Service",
               )}
