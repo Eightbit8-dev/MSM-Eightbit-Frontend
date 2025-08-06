@@ -169,7 +169,7 @@ const DashBoardPage = () => {
             </section>
           )}
           {role === "SERVICE" && (
-            <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <section className="grid min-w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {serviceStats.map((item, index) => {
                 const IconComponent = item.icon;
                 return (
