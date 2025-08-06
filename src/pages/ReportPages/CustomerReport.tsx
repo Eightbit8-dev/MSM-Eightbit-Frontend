@@ -92,7 +92,7 @@ const CustomerReport: React.FC = () => {
             onChange={(val) => setFilters({ ...filters, model: val.label })}
           />
 
-          <DateInput
+          {/* <DateInput
             title="Ref Date From"
             value={filters.refDateFrom}
             onChange={(val) => setFilters({ ...filters, refDateFrom: val })}
@@ -104,7 +104,7 @@ const CustomerReport: React.FC = () => {
             value={filters.refDateTo}
             onChange={(val) => setFilters({ ...filters, refDateTo: val })}
             name="refDateTo"
-          />
+          /> */}
 
           <DateInput
             title="Service Date"
@@ -164,7 +164,21 @@ const CustomerReport: React.FC = () => {
             state="default"
             isPending={isPending}
             type="submit"
-            text="Generate Report"
+            text="Submit"
+            className="mt-auto flex cursor-pointer items-center gap-2 rounded-[12px] bg-[#3A74D3] px-3 py-3 text-base font-medium text-white transition-colors duration-200 hover:bg-[#2a5bb0] active:bg-[#2a5bb0]"
+          />
+                    <ButtonSm
+            state="default"
+            isPending={isPending}
+            type="button"
+            text="Downloard PDF"
+            className="mt-auto flex cursor-pointer items-center gap-2 rounded-[12px] bg-[#3A74D3] px-3 py-3 text-base font-medium text-white transition-colors duration-200 hover:bg-[#2a5bb0] active:bg-[#2a5bb0]"
+          />
+                    <ButtonSm
+            state="default"
+            isPending={isPending}
+            type="button"
+            text="Downloard Excel"
             className="mt-auto flex cursor-pointer items-center gap-2 rounded-[12px] bg-[#3A74D3] px-3 py-3 text-base font-medium text-white transition-colors duration-200 hover:bg-[#2a5bb0] active:bg-[#2a5bb0]"
           />
         </div>
