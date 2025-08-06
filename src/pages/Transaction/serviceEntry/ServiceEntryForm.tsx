@@ -10,7 +10,7 @@ import { useFetchServiceRequestById } from "@/queries/TranscationQueries/Service
 import { useParams, useSearchParams } from "react-router-dom";
 import type { FormState } from "@/types/appTypes";
 import { toast } from "react-toastify";
-import type { MachineDetails, ServiceEntryPayload } from "@/types/transactionTypes";
+import type { ServiceEntryPayload } from "@/types/transactionTypes";
 import { useFetchServiceEngineerOptions } from "@/queries/masterQueries/ServiceEngineersQuery";
 import { useCreateServiceEntry } from "@/queries/TranscationQueries/ServiceEntryQuery";
 import {
@@ -30,18 +30,21 @@ import RequestEntrySkeleton from "./ServiceEntryFormSkeleton";
 import SparePartsManager from "./SparesImageUploader.component";
 import PageHeader from "@/components/masterPage.components/PageHeader";
 
-
 interface SparePartData {
   spareId: number;
   quantity: number;
   complaintSparePhotoUrl?: File;
   sparePhotoUrl?: File;
 }
+const getCurrentDate = () => {
+  const today = new Date();
+  return today.toISOString().split("T")[0];
+};
 
 const RequestEntry = () => {
   const emptyData: ServiceEntryPayload = {
     refNumber: "",
-    serviceDate: "",
+    serviceDate: getCurrentDate(),
     maintenanceType: "",
     maintenanceSubType: "",
     serviceRequestId: 0,
@@ -105,112 +108,126 @@ const RequestEntry = () => {
   }, [modeParam]);
 
   interface MachineDetails {
-  clientName?: string;
-  machineType?: string;
-  serialNumber?: string;
-  brand?: string;
-  model?: string;
-  refNumber?: string;
-  machineEntryId?: string;
-  installedDate?: string;
-}
+    clientName?: string;
+    machineType?: string;
+    serialNumber?: string;
+    brand?: string;
+    model?: string;
+    refNumber?: string;
+    machineEntryId?: string;
+    installedDate?: string;
+  }
 
   const handleQRScan = (data: string) => {
-  // console.log("Raw QR data:", data); // Debug log
-  
-  try {
-    let scannedData: MachineDetails = {};
-    
-    // Try to parse as JSON first
+    // console.log("Raw QR data:", data); // Debug log
+
     try {
-      scannedData = JSON.parse(data);
-      // console.log("Parsed as JSON:", scannedData);
-    } catch (parseError) {
-      // Parse the custom text format
-      // console.log("Parsing as custom text format");
-      
-      const lines = data.split('\n');
-      
-      for (const line of lines) {
-        const trimmedLine = line.trim();
-        if (!trimmedLine) continue;
-        
-        // Handle different line formats
-        if (trimmedLine.includes('Serial #:')) {
-          scannedData.serialNumber = trimmedLine.split('Serial #:')[1]?.trim();
-        } else if (trimmedLine.includes('Client:')) {
-          scannedData.clientName = trimmedLine.split('Client:')[1]?.trim();
-        } else if (trimmedLine.includes('Type:')) {
-          scannedData.machineType = trimmedLine.split('Type:')[1]?.trim();
-        } else if (trimmedLine.includes('Brand:')) {
-          scannedData.brand = trimmedLine.split('Brand:')[1]?.trim();
-        } 
+      let scannedData: MachineDetails = {};
+
+      // Try to parse as JSON first
+      try {
+        scannedData = JSON.parse(data);
+        // console.log("Parsed as JSON:", scannedData);
+      } catch (parseError) {
+        // Parse the custom text format
+        // console.log("Parsing as custom text format");
+
+        const lines = data.split("\n");
+
+        for (const line of lines) {
+          const trimmedLine = line.trim();
+          if (!trimmedLine) continue;
+
+          // Handle different line formats
+          if (trimmedLine.includes("Serial #:")) {
+            scannedData.serialNumber = trimmedLine
+              .split("Serial #:")[1]
+              ?.trim();
+          } else if (trimmedLine.includes("Client:")) {
+            scannedData.clientName = trimmedLine.split("Client:")[1]?.trim();
+          } else if (trimmedLine.includes("Type:")) {
+            scannedData.machineType = trimmedLine.split("Type:")[1]?.trim();
+          } else if (trimmedLine.includes("Brand:")) {
+            scannedData.brand = trimmedLine.split("Brand:")[1]?.trim();
+          }
+        }
+
+        // console.log("Parsed QR data:", scannedData);
       }
-      
-      // console.log("Parsed QR data:", scannedData);
+
+      // Check if required fields exist
+      if (
+        !scannedData.clientName ||
+        !scannedData.machineType ||
+        !scannedData.serialNumber
+      ) {
+        const missing = [];
+        if (!scannedData.clientName) missing.push("Client Name");
+        if (!scannedData.machineType) missing.push("Machine Type");
+        if (!scannedData.serialNumber) missing.push("Serial Number");
+
+        setQrError(`QR code missing required fields: ${missing.join(", ")}`);
+        setShowQRDialog(false);
+        return;
+      }
+
+      // console.log("Service request data:", {
+      //   clientName: serviceRequestData?.clientName,
+      //   machineType: serviceRequestData?.machineType,
+      //   serialNumber: serviceRequestData?.serialNumber
+      // });
+
+      // Verify if scanned data matches service request data (case-insensitive comparison)
+      const clientNameMatch =
+        scannedData.clientName?.toLowerCase().trim() ===
+        serviceRequestData?.clientName?.toLowerCase().trim();
+      const machineTypeMatch =
+        scannedData.machineType?.toLowerCase().trim() ===
+        serviceRequestData?.machineType?.toLowerCase().trim();
+      const serialNumberMatch =
+        scannedData.serialNumber?.toLowerCase().trim() ===
+        serviceRequestData?.serialNumber?.toLowerCase().trim();
+
+      // console.log("Comparison results:", {
+      //   clientNameMatch,
+      //   machineTypeMatch,
+      //   serialNumberMatch,
+      //   scannedClientName: scannedData.clientName,
+      //   expectedClientName: serviceRequestData?.clientName,
+      //   scannedMachineType: scannedData.machineType,
+      //   expectedMachineType: serviceRequestData?.machineType,
+      //   scannedSerialNumber: scannedData.serialNumber,
+      //   expectedSerialNumber: serviceRequestData?.serialNumber
+      // });
+
+      if (clientNameMatch && machineTypeMatch && serialNumberMatch) {
+        setIsVerified(true);
+        setQrError("");
+        toast.success("QR code verified successfully!");
+      } else {
+        // Provide specific feedback about which fields don't match
+        const mismatches = [];
+        if (!clientNameMatch)
+          mismatches.push(
+            `Client Name (Expected: "${serviceRequestData?.clientName}", Got: "${scannedData.clientName}")`,
+          );
+        if (!machineTypeMatch)
+          mismatches.push(
+            `Machine Type (Expected: "${serviceRequestData?.machineType}", Got: "${scannedData.machineType}")`,
+          );
+        if (!serialNumberMatch)
+          mismatches.push(
+            `Serial Number (Expected: "${serviceRequestData?.serialNumber}", Got: "${scannedData.serialNumber}")`,
+          );
+
+        setQrError(`QR code data does not match`);
+      }
+    } catch (error) {
+      console.error("Unexpected error in handleQRScan:", error);
+      setQrError("An unexpected error occurred while processing the QR code");
     }
-    
-    // Check if required fields exist
-    if (!scannedData.clientName || !scannedData.machineType || !scannedData.serialNumber) {
-      const missing = [];
-      if (!scannedData.clientName) missing.push('Client Name');
-      if (!scannedData.machineType) missing.push('Machine Type');
-      if (!scannedData.serialNumber) missing.push('Serial Number');
-      
-      setQrError(`QR code missing required fields: ${missing.join(', ')}`);
-      setShowQRDialog(false);
-      return;
-    }
-    
-    // console.log("Service request data:", {
-    //   clientName: serviceRequestData?.clientName,
-    //   machineType: serviceRequestData?.machineType,
-    //   serialNumber: serviceRequestData?.serialNumber
-    // });
-    
-    // Verify if scanned data matches service request data (case-insensitive comparison)
-    const clientNameMatch = scannedData.clientName?.toLowerCase().trim() === serviceRequestData?.clientName?.toLowerCase().trim();
-    const machineTypeMatch = scannedData.machineType?.toLowerCase().trim() === serviceRequestData?.machineType?.toLowerCase().trim();
-    const serialNumberMatch = scannedData.serialNumber?.toLowerCase().trim() === serviceRequestData?.serialNumber?.toLowerCase().trim();
-    
-    // console.log("Comparison results:", {
-    //   clientNameMatch,
-    //   machineTypeMatch,
-    //   serialNumberMatch,
-    //   scannedClientName: scannedData.clientName,
-    //   expectedClientName: serviceRequestData?.clientName,
-    //   scannedMachineType: scannedData.machineType,
-    //   expectedMachineType: serviceRequestData?.machineType,
-    //   scannedSerialNumber: scannedData.serialNumber,
-    //   expectedSerialNumber: serviceRequestData?.serialNumber
-    // });
-    
-    if (clientNameMatch && machineTypeMatch && serialNumberMatch) {
-      setIsVerified(true);
-      setQrError("");
-      toast.success("QR code verified successfully!");
-    } else {
-      // Provide specific feedback about which fields don't match
-      const mismatches = [];
-      if (!clientNameMatch) mismatches.push(`Client Name (Expected: "${serviceRequestData?.clientName}", Got: "${scannedData.clientName}")`);
-      if (!machineTypeMatch) mismatches.push(`Machine Type (Expected: "${serviceRequestData?.machineType}", Got: "${scannedData.machineType}")`);
-      if (!serialNumberMatch) mismatches.push(`Serial Number (Expected: "${serviceRequestData?.serialNumber}", Got: "${scannedData.serialNumber}")`);
-      
-      setQrError(`QR code data does not match`);
-    }
-  } catch (error) {
-    console.error("Unexpected error in handleQRScan:", error);
-    setQrError("An unexpected error occurred while processing the QR code");
-  }
-  setShowQRDialog(false);
-};
-
-
-
-
-
-
-
+    setShowQRDialog(false);
+  };
 
   // Set initial form data when service request is loaded
   useEffect(() => {
@@ -352,28 +369,30 @@ const RequestEntry = () => {
 
   return (
     <div className="flex w-full flex-col gap-3 rounded-lg bg-white p-6 shadow-md md:mb-0">
-<div className="flex justify-between items-center">
+      <div className="flex items-center justify-between">
         <PageHeader title="Service Entry Detail" />
-      
-      {/* QR Scanner Section */}
-      <div className="mb-4 flex items-center gap-4">
-        <ButtonSm
-          text={isVerified ? "Verified ✓" : "Scan QR"}
-          state={isVerified ? "outline" : "default"}
-          className={isVerified ? "bg-green-100 text-green-600 border-green-600" : "text-white"}
-          onClick={() => {
-            if (!isVerified) {
-              setShowQRDialog(true);
+
+        {/* QR Scanner Section */}
+        <div className="mb-4 flex items-center gap-4">
+          <ButtonSm
+            text={isVerified ? "Verified ✓" : "Scan QR"}
+            state={isVerified ? "outline" : "default"}
+            className={
+              isVerified
+                ? "border-green-600 bg-green-100 text-green-600"
+                : "text-white"
             }
-          }}
-          disabled={isVerified}
-        />
-        {qrError && (
-          <p className="text-sm text-red-500">{qrError}</p>
-        )}
+            onClick={() => {
+              if (!isVerified) {
+                setShowQRDialog(true);
+              }
+            }}
+            disabled={isVerified}
+          />
+          {qrError && <p className="text-sm text-red-500">{qrError}</p>}
+        </div>
       </div>
-</div>
-      
+
       <QrScannerDialog
         open={showQRDialog}
         onClose={() => setShowQRDialog(false)}
@@ -427,8 +446,6 @@ const RequestEntry = () => {
               setFormData({ ...formData, maintenanceType: val.label })
             }
           />
-
-
 
           {formData.maintenanceType === "Non-Warranty" && (
             <DropdownSelect

@@ -104,7 +104,7 @@ const SideNav: React.FC = () => {
               isVisible={role === "ADMIN"}
             />
 
-       <NavigationButton
+            <NavigationButton
               labelName="Service"
               isActive={isRouteActive(
                 appRoutes.ServiceRoutes?.servicePage || "/Service",
@@ -116,9 +116,7 @@ const SideNav: React.FC = () => {
                   appRoutes.ServiceRoutes?.servicePage || "/Service",
                 )
               }
-              isVisible={
- role === "SERVICE" || role === "ADMIN"
-              }
+              isVisible={role === "SERVICE" || role === "ADMIN"}
             />
             <NavigationButton
               labelName="Reports"
@@ -132,12 +130,9 @@ const SideNav: React.FC = () => {
                   appRoutes.reportRoutes?.reportPage || "/reports",
                 )
               }
-              isVisible={
- role === "SERVICE" || role === "ADMIN"
-              }
+              isVisible={role === "SERVICE" || role === "ADMIN"}
             />
 
-     
             {/* --install pwa button */}
             {/* <InstallButton /> */}
           </div>

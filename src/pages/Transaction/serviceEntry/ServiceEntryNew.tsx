@@ -13,6 +13,7 @@ import {
   convertToBackendDate,
   generateReferenceNumber,
   getMaxDateFromToday,
+  getMinDateFromToday,
 } from "@/utils/commonUtils";
 import { useFetchVendorOptions } from "@/queries/masterQueries/VendorQuery";
 import {
@@ -102,7 +103,6 @@ const ServiceEntryNew = () => {
   const [selectedSerial, setSelectedSerial] =
     useState<DropdownOption>(defaultOption);
 
-
   // Machine dropdown options from API
   const { data: typeOptions = [] } = useFetchProductsType();
   const { data: brandOptions = [] } = useFetchProductDropdownOptions({
@@ -120,7 +120,6 @@ const ServiceEntryNew = () => {
     brand: selectedBrand?.label || "",
     model: selectedModel?.label || "",
   });
-
 
   const { data: complaint = [], isLoading: isComplaintLoading } =
     useFetchProblemOptions();
@@ -198,10 +197,10 @@ const ServiceEntryNew = () => {
     setSelectedModel({ id: 404, label: parsed.modelNumber || "" });
     setSelectedSerial({ id: 404, label: parsed.serialNumber || "" });
 
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       clientId: matchedClient?.id || 0,
-      machineEntryId: Number(entryId)
+      machineEntryId: Number(entryId),
     }));
 
     setShowQRDialog(false);
@@ -261,7 +260,10 @@ const ServiceEntryNew = () => {
     formDataToSend.append("vendorId", formData.vendorId.toString());
     formDataToSend.append("engineerId", formData.engineerId.toString());
     if (selectedComplaint && selectedComplaint.id !== 0) {
-      formDataToSend.append("complaintDetailsId", selectedComplaint.id.toString());
+      formDataToSend.append(
+        "complaintDetailsId",
+        selectedComplaint.id.toString(),
+      );
     }
     formDataToSend.append("engineerDiagnostics", formData.engineerDiagnostics);
     formDataToSend.append("serviceStatus", formData.serviceStatus);
@@ -316,14 +318,17 @@ const ServiceEntryNew = () => {
 
   return (
     <div className="w-full rounded-lg bg-white p-6 shadow-md md:mb-0">
-      <div className="flex items-center mb-2 justify-between">
+      <div className="mb-2 flex items-center justify-between">
         <PageHeader title="New Service Entry" />
         <ButtonSm
           type="button"
           text="Scan QR"
           state="default"
           className="mb-4 w-fit border-blue-400 text-white"
-          onClick={() => {setShowQRDialog(true),console.log("clciked")}}
+          onClick={() => {
+            setShowQRDialog(true);
+            console.log("clciked");
+          }}
         />
       </div>
 
@@ -354,8 +359,8 @@ const ServiceEntryNew = () => {
           onChange={(val) => {
             setFormData({ ...formData, serviceDate: val });
           }}
-          minDate={getMaxDateFromToday(-30)}
-          maxDate={getMaxDateFromToday(30)}
+          minDate={getMinDateFromToday(3)}
+          maxDate={getMaxDateFromToday(3)}
           required
         />
 
@@ -388,8 +393,6 @@ const ServiceEntryNew = () => {
               setFormData({ ...formData, maintenanceType: val.label })
             }
           />
-
-
 
           {formData.maintenanceType === "Non-Warranty" && (
             <DropdownSelect
@@ -435,9 +438,9 @@ const ServiceEntryNew = () => {
           selected={selectedComplaint}
           onChange={(val) => {
             setSelectedComplaint(val);
-            setFormData(prev => ({
+            setFormData((prev) => ({
               ...prev,
-              complaintDetailsId: val.id
+              complaintDetailsId: val.id,
             }));
           }}
           required
@@ -569,7 +572,6 @@ const ServiceEntryNew = () => {
             setFormData({ ...formData, serviceStatus: val.label })
           }
         />
-
 
         <Input
           title="Remarks"
