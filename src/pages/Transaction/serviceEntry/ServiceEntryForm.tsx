@@ -43,7 +43,7 @@ const getCurrentDate = () => {
 };
 
 const RequestEntry = () => {
-  const { engineer } = useAuthStore();
+  const { engineer, role } = useAuthStore();
   const emptyData: ServiceEntryPayload = {
     refNumber: "",
     serviceDate: getCurrentDate(),
@@ -508,7 +508,7 @@ const RequestEntry = () => {
         <DropdownSelect
           required
           title="Engineer Name"
-          disabled
+          disabled={role === "Engineer"}
           options={engineerOptions}
           selected={
             engineerOptions.find((opt) => opt.id === formData.engineerId) || {
