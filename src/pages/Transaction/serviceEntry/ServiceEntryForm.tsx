@@ -30,7 +30,6 @@ import RequestEntrySkeleton from "./ServiceEntryFormSkeleton";
 import SparePartsManager from "./SparesImageUploader.component";
 import PageHeader from "@/components/masterPage.components/PageHeader";
 import { useAuthStore } from "@/store/useAuthStore";
-import { useAuthStore } from "@/store/useAuthStore";
 
 interface SparePartData {
   spareId: number;
